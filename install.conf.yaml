@@ -1,7 +1,7 @@
 - clean: ['~']
 
 - link:
-    ~/.dotfiles: ''
+    ~/.bashrc: bashrc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
