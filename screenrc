@@ -94,7 +94,7 @@ bindkey -k k8 remove
 bindkey -k k9 colon
 
 #bindkey "^[p" eval "copy" "stuff k?@das^m"
-bindkey "^[p" eval "copy" "stuff k?$^ml"
+bindkey "^[p" eval "copy" "stuff k?:>^ml"
 
 hardstatus off
 caption always "%?%F%{= B.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
@@ -125,6 +125,4 @@ defmonitor on
 bell "%C -> %n%f %t activity!"
 
 shelltitle '$|sh'
-
-source $HOME/.screenrc.local
 
