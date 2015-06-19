@@ -1,3 +1,9 @@
+alias adb='~/src/adt-bundle-mac-x86_64-20140702/sdk/platform-tools/adb'
+alias and='~/src/adt-bundle-mac-x86_64-20140702/sdk/tools/android'
+alias avd='and avd&'
+alias sdk='and sdk&'
+alias aem='~/src/adt-bundle-mac-x86_64-20140702/sdk/tools/emulator'
+
 alias ls='/bin/ls -AFGTeh'
 alias tf='tail -n 666 -f /var/log/system.log &'
 alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
