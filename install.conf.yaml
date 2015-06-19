@@ -4,6 +4,8 @@
     ~/.bashrc: 
       path: bashrc
       force: true
+    ~/.bashrc.Darwin: bashrc.Darwin
+    ~/.bashrc.Linux: bashrc.Linux
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
