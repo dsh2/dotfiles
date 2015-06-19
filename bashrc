@@ -43,12 +43,12 @@ vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDo
 
 shopt -s cmdhist
 shopt -s histappend
+shopt -s hostcomplete
 shopt -u interactive_comments
 shopt -s cdable_vars
 shopt -s checkhash
 shopt -s checkwinsize
 shopt -s dotglob
-shopt -s hostcomplete
 shopt -s nocaseglob
 
 ulimit -c unlimited

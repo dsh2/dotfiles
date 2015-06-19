@@ -26,6 +26,7 @@ CUSTOM_TITLE=0
 export VIEW_PDF=/usr/bin/open
 export VIEW_POSTSCRIPT=/usr/bin/open
 export HTML_TIDY=~/.tidy_config
+export USE_CCACHE=1
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
