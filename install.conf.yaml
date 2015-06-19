@@ -5,10 +5,13 @@
         path: bashrc
         force: true
     ~/.bash_profile: 
-      path: bash_profile
-      force: true
+        path: bash_profile
+        force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
-
+    ~/.screenrc: screenrc
+    ~/.screen/:
+        path: screen/
+        create: true
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
