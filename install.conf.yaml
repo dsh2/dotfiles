@@ -1,15 +1,18 @@
 - clean: ['~']
 
 - link:
-    ~/.bashrc: 
+    ~/.bashrc:
         path: bashrc
         force: true
-    ~/.bash_profile: 
+    ~/.bash_profile:
         path: bash_profile
         force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.liquidpromptrc: liquidpromptrc
+    ~/.inputrc:
+        path: inputrc
+        force: true
     ~/.screenrc: screenrc
 
 - shell:
