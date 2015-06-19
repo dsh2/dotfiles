@@ -33,26 +33,4 @@ if [ ! $SSH_TTY ]; then
 	fi
 fi
 
-# Change the Window Title
-case "$TERM" in
-	xterm*|rxvt*)
-		export PROMPT_COMMAND='if [ "$CUSTOM_TITLE" = "0" ]; then echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"; fi' ;;
-	screen*)
-		export PROMPT_COMMAND='if [ "$CUSTOM_TITLE" = "0" ]; then echo -ne "\033k\033\\"; fi' ;;
-	*)
-	;;
-esac
-
-PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-
-[ "${HOSTNAME/.*/}" = "dasmacbookpro.local" -o "$HOSTNAME" = "localhost" ] && HOST_COLOR='\[\e[32;40m\]' || HOST_COLOR='\[\e[31;40m\]'
-[ "$(whoami)" = "root" ] && USER_COLOR='\[\e[31;40m\]' || USER_COLOR='\[\e[32;40m\]'
-#[ -z "$WINDOW" ] && WINDOW_STR="" || WINDOW_STR=\($WINDOW\)
-export PS1=$USER_COLOR'\u\[\e[1;36m\]@'$HOST_COLOR'\h\[\e[00m\]'$WINDOW_STR'$(RC=$?;[ $RC -ne 0 ] && echo [\[\e[31\;40m\]rc = $RC\[\e[0\;0m\]]):\[\e[01;34m\]\w\[\e[00m\] $(while [ "$PWD" != "/" ]; do BRANCH=$(cat .git/HEAD 2>/dev/null); if [ $? -eq 0 ]; then echo \(${BRANCH/*\//}\); break; else cd ..; fi; done)\$ '
-
-
-if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-    . /opt/local/etc/profile.d/bash_completion.sh
-fi
-
 [ -f ~/.bashrc ] && . ~/.bashrc

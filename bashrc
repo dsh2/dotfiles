@@ -52,3 +52,6 @@ shopt -s hostcomplete
 shopt -s nocaseglob
 
 ulimit -c unlimited
+
+source ~/.dotfiles/liquidprompt/liquidprompt
+
