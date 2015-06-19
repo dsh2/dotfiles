@@ -13,7 +13,8 @@ set colored-stats on
 set completion-ignore-case on
 set completion-prefix-display-length 1
 set completion-query-items 1000
-set editing-mode vi
+set convert-meta off
+set editing-mode emacs
 set expand-tilde off
 set history-preserve-point on
 set horizontal-scroll-mode off
@@ -31,9 +32,7 @@ set prefer-visible-bell on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
 set show-mode-in-prompt on
-
 set visible-stats on
-set convert-meta off
 
 $if Python
 	"\M-i": "    "
