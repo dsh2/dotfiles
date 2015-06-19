@@ -11,8 +11,7 @@
     ~/.bashrc.Linux: bashrc.Linux
     ~/.liquidpromptrc: liquidpromptrc
     ~/.screenrc: screenrc
-    ~/.screen/:
-        path: screen/
-        create: true
+
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - [mkdir -p ~/.screen/, Setting up directory for screen]
