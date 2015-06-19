@@ -9,7 +9,7 @@
         force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
-    ~/.liquidpromptrc: liquitpromptrc
+    ~/.liquidpromptrc: liquidpromptrc
     ~/.screenrc: screenrc
     ~/.screen/:
         path: screen/
