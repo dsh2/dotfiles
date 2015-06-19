@@ -2,11 +2,13 @@
 
 - link:
     ~/.bashrc: 
-      path: bashrc
+        path: bashrc
+        force: true
+    ~/.bash_profile: 
+      path: bash_profile
       force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
-    ~/.bash_profile: bash_profile
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
