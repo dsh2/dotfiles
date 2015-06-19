@@ -53,5 +53,7 @@ shopt -s nocaseglob
 
 ulimit -c unlimited
 
+complete -d cd rmdir pushd
+
 source ~/.dotfiles/liquidprompt/liquidprompt
 
