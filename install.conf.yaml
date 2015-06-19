@@ -10,6 +10,7 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.liquidpromptrc: liquidpromptrc
+    ~/.bcrc: bcrc
     ~/.inputrc:
         path: inputrc
         force: true
