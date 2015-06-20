@@ -11,3 +11,4 @@ alias vlc=~/applications/vlC.app/Contents/MacOS/VLC
 p() { ps Axj|grep -i "$*"|grep -v grep; }
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
+[ -f /opt/local/share/bash-completion/bash_completion ] && . /opt/local/share/bash-completion/bash_completion
