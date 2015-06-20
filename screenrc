@@ -1,8 +1,80 @@
+# ettings
 vbell off
 autodetach on
 startup_message off
 shell -$SHELL
 defscrollback 65535
+
+hardstatus off
+caption always "%?%F%{= B.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
+# caption always "%{Yb} %Y-%02m-%02d %0c %{k}|%{C} %LD %{k}|%{G} %l %{k}|%{W} %-Lw%{+u}%n %t%{-u}%+Lw"
+# caption always "%{wb}%n%f %t %{wk} %?%-Lw%?%{wb}[%n*%f %t]%?(%u)%?%{wk}%?%+Lw%? %{wk}"
+# caption always "%?%F%{.R.}%?%3n %t%? [%h]%?"
+
+hardcopydir $HOME/.screen/hardcopies/
+logfile $HOME/.screen/logs/%n
+bufferfile $HOME/.screen/exchange
+
+crlf off
+silencewait 15
+defslowpaste 0
+escape ^zz
+msgwait 0
+msgminwait 2
+multiuser off
+obuflimit 4096
+ignorecase on
+
+activity "activity in %n (%t) [%w:%s]~"
+bell "%C -> %n%f %t activity!"
+defmonitor on
+
+shelltitle '$|sh'
+
+# key bindings
+bind k
+bind ^k
+bind .
+bind ^\
+bind \\
+bind ^h
+bind h
+bind 'K' kill
+
+bindkey "^[~" prev
+bindkey "^[`" next
+bindkey "^[1" prev
+bindkey "^[2" next
+bindkey "^[3" other
+bindkey "^[4" eval "copy" 
+# save in vim and relaunch in other window
+bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
+
+bindkey "^[q" focus
+bindkey "^[a" resize +1
+bindkey "^[z" resize -1
+bindkey "^[s" resize =
+bindkey "^[n" screen
+bindkey -m "^[p" stuff ?^m
+bindkey -m "^[n" stuff /^m
+bindkey "^[P" paste .
+
+bindkey "^[[5;2~" eval "copy" "stuff ^u"
+bindkey -m "^[[5;2~" stuff ^u
+bindkey -m "^[[6;2~" stuff ^d
+bindkey "^[m" eval "split" "focus" "screen"
+
+bindkey -k k2 windowlist -b -m
+bindkey -k k4 windowlist -b -m
+bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
+bindkey -k k6 title
+bindkey -k k7 screen
+bindkey -k k8 remove
+bindkey -k k9 colon
+# scroll back to beginning of output of the last command
+bindkey "^[p" eval "msgminwait 0" "copy" "stuff 0?:>^mj0" "msgminwait 2"
+
+# termcap stuff
 #xterm understands both im/ic and doesn't have a status line.
 #Note: Do not specify im and ic in the real termcap/info file as
 #some programs (e.g. vi) will not work anymore.
@@ -47,82 +119,4 @@ termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # erase background with current bg color
 defbce "on"
 
-bind k
-bind ^k
-bind .
-bind ^\
-bind \\
-bind ^h
-bind h
-bind 'K' kill
-
-bindkey "^[~" prev
-bindkey "^[`" next
-bindkey "^[1" prev
-bindkey "^[2" next
-bindkey "^[3" other
-bindkey "^[4" eval "copy" "stuff 0k"
-bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
-
-bindkey "^[q" focus
-bindkey "^[a" resize +1
-bindkey "^[z" resize -1
-bindkey "^[s" resize =
-bindkey "^[n" screen
-bindkey -m "^[p" stuff ?^m
-bindkey -m "^[n" stuff /^m
-bindkey "^[P" paste . 
-
-
-bindkey "^[[5;2~" eval "copy" "stuff ^u"
-bindkey -m "^[[5;2~" stuff ^u
-bindkey -m "^[[6;2~" stuff ^d
-
-bindkey -k k1 windowlist -b -m
-bindkey -k k2 windowlist -b -m
-#bindkey -k k3 windowlist -b -m
-bindkey -k k4 windowlist -b -m
-#bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
-#bindkey -k k6 title
-#bindkey -k k7 eval "bindkey '^[p' eval 'copy' 'stuff k?schaffrath@^m'"
-#bindkey -k k7 screen
-bindkey "^[m" eval "split" "focus" "screen"
-#bindkey -k k8 eval "split" "focus" "screen"
-#bindkey -k k8 eval "bindkey '^[p' eval 'copy' 'stuff k?das@^m'"
-bindkey -k k8 remove
-#bindkey -k k8 windowlist -b -m
-bindkey -k k9 colon
-
-#bindkey "^[p" eval "copy" "stuff k?@das^m"
-bindkey "^[p" eval "copy" "stuff k?:>^ml"
-
-hardstatus off
-caption always "%?%F%{= B.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
-# caption always "%{Yb} %Y-%02m-%02d %0c %{k}|%{C} %LD %{k}|%{G} %l %{k}|%{W} %-Lw%{+u}%n %t%{-u}%+Lw"
-# caption always "%{wb}%n%f %t %{wk} %?%-Lw%?%{wb}[%n*%f %t]%?(%u)%?%{wk}%?%+Lw%? %{wk}"
-#ccaption always "%?%F%{.R.}%?%3n %t%? [%h]%?"
-#hardstatus string "%{Yb} %D %Y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
-#hardstatus alwayslastline
-#hardstatus string '%{= kr}[ %{R}%c %{r}][%= %{= kg}%?%-Lw%?%{g}(%{R}%n*%f %t%?(%u)%?%{g})%{g}%?%+Lw%?%?%= %{r}][%{R} %D %M %d, %Y %{r}]'
-#hardstatus string "%{cb }[%{wb}%n%{cb}] [%{wb}A:%1`F %{kb}B:%3`F %{wb}C:%2`F %{kb}M:%4`F%{cb}] [%{wb}%c%{cb}] [%{kb}IBM %6`%{cb}] [%{wb}%5`%{cb}] [%{kb}%7`%{cb}]"
-#hardstatus string '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
-
-hardcopydir $HOME/.screen/hardcopies/
-logfile $HOME/.screen/logs/%n
-bufferfile $HOME/.screen/exchange
-crlf off
-silencewait 15
-defslowpaste 0
-escape ^zz
-msgwait 0
-msgminwait 1
-multiuser off
-obuflimit 4096
-ignorecase on
-
-activity "activity in %n (%t) [%w:%s]~"
-defmonitor on
-bell "%C -> %n%f %t activity!"
-
-shelltitle '$|sh'
 
