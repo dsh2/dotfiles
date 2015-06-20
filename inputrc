@@ -31,7 +31,7 @@ set print-completions-horizontally off
 set prefer-visible-bell on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
-set show-mode-in-prompt on
+set show-mode-in-prompt off
 set visible-stats on
 
 $if Python
