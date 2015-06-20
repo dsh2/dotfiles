@@ -5,8 +5,8 @@
 
 # If you want to use different themes and features,
 # you can load the corresponding files here:
-LP_PS1_FILE=~/.dotfiles/liquid.ps1 
-#source ~/.config/liquidprompt/nojhan.theme
+LP_PS1_FILE=~/.dotfiles/liquid.ps1
+source ~/.dotfiles/liquid.theme
 
 #############
 # BEHAVIOUR #
