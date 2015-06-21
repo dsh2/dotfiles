@@ -72,7 +72,7 @@ bindkey -k k7 screen
 bindkey -k k8 remove
 bindkey -k k9 colon
 # scroll back to beginning of output of the last command
-bindkey "^[p" eval "msgminwait 0" "copy" "stuff 0?:>^mj0" "msgminwait 2"
+bindkey "^[p" eval "msgminwait 0" "copy" "stuff 0?:>^m0" "msgminwait 2"
 
 # termcap stuff
 #xterm understands both im/ic and doesn't have a status line.
