@@ -56,4 +56,4 @@ ulimit -c unlimited
 complete -d cd rmdir pushd
 
 source ~/.dotfiles/liquidprompt/liquidprompt
-
+source ~/.dotfiles/z/z.sh
