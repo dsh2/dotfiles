@@ -27,17 +27,13 @@ alias p='ps axu | grep --color'
 alias raiseX='osascript -e "tell application \"X11\"" -e "activate" -e "end tell"'
 alias rm='rm -v'
 alias v='vim -X'
+alias c=z
 
-cd() { if [ "$1" = "--" ]; then command popd; else if [ $# = 0 ]; then pushd $HOME; else command pushd "$@" >/dev/null; fi; fi; pwd >> $HOME/.cd_history; }
-cdm() { cd "$(~/bin/cd.sh --most-often-used $@)"; }
-cdr() { cd "$(~/bin/cd.sh --most-recently-used $@)"; }
-cl() { cd "$@" && l;  }
 function viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
 function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 g() { grep --color -Inri -- "$@" *; }
 gv() { gvim "$*"; raiseX; }
 gw() { grep --color -Iwri -- "$@" *; }
-rcd() { cd - && cd -; }
 src_index() { find . | grep -E "\.cc?$|\.cpp$|\.hh?$|\.hpp$" > cscope.files && command cscope -bi cscope.files; ctags -R; }
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
 
