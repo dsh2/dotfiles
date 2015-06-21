@@ -32,8 +32,8 @@ alias c=z
 function viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
 function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 g() { grep --color -Inri -- "$@" *; }
-gv() { gvim "$*"; raiseX; }
 gw() { grep --color -Iwri -- "$@" *; }
+gv() { gvim "$*"; raiseX; }
 src_index() { find . | grep -E "\.cc?$|\.cpp$|\.hh?$|\.hpp$" > cscope.files && command cscope -bi cscope.files; ctags -R; }
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
 
