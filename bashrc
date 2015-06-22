@@ -1,30 +1,38 @@
-msource() { for f in $*; do [ -r $f  ] && source $f; done; }
+msource() { for f in $*; do [ -r "$f"  ] && source "$f"; done; }
 msource $HOME/.bashrc.$(uname) $HOME/.bashrc.local
 
 alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
+
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
+
 alias f=find
-alias fgr='find . | grep '
+alias fd='f . -type d'
+alias fgr='f . | grep -i --color=auto '
+
 alias gca='git commit -va'
 alias gdf='git diff'
 alias gst='git status'
-alias glast='gv -S ~/.vim/lastsession'
+
 alias l.='l -A'
 alias l="ls -Ghl"
+alias lt='l -tr'
+
 alias last='v -S ~/.vim/lastsession'
+alias glast='gv -S ~/.vim/lastsession'
+
 alias le='less'
 alias loc=locate
-alias lt='l -tr'
 alias ma='man -a'
 alias o=open
-alias pst='pstree -wg3'
+
 alias p='ps axu | grep --color'
-alias raiseX='osascript -e "tell application \"X11\"" -e "activate" -e "end tell"'
+alias pst='pstree -wg3'
+
 alias rm='rm -v'
 alias v='vim -X'
 alias c=z
