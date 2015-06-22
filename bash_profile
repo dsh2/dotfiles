@@ -11,8 +11,8 @@ export HISTTIMEFORMAT='%T'
 CDHISTFILE=$HOME/.cd_history
 
 export LESS=RMiwS
+export LESSOPEN="| src-hilite-lesspipe.sh %s"
 export GIT_PAGER='less -F'
-#export LESSOPEN="| $HOME/bin/lesspipe.sh %s"
 export BC_ENV_ARGS="-q $HOME/.bcrc"
 export XENVIRONMENT=$HOME/.Xresources
 export LANG=en_US.UTF-8
@@ -27,6 +27,7 @@ export VIEW_PDF=/usr/bin/open
 export VIEW_POSTSCRIPT=/usr/bin/open
 export HTML_TIDY=~/.tidy_config
 export USE_CCACHE=1
+export GREP_COLOR=auto
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
