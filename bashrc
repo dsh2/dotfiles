@@ -6,6 +6,8 @@ alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
 
+alias aosp='cd $AOSP_HOME && source build/envsetup.sh'
+
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"

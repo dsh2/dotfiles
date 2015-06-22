@@ -2,6 +2,10 @@ export PATH=$HOME/bin:$PATH:/usr/local/bin:/usr/local/sbin
 export PATH="/Library/Frameworks/Python.framework/Versions/3.4/bin:${PATH}"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 
+export ANDROID_SDK=$HOME/src/adt-bundle-mac-x86_64-20140702/sdk
+export PATH=$PATH:$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools
+export AOSP_HOME=/Volumes/AndroidBuildEnvironment/aosp
+
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export HISTCONTROL=ignoreboth
