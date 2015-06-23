@@ -44,7 +44,7 @@ function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
 gv() { gvim "$*"; raiseX; }
-src_index() { find . | grep -E "\.cc?$|\.cpp$|\.hh?$|\.hpp$" > cscope.files && command cscope -bi cscope.files; ctags -R; }
+src_index() { find . -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f \( -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) > cscope.files && command cscope -bi cscope.files; ctags -R; }
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
 
 shopt -s cmdhist
