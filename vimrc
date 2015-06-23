@@ -7,6 +7,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'vim-scripts/SelectBuf'
 Plugin 'L9'
 Plugin 'git://git.wincent.com/command-t.git'
 call vundle#end()
@@ -82,3 +83,5 @@ function! RestorePosition()
       let b:_goto_pos = 1
    endif
 endfunction
+
+
