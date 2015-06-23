@@ -61,4 +61,24 @@ syntax on
 " Make 'K' lookup vim help for vim files
 au FileType vim setl keywordprg=:help
 
+" Open log files at the bottom of the file
+autocmd BufReadPost *.log normal G
 
+" Restore last position in file upon opening a file
+autocmd BufReadPost * call RestorePosition()
+autocmd BufWritePost ~/.vimrc source ~/.vimrc
+autocmd VimLeave * mksession! ~/.vim/lastsession
+
+function! RestorePosition()
+   if !exists("b:_goto_pos") || b:_goto_po
+      if line("'\"") > 0
+         if line("'\"") <= line("$")
+            execute "norm `\""
+         else
+            execute "norm $"
+         endif
+      endif
+   else
+      let b:_goto_pos = 1
+   endif
+endfunction
