@@ -8,6 +8,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/SelectBuf'
+Plugin 'vim-scripts/genutils'
 Plugin 'L9'
 Plugin 'git://git.wincent.com/command-t.git'
 call vundle#end()
