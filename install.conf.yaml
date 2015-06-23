@@ -23,3 +23,5 @@
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
 
+- shell:
+  - [vim +PluginInstall +qall, Setting up Vundle.vim]
