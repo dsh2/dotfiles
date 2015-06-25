@@ -7,8 +7,8 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'vim-scripts/SelectBuf'
 Plugin 'vim-scripts/genutils'
+Plugin 'vim-scripts/SelectBuf'
 Plugin 'L9'
 Plugin 'git://git.wincent.com/command-t.git'
 call vundle#end()
@@ -58,17 +58,26 @@ set wildmenu
 set wildmode=list:longest,full
 set winminheight=0
 
+" Display tabs and trailing whitespace
+set list
+set listchars=tab:·\ ,trail:†
+"set listchars+=eol:¶
+highlight SpecialKey ctermfg=DarkRed
+
+" Enable syntax highlighting
 syntax on
 
 " Make 'K' lookup vim help for vim files
-au FileType vim setl keywordprg=:help
+autocmd FileType vim setl keywordprg=:help
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 
+" Source vimrc upon saving vimrc
+autocmd BufWritePost ~/.vimrc source ~/.vimrc
+
 " Restore last position in file upon opening a file
 autocmd BufReadPost * call RestorePosition()
-autocmd BufWritePost ~/.vimrc source ~/.vimrc
 autocmd VimLeave * mksession! ~/.vim/lastsession
 
 function! RestorePosition()
@@ -85,4 +94,46 @@ function! RestorePosition()
    endif
 endfunction
 
+" Add a cursorline(/cursorcolumn) to the active window
+"au WinLeave * set nocursorline nocursorcolumn
+"au WinEnter * set cursorline cursorcolumn
+au WinLeave * set nocursorline
+au WinEnter * set cursorline
+set nocursorcolumn
+set cursorline
 
+" Remove search highlighting by pressing enter key
+nnoremap <cr> :nohlsearch<CR>/<BS><CR>
+
+" Some Emacs-like mapping for command mode
+cmap <C-a> <Home>
+cmap <C-e> <End>
+cmap <C-d> <Del>
+cmap <C-f> <Right>
+cmap <C-b> <Left>
+
+" Some Quickfix mapping
+map <F5> \rlog
+map <F6> \older
+map <F7> \newer
+
+" What does this mapping do?
+nnoremap Q =ap
+
+" Some usual IDE mapping
+map <F8> :make<cr>
+
+" Some quickfix key mappings
+nnoremap <C-n> :cn<cr>
+nnoremap <C-p> :cp<cr>
+nnoremap <C-l> :cnewer<cr>
+nnoremap <C-h> :colder<cr>
+
+map <C-K> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
+imap <C-K> <c-o> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
+
+let g:clang_format_path = "~/.clang-format"
+
+" Enable spell checking for commit messages
+autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
+autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
