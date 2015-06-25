@@ -32,11 +32,11 @@ export VIEW_POSTSCRIPT=/usr/bin/open
 export HTML_TIDY=~/.tidy_config
 export USE_CCACHE=1
 export GREP_COLOR=auto
+export SSLKEYLOGFILE=~/.ssl_key_log
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
 		export DISPLAY=:0.0
 	fi
 fi
-
 [ -f ~/.bashrc ] && . ~/.bashrc
