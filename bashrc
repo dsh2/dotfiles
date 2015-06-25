@@ -39,6 +39,8 @@ alias rm='rm -v'
 alias v='vim -X'
 alias c=z
 
+alias tag=prompt_tag
+
 function viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
 function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 g() { grep --color -Inri -- "$@" *; }
