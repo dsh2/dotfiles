@@ -73,4 +73,4 @@ bindkey -k k9 colon
 # scroll back to beginning of output of the last command
 bindkey "^[p" eval "msgminwait 0" "copy" "stuff 0?:>^m0" "msgminwait 2"
 
-source $HOME/.screenrc.$HOSTNAME
+source ${HOME}.screenrc.${HOSTNAME}

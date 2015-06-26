@@ -27,10 +27,9 @@ alias lt='l -tr'
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
 
-alias le='less'
-alias loc=locate
+alias le=$PAGER
+alias loc='locate'
 alias ma='man -a'
-alias o=open
 
 alias p='ps axu | grep --color'
 alias pst='pstree -wg3'

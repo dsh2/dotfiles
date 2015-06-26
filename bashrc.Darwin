@@ -3,6 +3,8 @@ alias tf='tail -n 666 -f /var/log/system.log &'
 alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
 alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
 
+alias o='open'
+
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 
