@@ -10,6 +10,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'L9'
+Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 call vundle#end()
 filetype plugin indent on    
