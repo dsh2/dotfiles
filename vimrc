@@ -137,3 +137,7 @@ let g:clang_format_path = "~/.clang-format"
 " Enable spell checking for commit messages
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
+
+" vimpager settings
+let vimpager_passthrough = 0
+let vimpager_scrolloff = 5
