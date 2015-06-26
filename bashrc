@@ -7,6 +7,7 @@ alias ...='cd ../..'
 alias ..='cd ..'
 
 alias aosp='cd $AOSP_HOME && source build/envsetup.sh'
+alias aospmm='aosp && cd external/boringssl && pwd && mm'
 
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
