@@ -21,6 +21,7 @@
         force: true
     ~/.screenrc: screenrc
     ~/.screenrc.dasdeb: screenrc.dasdeb
+    ~/.screenrc.dasmacbook.local: screenrc.dasmacbookpro.local
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
 
