@@ -9,9 +9,9 @@ export AOSP_HOME=/Volumes/AndroidBuildEnvironment/aosp
 export MANPATH=/opt/local/share/man:$MANPATH
 
 export HISTCONTROL=ignoreboth
-export HISTFILESIZE=32767
-export HISTSIZE=32767
-export HISTTIMEFORMAT='%T'
+export HISTFILESIZE=-1
+export HISTSIZE=-1
+export HISTTIMEFORMAT='%F %T '
 CDHISTFILE=$HOME/.cd_history
 
 export BC_ENV_ARGS="-q $HOME/.bcrc"
@@ -22,10 +22,10 @@ export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 export VISUAL='vim -X'
 export EDITOR=$VISUAL
-# export PAGER=less
-# export LESS=RMiwS
-# export LESSOPEN="| src-hilite-lesspipe.sh %s"
-export PAGER=~/.dotfiles/vimpager/vimpager
+export PAGER=less
+# export PAGER=~/.dotfiles/vimpager/vimpager
+export LESS=RMiwS
+export LESSOPEN="| src-hilite-lesspipe.sh %s"
 export GIT_PAGER='less -F'
 alias less=$PAGER
 alias zless=$PAGER
