@@ -43,5 +43,5 @@ if [ ! $SSH_TTY ]; then
 	fi
 fi
 
-source $HOME/.bash_profile.$(uname)
+source $HOME/.bash_profile.$HOSTNAME
 [ -f ~/.bashrc ] && source ~/.bashrc
