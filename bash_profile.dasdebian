@@ -1,1 +1,1 @@
-export AOSP_HOME=/media/sf_Shared_Folder/AndroidBuildEnvironment/
+export AOSP_HOME="/media/sf_Shared/AndroidBuildEnvironment/aosp"
