@@ -1,4 +1,7 @@
 alias ls='/bin/ls --color=auto --human-readable --indicator-style=slash'
 alias tf='tail -n 666 -f /var/log/messages&'
+
+/media/sf_Shared_Folder/AndroidBuildEnvironment/aosp
+
 function p() { ps ax | grep $@ | grep -v grep; }
 export TIME="time total/sys/user = %e/%S/%U, socket I/O = %r/%s, file I/O = %I/%O, context switches = %w/%c, average memory total/unshared = %K/%D, page faults major/minor = %F/%P, exit code = %e"

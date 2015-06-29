@@ -9,3 +9,4 @@ pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 
 [ -f /opt/local/share/bash-completion/bash_completion ] && . /opt/local/share/bash-completion/bash_completion
+# set ft=vim
