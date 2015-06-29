@@ -1,1 +1,1 @@
-caption always "%?%F%{= R.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
+caption always "%?%F%{= r.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
