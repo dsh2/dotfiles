@@ -19,11 +19,12 @@ alias fd='f . -type d'
 alias fgr='f . | grep -i --color=auto '
 
 # git
+alias gap='git add -p'
 alias gc='git commit -v'
 alias gca='git commit -va'
 alias gdf='git diff'
+alias grp='git reset --patch'
 alias gst='git status -sb'
-alias gap='git add -p'
 
 # less
 alias l.='l -A'
