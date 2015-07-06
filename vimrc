@@ -9,11 +9,21 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
-Plugin 'L9'
+Plugin 'vim-scripts/taglist.vim'
+" Highlights words under the cursor
+Plugin 'ihacklog/HiCursorWords'
+let g:HiCursorWords_delay = 200
+let g:HiCursorWords_hiGroupRegexp = ''
+let g:HiCursorWords_debugEchoHiName = 0
+
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
+" Template
+" Plugin 'vim-scripts/TEMPLATE'
+" Plugin 'vim-scripts/TEMPLATE'
+" Plugin 'vim-scripts/TEMPLATE'
 call vundle#end()
-filetype plugin indent on    
+filetype plugin indent on
 " End of setup Vundle.vim
 
 " Options
