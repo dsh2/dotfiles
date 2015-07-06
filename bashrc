@@ -1,52 +1,72 @@
 msource() { for f in $*; do [ -r "$f"  ] && source "$f"; done; }
 msource $HOME/.bashrc.$(uname) $HOME/.bashrc.local
 
+# change directory 
 alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
+source ~/.dotfiles/z/z.sh
+alias c=z
 
-alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
-alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
-alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
+# aosp
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh'
 
+# find
 alias f=find
 alias fd='f . -type d'
 alias fgr='f . | grep -i --color=auto '
 
+# git
+alias gc='git commit -v'
 alias gca='git commit -va'
 alias gdf='git diff'
-alias gst='git status'
+alias gst='git status -sb'
+alias gap='git add -p'
 
+# less
 alias l.='l -A'
 alias l="ls -Ghl"
 alias lt='l -tr'
 
+# vim alises
+alias v='vim -X'
+vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
+alias v.=vs
+gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
+viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
+vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 
+# miscellaneous
+alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
+alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
+alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
 alias le=$PAGER
 alias loc='locate'
 alias ma='man -a'
-
 alias p='ps axu | grep --color'
 alias pst='pstree -wg3'
-
 alias rm='rm -v'
-alias v='vim -X'
-alias c=z
-
 alias tag=prompt_tag
-
-function viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
-function vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
-gv() { gvim "$*"; raiseX; }
-src_index() { find . -name .repo -prune -o -name .git -prune -o -name out -prune -o -type f \( -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) > cscope.files && command cscope -bi cscope.files; ctags -R; }
-vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
+
+src_index() {
+		find . -name .repo -prune -o \
+				-name .git -prune -o \
+				-name out -prune -o \
+				-type f \( \
+						-name '*.c' -o \
+						-name '*.cc' -o \
+						-name '*.cpp' -o \
+						-name '*.h' -o \
+						-name '*.hpp' 
+				\) > cscope.files && command cscope -bi cscope.files;
+		ctags -R; 
+}
 
 shopt -s cmdhist
 shopt -s histappend
