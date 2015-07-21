@@ -84,4 +84,5 @@ ulimit -c unlimited
 complete -d cd rmdir pushd
 
 source ~/.dotfiles/liquidprompt/liquidprompt
+export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 source ~/.dotfiles/z/z.sh

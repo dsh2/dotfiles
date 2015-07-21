@@ -47,4 +47,3 @@ fi
 source $HOME/.bash_profile.$HOSTNAME
 [ -f ~/.bashrc ] && source ~/.bashrc
 
-export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
