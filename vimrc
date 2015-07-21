@@ -9,6 +9,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+" Show tags of current file in separat window 
 Plugin 'vim-scripts/taglist.vim'
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
@@ -18,8 +19,8 @@ let g:HiCursorWords_debugEchoHiName = 0
 
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'tpope/vim-dispatch'
 " Template
-" Plugin 'vim-scripts/TEMPLATE'
 " Plugin 'vim-scripts/TEMPLATE'
 " Plugin 'vim-scripts/TEMPLATE'
 call vundle#end()
