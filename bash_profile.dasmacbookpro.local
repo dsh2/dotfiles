@@ -1,1 +1,6 @@
+export PATH="/Library/Frameworks/Python.framework/Versions/3.4/bin:$PATH"
+export PATH="$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH"
+export ANDROID_SDK="$HOME/src/adt-bundle-mac-x86_64-20140702/sdk"
 export AOSP_HOME="/Users/dsh0/VirtualBox/Shared/AndroidBuildEnvironment/aosp/"
+export VIEW_PDF=/usr/bin/open
+export VIEW_POSTSCRIPT=/usr/bin/open
