@@ -10,7 +10,7 @@ alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks -
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
-alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh'
+alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$HOSTNAME" && lunch aosp_x86_64-eng'
 
 alias f=find
 alias fd='f . -type d'
