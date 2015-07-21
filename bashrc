@@ -64,7 +64,7 @@ src_index() {
 						-name '*.cc' -o \
 						-name '*.cpp' -o \
 						-name '*.h' -o \
-						-name '*.hpp' 
+						-name '*.hpp' \
 				\) > cscope.files && command cscope -bi cscope.files;
 		ctags -R; 
 }
