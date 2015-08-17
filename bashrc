@@ -83,6 +83,11 @@ ulimit -c unlimited
 
 complete -d cd rmdir pushd
 
-source ~/.dotfiles/liquidprompt/liquidprompt
-export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then 
+		echo Sourcing liquidprompt
+		source ~/.dotfiles/liquidprompt/liquidprompt
+fi
+if ! grep -q history <<< $PROMPT_COMMAND; then 
+		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+fi
 source ~/.dotfiles/z/z.sh
