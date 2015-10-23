@@ -1,36 +1,31 @@
-vbell off
+# General settings
+activity "activity in %n (%t) [%w:%s]~"
 autodetach on
-startup_message off
-shell -$SHELL
-defscrollback 65535
-
-hardstatus off
-caption always "%?%F%{= B.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
-# caption always "%{Yb} %Y-%02m-%02d %0c %{k}|%{C} %LD %{k}|%{G} %l %{k}|%{W} %-Lw%{+u}%n %t%{-u}%+Lw"
-# caption always "%{wb}%n%f %t %{wk} %?%-Lw%?%{wb}[%n*%f %t]%?(%u)%?%{wk}%?%+Lw%? %{wk}"
-# caption always "%?%F%{.R.}%?%3n %t%? [%h]%?"
-
-hardcopydir $HOME/.screen/hardcopies/
-logfile $HOME/.screen/logs/%n
+bell "%C -> %n%f %t activity!"
 bufferfile $HOME/.screen/exchange
-
+caption always "%-w%{+b}%n %t%{-b}%+w"
 crlf off
-silencewait 15
+defmonitor on
+defscrollback 65535
 defslowpaste 0
 escape ^zz
-msgwait 0
-msgminwait 2
+hardcopydir $HOME/.screen/hardcopies/
+hardstatus off
+ignorecase on
+log on
+logfile $HOME/.screen/logs/%n
+log flush 1
+msgminwait 1
+msgwait 1
 multiuser off
 obuflimit 4096
-ignorecase on
+shell -$SHELL
+shelltitle '$|'
+silencewait 15
+startup_message off
+vbell off
 
-activity "activity in %n (%t) [%w:%s]~"
-bell "%C -> %n%f %t activity!"
-defmonitor on
-
-shelltitle '$|sh'
-
-# key bindings
+# Key bindings
 bind k
 bind ^k
 bind .
@@ -40,37 +35,51 @@ bind ^h
 bind h
 bind 'K' kill
 
-bindkey "^[~" prev
-bindkey "^[`" next
+# Previous buffer - Meta-1
 bindkey "^[1" prev
 bindkey "^[2" next
 bindkey "^[3" other
-bindkey "^[4" eval "copy" 
-# save in vim and relaunch in other window
+bindkey "^[4" eval "copy"
+# bindkey "^[~" prev
+# bindkey "^[`" next
+
+# Save in vim and relaunch in other window
 bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
 
+# Multi-window setup
 bindkey "^[q" focus
-bindkey "^[a" resize +1
-bindkey "^[z" resize -1
+bindkey "^[a" resize +2
+bindkey "^[z" resize -2
 bindkey "^[s" resize =
+
+# New window - Meta-n
 bindkey "^[n" screen
+
+# New spilt window - Meta-m
+bindkey "^[m" eval "split" "focus" "screen"
+
+# Continue search backwards and forward copy modes
 bindkey -m "^[p" stuff ?^m
 bindkey -m "^[n" stuff /^m
+
 bindkey "^[P" paste .
 
+# To be determined
 bindkey "^[[5;2~" eval "copy" "stuff ^u"
 bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
-bindkey "^[m" eval "split" "focus" "screen"
 
+# Function keys
 bindkey -k k2 windowlist -b -m
 bindkey -k k4 windowlist -b -m
-#bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
+bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
 bindkey -k k6 title
 bindkey -k k7 screen
 bindkey -k k8 remove
 bindkey -k k9 colon
-# scroll back to beginning of output of the last command
-bindkey "^[p" eval "msgminwait 0" "copy" "stuff 0?:>^m0" "msgminwait 2"
 
-source ${HOME}.screenrc.${HOSTNAME}
+# Scroll back to beginning of output of the last command - Meta-p
+# bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?##^m" "msgminwait 1" "msgwait 1"
+bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?dsf@^m0" "msgminwait 1"
+
+source ${HOME}.screenrc.${MYHOSTNAME}
