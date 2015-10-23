@@ -26,7 +26,7 @@ alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb'
 
-# less
+# ls
 alias l.='l -A'
 alias l="ls -Ghl"
 alias lt='l -tr'
