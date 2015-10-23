@@ -11,7 +11,7 @@ alias c=z
 
 # aosp
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
-alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$HOSTNAME" && lunch aosp_x86_64-eng'
+alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME" && lunch aosp_x86_64-eng'
 
 # find
 alias f=find
@@ -85,7 +85,7 @@ complete -d cd rmdir pushd
 source ~/.dotfiles/z/z.sh
 
 # Setup prompt
-if [ "$HOSTNAME" == "P3-01882" ]; then 
+if [ "$MYHOSTNAME" == "P3-01882" ]; then 
 		echo Need some prompt...
 else
 		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then 
