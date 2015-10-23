@@ -12,8 +12,8 @@ export MANPATH=/opt/local/share/man:$MANPATH
 
 # pager
 # export PAGER=~/.dotfiles/vimpager/vimpager
+export LESS=cRMiWSJ
 export PAGER=less
-export LESS=cRMiwS
 export LESSOPEN="| src-hilite-lesspipe.sh %s"
 export GIT_PAGER='less -F'
 alias less=$PAGER
