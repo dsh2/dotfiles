@@ -22,7 +22,7 @@
         path: inputrc
         force: true
     ~/.screenrc: screenrc
-    ~/.screenrc.dasdeb: screenrc.dasdeb
+    ~/.screenrc.dasdebian: screenrc.dasdebian
     ~/.screenrc.dasmacbook.local: screenrc.dasmacbookpro.local
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
