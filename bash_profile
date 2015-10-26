@@ -46,6 +46,11 @@ if [ ! $SSH_TTY ]; then
 fi
 export MYHOSTNAME=${HOSTNAME/.*/}
 
-[ -f ~/.bash_profile.$MYHOSTNAME ] && source $HOME/.bash_profile.$MYHOSTNAME
+echo myhostename = $MYHOSTNAME
+echo $( test -f "~/.bash_profile.$MYHOSTNAME"; echo $? )
+
+source ~/.bash_profile.$MYHOSTNAME
+[ -f "~/.bash_profile.$MYHOSTNAME" ] && source ~/.bash_profile.$MYHOSTNAME
+[ -f "~/.bash_profile.$MYHOSTNAME" ] && echo check and hello
 [ -f ~/.bashrc ] && source ~/.bashrc
 

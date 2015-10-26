@@ -1,0 +1,3 @@
+echo check and check
+alias ls='ls --color'
+export ANDROID_SDK_HOME=/cygdrive/c/Users/dsf/AppData/Roaming/Android/SDK

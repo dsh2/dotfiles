@@ -15,7 +15,8 @@
         force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
-    ~/.bash_profile.dasmacbookpro: bash_profile.dasmacbookpro
+    ~/.bash_profile.P3-01882: bash_profile.P3-01882
+    ~/.bash_profile.dasdebian: bash_profile.dasdebian
     ~/.bash_profile.dasdebian: bash_profile.dasdebian
     ~/.liquidpromptrc: liquidpromptrc
     ~/.bcrc: bcrc
