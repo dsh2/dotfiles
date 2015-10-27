@@ -30,6 +30,7 @@ alias gst='git status -sb'
 alias l.='l -A'
 alias l="ls -Ghl"
 alias lt='l -tr'
+alias l1="ls -1"
 
 # vim alises
 alias v='vim -X'
