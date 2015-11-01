@@ -46,6 +46,7 @@ vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
+alias hgrep='history | grep -i $@'
 alias le=$PAGER
 alias loc='locate'
 alias ma='man -a'
