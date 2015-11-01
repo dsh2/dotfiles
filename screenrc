@@ -48,6 +48,7 @@ bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
 
 # Multi-window setup
 bindkey "^[q" focus
+bindkey "^[w" split
 bindkey "^[a" resize +2
 bindkey "^[z" resize -2
 bindkey "^[s" resize =
