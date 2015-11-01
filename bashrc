@@ -19,7 +19,7 @@ alias fdd='f . -type d'
 alias fgr='f . | grep -i --color=auto '
 
 # git
-alias gap='git add -p'
+alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
 alias gca='git commit -va'
 alias gdf='git diff'
