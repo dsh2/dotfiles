@@ -20,6 +20,8 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
+Plugin 'itchyny/lightline.vim'
+
 " Template
 " Plugin 'vim-scripts/TEMPLATE'
 " Plugin 'vim-scripts/TEMPLATE'
