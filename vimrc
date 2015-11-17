@@ -81,7 +81,8 @@ highlight SpecialKey ctermfg=DarkRed
 
 " Enable syntax highlighting
 syntax on
-colorscheme morning
+colorscheme evening
+"colorscheme morning
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
