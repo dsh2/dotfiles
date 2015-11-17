@@ -49,6 +49,7 @@ set laststatus=2
 set mouse=a
 set nobackup
 set nocompatible
+set nowrapscan
 set nospell
 set previewheight=14
 set ruler
