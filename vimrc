@@ -4,13 +4,16 @@ filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 
+" Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+
 " Show tags of current file in separat window 
 Plugin 'vim-scripts/taglist.vim'
+
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
 let g:HiCursorWords_delay = 200
@@ -20,7 +23,12 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
+
+" Beautiy vi status line
 Plugin 'itchyny/lightline.vim'
+
+" Undotree
+Plugin 'mbbill/undotree'
 
 " Template
 " Plugin 'vim-scripts/TEMPLATE'
@@ -129,6 +137,10 @@ cmap <C-d> <Del>
 cmap <C-f> <Right>
 cmap <C-b> <Left>
 
+"
+" Function key mappings
+"
+nnoremap <F4> :UndotreeToggle<cr>
 " Some Quickfix mapping
 map <F5> \rlog
 map <F6> \older
