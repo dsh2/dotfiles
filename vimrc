@@ -20,7 +20,8 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
-Plugin 'itchyny/lightline.vim'
+Plugin 'bling/vim-airline'
+Plugin 'itchyny/landscape.vim'
 
 " Template
 " Plugin 'vim-scripts/TEMPLATE'
@@ -81,8 +82,7 @@ highlight SpecialKey ctermfg=DarkRed
 
 " Enable syntax highlighting
 syntax on
-colorscheme evening
-"colorscheme morning
+colorscheme landscape
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help

@@ -38,6 +38,7 @@ export SSLKEYLOGFILE=~/.ssl_key_log
 
 # miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
+export TERM=xterm-256color
 export XENVIRONMENT=$HOME/.Xresources
 
 if [ ! $SSH_TTY ]; then
@@ -49,4 +50,3 @@ fi
 export MYHOSTNAME=${HOSTNAME/.*/}
 [ -e ~/.bash_profile.$MYHOSTNAME ] && source ~/.bash_profile.$MYHOSTNAME
 [ -e ~/.bashrc ] && source ~/.bashrc
-
