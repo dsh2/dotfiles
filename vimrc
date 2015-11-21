@@ -4,13 +4,16 @@ filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 
+" Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+
 " Show tags of current file in separat window 
 Plugin 'vim-scripts/taglist.vim'
+
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
 let g:HiCursorWords_delay = 200
@@ -23,9 +26,9 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
 Plugin 'itchyny/landscape.vim'
 
-" Template
-" Plugin 'vim-scripts/TEMPLATE'
-" Plugin 'vim-scripts/TEMPLATE'
+" Undotree
+Plugin 'mbbill/undotree'
+
 call vundle#end()
 filetype plugin indent on
 " End of setup Vundle.vim
@@ -129,6 +132,10 @@ cmap <C-d> <Del>
 cmap <C-f> <Right>
 cmap <C-b> <Left>
 
+"
+" Function key mappings
+"
+nnoremap <F4> :UndotreeToggle<cr>
 " Some Quickfix mapping
 map <F5> \rlog
 map <F6> \older
