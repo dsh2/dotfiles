@@ -10,6 +10,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+Plugin 'scrooloose/nerdtree'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
