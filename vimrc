@@ -1,4 +1,4 @@
-" Setup Vundle.vim 
+" Setup Vundle.vim
 set nocompatible
 filetype off
 
@@ -11,7 +11,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 
-" Show tags of current file in separat window 
+" Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
 
 " Highlights words under the cursor
@@ -25,9 +25,14 @@ Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
 Plugin 'itchyny/landscape.vim'
+Plugin 'chrisbra/csv.vim'
+hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
+hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 
 " Undotree
 Plugin 'mbbill/undotree'
+let g:undotree_WindowLayout = 2
+let g:undotree_SetFocusWhenToggle = 1
 
 call vundle#end()
 filetype plugin indent on
@@ -165,3 +170,10 @@ autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " vimpager settings
 let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
+
+" Enable persistent undo
+if has("persistent_undo")
+		set undodir=~/.vim/undodir/
+		set undofile
+endif
+

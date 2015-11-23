@@ -3,7 +3,7 @@
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
   - [mkdir -p ~/.screen/ ~/.screen/hardcopies ~/.screen/logs, Setting up directories for screen]
-  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/bundle, Setting up directories for vim]
+  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/bundle ~/.vim/undodir, Setting up directories for vim]
   - [mkdir -p ~/bin/, Setting up directory for local bin]
 
 - link:
