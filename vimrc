@@ -30,6 +30,8 @@ Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 
+Plugin 'airblade/vim-gitgutter'
+
 " Undotree
 Plugin 'mbbill/undotree'
 let g:undotree_WindowLayout = 2
