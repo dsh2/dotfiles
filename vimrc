@@ -110,6 +110,7 @@ autocmd BufReadPost *.log normal G
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
+autocmd BufWritePost ~/.dotfiles/vimrc source ~/.vimrc
 
 " Restore last position in file upon opening a file
 autocmd BufReadPost * call RestorePosition()
