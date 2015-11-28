@@ -31,6 +31,10 @@ hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 
 Plugin 'airblade/vim-gitgutter'
+let g:gitgutter_highlight_lines = 1
+let g:gitgutter_override_sign_column_highlight = 0
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=black
 
 " Undotree
 Plugin 'mbbill/undotree'
