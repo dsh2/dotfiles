@@ -38,7 +38,6 @@ export SSLKEYLOGFILE=~/.ssl_key_log
 
 # miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
-export TERM=xterm-256color
 export XENVIRONMENT=$HOME/.Xresources
 
 if [ ! $SSH_TTY ]; then

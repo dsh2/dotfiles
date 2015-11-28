@@ -2,7 +2,7 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/bundle/Vundle.vim
 
 " Begin of setup Vundle.vim
 call vundle#begin()
@@ -17,7 +17,7 @@ Plugin 'vim-scripts/taglist.vim'
 
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
-let g:HiCursorWords_delay = 200
+let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 
@@ -25,12 +25,16 @@ Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
-Plugin 'itchyny/landscape.vim'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 
 Plugin 'airblade/vim-gitgutter'
+let g:gitgutter_highlight_lines = 1
+let g:gitgutter_override_sign_column_highlight = 0
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=black
 
 " Undotree
 Plugin 'mbbill/undotree'
@@ -44,7 +48,7 @@ filetype plugin indent on
 " Options
 set autoindent
 set autowrite
-set background=light
+set background=dark
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set dir=~/.vim/swo
@@ -62,8 +66,10 @@ set mouse=a
 set nobackup
 set nocompatible
 set nowrapscan
+set number
 set nospell
 set previewheight=14
+set relativenumber
 set ruler
 set scrolloff=99999
 set shellslash
@@ -78,6 +84,7 @@ set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 set tabstop=4
+set ttimeoutlen=50
 set title
 set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
@@ -92,8 +99,8 @@ set listchars=tab:·\ ,trail:†
 highlight SpecialKey ctermfg=DarkRed
 
 " Enable syntax highlighting
-syntax on
-colorscheme landscape
+syntax enable
+colorscheme solarized
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
@@ -103,6 +110,7 @@ autocmd BufReadPost *.log normal G
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
+autocmd BufWritePost ~/.dotfiles/vimrc source ~/.vimrc
 
 " Restore last position in file upon opening a file
 autocmd BufReadPost * call RestorePosition()
@@ -149,9 +157,6 @@ map <F5> \rlog
 map <F6> \older
 map <F7> \newer
 
-" What does this mapping do?
-nnoremap Q =ap
-
 " Some usual IDE mapping
 map <F8> :make<cr>
 
@@ -161,10 +166,8 @@ nnoremap <C-p> :cp<cr>
 nnoremap <C-l> :cnewer<cr>
 nnoremap <C-h> :colder<cr>
 
-map <C-K> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
-imap <C-K> <c-o> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
-
-let g:clang_format_path = "~/.clang-format"
+" What does this mapping do?
+nnoremap Q =ap
 
 " Enable spell checking for commit messages
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
@@ -173,6 +176,15 @@ autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " vimpager settings
 let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
+
+" airline settings
+let g:airline_left_sep='|'
+let g:airline_right_sep='|'
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
+
+" Add support for reading manual pages
+runtime! ftplugin/man.vim
 
 " Enable persistent undo
 if has("persistent_undo")

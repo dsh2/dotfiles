@@ -13,3 +13,6 @@
 [submodule "vimpager"]
 	path = vimpager
 	url = https://github.com/rkitover/vimpager.git
+[submodule "VBoxManage-completion"]
+	path = VBoxManage-completion
+	url = https://github.com/alexandregz/VBoxManage-completion
