@@ -144,9 +144,6 @@ map <F5> \rlog
 map <F6> \older
 map <F7> \newer
 
-" What does this mapping do?
-nnoremap Q =ap
-
 " Some usual IDE mapping
 map <F8> :make<cr>
 
@@ -156,10 +153,8 @@ nnoremap <C-p> :cp<cr>
 nnoremap <C-l> :cnewer<cr>
 nnoremap <C-h> :colder<cr>
 
-map <C-K> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
-imap <C-K> <c-o> :pyf /Volumes/AndroidBuildEnvironment/aosp/external/clang/tools/clang-format/clang-format.py<cr>
-
-let g:clang_format_path = "~/.clang-format"
+" What does this mapping do?
+nnoremap Q =ap
 
 " Enable spell checking for commit messages
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
