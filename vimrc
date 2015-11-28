@@ -163,3 +163,13 @@ autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " vimpager settings
 let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
+
+" airline settings
+let g:airline_left_sep='|'
+let g:airline_right_sep='|'
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
+
+" Add support for reading manual pages
+runtime! ftplugin/man.vim
+
