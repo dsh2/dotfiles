@@ -1,8 +1,8 @@
-" Setup Vundle.vim 
+" Setup Vundle.vim
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/bundle/Vundle.vim
 
 " Begin of setup Vundle.vim
 call vundle#begin()
