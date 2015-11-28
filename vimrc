@@ -10,6 +10,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+Plugin 'scrooloose/nerdtree'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
@@ -25,9 +26,16 @@ Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'chrisbra/csv.vim'
+hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
+hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
+
+Plugin 'airblade/vim-gitgutter'
 
 " Undotree
 Plugin 'mbbill/undotree'
+let g:undotree_WindowLayout = 2
+let g:undotree_SetFocusWhenToggle = 1
 
 call vundle#end()
 filetype plugin indent on
@@ -172,4 +180,10 @@ let g:airline#extensions#syntastic#enabled = 1
 
 " Add support for reading manual pages
 runtime! ftplugin/man.vim
+
+" Enable persistent undo
+if has("persistent_undo")
+		set undodir=~/.vim/undodir/
+		set undofile
+endif
 
