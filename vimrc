@@ -11,12 +11,12 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 
-" Show tags of current file in separat window 
+" Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
 
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
-let g:HiCursorWords_delay = 200
+let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 
