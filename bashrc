@@ -85,6 +85,7 @@ shopt -s nocaseglob
 ulimit -c unlimited
 
 complete -d cd rmdir pushd
+source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
 source ~/.dotfiles/z/z.sh
 
 # Setup prompt
