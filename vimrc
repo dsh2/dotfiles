@@ -24,7 +24,7 @@ Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
-Plugin 'itchyny/landscape.vim'
+Plugin 'altercation/vim-colors-solarized'
 
 " Undotree
 Plugin 'mbbill/undotree'
@@ -36,7 +36,7 @@ filetype plugin indent on
 " Options
 set autoindent
 set autowrite
-set background=light
+set background=dark
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set dir=~/.vim/swo
@@ -84,8 +84,8 @@ set listchars=tab:·\ ,trail:†
 highlight SpecialKey ctermfg=DarkRed
 
 " Enable syntax highlighting
-syntax on
-colorscheme landscape
+syntax enable
+colorscheme solarized
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
