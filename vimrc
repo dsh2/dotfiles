@@ -72,6 +72,7 @@ set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 set tabstop=4
+set ttimeoutlen=50
 set title
 set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
