@@ -54,8 +54,10 @@ set mouse=a
 set nobackup
 set nocompatible
 set nowrapscan
+set number
 set nospell
 set previewheight=14
+set relativenumber
 set ruler
 set scrolloff=99999
 set shellslash
