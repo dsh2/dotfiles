@@ -18,8 +18,8 @@
     ~/.bash_profile.P3-01882: bash_profile.P3-01882
     ~/.bash_profile.dasdebian: bash_profile.dasdebian
     ~/.bash_profile.dasmacbookpro: bash_profile.dasmacbookpro
-    ~/.liquidpromptrc: liquidpromptrc
     ~/.bcrc: bcrc
+    ~/.liquidpromptrc: liquidpromptrc
     ~/.inputrc:
         path: inputrc
         force: true
