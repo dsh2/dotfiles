@@ -1,7 +1,7 @@
 msource() { for f in $*; do [ -r "$f"  ] && source "$f"; done; }
 msource $HOME/.bashrc.$(uname) $HOME/.bashrc.local
 
-# change directory 
+# change directory
 alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
@@ -47,10 +47,11 @@ vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
+alias h=history
 alias hgrep='history | grep -i $@'
 alias le=$PAGER
 alias loc='locate'
-alias ma='man -a'
+alias man='man -a'
 alias p='ps axu | grep --color'
 alias pst='pstree -wg3'
 alias rm='rm -v'
@@ -69,7 +70,7 @@ src_index() {
 						-name '*.h' -o \
 						-name '*.hpp' \
 				\) > cscope.files && command cscope -bi cscope.files;
-		ctags -R; 
+		ctags -R;
 }
 
 shopt -s cmdhist
@@ -89,14 +90,14 @@ source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
 source ~/.dotfiles/z/z.sh
 
 # Setup prompt
-if [ "$MYHOSTNAME" == "P3-01882" ]; then 
+if [ "$MYHOSTNAME" == "P3-01882" ]; then
 		echo Need some prompt...
 else
-		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then 
+		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
 				echo Sourcing liquidprompt
 				source ~/.dotfiles/liquidprompt/liquidprompt
 		fi
 fi
-if ! grep -q history <<< $PROMPT_COMMAND; then 
+if ! grep -q history <<< $PROMPT_COMMAND; then
 		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 fi
