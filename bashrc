@@ -102,3 +102,6 @@ fi
 if ! grep -q history <<< $PROMPT_COMMAND; then
 		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 fi
+
+eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+export LS_COLORS
