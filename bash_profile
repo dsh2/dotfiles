@@ -32,7 +32,7 @@ export EDITOR=$VISUAL
 export HTML_TIDY=~/.tidy_config
 export USE_CCACHE=1
 # export GREP_COLOR=auto
-export SSLKEYLOGFILE=~/.ssl_key_log
+export SSLKEYLOGFILE=~/ssl_key_log
 
 # miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
