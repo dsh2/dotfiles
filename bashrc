@@ -73,6 +73,7 @@ src_index() {
 		ctags -R;
 }
 
+shopt -s autocd 
 shopt -s cmdhist
 shopt -s histappend
 shopt -s hostcomplete
