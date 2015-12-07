@@ -19,6 +19,7 @@ highlight GitGutterAdd ctermbg=black
 " Utils
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'scrooloose/nerdtree'
 
 " Show tags of current file in separat window
