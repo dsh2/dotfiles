@@ -16,3 +16,6 @@
 [submodule "VBoxManage-completion"]
 	path = VBoxManage-completion
 	url = https://github.com/alexandregz/VBoxManage-completion
+[submodule "dircolors-solarized"]
+	path = dircolors-solarized
+	url = https://github.com/seebi/dircolors-solarized
