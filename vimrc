@@ -7,7 +7,16 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 " Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
+
+" Git stuff
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+let g:gitgutter_highlight_lines = 0
+let g:gitgutter_override_sign_column_highlight = 1
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=black
+
+" Utils
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'scrooloose/nerdtree'
