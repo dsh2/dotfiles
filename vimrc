@@ -55,7 +55,11 @@ Plugin 'bling/vim-airline'
 Plugin 'tmhedberg/SimpylFold'
 let g:SimpylFold_docstring_preview=1
 
+" Colorschemes
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'jnurmine/Zenburn'
+
+" Comma separated values
 Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
