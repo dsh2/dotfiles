@@ -134,6 +134,8 @@ colorscheme solarized
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
 
+autocmd FileType help set nonumber
+
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 
@@ -162,8 +164,8 @@ endfunction
 " Add a cursorline(/cursorcolumn) to the active window
 "au WinLeave * set nocursorline nocursorcolumn
 "au WinEnter * set cursorline cursorcolumn
-au WinLeave * set nocursorline
-au WinEnter * set cursorline
+autocmd WinLeave * set nocursorline
+autocmd WinEnter * set cursorline
 set nocursorcolumn
 set cursorline
 
