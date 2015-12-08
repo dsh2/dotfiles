@@ -64,12 +64,6 @@ Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 
-Plugin 'airblade/vim-gitgutter'
-let g:gitgutter_highlight_lines = 1
-let g:gitgutter_override_sign_column_highlight = 0
-highlight clear SignColumn
-highlight GitGutterAdd ctermbg=black
-
 " Undotree
 Plugin 'mbbill/undotree'
 let g:undotree_WindowLayout = 2
@@ -105,7 +99,8 @@ set nospell
 set previewheight=14
 set relativenumber
 set ruler
-set scrolloff=99999
+set scrolloff=999
+set sidescrolloff=10
 set shellslash
 set shortmess=filnxtToOI
 set showbreak=›
