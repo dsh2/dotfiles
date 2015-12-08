@@ -20,7 +20,14 @@ highlight GitGutterAdd ctermbg=black
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'tpope/vim-unimpaired'
+
+" NERD Tree
 Plugin 'scrooloose/nerdtree'
+let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
+autocmd FileType nerdtree map <buffer> l oj^
+autocmd FileType nerdtree map <buffer> L O
+autocmd FileType nerdtree map <buffer> h x^
+autocmd FileType nerdtree map <buffer> ; go
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
