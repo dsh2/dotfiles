@@ -7,10 +7,35 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 " Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
+
+" Git stuff
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+let g:gitgutter_highlight_lines = 0
+let g:gitgutter_override_sign_column_highlight = 1
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=black
+
+" Utils
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
+Plugin 'tpope/vim-unimpaired'
+
+" NERD Tree
 Plugin 'scrooloose/nerdtree'
+let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
+autocmd FileType nerdtree map <buffer> l oj^
+autocmd FileType nerdtree map <buffer> L O
+autocmd FileType nerdtree map <buffer> h x^
+autocmd FileType nerdtree map <buffer> ; go
+
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'kien/ctrlp.vim'
+let g:ctrlp_prompt_mappings = { 'ToggleMRURelative()': ['<F2>'] }
+
+Plugin 'Valloric/YouCompleteMe'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
@@ -25,16 +50,19 @@ Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
+
+" Folding
+Plugin 'tmhedberg/SimpylFold'
+let g:SimpylFold_docstring_preview=1
+
+" Colorschemes
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'jnurmine/Zenburn'
+
+" Comma separated values
 Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
-
-Plugin 'airblade/vim-gitgutter'
-let g:gitgutter_highlight_lines = 1
-let g:gitgutter_override_sign_column_highlight = 0
-highlight clear SignColumn
-highlight GitGutterAdd ctermbg=black
 
 " Undotree
 Plugin 'mbbill/undotree'
@@ -71,7 +99,8 @@ set nospell
 set previewheight=14
 set relativenumber
 set ruler
-set scrolloff=99999
+set scrolloff=999
+set sidescrolloff=10
 set shellslash
 set shortmess=filnxtToOI
 set showbreak=›
@@ -105,6 +134,8 @@ colorscheme solarized
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
 
+autocmd FileType help set nonumber
+
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 
@@ -133,8 +164,8 @@ endfunction
 " Add a cursorline(/cursorcolumn) to the active window
 "au WinLeave * set nocursorline nocursorcolumn
 "au WinEnter * set cursorline cursorcolumn
-au WinLeave * set nocursorline
-au WinEnter * set cursorline
+autocmd WinLeave * set nocursorline
+autocmd WinEnter * set cursorline
 set nocursorcolumn
 set cursorline
 
@@ -151,20 +182,17 @@ cmap <C-b> <Left>
 "
 " Function key mappings
 "
-nnoremap <F4> :UndotreeToggle<cr>
-" Some Quickfix mapping
-map <F5> \rlog
-map <F6> \older
-map <F7> \newer
 
-" Some usual IDE mapping
+nnoremap <F2> :NERDTreeFind<cr>
+nnoremap <S-F2> :NERDTreeToggle<cr>
+nnoremap <F4> :UndotreeToggle<cr>
 map <F8> :make<cr>
 
-" Some quickfix key mappings
-nnoremap <C-n> :cn<cr>
-nnoremap <C-p> :cp<cr>
-nnoremap <C-l> :cnewer<cr>
-nnoremap <C-h> :colder<cr>
+" Split navigations
+nnoremap <C-j> <C-w><C-j>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-h> <C-w><C-h>
 
 " What does this mapping do?
 nnoremap Q =ap
@@ -178,8 +206,6 @@ let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
 
 " airline settings
-let g:airline_left_sep='|'
-let g:airline_right_sep='|'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
@@ -196,3 +222,25 @@ endif
 noremap <silent> <C-s>          :update<cr>
 vnoremap <silent> <C-s>         <C-c>:update<cr>
 inoremap <silent> <C-s>         <C-c>:update<cr>
+"
+" Python stuff
+" PEP8 indentation
+autocmd BufNewFile,BufRead *.py
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+    \ set textwidth=79
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+
+" FIXME: does not work :(
+autocmd QuickfixCmdPre :copen<CR>
+" Add vim-umimpair style option switching
+" TODO: toggle auto search highlighting
+" nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
