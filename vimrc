@@ -31,6 +31,7 @@ autocmd FileType nerdtree map <buffer> ; go
 
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'nvie/vim-flake8'
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
 
