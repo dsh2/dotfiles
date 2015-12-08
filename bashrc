@@ -85,6 +85,7 @@ shopt -s dotglob
 shopt -s nocaseglob
 
 ulimit -c unlimited
+stty -ixon
 
 complete -d cd rmdir pushd
 source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
