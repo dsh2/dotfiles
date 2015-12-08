@@ -50,6 +50,11 @@ Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 Plugin 'bling/vim-airline'
+
+" Folding
+Plugin 'tmhedberg/SimpylFold'
+let g:SimpylFold_docstring_preview=1
+
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'chrisbra/csv.vim'
 hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
