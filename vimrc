@@ -182,20 +182,17 @@ cmap <C-b> <Left>
 "
 " Function key mappings
 "
-nnoremap <F4> :UndotreeToggle<cr>
-" Some Quickfix mapping
-map <F5> \rlog
-map <F6> \older
-map <F7> \newer
 
-" Some usual IDE mapping
+nnoremap <F2> :NERDTreeFind<cr>
+nnoremap <S-F2> :NERDTreeToggle<cr>
+nnoremap <F4> :UndotreeToggle<cr>
 map <F8> :make<cr>
 
-" Some quickfix key mappings
-nnoremap <C-n> :cn<cr>
-nnoremap <C-p> :cp<cr>
-nnoremap <C-l> :cnewer<cr>
-nnoremap <C-h> :colder<cr>
+" Split navigations
+nnoremap <C-j> <C-w><C-j>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-h> <C-w><C-h>
 
 " What does this mapping do?
 nnoremap Q =ap
@@ -209,8 +206,6 @@ let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
 
 " airline settings
-let g:airline_left_sep='|'
-let g:airline_right_sep='|'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
@@ -223,3 +218,22 @@ if has("persistent_undo")
 		set undofile
 endif
 
+" Python stuff
+" PEP8 indentation
+autocmd BufNewFile,BufRead *.py
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+    \ set textwidth=79
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+
+" FIXME: does not work :(
+autocmd QuickfixCmdPre :copen<CR>
+" nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
