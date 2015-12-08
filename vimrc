@@ -192,3 +192,7 @@ if has("persistent_undo")
 		set undofile
 endif
 
+" Map <c-s> to save current buffer
+noremap <silent> <C-s>          :update<cr>
+vnoremap <silent> <C-s>         <C-c>:update<cr>
+inoremap <silent> <C-s>         <C-c>:update<cr>
