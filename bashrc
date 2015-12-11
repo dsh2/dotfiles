@@ -106,3 +106,5 @@ fi
 
 eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 export LS_COLORS
+
+alias file='file -ikpz'
