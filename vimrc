@@ -52,7 +52,11 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'lzap/vim-selinux'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
-Plugin 'bling/vim-airline'
+
+" Vim-airline
+" Plugin 'bling/vim-airline'
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
 
 " Folding
 Plugin 'tmhedberg/SimpylFold'
@@ -208,9 +212,6 @@ autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
 
-" airline settings
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#syntastic#enabled = 1
 
 " Add support for reading manual pages
 runtime! ftplugin/man.vim
