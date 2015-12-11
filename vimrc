@@ -100,6 +100,7 @@ set laststatus=2
 set mouse=a
 set nobackup
 set nocompatible
+set nowrap
 set nowrapscan
 set number
 set nospell
@@ -244,7 +245,7 @@ au BufNewFile,BufRead *.js, *.html, *.css
     \ set shiftwidth=2
 
 " FIXME: does not work :(
-autocmd QuickfixCmdPre :copen<CR>
+" autocmd QuickfixCmdPre :copen<CR>
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
 " nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
