@@ -38,7 +38,7 @@ Plugin 'nvie/vim-flake8'
 Plugin 'kien/ctrlp.vim'
 let g:ctrlp_prompt_mappings = { 'ToggleMRURelative()': ['<F2>'] }
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
