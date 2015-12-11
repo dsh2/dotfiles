@@ -59,8 +59,8 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
 " Folding
-Plugin 'tmhedberg/SimpylFold'
-let g:SimpylFold_docstring_preview=1
+" Plugin 'tmhedberg/SimpylFold'
+" let g:SimpylFold_docstring_preview=1
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
