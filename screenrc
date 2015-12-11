@@ -71,7 +71,7 @@ bindkey -m "^[[5;2~" stuff ^u
 bindkey -m "^[[6;2~" stuff ^d
 
 # Function keys
-bindkey -k k2 windowlist -b -m
+bindkey -k k1 windowlist -b -m
 # bindkey -k k4 windowlist -b -m
 # bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
 bindkey -k k6 title
