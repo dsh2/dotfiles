@@ -16,6 +16,9 @@ let g:gitgutter_override_sign_column_highlight = 1
 highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
 
+" Cscope
+Plugin 'chazy/cscope_maps'
+
 " Utils
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
