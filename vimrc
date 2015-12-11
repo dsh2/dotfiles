@@ -130,7 +130,7 @@ set wildmode=list:longest,full
 set winminheight=0
 
 " Display tabs and trailing whitespace
-set list
+set nolist
 set listchars=tab:·\ ,trail:†
 "set listchars+=eol:¶
 highlight SpecialKey ctermfg=DarkRed
