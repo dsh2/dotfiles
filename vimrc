@@ -31,6 +31,7 @@ Plugin 'xolox/vim-misc'
 " NERD Tree
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
+let NERDTreeWinSize=50
 autocmd FileType nerdtree map <buffer> l oj^
 autocmd FileType nerdtree map <buffer> L O
 autocmd FileType nerdtree map <buffer> h x^
