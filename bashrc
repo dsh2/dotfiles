@@ -40,6 +40,7 @@ alias v.=vs
 gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
+alias vl=last
 viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
 vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 
