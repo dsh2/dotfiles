@@ -16,6 +16,9 @@ alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON
 # find
 alias f=find
 alias fdd='f . -type d'
+alias ff='f . -type f'
+alias ffn='ff -name'
+gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 
 # git
