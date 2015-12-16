@@ -29,6 +29,13 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'xolox/vim-lua-ftplugin'
 Plugin 'xolox/vim-misc'
 
+" json
+Plugin 'elzr/vim-json'
+function! FormatJSON() 
+		:'<,'>!python -m json.tool
+endfunction
+map =j :call FormatJSON()<cr>
+
 " NERD Tree
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
