@@ -18,6 +18,7 @@ highlight GitGutterAdd ctermbg=black
 
 " Cscope
 Plugin 'chazy/cscope_maps'
+Plugin 'vim-scripts/cscope-quickfix'
 
 " Utils
 Plugin 'vim-scripts/genutils'
