@@ -102,7 +102,6 @@ set exrc
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
-set history=5000
 set hlsearch
 set ignorecase
 set incsearch
@@ -259,3 +258,5 @@ au BufNewFile,BufRead *.js, *.html, *.css
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
 " nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
+
+set history=5000
