@@ -94,6 +94,8 @@ set autowrite
 set background=dark
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
+set cmdheight=1
+set cmdwinheight=20
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
