@@ -18,6 +18,7 @@ highlight GitGutterAdd ctermbg=black
 
 " Cscope
 Plugin 'chazy/cscope_maps'
+Plugin 'vim-scripts/cscope-quickfix'
 
 " Utils
 Plugin 'vim-scripts/genutils'
@@ -30,6 +31,13 @@ Plugin 'tpope/vim-repeat'
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
 Plugin 'xolox/vim-misc'
+
+" json
+Plugin 'elzr/vim-json'
+function! FormatJSON() 
+		:'<,'>!python -m json.tool
+endfunction
+map =j :call FormatJSON()<cr>
 
 " NERD Tree
 Plugin 'scrooloose/nerdtree'
@@ -150,8 +158,8 @@ colorscheme solarized
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
-
 autocmd FileType help set nonumber
+autocmd FileType help,* wincmd L
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
