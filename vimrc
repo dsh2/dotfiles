@@ -23,6 +23,9 @@ Plugin 'chazy/cscope_maps'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'embear/vim-foldsearch'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
