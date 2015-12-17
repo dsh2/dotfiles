@@ -195,6 +195,7 @@ cmap <C-e> <End>
 cmap <C-d> <Del>
 cmap <C-f> <Right>
 cmap <C-b> <Left>
+set cedit=<C-i>
 
 "
 " Function key mappings
