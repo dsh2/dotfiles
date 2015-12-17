@@ -154,8 +154,8 @@ colorscheme solarized
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
-
 autocmd FileType help set nonumber
+autocmd FileType help,* wincmd L
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
