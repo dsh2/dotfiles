@@ -18,16 +18,32 @@ highlight GitGutterAdd ctermbg=black
 
 " Cscope
 Plugin 'chazy/cscope_maps'
+Plugin 'vim-scripts/cscope-quickfix'
 set cscopequickfix=s-,c-,d-,i-,t-,e- 
 
 " Utils
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'embear/vim-foldsearch'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+
+" Lua
+Plugin 'xolox/vim-lua-ftplugin'
+Plugin 'xolox/vim-misc'
+
+" json
+Plugin 'elzr/vim-json'
+function! FormatJSON() 
+		:'<,'>!python -m json.tool
+endfunction
+map =j :call FormatJSON()<cr>
 
 " NERD Tree
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
+let NERDTreeWinSize=50
 autocmd FileType nerdtree map <buffer> l oj^
 autocmd FileType nerdtree map <buffer> L O
 autocmd FileType nerdtree map <buffer> h x^
@@ -55,7 +71,7 @@ Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 
 " Vim-airline
-" Plugin 'bling/vim-airline'
+Plugin 'bling/vim-airline'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
@@ -87,13 +103,14 @@ set autowrite
 set background=dark
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
+set cmdheight=1
+set cmdwinheight=20
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
-set history=5000
 set hlsearch
 set ignorecase
 set incsearch
@@ -142,8 +159,8 @@ colorscheme solarized
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
-
 autocmd FileType help set nonumber
+autocmd FileType help wincmd L
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
@@ -187,6 +204,7 @@ cmap <C-e> <End>
 cmap <C-d> <Del>
 cmap <C-f> <Right>
 cmap <C-b> <Left>
+set cedit=<C-i>
 
 "
 " Function key mappings
@@ -213,7 +231,6 @@ autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " vimpager settings
 let vimpager_passthrough = 0
 let vimpager_scrolloff = 5
-
 
 " Add support for reading manual pages
 runtime! ftplugin/man.vim
@@ -250,3 +267,5 @@ au BufNewFile,BufRead *.js, *.html, *.css
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
 " nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
+
+set history=5000

@@ -16,6 +16,9 @@ alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON
 # find
 alias f=find
 alias fdd='f . -type d'
+alias ff='f . -type f'
+alias ffn='ff -name'
+gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 
 # git
@@ -40,6 +43,7 @@ alias v.=vs
 gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
+alias vl=last
 viminfo () { vim -R -c "Info $1 $2" -c "bdelete 1"; }
 vimman () { vim -R -c "Man $1 $2" -c "bdelete 1"; }
 
