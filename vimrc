@@ -84,8 +84,14 @@ Plugin 'jnurmine/Zenburn'
 
 " Comma separated values
 Plugin 'chrisbra/csv.vim'
-hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
-hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
+" hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
+" hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
+" hi link CSVColumnOdd MoreMsg
+" hi link CSVColumnEven Question
+let g:csv_no_column_highlight = 0
+let b:csv_arrange_align = 'llllllll'
+let g:csv_autocmd_arrange      = 1
+let g:csv_autocmd_arrange_size = 1024*1024
 
 " Undotree
 Plugin 'mbbill/undotree'
