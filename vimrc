@@ -27,6 +27,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-rsi'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
