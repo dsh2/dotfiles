@@ -142,7 +142,7 @@ set previewheight=14
 set relativenumber
 set ruler
 set scrolloff=999
-set sidescrolloff=10
+set sidescrolloff=30
 set shellslash
 set shortmess=filnxtToOI
 set showbreak=›
@@ -176,6 +176,7 @@ colorscheme solarized
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
 autocmd FileType help set nonumber
+autocmd FileType help set sidescrolloff=0
 autocmd FileType help wincmd L
 
 " Open log files at the bottom of the file
@@ -250,6 +251,7 @@ let vimpager_scrolloff = 5
 
 " Add support for reading manual pages
 runtime! ftplugin/man.vim
+autocmd FileType man set sidescrolloff=0
 
 " Enable persistent undo
 if has("persistent_undo")
