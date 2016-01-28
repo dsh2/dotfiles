@@ -33,6 +33,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-eunuch'
 Plugin 'dkprice/vim-easygrep'
+Plugin 'nelstrom/vim-visual-star-search'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
