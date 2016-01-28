@@ -35,6 +35,11 @@ Plugin 'tpope/vim-eunuch'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'nelstrom/vim-visual-star-search'
 
+Plugin 'tyru/open-browser.vim'
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
+nmap gx <Plug>(openbrowser-smart-search)
+vmap gx <Plug>(openbrowser-smart-search)
+
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
 Plugin 'xolox/vim-misc'
