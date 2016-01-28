@@ -29,6 +29,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-eunuch'
+Plugin 'dkprice/vim-easygrep'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
