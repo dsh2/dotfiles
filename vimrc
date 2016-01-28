@@ -78,7 +78,6 @@ let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 
 Plugin 'lzap/vim-selinux'
-Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'tpope/vim-dispatch'
 
 " Vim-airline
