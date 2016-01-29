@@ -24,6 +24,7 @@ alias fgr='f . | grep -i --color=auto '
 # git
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
+alias gcv=gc
 alias gca='git commit -va'
 alias gcop='git checkout --patch'
 alias gdf='git diff'
