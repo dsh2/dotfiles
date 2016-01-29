@@ -12,6 +12,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
+nmap <leader>gs :Gstatus<cr>
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
@@ -46,7 +47,7 @@ Plugin 'xolox/vim-misc'
 
 " json
 Plugin 'elzr/vim-json'
-function! FormatJSON() 
+function! FormatJSON()
 		:'<,'>!python -m json.tool
 endfunction
 map =j :call FormatJSON()<cr>
@@ -61,6 +62,9 @@ autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
 
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'davidhalter/jedi-vim'
+let g:jedi#use_splits_not_buffers = "right"
+
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
 Plugin 'kien/ctrlp.vim'
@@ -163,12 +167,6 @@ set wildmenu
 set wildmode=list:longest,full
 set winminheight=0
 
-" Display tabs and trailing whitespace
-set nolist
-set listchars=tab:·\ ,trail:†
-"set listchars+=eol:¶
-highlight SpecialKey ctermfg=DarkRed
-
 " Enable syntax highlighting
 syntax enable
 colorscheme solarized
@@ -215,31 +213,18 @@ set cursorline
 " Remove search highlighting by pressing enter key
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 
-" Some Emacs-like mapping for command mode
-cmap <C-a> <Home>
-cmap <C-e> <End>
-cmap <C-d> <Del>
-cmap <C-f> <Right>
-cmap <C-b> <Left>
-set cedit=<C-i>
-
 "
 " Function key mappings
 "
-
 nnoremap <F2> :NERDTreeFind<cr>
 nnoremap <S-F2> :NERDTreeToggle<cr>
 nnoremap <F4> :UndotreeToggle<cr>
-map <F8> :make<cr>
 
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
-
-" What does this mapping do?
-nnoremap Q =ap
 
 " Enable spell checking for commit messages
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
@@ -260,30 +245,39 @@ if has("persistent_undo")
 endif
 
 " Map <c-s> to save current buffer
-noremap <silent> <C-s>          :update<cr>
-vnoremap <silent> <C-s>         <C-c>:update<cr>
-inoremap <silent> <C-s>         <C-c>:update<cr>
-"
-" Python stuff
-" PEP8 indentation
-autocmd BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
-
-au BufNewFile,BufRead *.js, *.html, *.css
-    \ set tabstop=2
-    \ set softtabstop=2
-    \ set shiftwidth=2
+nmap <silent> <M-s> :update<cr>
+nmap <leader>s :update<cr>
 
 " FIXME: does not work :(
 " autocmd QuickfixCmdPre :copen<CR>
+autocmd FileType qf set norelativenumber
+
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
-" nnoremap cox :set <C-R>=&cursorline && &cursorcolumn ? 'nocursorline nocursorcolumn' : 'cursorline cursorcolumn'<CR><CR>
 
+" FIXME: Setting seems to get lost after some time during a long vim session
 set history=5000
+
+" Removes trailing spaces
+command! TrimWhiteSpace call TrimWhiteSpace()
+function! TrimWhiteSpace()
+        %s/\s*$//
+endfunction
+
+" Display tabs and trailing whitespace
+set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
+" FIXME: the following setting gives very slow rendering
+" set listchars=tab:‣\ ,trail:□,extends:↦,precedes:↤,nbsp:∙
+set nolist
+highlight SpecialKey ctermfg=DarkRed ctermbg=NONE
+highlight NonText ctermfg=DarkGreen ctermbg=NONE
+
+" Rename current file in split explorer
+map <leader>r :let @f=expand("%:p:t")<cr>:Sexplore<cr>/<c-r>f<cr>R
+
+" Open file with default action
+nmap <leader>o :silent !open "%"<cr>
+
+" Quick window resizing
+map + 10<c-w><
+map _ 10<c-w>>
