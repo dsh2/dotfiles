@@ -43,6 +43,8 @@ let g:peekaboo_window = 'vertical botright 51new'
 let g:peekaboo_delay = 100
 let g:peekaboo_compact = 0
 
+Plugin 'junegunn/rainbow_parentheses.vim'
+
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
