@@ -38,6 +38,11 @@ Plugin 'tpope/vim-eunuch'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'nelstrom/vim-visual-star-search'
 
+Plugin 'junegunn/vim-peekaboo'
+let g:peekaboo_window = 'vertical botright 51new'
+let g:peekaboo_delay = 100
+let g:peekaboo_compact = 0
+
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
