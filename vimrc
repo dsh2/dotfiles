@@ -185,6 +185,8 @@ autocmd FileType help wincmd L
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
+autocmd BufReadPost *.log :set filetype=messages
+
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
@@ -287,3 +289,11 @@ nmap <leader>o :silent !open "%"<cr>
 " Quick window resizing
 map + 10<c-w><
 map _ 10<c-w>>
+
+let g:pyclewn_terminal = "xterm, -e"
+let g:pyclewn_python = "/opt/local/bin/python3.3"
+let g:pyclewn_args="--file=/tmp/pyclewn.log --window=top"
+nmap <leader>D :Pyclewn pdb %
+nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
+
+autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
