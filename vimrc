@@ -13,6 +13,7 @@ Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
+Plugin 'junegunn/gv.vim'
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
@@ -36,6 +37,11 @@ Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-eunuch'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'nelstrom/vim-visual-star-search'
+
+Plugin 'junegunn/vim-peekaboo'
+let g:peekaboo_window = 'vertical botright 51new'
+let g:peekaboo_delay = 100
+let g:peekaboo_compact = 0
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
@@ -100,6 +106,7 @@ let g:airline#extensions#syntastic#enabled = 1
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
+Plugin 'junegunn/seoul256.vim'
 
 " Comma separated values
 Plugin 'chrisbra/csv.vim'
