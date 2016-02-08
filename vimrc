@@ -98,6 +98,7 @@ let g:airline#extensions#syntastic#enabled = 1
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
+Plugin 'junegunn/seoul256.vim'
 
 " Comma separated values
 Plugin 'chrisbra/csv.vim'
