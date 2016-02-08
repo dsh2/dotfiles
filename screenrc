@@ -8,13 +8,12 @@ crlf off
 defmonitor on
 defscrollback 65535
 defslowpaste 0
-escape ^zz
+escape ^11
 hardcopydir $HOME/.screen/hardcopies/
 hardstatus off
 ignorecase on
 log on
 logfile $HOME/.screen/logs/%n
-log flush 1
 msgminwait 1
 msgwait 1
 multiuser off
