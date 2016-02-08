@@ -23,7 +23,7 @@ highlight GitGutterAdd ctermbg=black
 " Cscope
 Plugin 'chazy/cscope_maps'
 Plugin 'vim-scripts/cscope-quickfix'
-set cscopequickfix=s-,c-,d-,i-,t-,e- 
+set cscopequickfix=s-,c-,d-,i-,t-,e-
 
 " Utils
 Plugin 'vim-scripts/genutils'
@@ -118,6 +118,8 @@ let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'scrooloose/nerdcommenter'
+
+Plugin 'joonty/vdebug'
 
 call vundle#end()
 filetype plugin indent on
