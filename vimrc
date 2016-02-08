@@ -64,8 +64,8 @@ autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
 
 Plugin 'vim-scripts/indentpython.vim'
-Plugin 'davidhalter/jedi-vim'
-let g:jedi#use_splits_not_buffers = "right"
+" Plugin 'davidhalter/jedi-vim'
+" let g:jedi#use_splits_not_buffers = "right"
 
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
@@ -114,6 +114,8 @@ let g:csv_autocmd_arrange_size = 1024*1024
 Plugin 'mbbill/undotree'
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
+
+Plugin 'scrooloose/nerdcommenter'
 
 call vundle#end()
 filetype plugin indent on
