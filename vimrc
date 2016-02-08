@@ -24,7 +24,7 @@ highlight GitGutterAdd ctermbg=black
 " Cscope
 Plugin 'chazy/cscope_maps'
 Plugin 'vim-scripts/cscope-quickfix'
-set cscopequickfix=s-,c-,d-,i-,t-,e- 
+set cscopequickfix=s-,c-,d-,i-,t-,e-
 
 " Utils
 Plugin 'vim-scripts/genutils'
@@ -76,10 +76,13 @@ Plugin 'vim-scripts/indentpython.vim'
 
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_prompt_mappings = { 'ToggleMRURelative()': ['<F2>'] }
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:20'
+let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
+let g:ctrlp_line_prefix = '> '
 
-"Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
@@ -124,6 +127,8 @@ let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'scrooloose/nerdcommenter'
+
+Plugin 'joonty/vdebug'
 
 call vundle#end()
 filetype plugin indent on
@@ -191,6 +196,8 @@ autocmd FileType help wincmd L
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
+autocmd BufReadPost *.log :set filetype=messages
+
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
@@ -293,3 +300,11 @@ nmap <leader>o :silent !open "%"<cr>
 " Quick window resizing
 map + 10<c-w><
 map _ 10<c-w>>
+
+let g:pyclewn_terminal = "xterm, -e"
+let g:pyclewn_python = "/opt/local/bin/python3.3"
+let g:pyclewn_args="--file=/tmp/pyclewn.log --window=top"
+nmap <leader>D :Pyclewn pdb %
+nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
+
+autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip

@@ -60,6 +60,7 @@ alias loc='locate'
 alias man='man -a'
 alias p='ps axu | grep --color'
 alias pst='pstree -wg3'
+alias p_s='port search --line '
 alias rm='rm -v'
 alias tag=prompt_tag
 g() { grep --color -Inri -- "$@" *; }
