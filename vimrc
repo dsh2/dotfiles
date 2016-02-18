@@ -97,6 +97,7 @@ Plugin 'tpope/vim-dispatch'
 
 " Vim-airline
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
