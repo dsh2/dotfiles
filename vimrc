@@ -110,6 +110,9 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
 
+Plugin 'vim-scripts/VCard-syntax'
+Plugin 'Chiel92/vim-autoformat'
+
 " Comma separated values
 Plugin 'chrisbra/csv.vim'
 " hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
