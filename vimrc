@@ -131,7 +131,10 @@ let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'scrooloose/nerdcommenter'
 
-Plugin 'joonty/vdebug'
+Plugin 'hsanson/vim-android'
+let g:android_sdk_path = $ANDROID_SDK_ROOT
+let g:android_airline_android_glyph = 'U+f17b'
+Plugin 'artur-shaik/vim-javacomplete2'
 
 call vundle#end()
 filetype plugin indent on
