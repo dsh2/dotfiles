@@ -8,6 +8,7 @@ export HISTTIMEFORMAT='%F %T '
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+export PATH="$PATH:$ANDROID_SDK/plattform-tools"
 export MANPATH="/opt/local/share/man:$MANPATH"
 
 # pager
