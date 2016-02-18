@@ -14,6 +14,7 @@ nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
 Plugin 'junegunn/gv.vim'
+nmap <leader>gv :GV<cr>
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
