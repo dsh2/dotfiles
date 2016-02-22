@@ -16,6 +16,8 @@ nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
 Plugin 'junegunn/gv.vim'
+nmap <leader>gv :GV<cr>
+
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
@@ -99,6 +101,7 @@ Plugin 'tpope/vim-dispatch'
 
 " Vim-airline
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 
@@ -110,6 +113,9 @@ let g:airline#extensions#syntastic#enabled = 1
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
+
+Plugin 'vim-scripts/VCard-syntax'
+Plugin 'Chiel92/vim-autoformat'
 
 " Comma separated values
 Plugin 'chrisbra/csv.vim'
@@ -129,7 +135,10 @@ let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'scrooloose/nerdcommenter'
 
-Plugin 'joonty/vdebug'
+Plugin 'hsanson/vim-android'
+let g:android_sdk_path = $ANDROID_SDK_ROOT
+let g:android_airline_android_glyph = 'U+f17b'
+Plugin 'artur-shaik/vim-javacomplete2'
 
 call vundle#end()
 filetype plugin indent on
