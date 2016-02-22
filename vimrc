@@ -8,13 +8,14 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'vim-scripts/hexman.vim'
+
 " Git stuff
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
 Plugin 'junegunn/gv.vim'
-
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
@@ -197,7 +198,6 @@ autocmd FileType help wincmd L
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 autocmd BufReadPost *.log :set filetype=messages
-
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
