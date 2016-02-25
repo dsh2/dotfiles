@@ -80,11 +80,23 @@ let g:ctrlp_prompt_mappings = { 'ToggleMRURelative()': ['<F2>'] }
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:20'
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
 let g:ctrlp_line_prefix = '> '
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = $HOME.'/.vim/ctrlp-cache'
+let g:ctrlp_open_multiple_files = 'v'
+let g:ctrlp_mruf_max = 250
 
 " Plugin 'Valloric/YouCompleteMe'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
+let Tlist_Use_Right_Window = 1
+let Tlist_WinWidth = 55
+let Tlist_Display_Prototype = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Highlight_Tag_On_BufEnter = 1
+let Tlist_Auto_Open = 1
+map <leader>tt :TlistToggle<cr>
 
 " Highlights words under the cursor
 Plugin 'ihacklog/HiCursorWords'
