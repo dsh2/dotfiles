@@ -1,5 +1,7 @@
 alias ls='ls --color'
 alias o='cygstart'
+alias open='cygstart'
 alias cdw='cd "$(cygpath -uf /dev/clipboard)"'
 export ANDROID_SDK_HOME="/cygdrive/c/Users/dsf/AppData/Roaming/Android/SDK"
+export ANDROID_AVD_HOME="/cygdrive/c/Users/dsf/.android/avd/"
 export JAVA_HOME="/cygdrive/c/Program Files/Java/jdk1.7.0_79/"

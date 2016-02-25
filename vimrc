@@ -8,6 +8,8 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'vim-scripts/hexman.vim'
+
 " Git stuff
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
@@ -43,6 +45,8 @@ Plugin 'junegunn/vim-peekaboo'
 let g:peekaboo_window = 'vertical botright 51new'
 let g:peekaboo_delay = 100
 let g:peekaboo_compact = 0
+
+Plugin 'junegunn/rainbow_parentheses.vim'
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
@@ -217,7 +221,6 @@ autocmd FileType help wincmd L
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 autocmd BufReadPost *.log :set filetype=messages
-
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
