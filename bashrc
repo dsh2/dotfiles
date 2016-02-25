@@ -98,6 +98,13 @@ complete -d cd rmdir pushd
 source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
 source ~/.dotfiles/z/z.sh
 
+_logdog() {
+    local tag=${COMP_WORDS[COMP_CWORD]}
+    procs="$(adb shell pm list packages $tag | sed -e 's/package://')"
+    COMPREPLY=($(compgen -W "$procs" -- $tag))
+}
+complete -o default -o nospace -F _logdog logdog
+
 # Setup prompt
 if [ "$MYHOSTNAME" == "P3-01882" ]; then
 		echo Need some prompt...
