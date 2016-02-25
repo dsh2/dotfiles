@@ -318,8 +318,8 @@ map <leader>r :let @f=expand("%:p:t")<cr>:Sexplore<cr>/<c-r>f<cr>R
 nmap <leader>o :silent !open "%"<cr>
 
 " Quick window resizing
-map + 10<c-w><
-map _ 10<c-w>>
+map <leader>+ 20<c-w><
+map <leader>_ 15<c-w>>
 
 let g:pyclewn_terminal = "xterm, -e"
 let g:pyclewn_python = "/opt/local/bin/python3.3"
