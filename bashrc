@@ -106,9 +106,7 @@ _logdog() {
 complete -o default -o nospace -F _logdog logdog
 
 # Setup prompt
-if [ "$MYHOSTNAME" == "P3-01882" ]; then
-		echo Need some prompt...
-else
+if [ "$MYHOSTNAME" != "P3-01882" ]; then
 		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
 				echo Sourcing liquidprompt
 				source ~/.dotfiles/liquidprompt/liquidprompt
