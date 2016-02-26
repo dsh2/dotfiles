@@ -108,7 +108,6 @@ complete -o default -o nospace -F _logdog logdog
 # Setup prompt
 if [ "$MYHOSTNAME" != "P3-01882" ]; then
 		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
-				echo Sourcing liquidprompt
 				source ~/.dotfiles/liquidprompt/liquidprompt
 		fi
 fi
@@ -116,7 +115,9 @@ if ! grep -q history <<< $PROMPT_COMMAND; then
 		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 fi
 
-eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+if [ type dircolors > /dev/null 2>&1 ]; then
+		eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+fi
 export LS_COLORS
 
 alias file='file -ikpz'
