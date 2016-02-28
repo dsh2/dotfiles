@@ -97,9 +97,10 @@ let Tlist_Use_Right_Window = 1
 let Tlist_WinWidth = 55
 let Tlist_Display_Prototype = 1
 let Tlist_Exit_OnlyWindow = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_GainFocus_On_ToggleOpen = 0
 let Tlist_Highlight_Tag_On_BufEnter = 1
 let Tlist_Auto_Open = 1
+let Tlist_Show_One_File = 1
 map <leader>tt :TlistToggle<cr>
 
 " Highlights words under the cursor
