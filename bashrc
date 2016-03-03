@@ -13,6 +13,14 @@ alias c=z
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME" && lunch aosp_x86_64-eng'
 
+ash() {
+		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
+		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
+		type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
+		echo $ANDROID_SERIAL: $@
+		adb shell $@
+}
+
 # find
 alias f=find
 alias fdd='f . -type d'
