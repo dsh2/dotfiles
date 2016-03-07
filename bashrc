@@ -66,10 +66,11 @@ alias hgrep='history | grep -i $@'
 alias hle='history | less +G -S'
 alias le=$PAGER
 alias loc='locate'
-alias man='man -a'
+alias man='vimman'
 alias p='ps axu | grep --color'
 alias pst='pstree -wg3'
-alias p_s='port search --line '
+alias p_s='port search --line'
+pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
 alias rm='rm -v'
 alias tag=prompt_tag
 g() { grep --color -Inri -- "$@" *; }
