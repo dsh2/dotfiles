@@ -3,17 +3,18 @@ activity "activity in %n (%t) [%w:%s]~"
 autodetach on
 bell "%C -> %n%f %t activity!"
 bufferfile $HOME/.screen/exchange
-caption always "%-w%{+b}%n %t%{-b}%+w"
+#caption always "%-w%{+b}%n %t%{-b}%+w"
+#caption always "%3n %t%? @%u%?%? [%h]%?"
+hardstatus off
+caption always "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= rW}%50> %n%f %t %{-}%+Lw%<"
+
 crlf off
 defmonitor on
 defscrollback 65535
 defslowpaste 0
 escape ^11
 hardcopydir $HOME/.screen/hardcopies/
-hardstatus off
 ignorecase on
-log on
-logfile $HOME/.screen/logs/%n
 msgminwait 1
 msgwait 1
 multiuser off
@@ -47,7 +48,10 @@ bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
 
 # Multi-window setup
 bindkey "^[q" focus
-bindkey "^[w" split
+bindkey "^[w" split 
+bindkey "^[W" remove
+bindkey "^[e" split -v
+bindkey "^[E" remove
 bindkey "^[a" resize +2
 bindkey "^[z" resize -2
 bindkey "^[s" resize =
@@ -74,12 +78,9 @@ bindkey -k k1 windowlist -b -m
 # bindkey -k k4 windowlist -b -m
 # bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
 bindkey -k k6 title
-bindkey -k k7 screen
 bindkey -k k8 remove
 bindkey -k k9 colon
 
 # Scroll back to beginning of output of the last command - Meta-p
 # bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?##^m" "msgminwait 1" "msgwait 1"
-bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?dsf@^m0" "msgminwait 1"
-
-source ${HOME}.screenrc.${MYHOSTNAME}
+bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?dsh0@^m0" "msgminwait 1"
