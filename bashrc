@@ -133,3 +133,5 @@ export LS_COLORS
 
 alias file='file -ikpz'
 alias d2='dnf-2'
+alias sx='screen -X'
+alias sxt='sx title'
