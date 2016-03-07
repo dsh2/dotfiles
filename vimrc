@@ -15,6 +15,7 @@ Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
+nmap <leader>gl :
 Plugin 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 
@@ -25,7 +26,6 @@ highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
 
 " Cscope
-Plugin 'chazy/cscope_maps'
 Plugin 'vim-scripts/cscope-quickfix'
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 
@@ -53,10 +53,13 @@ let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 
+Plugin 'vim-scripts/renamer.vim'
+
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
 Plugin 'xolox/vim-misc'
 
+Plugin 'tpope/vim-afterimage'
 " json
 Plugin 'elzr/vim-json'
 function! FormatJSON()
@@ -72,6 +75,7 @@ autocmd FileType nerdtree map <buffer> l oj^
 autocmd FileType nerdtree map <buffer> L O
 autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
 " Plugin 'davidhalter/jedi-vim'
@@ -141,7 +145,6 @@ Plugin 'chrisbra/csv.vim'
 let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'llllllll'
 let g:csv_autocmd_arrange      = 1
-let g:csv_autocmd_arrange_size = 1024*1024
 
 " Undotree
 Plugin 'mbbill/undotree'
@@ -212,6 +215,7 @@ set winminheight=0
 " Enable syntax highlighting
 syntax enable
 colorscheme solarized
+"colorscheme zenburn
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
@@ -222,6 +226,7 @@ autocmd FileType help wincmd L
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
 autocmd BufReadPost *.log :set filetype=messages
+autocmd BufRead,BufNewFile *.strace set filetype=strace
 
 " Source vimrc upon saving vimrc
 autocmd BufWritePost ~/.vimrc source ~/.vimrc
@@ -332,3 +337,5 @@ nmap <leader>D :Pyclewn pdb %
 nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
+
+nmap Q :q<cr>
