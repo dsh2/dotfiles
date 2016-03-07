@@ -11,7 +11,7 @@ alias c=z
 
 # aosp
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
-alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME" && lunch aosp_x86_64-eng'
+alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 
 ash() {
 		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
