@@ -107,6 +107,7 @@ stty -ixon
 complete -d cd rmdir pushd
 source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
 source ~/.dotfiles/z/z.sh
+[ -f $AOSP_HOME/sdk/bash_completion/adb.bash ] && source $AOSP_HOME/sdk/bash_completion/adb.bash
 
 _logdog() {
     local tag=${COMP_WORDS[COMP_CWORD]}
