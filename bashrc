@@ -21,6 +21,7 @@ ash() {
 		adb shell $@
 }
 alias a_=ash
+a__() { ash /data/app/dsf/$@; }
 
 # find
 alias f=find
@@ -78,7 +79,8 @@ g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
 
 src_index() {
-		find . -name .repo -prune -o \
+		find . \
+				-name .repo -prune -o \
 				-name .git -prune -o \
 				-name out -prune -o \
 				-type f \( \
@@ -136,3 +138,4 @@ alias file='file -ikpz'
 alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
+a_pidof() { echo $(adb shell ps "$@" | cut -c 8-15 | sed s,PID,,); }
