@@ -67,8 +67,9 @@ alias hle='history | less +G -S'
 alias le=$PAGER
 alias loc='locate'
 alias man='vimman'
-alias p='ps axu | grep --color'
-alias pst='pstree -wg3'
+alias p='ps -afx | grep --color'
+alias pst='pstree -g3'
+alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
 alias rm='rm -v'
