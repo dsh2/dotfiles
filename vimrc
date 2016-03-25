@@ -28,8 +28,15 @@ highlight GitGutterAdd ctermbg=black
 " Cscope
 Plugin 'vim-scripts/cscope-quickfix'
 set cscopequickfix=s-,c-,d-,i-,t-,e-
+set cscoperelative
+nnoremap <C-n> :cn<cr>
+nnoremap <C-p> :cp<cr>
+Plugin 'hari-rangarajan/CCTree' 
+let g:CCTreeDisplayMode=1
+let g:CCTreeHilightCallTree=1
 
 " Utils
+Plugin 'Shougo/vimproc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/SelectBuf'
 Plugin 'tpope/vim-unimpaired'
@@ -46,17 +53,23 @@ let g:peekaboo_window = 'vertical botright 51new'
 let g:peekaboo_delay = 100
 let g:peekaboo_compact = 0
 
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-pandoc/vim-pandoc-syntax' 
+
 Plugin 'junegunn/rainbow_parentheses.vim'
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
+command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
+nmap gX OpenBrowserCurrent
 
 Plugin 'vim-scripts/renamer.vim'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
+" Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
 
 Plugin 'tpope/vim-afterimage'
@@ -264,8 +277,6 @@ nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 "
 " Function key mappings
 "
-nnoremap <F2> :NERDTreeFind<cr>
-nnoremap <S-F2> :NERDTreeToggle<cr>
 nnoremap <F4> :UndotreeToggle<cr>
 
 " Split navigations
