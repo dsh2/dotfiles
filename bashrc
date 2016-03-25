@@ -73,6 +73,7 @@ alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
+vp() { vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
 alias rm='rm -v'
 alias tag=prompt_tag
 g() { grep --color -Inri -- "$@" *; }
