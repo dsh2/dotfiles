@@ -5,11 +5,18 @@ export HISTSIZE=-1
 export HISTTIMEFORMAT='%F %T '
 
 # path
+pathprepend() {
+    if [ -d "$1" ] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
+        PATH=$1:$PATH
+    fi
+}
+
 export PATH="$HOME/bin:$PATH"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 export PATH="$PATH:$ANDROID_SDK/plattform-tools"
 export MANPATH="/opt/local/share/man:$MANPATH"
+pathprepend "/opt/local/share/luarocks/bin/"
 
 # pager
 # export PAGER=~/.dotfiles/vimpager/vimpager
