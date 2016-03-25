@@ -73,7 +73,8 @@ alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
-vp() { vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
+alias vp='vim -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
+alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='rm -v'
 alias tag=prompt_tag
 g() { grep --color -Inri -- "$@" *; }
@@ -140,3 +141,4 @@ alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
 a_pidof() { echo $(adb shell ps "$@" | cut -c 8-15 | sed s,PID,,); }
+alias ssv2csv="gsed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
