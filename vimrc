@@ -85,18 +85,32 @@ Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
 let NERDTreeWinSize=50
 autocmd FileType nerdtree map <buffer> l oj^
-autocmd FileType nerdtree map <buffer> L O
+autocmd FileType nerdtree map <buffer> O mo
 autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
-Plugin 'Xuyuanp/nerdtree-git-plugin'
+autocmd FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
+nnoremap <F2> :NERDTreeFind<cr>
+" Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
 " Plugin 'davidhalter/jedi-vim'
 " let g:jedi#use_splits_not_buffers = "right"
 
 Plugin 'scrooloose/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_lua_checkers = ["luac", "luacheck"]
+let g:syntastic_lua_luacheck_args = "--no-unused-args" 
+
 Plugin 'nvie/vim-flake8'
 Plugin 'ctrlpvim/ctrlp.vim'
+let g:ctrlp_map = '<c-u>'
 let g:ctrlp_prompt_mappings = { 'ToggleMRURelative()': ['<F2>'] }
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:20,results:20'
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir', 'rtscript', 'undo', 'line', 'changes', 'mixed', 'bookmarkdir']
@@ -170,6 +184,10 @@ Plugin 'hsanson/vim-android'
 let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 Plugin 'artur-shaik/vim-javacomplete2'
+
+Plugin 'idanarye/vim-vebugger'
+let g:vebugger_leader='<Leader>d'
+let g:vebugger_path_gdb='ggdb'
 
 call vundle#end()
 filetype plugin indent on
@@ -349,4 +367,4 @@ nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 
-nmap Q :q<cr>
+nmap Q :qall<cr>
