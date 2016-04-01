@@ -42,8 +42,20 @@ alias grp='git reset --patch'
 alias gst='git status -sb'
 
 # ls
+ll() { 
+		gls \
+				--almost-all \
+				--author \
+				--color=always \
+				--file-type \
+				--format=long \
+				--indicator-style=slash \
+				--quoting-style=shell \
+				--time-style='+%F %T' \
+				"$@";
+}
+alias l=ll
 alias l.='l -A'
-alias l="ls -Ghl"
 alias lt='l -tr'
 alias l1="ls -1"
 
