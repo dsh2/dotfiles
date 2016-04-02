@@ -76,6 +76,7 @@ alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
 alias h=history
 alias hgrep='history | grep -i $@'
+alias hrr=hgrep
 alias hle='history | less +G -S'
 alias le=$PAGER
 alias loc='locate'
