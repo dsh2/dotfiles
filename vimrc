@@ -282,14 +282,16 @@ function! RestorePosition()
 endfunction
 
 " Add a cursorline(/cursorcolumn) to the active window
-"au WinLeave * set nocursorline nocursorcolumn
-"au WinEnter * set cursorline cursorcolumn
-autocmd WinLeave * set nocursorline
-autocmd WinEnter * set cursorline
-set nocursorcolumn
-set cursorline
+autocmd WinLeave *
+		\ set nocursorline |
+		\ highlight CursorLineNr ctermbg=grey  " FIXME: does not work... :(
 
-" Remove search highlighting by pressing enter key
+autocmd WinEnter * 
+		\ set cursorline |
+		\ highlight CursorLineNr ctermfg=white |
+		\ highlight CursorLineNr ctermbg=red |
+		\ highlight CursorLine cterm=underline
+
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 
 "
