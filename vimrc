@@ -169,6 +169,8 @@ Plugin 'chrisbra/csv.vim'
 " hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 " hi link CSVColumnOdd MoreMsg
 " hi link CSVColumnEven Question
+" autocmd Filetype csv hi CSVColumnEven ctermbg=4
+" autocmd Filetype csv hi CSVColumnOdd  ctermbg=5
 let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'llllllll'
 let g:csv_autocmd_arrange      = 1
@@ -179,15 +181,18 @@ let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'wannesm/wmgraphviz.vim'
 
-Plugin 'hsanson/vim-android'
+"Plugin 'hsanson/vim-android'
 let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
-Plugin 'artur-shaik/vim-javacomplete2'
+"Plugin 'artur-shaik/vim-javacomplete2'
 
 Plugin 'idanarye/vim-vebugger'
 let g:vebugger_leader='<Leader>d'
 let g:vebugger_path_gdb='ggdb'
+
+Plugin 'alderz/smali-vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -196,7 +201,6 @@ filetype plugin indent on
 " Options
 set autoindent
 set autowrite
-set background=dark
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set cmdheight=1
@@ -219,7 +223,7 @@ set nowrapscan
 set number
 set nospell
 set previewheight=14
-set relativenumber
+set norelativenumber
 set ruler
 set scrolloff=999
 set sidescrolloff=30
@@ -246,7 +250,11 @@ set winminheight=0
 " Enable syntax highlighting
 syntax enable
 colorscheme solarized
+"colorscheme default
 "colorscheme zenburn
+set background=dark
+"set background=light
+"AirlineTheme base16_pop
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
@@ -282,15 +290,14 @@ function! RestorePosition()
 endfunction
 
 " Add a cursorline(/cursorcolumn) to the active window
-autocmd WinLeave *
-		\ set nocursorline |
-		\ highlight CursorLineNr ctermbg=grey  " FIXME: does not work... :(
+autocmd WinLeave * set nocursorline |
+		\ highlight CursorLineNr ctermbg=grey
 
-autocmd WinEnter * 
-		\ set cursorline |
+autocmd WinEnter * set cursorline |
 		\ highlight CursorLineNr ctermfg=white |
 		\ highlight CursorLineNr ctermbg=red |
 		\ highlight CursorLine cterm=underline
+set cursorline
 
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 
