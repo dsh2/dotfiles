@@ -44,6 +44,7 @@ export SSLKEYLOGFILE=~/ssl_key_log
 
 # miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
+export HH_CONFIG=hicolor
 export XENVIRONMENT=$HOME/.Xresources
 
 if [ ! $SSH_TTY ]; then
