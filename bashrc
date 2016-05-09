@@ -109,8 +109,12 @@ src_index() {
 }
 
 shopt -s autocd 
+shopt -s cdable_vars
+shopt -s checkjobs
+shopt -s checkwinsize
 shopt -s cmdhist
 shopt -s histappend
+shopt -s histverify
 shopt -s hostcomplete
 shopt -u interactive_comments
 shopt -s cdable_vars
