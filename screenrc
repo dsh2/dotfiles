@@ -20,7 +20,7 @@ msgwait 1
 multiuser off
 obuflimit 4096
 shell -$SHELL
-shelltitle '$|'
+shelltitle '$ |N'
 silencewait 15
 startup_message off
 vbell off
