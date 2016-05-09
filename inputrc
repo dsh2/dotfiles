@@ -1,12 +1,13 @@
 "\e[A": history-search-backward
 "\e[B": history-search-forward
-"\M-o": "\C-p\C-a\M-f "
+"\C-o": "\C-p\C-a\M-f "
 "\M-s": "\C-p\C-asudo \C-e"
 "\M-e": "\C-p\C-e | grep -i \"\"\C-b"
 "\M-l": "\C-p\C-e | less\C-m"
 "\M-x": " \C-b"
 "\M-r": "find . -exec grep -nH \"\" {} \\;\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 "\M-h": "cd -l\ncd -n "
+"\C-t": "\C-ahh \C-j"
 
 set bell-style audible
 set colored-stats on
