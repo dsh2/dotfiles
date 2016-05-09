@@ -60,15 +60,15 @@ alias lt='l -tr'
 alias l1="ls -1"
 
 # vim alises
-alias v='vim -X'
+alias v='vim -X "+AirlineTheme base16_pop"'
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
 alias v.=vs
 gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
 alias vl=last
-viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "set nomodifiable" ; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "set nomodifiable" ; }
+viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 
 # miscellaneous
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
@@ -85,8 +85,8 @@ alias p='ps -afx | grep --color'
 alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
-pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "set nomodifiable" -; }
-alias vp='vim -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
+pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
+alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='rm -v'
 alias tag=prompt_tag
