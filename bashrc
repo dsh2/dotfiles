@@ -1,17 +1,8 @@
-msource() { for f in $*; do [ -r "$f"  ] && source "$f"; done; }
-msource $HOME/.bashrc.$(uname) $HOME/.bashrc.local
-
-# change directory
-alias .....='cd ../../../..'
-alias ....='cd ../../..'
-alias ...='cd ../..'
-alias ..='cd ..'
-source ~/.dotfiles/z/z.sh
-alias c=z
-
-# aosp
-alias aospmm='aosp && cd external/boringssl && pwd && mm'
-alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
+msource() { for f in $*; do [ -r "$f" ] && source "$f"; done; }
+msource \ 
+		$HOME/.aliases \
+		$HOME/.bashrc.$(uname) \
+		$HOME/.bashrc.local
 
 ash() {
 		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
@@ -23,90 +14,6 @@ ash() {
 alias a_=ash
 a__() { ash /data/app/dsf/$@; }
 
-# find
-alias f=find
-alias fdd='f . -type d'
-alias ff='f . -type f'
-alias ffn='ff -name'
-gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
-alias fgr='f . | grep -i --color=auto '
-
-# git
-alias gap='git add -pv && git commit -v'
-alias gc='git commit -v'
-alias gcv=gc
-alias gca='git commit -va'
-alias gcop='git checkout --patch'
-alias gdf='git diff'
-alias grp='git reset --patch'
-alias gst='git status -sb'
-
-# ls
-ll() { 
-		gls \
-				--almost-all \
-				--author \
-				--color=always \
-				--file-type \
-				--format=long \
-				--indicator-style=slash \
-				--quoting-style=shell \
-				--time-style='+%F %T' \
-				"$@";
-}
-alias l=ll
-alias l.='l -A'
-alias lt='l -tr'
-alias l1="ls -1"
-
-# vim alises
-alias v='vim -X "+AirlineTheme base16_pop"'
-vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
-alias v.=vs
-gv() { gvim "$*"; raiseX; }
-alias last='v -S ~/.vim/lastsession'
-alias glast='gv -S ~/.vim/lastsession'
-alias vl=last
-viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-
-# miscellaneous
-alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
-alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
-alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
-alias h=history
-alias hgrep='history | grep -i $@'
-alias hrr=hgrep
-alias hle='history | less +G -S'
-alias le=$PAGER
-alias loc='locate'
-alias man='vimman'
-alias p='ps -afx | grep --color'
-alias pst='pstree -g3'
-alias pt='pstree -s'
-alias p_s='port search --line'
-pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
-alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
-alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
-alias rm='rm -v'
-alias tag=prompt_tag
-g() { grep --color -Inri -- "$@" *; }
-gw() { grep --color -Iwri -- "$@" *; }
-
-src_index() {
-		find . \
-				-name .repo -prune -o \
-				-name .git -prune -o \
-				-name out -prune -o \
-				-type f \( \
-						-name '*.c' -o \
-						-name '*.cc' -o \
-						-name '*.cpp' -o \
-						-name '*.h' -o \
-						-name '*.hpp' \
-				\) > cscope.files && command cscope -bi cscope.files;
-		ctags -R;
-}
 
 shopt -s autocd 
 shopt -s cdable_vars

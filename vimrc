@@ -378,3 +378,5 @@ nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 
 nmap Q :qall<cr>
+nmap <C-8> <c-^>
+map <C-8> :echo "a"<cr>
