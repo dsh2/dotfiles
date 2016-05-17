@@ -31,6 +31,7 @@
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
+    ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
 
 
