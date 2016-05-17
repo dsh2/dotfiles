@@ -27,6 +27,7 @@
     ~/.screenrc: screenrc
     ~/.screenrc.dasdebian: screenrc.dasdebian
     ~/.screenrc.dasmacbookpro: screenrc.dasmacbookpro
+    ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
     ~/bin/repo: bin/repo

@@ -66,6 +66,7 @@ command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\
 nmap gX OpenBrowserCurrent
 
 Plugin 'vim-scripts/renamer.vim'
+Plugin 'tmux-plugins/vim-tmux'
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
