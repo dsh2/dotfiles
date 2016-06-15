@@ -1,6 +1,10 @@
 export ZSH=/Users/dsh0/.dotfiles/oh-my-zsh
 
+
 ZSH_THEME="bureau"
+
+zstyle ':dotzsh:load' timing 'yes'
+zstyle ':dotzsh:module:*' timing 'yes'
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.

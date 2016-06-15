@@ -303,10 +303,10 @@ function! RestorePosition()
 endfunction
 
 " Add a cursorline(/cursorcolumn) to the active window
-autocmd WinLeave * set nocursorline |
+autocmd BufWinLeave * set nocursorline |
 		\ highlight CursorLineNr ctermbg=grey
 
-autocmd WinEnter * set cursorline |
+autocmd BufWinEnter * set cursorline |
 		\ highlight CursorLineNr ctermfg=white |
 		\ highlight CursorLineNr ctermbg=red |
 		\ highlight CursorLine cterm=underline
@@ -390,5 +390,19 @@ nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 
 nmap Q :qall<cr>
-nmap <C-8> <c-^>
-map <C-8> :echo "a"<cr>
+
+command! -nargs=1 Redir call <SID>Redir(<f-args>)
+
+function! s:Redir(cmd) abort
+		let l:oldz = @z
+		redir @z
+		silent! exe a:cmd
+		redir END
+		new
+		silent! put z
+		let @z = l:oldz
+		" Remove blank lines and superfluous greater-than symbol (silently)
+		silent! %g/^[\s>]*$/d
+		" Make the buffer not related to any sort of file, and will never be written
+		set buftype=nofile
+endfunction
