@@ -19,6 +19,12 @@ nmap <leader>gl :
 Plugin 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+nnoremap U <c-r>
+nmap <c-r> :History:<cr>
+nmap <c-e> :History/<cr>
+
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
