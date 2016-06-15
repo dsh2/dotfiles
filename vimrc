@@ -44,7 +44,11 @@ let g:CCTreeHilightCallTree=1
 " Utils
 Plugin 'Shougo/vimproc.vim'
 Plugin 'vim-scripts/genutils'
+Plugin 'vim-scripts/multiselect'
 Plugin 'vim-scripts/SelectBuf'
+nmap <silent> <F3> \sb <Plug>SelectBuf
+let g:selBufDoFileOnClose=0
+
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
 Plugin 'tpope/vim-surround'
