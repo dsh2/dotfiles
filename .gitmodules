@@ -19,3 +19,6 @@
 [submodule "dircolors-solarized"]
 	path = dircolors-solarized
 	url = https://github.com/seebi/dircolors-solarized
+[submodule "fzf"]
+	path = fzf
+	url = https://github.com/junegunn/fzf.git

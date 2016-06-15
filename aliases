@@ -6,9 +6,22 @@ alias ..='cd ..'
 source ~/.dotfiles/z/z.sh
 alias c=z
 
-# aosp
+alias tmux=~/src/tmux/tmux
+
+# AOSP
 alias aospmm='aosp && cd external/boringssl && pwd && mm'
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
+alias adbk='adb shell input keyboard text'
+ash() {
+		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
+		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
+		type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
+		echo $ANDROID_SERIAL: $@
+		adb shell $@
+}
+alias a_=ash
+a__() { ash /data/app/dsf/$@; }
+a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1); }
 
 # find
 alias f=find
@@ -17,6 +30,8 @@ alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
+alias loc='locate'
+locl() { loc "$PWD/$*" }
 
 # git
 alias gap='git add -pv && git commit -v'
@@ -45,6 +60,11 @@ alias l=ll
 alias l.='l -A'
 alias lt='l -tr'
 alias l1="ls -1"
+alias ls='/bin/ls -AFGTeh'
+alias tf='tail -n 666 -f /var/log/system.log &'
+alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
+alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
+alias o='open'
 
 # vim aliases
 alias v='vim -X "+AirlineTheme base16_pop"'
@@ -66,13 +86,15 @@ alias hgrep='history | grep -i $@'
 alias hrr=hgrep
 alias hle='history | less +G -S'
 alias le=$PAGER
-alias loc='locate'
-alias man='vimman'
+alias m='vimman'
 alias p='ps -afx | grep --color'
+pp() { ps Axjww|grep -i "$*"|grep -v grep; }
+ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
+alias tm=tmux
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='rm -v'
@@ -94,4 +116,5 @@ src_index() {
 				\) > cscope.files && command cscope -bi cscope.files;
 		ctags -R;
 }
-
+# vim: se ft=zsh:
+alias s3='/usr/local/bin/sqlite3'
