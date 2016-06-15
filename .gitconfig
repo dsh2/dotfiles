@@ -1,0 +1,24 @@
+[user]
+	name = dsh2
+	email = dsh2@me.com
+[push]
+	default = simple
+[hub]
+	protocol = https
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[filter "lfs"]
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true
+[color]
+	ui = auto
+[http]
+	cookiefile = ~/.gitcookies
+[core]
+	excludesfile = ~/.gitignore_global
+[init]
+	templatedir = ~/.git_template
+[alias]
+	ctags = !.git/hooks/ctags
