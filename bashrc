@@ -64,5 +64,8 @@ alias file='file -ikpz'
 alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
+
 a_pidof() { echo $(adb shell ps "$@" | cut -c 8-15 | sed s,PID,,); }
 alias ssv2csv="gsed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
