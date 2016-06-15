@@ -65,6 +65,7 @@ let g:peekaboo_compact = 0
 
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax' 
+let g:pandoc#folding#level=0
 
 Plugin 'junegunn/rainbow_parentheses.vim'
 
