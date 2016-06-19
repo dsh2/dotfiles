@@ -8,7 +8,7 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'vim-scripts/hexman.vim'
+Plugin 'sukima/xmledit'
 
 " Git stuff
 Plugin 'tpope/vim-fugitive'
@@ -33,6 +33,9 @@ highlight GitGutterAdd ctermbg=black
 
 " Cscope
 Plugin 'vim-scripts/cscope-quickfix'
+set cscopepathcomp=2
+set cscopeprg=/opt/local/bin/cscope
+set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
 nnoremap <C-n> :cn<cr>
@@ -169,9 +172,15 @@ let g:airline#extensions#whitespace#enabled = 0
 " let g:SimpylFold_docstring_preview=1
 
 " Colorschemes
+"Plugin 'govindkrjoshi/CSApprox'
+"Plugin 'KevinGoodsell/vim-csexact'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
+Plugin 'nanotech/jellybeans.vim'
+syntax enable
+"colorscheme solarized
+set background=dark
 
 Plugin 'vim-scripts/VCard-syntax'
 Plugin 'Chiel92/vim-autoformat'
@@ -259,15 +268,6 @@ set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
 set winminheight=0
-
-" Enable syntax highlighting
-syntax enable
-colorscheme solarized
-"colorscheme default
-"colorscheme zenburn
-set background=dark
-"set background=light
-"AirlineTheme base16_pop
 
 " Make 'K' lookup vim help for vim files
 autocmd FileType vim setl keywordprg=:help
