@@ -21,6 +21,8 @@
     ~/.bash_profile.dasmacbookpro: bash_profile.dasmacbookpro
     ~/.bash_profile.p3tg-mrz-vm1: bash_profile.p3tg-mrz-vm1
     ~/.bcrc: bcrc
+    ~/.gitconfig: gitconfig
+    ~/.git_template: git_template/
     ~/.liquidpromptrc: liquidpromptrc
     ~/.inputrc:
         path: inputrc
