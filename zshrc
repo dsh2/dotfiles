@@ -28,6 +28,8 @@ COMPLETION_WAITING_DOTS="true"
 #
 
 # History
+SAVEHIST=999999
+HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
 setopt extended_history
 setopt hist_find_no_dups
@@ -61,6 +63,7 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' verbose true
 eval $(gdircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 zstyle ':completion:*:default' list-colors  ${(s.:.)LS_COLORS}
+zstyle ':completion:*:warnings' format 'No matches for: %d%b'
 
 autoload run-help
 
