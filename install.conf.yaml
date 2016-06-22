@@ -16,24 +16,21 @@
         force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
-    ~/.bash_profile.P3-01882: bash_profile.P3-01882
-    ~/.bash_profile.dasdebian: bash_profile.dasdebian
-    ~/.bash_profile.dasmacbookpro: bash_profile.dasmacbookpro
-    ~/.bash_profile.p3tg-mrz-vm1: bash_profile.p3tg-mrz-vm1
     ~/.bcrc: bcrc
+    ~/.environment: environment
+    ~/.fzfrc: fzfrc
+    ~/.gitconfig: gitconfig
+    ~/.git_template: git_template/
     ~/.liquidpromptrc: liquidpromptrc
     ~/.inputrc:
         path: inputrc
         force: true
     ~/.screenrc: screenrc
-    ~/.screenrc.dasdebian: screenrc.dasdebian
-    ~/.screenrc.dasmacbookpro: screenrc.dasmacbookpro
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
     ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
-
 
 - shell:
   - [vim +PluginInstall +qall, Setting up Vundle.vim]

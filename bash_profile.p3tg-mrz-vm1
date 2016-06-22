@@ -1,4 +1,0 @@
-export AOSP_HOME=$HOME/src/aosp/
-export ANDROID_SDK=$HOME/src/android-sdk
-export PATH=$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH
-export TERM=xterm-256color

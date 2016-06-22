@@ -1,0 +1,60 @@
+# Path
+pathprepend() {
+	path_env=PATH
+    if [ -d "$1" ] && [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
+		if [ -n "$2" ]; then 
+				path_env="$2"
+		fi
+		eval $path_env=$1:$path_env
+    fi
+}
+pathprepend "$HOME/bin"
+pathprepend "/usr/local/bin:/usr/local/sbin"
+pathprepend "/opt/local/bin:/opt/local/sbin"
+pathprepend "/opt/local/share/man:$MANPATH" "MANPATH"
+
+# Android 
+export ANDROID_AVD_HOME="$HOME/.android/avd/"
+export ANDROID_SDK="$HOME/src/android-sdk"
+export ANDROID_SDK_ROOT=$ANDROID_SDK
+export ANDROID_HOME=$ANDROID_SDK
+export ANDROID_NDK=$ANDROID_SDK/ndk-bundle
+export NDK=$ANDROID_NDK
+export AOSP_HOME="/Users/dsh0/VirtualBox/Shared/AndroidBuildEnvironment/aosp/"
+export GRADLE_HOME=/opt/local/share/java/gradle
+pathprepend "$ANDROID_SDK/plattform-tools"
+pathprepend "$ANDROID_SDK/tools"
+
+# Pager
+export LESS=cRMiWSJ
+export PAGER=less
+export GIT_PAGER='less -F'
+alias less=$PAGER
+alias zless=$PAGER
+
+# L10n
+export LANG=en_US.UTF-8
+export LANGUAGE=$LANG
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+
+# Editor
+export VISUAL='vim -X'
+export EDITOR=$VISUAL
+
+# Miscellaneous
+export BC_ENV_ARGS="-q $HOME/.bcrc"
+export HH_CONFIG=hicolor
+export XENVIRONMENT=$HOME/.Xresources
+export HTML_TIDY=~/.tidy_config
+export USE_CCACHE=1
+export SSLKEYLOGFILE=$HOME/ssl_key_log
+
+if [ ! $SSH_TTY ]; then
+	if [ -z $DISPLAY  ]; then
+		export DISPLAY=:0.0
+	fi
+fi
+
+export MYHOSTNAME=${HOSTNAME/.*/}
+# vim: se ft=shell:

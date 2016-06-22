@@ -1,4 +1,6 @@
-# change directory
+UNAME=$(uname)
+
+# Change directory
 alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
@@ -6,10 +8,7 @@ alias ..='cd ..'
 source ~/.dotfiles/z/z.sh
 alias c=z
 
-alias tmux=~/src/tmux/tmux
-
 # AOSP
-alias aospmm='aosp && cd external/boringssl && pwd && mm'
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
 ash() {
@@ -20,17 +19,21 @@ ash() {
 		adb shell $@
 }
 alias a_=ash
-a__() { ash /data/app/dsf/$@; }
 a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1); }
 
 # find
-alias f=find
+if [ "$UNAME" = "Darwin" ]; then
+		alias f=gfind
+		alias loc=glocate
+else
+		alias f=find
+		alias loc=locate
+fi
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-alias loc='locate'
 locl() { loc "$PWD/$*" }
 
 # git
@@ -44,8 +47,11 @@ alias grp='git reset --patch'
 alias gst='git status -sb'
 
 # ls
-ll() { 
-		gls \
+if [ "$UNAME" = "Darwin" ]; then
+		alias ls=gls
+fi
+l() { 
+		ls \
 				--almost-all \
 				--author \
 				--color=always \
@@ -56,18 +62,10 @@ ll() {
 				--time-style='+%F %T' \
 				"$@";
 }
-alias l=ll
-alias l.='l -A'
 alias lt='l -tr'
-alias l1="ls -1"
-alias ls='/bin/ls -AFGTeh'
-alias tf='tail -n 666 -f /var/log/system.log &'
-alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
-alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
-alias o='open'
 
-# vim aliases
-alias v='vim -X "+AirlineTheme base16_pop"'
+# Vim aliases
+alias v='vim -X'
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
 alias v.=vs
 gv() { gvim "$*"; raiseX; }
@@ -77,7 +75,11 @@ alias vl=last
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 
-# miscellaneous
+# Miscellaneous
+alias tf='tail -n 666 -f /var/log/system.log &'
+alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
+alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
+alias o='open'
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
@@ -116,5 +118,13 @@ src_index() {
 				\) > cscope.files && command cscope -bi cscope.files;
 		ctags -R;
 }
-# vim: se ft=zsh:
 alias s3='/usr/local/bin/sqlite3'
+alias file='file -ikpz'
+alias d2='dnf-2'
+alias sx='screen -X'
+alias sxt='sx title'
+alias ssv2csv="gsed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
+# Switch profile of running iTerm2 window
+it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
+
+# vim: se ft=sh:
