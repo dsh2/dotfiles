@@ -5,13 +5,15 @@ pathprepend() {
 		if [ -n "$2" ]; then 
 				path_env="$2"
 		fi
-		eval $path_env=$1:$path_env
+		eval $path_env=$1:$(eval echo \$$path_env)
     fi
 }
 pathprepend "$HOME/bin"
-pathprepend "/usr/local/bin:/usr/local/sbin"
-pathprepend "/opt/local/bin:/opt/local/sbin"
-pathprepend "/opt/local/share/man:$MANPATH" "MANPATH"
+pathprepend "/usr/local/bin"
+pathprepend "/usr/local/sbin"
+pathprepend "/opt/local/bin"
+pathprepend "/opt/local/sbin"
+pathprepend "/opt/local/share/man" "MANPATH"
 
 # Android 
 export ANDROID_AVD_HOME="$HOME/.android/avd/"
@@ -57,4 +59,5 @@ if [ ! $SSH_TTY ]; then
 fi
 
 export MYHOSTNAME=${HOSTNAME/.*/}
+set +x
 # vim: se ft=shell:
