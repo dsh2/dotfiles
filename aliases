@@ -48,10 +48,12 @@ alias gst='git status -sb'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
-		alias ls=gls
+		LS_CMD=gls
+else
+		LS_CMD=ls
 fi
 l() { 
-		ls \
+		$LS_CMD \
 				--almost-all \
 				--author \
 				--color=always \
