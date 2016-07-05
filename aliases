@@ -34,7 +34,7 @@ alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-locl() { loc "$PWD/$*" }
+locl() { loc "$PWD/$*" ; }
 
 # git
 alias gap='git add -pv && git commit -v'
