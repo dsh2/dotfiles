@@ -22,3 +22,6 @@
 [submodule "fzf"]
 	path = fzf
 	url = https://github.com/junegunn/fzf.git
+[submodule "zsh-prompt-garrett"]
+	path = zsh-prompt-garrett
+	url = https://github.com/chauncey-garrett/zsh-prompt-garrett
