@@ -179,7 +179,7 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
 Plugin 'nanotech/jellybeans.vim'
 syntax enable
-colorscheme solarized
+nmap S :colorscheme solarized<cr>
 set background=dark
 
 Plugin 'vim-scripts/VCard-syntax'
