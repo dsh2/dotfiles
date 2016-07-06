@@ -34,12 +34,14 @@ zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' substitute 1
 zstyle ':completion:*' verbose true
-eval $(gdircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 zstyle ':completion:*:default' list-colors  ${(s.:.)LS_COLORS}
 zstyle ':completion:*:warnings' format 'No matches for: %d%b'
 
 autoload run-help
+eval $(gdircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 
 source ~/.aliases
 source ~/.environment
 source ~/.fzfrc
+source ~/.dotfiles/zsh-prompt-garrett/prompt_garrett_setup
+bindkey -s '^l' 'clear\n'
