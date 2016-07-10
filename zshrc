@@ -1,7 +1,5 @@
-export LANGUAGE="en"
-export LC_ALL=""
-export LC_CTYPE="UTF-8"
-export LANG="en_US.UTF-8"
+export ZSH=/Users/dsh0/.dotfiles/oh-my-zsh
+source $ZSH/oh-my-zsh.sh
 
 zstyle ':dotzsh:load' timing 'yes'
 zstyle ':dotzsh:module:*' timing 'yes'
@@ -20,9 +18,8 @@ setopt hist_verify
 setopt inc_append_history_time
 setopt complete_aliases
 
-autoload -Uz compinit
-compinit
-
+# Completion
+autoload -Uz compinit && compinit
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _approximate _prefix
 zstyle ':completion:*' completions 1
 zstyle ':completion:*' format 'Completing %d'
