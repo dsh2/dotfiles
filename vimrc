@@ -179,7 +179,8 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
 Plugin 'nanotech/jellybeans.vim'
 syntax enable
-colorscheme solarized
+colorscheme default
+"colorscheme solarized
 set background=dark
 
 Plugin 'vim-scripts/VCard-syntax'
@@ -247,6 +248,7 @@ set nospell
 set previewheight=14
 set norelativenumber
 set ruler
+set shiftwidth=4
 set scrolloff=999
 set sidescrolloff=30
 set shellslash
