@@ -99,6 +99,7 @@ alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
 alias tm=tmux
+alias tma='tmux attach'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='rm -v'
