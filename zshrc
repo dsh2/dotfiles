@@ -10,8 +10,8 @@ HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
 setopt extended_history
 setopt hist_find_no_dups
-setopt hist_ignore_all_dups
-setopt hist_ignore_dups
+setopt no_hist_ignore_all_dups
+setopt no_hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
