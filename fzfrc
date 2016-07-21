@@ -1,9 +1,12 @@
-export FZF_DEFAULT_OPTS="\
+export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-v:execute(vim {})'
 		--bind 'ctrl-o:execute(less {})'
 		--bind 'ctrl-q:execute(print-query)'
 		--history=${HOME}/.fzf_history
-		--inline-info"
+		--no-mouse
+		--exact
+		--prompt=\"fzf: \"
+"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 fbr() {
