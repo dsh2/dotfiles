@@ -71,6 +71,7 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level=0
 
 Plugin 'junegunn/rainbow_parentheses.vim'
+Plugin 'jiangmiao/auto-pairs'
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
