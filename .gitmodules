@@ -25,3 +25,6 @@
 [submodule "zsh-prompt-garrett"]
 	path = zsh-prompt-garrett
 	url = https://github.com/chauncey-garrett/zsh-prompt-garrett
+[submodule "zsh-prezto"]
+	path = zsh-prezto
+	url = https://github.com/chauncey-garrett/zsh-prezto

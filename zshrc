@@ -1,5 +1,5 @@
-export ZSH=/Users/dsh0/.dotfiles/oh-my-zsh
-source $ZSH/oh-my-zsh.sh
+source ~/.dotfiles/zsh-prezto/init.zsh
+source ~/.dotfiles/zsh-prompt-garrett/prompt_garrett_setup
 
 zstyle ':dotzsh:load' timing 'yes'
 zstyle ':dotzsh:module:*' timing 'yes'
@@ -40,5 +40,4 @@ eval $(gdircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 source ~/.aliases
 source ~/.environment
 source ~/.fzfrc
-source ~/.dotfiles/zsh-prompt-garrett/prompt_garrett_setup
 bindkey -s '^l' 'clear\n'
