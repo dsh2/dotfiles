@@ -101,7 +101,7 @@ Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
 let NERDTreeWinSize=50
 autocmd FileType nerdtree map <buffer> l oj^
-autocmd FileType nerdtree map <buffer> O mo
+"autocmd FileType nerdtree map <buffer> O mo
 autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
 autocmd FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
@@ -179,9 +179,11 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
 Plugin 'nanotech/jellybeans.vim'
+Plugin 'reedes/vim-colors-pencil'
+
 syntax enable
 colorscheme default
-"colorscheme solarized
+nmap S :colorscheme solarized<cr>
 set background=dark
 
 Plugin 'vim-scripts/VCard-syntax'
@@ -207,7 +209,7 @@ let g:undotree_SetFocusWhenToggle = 1
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'wannesm/wmgraphviz.vim'
 
-"Plugin 'hsanson/vim-android'
+Plugin 'hsanson/vim-android'
 let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 "Plugin 'artur-shaik/vim-javacomplete2'
@@ -217,6 +219,7 @@ let g:vebugger_leader='<Leader>d'
 let g:vebugger_path_gdb='ggdb'
 
 Plugin 'alderz/smali-vim'
+au BufRead,BufNewFile *.smali set filetype=smali
 
 call vundle#end()
 filetype plugin indent on
@@ -346,7 +349,8 @@ if has("persistent_undo")
 		set undofile
 endif
 
-" Map <c-s> to save current buffer
+" Save current buffer
+nmap <silent> <F9> :update<cr>
 nmap <silent> <M-s> :update<cr>
 nmap <leader>s :update<cr>
 
@@ -409,3 +413,4 @@ function! s:Redir(cmd) abort
 		" Make the buffer not related to any sort of file, and will never be written
 		set buftype=nofile
 endfunction
+map  
