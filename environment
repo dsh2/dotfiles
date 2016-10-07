@@ -5,15 +5,20 @@ pathprepend() {
 	else
 		path_env=PATH
 	fi
-	if [ -d "$1" ]; then
-		if [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
-			eval $path_env=$1:$(eval echo \$$path_env)
+	if [ -e "$1" ]; then
+		if [ -d "$1" ]; then
+			if [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
+				eval $path_env=$1:$(eval echo \$$path_env)
+			fi
+		else
+			echo $0: WARNING: "$1" is not a directory
 		fi
-	else
-		echo $0: WARNING: "$1" not a directory
 	fi
 }
+
 pathprepend "$HOME/bin"
+pathprepend "/sbin"
+pathprepend "/usr/sbin"
 pathprepend "/usr/local/bin"
 pathprepend "/usr/local/sbin"
 pathprepend "/opt/local/bin"
@@ -25,14 +30,19 @@ pathprepend "/opt/local/share/man" "MANPATH"
 export ANDROID_AVD_HOME="$HOME/.android/avd/"
 export ANDROID_SDK="$HOME/src/android-sdk"
 export ANDROID_SDK_ROOT=$ANDROID_SDK
+export ANDROID_PLATTFORM=$ANDROID_SDK_ROOT/plattform/android-24
 export ANDROID_HOME=$ANDROID_SDK
 export ANDROID_NDK=$ANDROID_SDK/ndk-bundle
 export ANDROID_NDK_ROOT=$ANDROID_NDK
 export NDK=$ANDROID_NDK
-export AOSP_HOME="/Users/dsh0/VirtualBox/Shared/AndroidBuildEnvironment/aosp/"
+export AOSP_HOME=$HOME/src/AOSP
 export GRADLE_HOME=/opt/local/share/java/gradle
 pathprepend "$ANDROID_SDK/platform-tools"
 pathprepend "$ANDROID_SDK/tools"
+# export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+# export JAVA_BINDIR=$JAVA_HOME/bin
+# export JDK_HOME=$JAVA_HOME
+# export JRE_HOME=$JAVA_HOME
 
 # Pager
 export LESS=cRMiWSJ
@@ -58,6 +68,7 @@ export XENVIRONMENT=$HOME/.Xresources
 export HTML_TIDY=~/.tidy_config
 export USE_CCACHE=1
 export SSLKEYLOGFILE=$HOME/ssl_key_log
+export BROWSER=/usr/bin/google-chrome-stable
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
