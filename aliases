@@ -11,6 +11,9 @@ alias c=z
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
+alias adl='adb logcat|&lnav -tw ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
+alias add='adb devices -l'
+alias ads='adb shell '
 ash() {
 		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
 		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
@@ -45,7 +48,7 @@ alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb'
-
+alias gcr='git clone --recursive --verbose '
 # ls
 if [ "$UNAME" = "Darwin" ]; then
 		LS_CMD=gls
@@ -78,20 +81,15 @@ viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 
 # Miscellaneous
-alias tf='tail -n 666 -f /var/log/system.log &'
 alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
 alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
-alias o='open'
+alias o='exo-open'
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
-alias Xreseed="dd if=/dev/urandom count=1 2>/dev/null|md5|sed -e 's/^/add :0 . /'|tee /dev/stderr|xauth -q"
-alias h=history
-alias hgrep='history | grep -i $@'
-alias hrr=hgrep
-alias hle='history | less +G -S'
+alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
 alias le=$PAGER
 alias m='vimman'
-alias p='ps -afx | grep --color'
+alias p='ps -afx | grep -i --color'
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -g3'
@@ -100,12 +98,16 @@ alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
 alias tm=tmux
 alias tma='tmux attach'
+alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='rm -v'
 alias tag=prompt_tag
-g() { grep --color -Inri -- "$@" *; }
+#g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
+alias -g gg='|& grep -i --color '
+alias pg='ping gdns |& lnav -t'
+alias acs='apt-cache search'
 
 src_index() {
 		find . \
@@ -127,6 +129,7 @@ alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
 alias ssv2csv="gsed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
+
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
 
