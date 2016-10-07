@@ -7,8 +7,8 @@ export FZF_DEFAULT_OPTS="
 		--exact
 		--prompt=\"fzf: \"
 "
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# fbr - git branch browser
 fbr() {
   local branches branch
   branches=$(git branch --all | grep -v HEAD) &&
@@ -29,6 +29,7 @@ fshow() {
 FZF-EOF"
 }
 
+# fs - tmux session management
 fs() {
   local session
   session=$(tmux list-sessions -F "#{session_name}" | \
@@ -36,42 +37,41 @@ fs() {
   tmux switch-client -t "$session"
 }
 
-# ftpane - switch pane (@george-b)
 ftpane() {
-  local panes current_window current_pane target target_window target_pane
-  panes=$(tmux list-panes -s -F '#I:#P - #{pane_current_path} #{pane_current_command}')
+  local panes current_window current_pane target target_session target_window target_pane
+  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty} - #{window_name} #{pane_current_command} #{pane_current_path} ')
   current_pane=$(tmux display-message -p '#I:#P')
   current_window=$(tmux display-message -p '#I')
 
   target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --reverse) || return
 
-  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
-  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}' | cut -c 1)
+  target_session=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
+  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}')
+  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$3}' | cut -c 1)
 
-  if [[ $current_window -eq $target_window ]]; then
-    tmux select-pane -t ${target_window}.${target_pane}
-  else
-    tmux select-pane -t ${target_window}.${target_pane} &&
-    tmux select-window -t $target_window
-  fi
+  tmux switch-client -t $target_session:$target_window.$target_pane
+  zle redisplay
 }
 
-# c - browse chrome history
+zle     -N   ftpane
+bindkey '\ew' ftpane
+
+# gch - browse chrome history
 gch() {
   local cols sep
   cols=$(( COLUMNS / 3 ))
   sep='{{::}}'
 
-  # Copy History DB to circumvent the lock
-  # - See http://stackoverflow.com/questions/8936878 for the file path
-  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+  cp -f "/home/dsf/.config/google-chrome/Profile 2/History" /tmp/h
 
   sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
+    "select substr(title, 1, $cols), url from urls order by last_visit_time desc" |
   awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs exo-open
+  zle redisplay
 }
+zle		-N		gch
+bindkey	'\eU'	gch
 
 __fzfz() {
   local cmd="z -l | awk '{print \$2}'"
