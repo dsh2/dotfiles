@@ -1,3 +1,4 @@
+let mapleader = "\<Space>"
 " Setup Vundle.vim
 set nocompatible
 filetype off
@@ -49,6 +50,7 @@ Plugin 'Shougo/vimproc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
 Plugin 'vim-scripts/SelectBuf'
+nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> \sb <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
 
@@ -80,6 +82,9 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 
+Plugin 'vim-scripts/Tail-Bundle'
+Plugin 'vim-scripts/httplog'
+Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 Plugin 'tmux-plugins/vim-tmux'
 
@@ -91,15 +96,15 @@ Plugin 'xolox/vim-misc'
 Plugin 'tpope/vim-afterimage'
 " json
 Plugin 'elzr/vim-json'
-function! FormatJSON()
-		:'<,'>!python -m json.tool
-endfunction
-map =j :call FormatJSON()<cr>
+"function! FormatJSON()
+		":'<,'>!python -m json.tool
+"endfunction
+"map =j :call FormatJSON()<cr>
 
 " NERD Tree
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
-let NERDTreeWinSize=50
+let NERDTreeWinSize=35
 autocmd FileType nerdtree map <buffer> l oj^
 "autocmd FileType nerdtree map <buffer> O mo
 autocmd FileType nerdtree map <buffer> h x^
@@ -156,6 +161,7 @@ let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 
+Plugin 'maksimr/vim-yate'
 Plugin 'lzap/vim-selinux'
 Plugin 'tpope/vim-dispatch'
 
@@ -200,6 +206,7 @@ Plugin 'chrisbra/csv.vim'
 let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'llllllll'
 let g:csv_autocmd_arrange      = 1
+map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>
 
 " Undotree
 Plugin 'mbbill/undotree'
@@ -218,8 +225,8 @@ Plugin 'idanarye/vim-vebugger'
 let g:vebugger_leader='<Leader>d'
 let g:vebugger_path_gdb='ggdb'
 
-Plugin 'alderz/smali-vim'
-au BufRead,BufNewFile *.smali set filetype=smali
+"Plugin 'alderz/smali-vim'
+Plugin 'kelwin/vim-smali'
 
 call vundle#end()
 filetype plugin indent on
@@ -269,6 +276,7 @@ set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 set tabstop=4
 set ttimeoutlen=50
 set title
+set titleold=''
 set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
@@ -276,10 +284,14 @@ set wildmode=list:longest,full
 set winminheight=0
 
 " Make 'K' lookup vim help for vim files
-autocmd FileType vim setl keywordprg=:help
+autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
+nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
+let g:ft_man_folding_enable = 0
+autocmd FileType vim setl keywordprg=help
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
 autocmd FileType help wincmd L
+"autocmd FileType help wincmd L | vert resize 80
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
@@ -351,7 +363,7 @@ endif
 
 " Save current buffer
 nmap <silent> <F9> :update<cr>
-nmap <silent> <M-s> :update<cr>
+nmap <silent> <A-s> :update<cr>
 nmap <leader>s :update<cr>
 
 " FIXME: does not work :(
@@ -414,3 +426,34 @@ function! s:Redir(cmd) abort
 		set buftype=nofile
 endfunction
 map  
+map <leader><c-l> :redraw!<cr>
+
+function! MarkWindowSwap()
+    let g:markedWinNum = winnr()
+endfunction
+
+function! DoWindowSwap()
+    "Mark destination
+    let curNum = winnr()
+    let curBuf = bufnr( "%" )
+    exe g:markedWinNum . "wincmd w"
+    "Switch to source and shuffle dest->source
+    let markedBuf = bufnr( "%" )
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' curBuf
+    "Switch to dest and shuffle source->dest
+    exe curNum . "wincmd w"
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' markedBuf 
+endfunction
+nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
+nmap <silent> <leader>pw :call DoWindowSwap()<CR>
+
+map <leader>la :Ag<cr>
+map <leader>lf :Files<cr>
+map <leader>lt :Filetypes<cr>
+map <leader>ll :Lines<cr>
+map <leader>lL :BLines<cr>
+map <leader>lc :Commits<cr>
+map <leader>lC :BCommits<cr>
+map <leader>lb :Buffers<cr>
