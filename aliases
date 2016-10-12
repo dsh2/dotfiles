@@ -109,6 +109,7 @@ alias -g gg='|& grep -i --color '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install -y '
+alias r22='rabin2 -gx'
 
 src_index() {
 		find . \
