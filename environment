@@ -17,6 +17,7 @@ pathprepend() {
 }
 
 pathprepend "$HOME/bin"
+pathprepend "$HOME/.rvm/bin"
 pathprepend "/sbin"
 pathprepend "/usr/sbin"
 pathprepend "/usr/local/bin"
@@ -39,6 +40,7 @@ export AOSP_HOME=$HOME/src/AOSP
 export GRADLE_HOME=/opt/local/share/java/gradle
 pathprepend "$ANDROID_SDK/platform-tools"
 pathprepend "$ANDROID_SDK/tools"
+pathprepend "$NDK"
 # export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 # export JAVA_BINDIR=$JAVA_HOME/bin
 # export JDK_HOME=$JAVA_HOME
