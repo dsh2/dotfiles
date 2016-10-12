@@ -16,7 +16,8 @@ Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
-nmap <leader>gl :
+nmap <leader>gv :Gblame<cr>
+nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 Plugin 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 
@@ -25,6 +26,11 @@ Plugin 'junegunn/fzf.vim'
 nnoremap U <c-r>
 nmap <c-r> :History:<cr>
 nmap <c-e> :History/<cr>
+
+Plugin 'will133/vim-dirdiff'
+let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
+Plugin 'rickhowe/diffchar.vim'
+let g:DiffUnit = 'Char'
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
@@ -60,6 +66,9 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-tbone'
+Plugin 'kana/vim-fakeclip'
+let g:fakeclip_terminal_multiplexer_type = "tmux"
 Plugin 'dkprice/vim-easygrep'
 Plugin 'nelstrom/vim-visual-star-search'
 
@@ -111,7 +120,7 @@ autocmd FileType nerdtree map <buffer> h x^
 autocmd FileType nerdtree map <buffer> ; go
 autocmd FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
-" Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
 " Plugin 'davidhalter/jedi-vim'
@@ -164,6 +173,8 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'maksimr/vim-yate'
 Plugin 'lzap/vim-selinux'
 Plugin 'tpope/vim-dispatch'
+map <leader>M :udpate<cr>:Make<cr>:copen<cr>/error:<cr>n
+map <leader>R :source ~/.vimrc<cr>
 
 " Vim-airline
 Plugin 'bling/vim-airline'
