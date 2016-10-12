@@ -109,6 +109,7 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle ':completion:*:warnings' format 'No matches for: %d%b'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 setopt menu_complete 
+setopt interactivecomments
 
 setopt autocd
 setopt cdablevars
