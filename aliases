@@ -11,7 +11,7 @@ alias c=z
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
-alias adl='adb logcat -T 10 -v threadtime NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
+alias adl='adb logcat|&lnav -tw ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
 alias add='adb devices -l'
 alias ads='adb shell '
 ash() {
@@ -108,8 +108,6 @@ gw() { grep --color -Iwri -- "$@" *; }
 alias -g gg='|& grep -i --color '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
-alias agi='sudo apt-get install -y '
-alias r22='rabin2 -gx'
 
 src_index() {
 		find . \
