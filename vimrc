@@ -50,6 +50,7 @@ nnoremap <C-p> :cp<cr>
 Plugin 'hari-rangarajan/CCTree' 
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
+Plugin 'sk1418/QFGrep'
 
 " Utils
 Plugin 'Shougo/vimproc.vim'
@@ -96,6 +97,7 @@ Plugin 'vim-scripts/httplog'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 Plugin 'tmux-plugins/vim-tmux'
+autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
@@ -468,3 +470,4 @@ map <leader>lL :BLines<cr>
 map <leader>lc :Commits<cr>
 map <leader>lC :BCommits<cr>
 map <leader>lb :Buffers<cr>
+map <leader>TT :Tags<cr>
