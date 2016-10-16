@@ -98,7 +98,7 @@ Plugin 'vim-scripts/httplog'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 Plugin 'tmux-plugins/vim-tmux'
-autocmd BufRead,BufNewFile tmux.conf set filetype=strace
+autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
