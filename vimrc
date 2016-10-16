@@ -426,17 +426,17 @@ nmap Q :qall<cr>
 command! -nargs=1 Redir call <SID>Redir(<f-args>)
 
 function! s:Redir(cmd) abort
-		let l:oldz = @z
-		redir @z
-		silent! exe a:cmd
-		redir END
-		new
-		silent! put z
-		let @z = l:oldz
-		" Remove blank lines and superfluous greater-than symbol (silently)
-		silent! %g/^[\s>]*$/d
-		" Make the buffer not related to any sort of file, and will never be written
-		set buftype=nofile
+	let l:oldz = @z
+	redir @z
+	silent! exe a:cmd
+	redir END
+	new
+	silent! put z
+	let @z = l:oldz
+	" Remove blank lines and superfluous greater-than symbol (silently)
+	silent! %g/^[\s>]*$/d
+	" Make the buffer not related to any sort of file, and will never be written
+	set buftype=nofile
 endfunction
 map  
 map <leader><c-l> :redraw!<cr>
@@ -446,18 +446,18 @@ function! MarkWindowSwap()
 endfunction
 
 function! DoWindowSwap()
-    "Mark destination
-    let curNum = winnr()
-    let curBuf = bufnr( "%" )
-    exe g:markedWinNum . "wincmd w"
-    "Switch to source and shuffle dest->source
-    let markedBuf = bufnr( "%" )
-    "Hide and open so that we aren't prompted and keep history
-    exe 'hide buf' curBuf
-    "Switch to dest and shuffle source->dest
-    exe curNum . "wincmd w"
-    "Hide and open so that we aren't prompted and keep history
-    exe 'hide buf' markedBuf 
+	"Mark destination
+	let curNum = winnr()
+	let curBuf = bufnr( "%" )
+	exe g:markedWinNum . "wincmd w"
+	"Switch to source and shuffle dest->source
+	let markedBuf = bufnr( "%" )
+	"Hide and open so that we aren't prompted and keep history
+	exe 'hide buf' curBuf
+	"Switch to dest and shuffle source->dest
+	exe curNum . "wincmd w"
+	"Hide and open so that we aren't prompted and keep history
+	exe 'hide buf' markedBuf 
 endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
