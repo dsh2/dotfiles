@@ -32,6 +32,7 @@ let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 Plugin 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Char'
 
+Plugin 'chrisbra/Recover.vim'
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
@@ -58,7 +59,7 @@ Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
 Plugin 'vim-scripts/SelectBuf'
 nmap <silent><M-F3> :Buffers<cr>
-nmap <silent> <F3> \sb <Plug>SelectBuf
+nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
 
 Plugin 'tpope/vim-unimpaired'
@@ -97,7 +98,7 @@ Plugin 'vim-scripts/httplog'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 Plugin 'tmux-plugins/vim-tmux'
-autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
+autocmd BufRead,BufNewFile tmux.conf set filetype=strace
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
@@ -132,7 +133,6 @@ Plugin 'scrooloose/syntastic'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 0
@@ -175,7 +175,7 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'maksimr/vim-yate'
 Plugin 'lzap/vim-selinux'
 Plugin 'tpope/vim-dispatch'
-map <leader>M :udpate<cr>:Make<cr>:copen<cr>/error:<cr>n
+map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
 map <leader>R :source ~/.vimrc<cr>
 
 " Vim-airline
@@ -190,6 +190,9 @@ let g:airline#extensions#whitespace#enabled = 0
 " Folding
 " Plugin 'tmhedberg/SimpylFold'
 " let g:SimpylFold_docstring_preview=1
+
+let g:autoswap_detect_tmux = 1
+Plugin 'gioele/vim-autoswap'
 
 " Colorschemes
 "Plugin 'govindkrjoshi/CSApprox'
