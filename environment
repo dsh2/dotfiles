@@ -24,7 +24,6 @@ pathprepend "/usr/local/bin"
 pathprepend "/usr/local/sbin"
 pathprepend "/opt/local/bin"
 pathprepend "/opt/local/sbin"
-pathprepend "/Library/Frameworks/Python.framework/Versions/3.4/bin"
 pathprepend "/opt/local/share/man" "MANPATH"
 
 # Android 
