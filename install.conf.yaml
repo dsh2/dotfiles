@@ -25,6 +25,7 @@
     ~/.inputrc:
         path: inputrc
         force: true
+    ~/.config/radare2rc: radare2rc
     ~/.screenrc: screenrc
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
@@ -33,4 +34,4 @@
     ~/bin/repo: bin/repo
 
 - shell:
-  - [vim +PluginInstall +qall, Setting up Vundle.vim]
+    - [vim +PluginInstall +qall, Setting up Vundle.vim]
