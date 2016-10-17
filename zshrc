@@ -84,8 +84,8 @@ _expand-ealias() {
 
 zle -N _expand-ealias
 
-bindkey ' '    _expand-ealias
-bindkey '^ '   magic-space          # control-space to bypass completion
+bindkey ' ' _expand-ealias
+bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
 
 # History
@@ -108,6 +108,8 @@ zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
+bindkey -M menuselect '^l' forward-char
+bindkey -M menuselect '^h' backward-char
 autoload -U colors && colors
 #zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix
 zstyle ':completion:*' completer _oldlist _expand _complete 
