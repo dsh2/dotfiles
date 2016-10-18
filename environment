@@ -18,12 +18,12 @@ pathprepend() {
 
 pathprepend "$HOME/bin"
 pathprepend "$HOME/.rvm/bin"
+pathprepend "/opt/local/bin"
+pathprepend "/opt/local/sbin"
 pathprepend "/sbin"
 pathprepend "/usr/sbin"
 pathprepend "/usr/local/bin"
 pathprepend "/usr/local/sbin"
-pathprepend "/opt/local/bin"
-pathprepend "/opt/local/sbin"
 pathprepend "/opt/local/share/man" "MANPATH"
 
 # Android 
