@@ -10,6 +10,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'sukima/xmledit'
+Plugin 'christoomey/vim-sort-motion'
 
 " Git stuff
 Plugin 'tpope/vim-fugitive'
