@@ -61,6 +61,7 @@ export LC_CTYPE=en_US.UTF-8
 # Editor
 export VISUAL='vim -X'
 export EDITOR=$VISUAL
+export SUDO_EDITOR=$VISUAL
 
 # Miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
