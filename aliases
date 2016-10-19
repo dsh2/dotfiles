@@ -68,6 +68,8 @@ l() {
 				"$@";
 }
 alias lt='l -tr'
+alias ltr=lt
+alias fr='fc -R'
 
 # Vim aliases
 alias v='vim -X'
@@ -131,7 +133,7 @@ src_index() {
 		ctags -R;
 }
 alias s3='/usr/local/bin/sqlite3'
-alias file='file -ikpz'
+alias file='file -z'
 alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
