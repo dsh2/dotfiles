@@ -110,6 +110,9 @@ alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install -y '
 alias r22='rabin2 -gx'
+alias pl='patool list'
+alias px='patool extract'
+alias pd='patool diff'
 
 src_index() {
 		find . \
