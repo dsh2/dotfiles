@@ -113,6 +113,8 @@ alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
 alias pd='patool diff'
+alias aa='alias|fzf' # TODO: make this zle
+alias q='qiv -uBRfta '
 
 src_index() {
 		find . \
