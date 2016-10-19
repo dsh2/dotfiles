@@ -11,6 +11,8 @@ Plugin 'gmarik/Vundle.vim'
 
 Plugin 'sukima/xmledit'
 
+Plugin 'lyuts/vim-mymaps'
+
 " Git stuff
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
@@ -297,17 +299,18 @@ set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
-set winminheight=0
+" set winminheight=5 
+" set winminwidth=10
 
 " Make 'K' lookup vim help for vim files
-autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
-nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
-let g:ft_man_folding_enable = 0
+" autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
+" nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
+" let g:ft_man_folding_enable = 0
 autocmd FileType vim setl keywordprg=help
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
-autocmd FileType help wincmd L
-"autocmd FileType help wincmd L | vert resize 80
+" autocmd FileType help wincmd L
+autocmd FileType help wincmd L | vert resize 80
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
