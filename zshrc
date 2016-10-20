@@ -118,7 +118,7 @@ bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
 autoload -U colors && colors
-zstyle ':completion:*' completer _oldlist _expand _complete _ignored _atch _prefix _approximate
+zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 #zstyle ':completion:*' completions 1
 zstyle ':completion:*' format 'Completing %d'
