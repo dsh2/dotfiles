@@ -198,9 +198,6 @@ let g:airline#extensions#whitespace#enabled = 0
 " Plugin 'tmhedberg/SimpylFold'
 " let g:SimpylFold_docstring_preview=1
 
-let g:autoswap_detect_tmux = 1
-Plugin 'gioele/vim-autoswap'
-
 " Colorschemes
 "Plugin 'govindkrjoshi/CSApprox'
 "Plugin 'KevinGoodsell/vim-csexact'
