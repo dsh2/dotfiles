@@ -13,12 +13,15 @@ Plugin 'sukima/xmledit'
 
 Plugin 'lyuts/vim-mymaps'
 
+Plugin 'romgrk/winteract.vim'
+nmap gw :InteractiveWindow<CR>
+
 " Git stuff
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
-nmap <leader>gv :Gblame<cr>
+nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 Plugin 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
@@ -116,6 +119,8 @@ Plugin 'elzr/vim-json'
 "map =j :call FormatJSON()<cr>
 
 " NERD Tree
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/vimfiler.vim'
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
 let NERDTreeWinSize=35
