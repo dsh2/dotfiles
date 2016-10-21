@@ -35,7 +35,7 @@ nmap <c-e> :History/<cr>
 Plugin 'will133/vim-dirdiff'
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 Plugin 'rickhowe/diffchar.vim'
-let g:DiffUnit = 'Char'
+let g:DiffUnit = 'Word1'
 
 Plugin 'chrisbra/Recover.vim'
 Plugin 'airblade/vim-gitgutter'
@@ -67,6 +67,9 @@ nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
 
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-indent'
+Plugin 'kana/vim-textobj-function'
 Plugin 'christoomey/vim-sort-motion'
 
 Plugin 'tpope/vim-unimpaired'
@@ -91,7 +94,7 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level=0
 
 Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'jiangmiao/auto-pairs'
+Plugin 'kana/vim-smartinput'
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
@@ -139,6 +142,7 @@ nnoremap <F2> :NERDTreeFind<cr>
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
+
 " Plugin 'davidhalter/jedi-vim'
 " let g:jedi#use_splits_not_buffers = "right"
 
