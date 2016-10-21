@@ -10,9 +10,6 @@
 [submodule "Vundle.vim"]
 	path = Vundle.vim
 	url = https://github.com/gmarik/Vundle.vim.git
-[submodule "vimpager"]
-	path = vimpager
-	url = https://github.com/rkitover/vimpager.git
 [submodule "VBoxManage-completion"]
 	path = VBoxManage-completion
 	url = https://github.com/alexandregz/VBoxManage-completion
@@ -22,9 +19,3 @@
 [submodule "fzf"]
 	path = fzf
 	url = https://github.com/junegunn/fzf.git
-[submodule "zsh-prompt-garrett"]
-	path = zsh-prompt-garrett
-	url = https://github.com/chauncey-garrett/zsh-prompt-garrett
-[submodule "zsh-prezto"]
-	path = zsh-prezto
-	url = https://github.com/chauncey-garrett/zsh-prezto
