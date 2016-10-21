@@ -67,6 +67,8 @@ nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
 
+Plugin 'christoomey/vim-sort-motion'
+
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
 Plugin 'tpope/vim-surround'
@@ -109,6 +111,10 @@ autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
 Plugin 'xolox/vim-lua-ftplugin'
 " Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
+
+" Colorschema
+Plugin 'xolox/vim-colorscheme-switcher'
+nmap <F8> :RandomColorScheme<CR>
 
 Plugin 'tpope/vim-afterimage'
 " json
@@ -425,7 +431,6 @@ let g:pyclewn_terminal = "xterm, -e"
 let g:pyclewn_python = "/opt/local/bin/python3.3"
 let g:pyclewn_args="--file=/tmp/pyclewn.log --window=top"
 nmap <leader>D :Pyclewn pdb %
-nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 
