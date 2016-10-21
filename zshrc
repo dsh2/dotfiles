@@ -12,6 +12,8 @@ zplug load
 
 # ZLE
 bindkey -e
+bindkey '^v^v' vi-cmd-mode
+bindkey '^j' vi-cmd-mode'
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
