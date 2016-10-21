@@ -90,7 +90,6 @@ _expand-ealias() {
 }
 
 zle -N _expand-ealias
-
 bindkey ' ' _expand-ealias
 bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
@@ -113,6 +112,7 @@ setopt complete_aliases
 # Completion
 zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
+bindkey '^j' menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
