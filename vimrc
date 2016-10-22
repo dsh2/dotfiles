@@ -11,6 +11,7 @@ Plugin 'gmarik/Vundle.vim'
 
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
+Plugin 'christoomey/vim-system-copy'
 
 " Git stuff
 Plugin 'tpope/vim-fugitive'
@@ -233,7 +234,7 @@ let g:undotree_SetFocusWhenToggle = 1
 Plugin 'tpope/vim-commentary'
 Plugin 'wannesm/wmgraphviz.vim'
 
-Plugin 'hsanson/vim-android'
+" Plugin 'hsanson/vim-android'
 let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 "Plugin 'artur-shaik/vim-javacomplete2'
