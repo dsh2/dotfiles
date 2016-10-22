@@ -13,12 +13,17 @@ Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'christoomey/vim-system-copy'
 
+Plugin 'lyuts/vim-mymaps'
+
+Plugin 'romgrk/winteract.vim'
+nmap gw :InteractiveWindow<CR>
+
 " Git stuff
 Plugin 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
-nmap <leader>gv :Gblame<cr>
+nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 Plugin 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
@@ -32,7 +37,7 @@ nmap <c-e> :History/<cr>
 Plugin 'will133/vim-dirdiff'
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 Plugin 'rickhowe/diffchar.vim'
-let g:DiffUnit = 'Char'
+let g:DiffUnit = 'Word1'
 
 Plugin 'chrisbra/Recover.vim'
 Plugin 'airblade/vim-gitgutter'
@@ -64,6 +69,11 @@ nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
 
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-indent'
+Plugin 'kana/vim-textobj-function'
+Plugin 'christoomey/vim-sort-motion'
+
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
 Plugin 'tpope/vim-surround'
@@ -86,7 +96,7 @@ Plugin 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level=0
 
 Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'jiangmiao/auto-pairs'
+Plugin 'kana/vim-smartinput'
 
 Plugin 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
@@ -107,6 +117,10 @@ Plugin 'xolox/vim-lua-ftplugin'
 " Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
 
+" Colorschema
+Plugin 'xolox/vim-colorscheme-switcher'
+nmap <F8> :RandomColorScheme<CR>
+
 Plugin 'tpope/vim-afterimage'
 " json
 Plugin 'elzr/vim-json'
@@ -116,6 +130,8 @@ Plugin 'elzr/vim-json'
 "map =j :call FormatJSON()<cr>
 
 " NERD Tree
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/vimfiler.vim'
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
 let NERDTreeWinSize=35
@@ -128,6 +144,7 @@ nnoremap <F2> :NERDTreeFind<cr>
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
+
 " Plugin 'davidhalter/jedi-vim'
 " let g:jedi#use_splits_not_buffers = "right"
 
@@ -192,9 +209,6 @@ let g:airline#extensions#whitespace#enabled = 0
 " Folding
 " Plugin 'tmhedberg/SimpylFold'
 " let g:SimpylFold_docstring_preview=1
-
-let g:autoswap_detect_tmux = 1
-Plugin 'gioele/vim-autoswap'
 
 " Colorschemes
 "Plugin 'govindkrjoshi/CSApprox'
@@ -299,17 +313,18 @@ set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
-set winminheight=0
+" set winminheight=5 
+" set winminwidth=10
 
 " Make 'K' lookup vim help for vim files
-autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
-nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
-let g:ft_man_folding_enable = 0
+" autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
+" nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
+" let g:ft_man_folding_enable = 0
 autocmd FileType vim setl keywordprg=help
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
-autocmd FileType help wincmd L
-"autocmd FileType help wincmd L | vert resize 80
+" autocmd FileType help wincmd L
+autocmd FileType help wincmd L | vert resize 80
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
@@ -422,7 +437,6 @@ let g:pyclewn_terminal = "xterm, -e"
 let g:pyclewn_python = "/opt/local/bin/python3.3"
 let g:pyclewn_args="--file=/tmp/pyclewn.log --window=top"
 nmap <leader>D :Pyclewn pdb %
-nmap <F8> :exe "Cprint " . expand("<cword>") <CR>
 
 autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 

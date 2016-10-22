@@ -21,6 +21,7 @@
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
     ~/.git_template: git_template/
+    ~/.gitignore_global: gitignore_global
     ~/.liquidpromptrc: liquidpromptrc
     ~/.inputrc:
         path: inputrc

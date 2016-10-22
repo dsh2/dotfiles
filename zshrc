@@ -12,7 +12,9 @@ zplug load
 
 # ZLE
 bindkey -e
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>='
+bindkey '^v^v' vi-cmd-mode
+bindkey '^j' vi-cmd-mode'
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
 }
@@ -35,6 +37,13 @@ zle -N run-again-in-lnav
 bindkey '^X^L' run-again-in-lnav 
 
 function run-again-in-vp {
+	zle up-history
+	zle -U '|&vp'
+}
+zle -N run-again-in-vp
+bindkey '^X^X' run-again-in-vp 
+
+function show-aliases {
 	zle up-history
 	zle -U '|&vp'
 }
@@ -83,7 +92,6 @@ _expand-ealias() {
 }
 
 zle -N _expand-ealias
-
 bindkey ' ' _expand-ealias
 bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
@@ -106,20 +114,21 @@ setopt complete_aliases
 # Completion
 zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
+bindkey '^j' menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
 autoload -U colors && colors
-#zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix
-zstyle ':completion:*' completer _oldlist _expand _complete 
+zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 #zstyle ':completion:*' completions 1
 zstyle ':completion:*' format 'Completing %d'
 #zstyle ':completion:*' glob 1
 zstyle ':completion:*' group-name ''
-#zstyle ':completion:*' verbose true
-zstyle ':completion:*' list-dirs-first true
-#zstyle ':completion:*' matcher-list ''
+zstyle ':completion:*' verbose true
+zstyle ':completion:*' list-dirs-first false
+#zstyle ':completion:*' matcher-list ''kk
 #zstyle ':completion:*' max-errors 2
 #zstyle ':completion:*' substitute 1
 zstyle ':completion:*' menu select
@@ -127,12 +136,16 @@ zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character 
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*:warnings' format 'No matches for: %d%b'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
-setopt menu_complete 
+setopt nomenu_complete 
+setopt auto_list
+setopt auto_menu
+setopt list_ambiguous
 setopt interactivecomments
-
 setopt autocd
 setopt cdablevars
 setopt prompt_subst
+
+REPORTTIME=10
 
 autoload run-help
 
