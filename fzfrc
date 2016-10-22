@@ -39,7 +39,7 @@ fs() {
 
 ftpane() {
   local panes current_window current_pane target target_session target_window target_pane
-  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty} - #{window_name} #{pane_current_command} #{pane_current_path} ')
+  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty}|#{pane_active}| - #{pane_width}x#{pane_height} - name:#{=15:window_name} cmd:#{=-15:pane_current_command} dir:#{=15:pane_current_path} title:#{pane_title}')
   current_pane=$(tmux display-message -p '#I:#P')
   current_window=$(tmux display-message -p '#I')
 
