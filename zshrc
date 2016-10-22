@@ -12,8 +12,8 @@ zplug load
 
 # ZLE
 bindkey -e
-bindkey '^v^v' vi-cmd-mode
-bindkey '^j' vi-cmd-mode'
+bindkey '^x^z' vi-cmd-mode
+bindkey -M viins '^j' vi-cmd-mode
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
@@ -114,8 +114,7 @@ setopt complete_aliases
 # Completion
 zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
-bindkey '^j' menu-complete
-bindkey -M menuselect '^j' menu-complete
+bindkey -M emacs '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
