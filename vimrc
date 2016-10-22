@@ -72,7 +72,6 @@ let g:selBufDoFileOnClose=0
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-function'
-Plugin 'christoomey/vim-sort-motion'
 
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
