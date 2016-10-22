@@ -10,6 +10,8 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'sukima/xmledit'
+Plugin 'christoomey/vim-sort-motion'
+Plugin 'christoomey/vim-system-copy'
 
 Plugin 'lyuts/vim-mymaps'
 
@@ -70,7 +72,6 @@ let g:selBufDoFileOnClose=0
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-function'
-Plugin 'christoomey/vim-sort-motion'
 
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
@@ -246,7 +247,7 @@ let g:undotree_SetFocusWhenToggle = 1
 Plugin 'tpope/vim-commentary'
 Plugin 'wannesm/wmgraphviz.vim'
 
-Plugin 'hsanson/vim-android'
+" Plugin 'hsanson/vim-android'
 let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 "Plugin 'artur-shaik/vim-javacomplete2'
