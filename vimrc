@@ -316,7 +316,7 @@ set wildmode=list:longest,full
 
 " Make 'K' lookup vim help for vim files
 " autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
-" nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
+nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
 " let g:ft_man_folding_enable = 0
 autocmd FileType vim setl keywordprg=help
 autocmd FileType help set nonumber
