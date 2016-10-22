@@ -13,6 +13,11 @@ Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'christoomey/vim-system-copy'
 
+Plugin 'tmux-plugins/vim-tmux-focus-events'
+let g:diminactive_use_syntax = 1
+let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
+Plugin 'blueyed/vim-diminactive'
+
 Plugin 'lyuts/vim-mymaps'
 
 Plugin 'romgrk/winteract.vim'
@@ -108,6 +113,8 @@ Plugin 'vim-scripts/Tail-Bundle'
 Plugin 'vim-scripts/httplog'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
+
+" tmux 
 Plugin 'tmux-plugins/vim-tmux'
 autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
 
