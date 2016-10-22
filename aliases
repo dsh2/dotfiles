@@ -40,6 +40,7 @@ alias fgr='f . | grep -i --color=auto '
 locl() { loc "$PWD/$*" ; }
 
 # git
+eval "$(hub alias -s)"
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
 alias gcv=gc
@@ -49,6 +50,7 @@ alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb'
 alias gcr='git clone --recursive --verbose '
+
 # ls
 if [ "$UNAME" = "Darwin" ]; then
 		LS_CMD=gls
