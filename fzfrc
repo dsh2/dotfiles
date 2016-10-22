@@ -74,13 +74,11 @@ zle		-N		gch
 bindkey	'\eU'	gch
 
 __fzfz() {
-  local cmd="z -l | awk '{print \$2}'"
-  eval "$cmd" | fzf -m | while read item; do
+    eval "z -l|cut -f 2" | fzf --tac --tiebreak=index -m --preview="ls --color=always -al {} " | while read item; do
     printf '%q ' "$item"
   done
   echo
 }
-
 fzfz-file-widget() {
   LBUFFER="${LBUFFER}$(__fzfz)"
   zle redisplay
