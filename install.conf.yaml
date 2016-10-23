@@ -33,6 +33,7 @@
     ~/.vim/bundle/Vundle.vim: Vundle.vim
     ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
+    ~/bin/adb-ip-reconnect.sh bin/adb-ip-reconnect.sh
 
 - shell:
     - [vim +PluginInstall +qall, Setting up Vundle.vim]
