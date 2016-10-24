@@ -1,7 +1,7 @@
 export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-v:execute(vim {})'
 		--bind 'ctrl-o:execute(less {})'
-		--bind 'ctrl-q:execute(print-query)'
+		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
 		--history=${HOME}/.fzf_history
 		--no-mouse
 		--exact
