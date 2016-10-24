@@ -14,9 +14,9 @@ Plugin 'christoomey/vim-sort-motion'
 Plugin 'christoomey/vim-system-copy'
 
 Plugin 'tmux-plugins/vim-tmux-focus-events'
-let g:diminactive_use_syntax = 1
-let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
-Plugin 'blueyed/vim-diminactive'
+" let g:diminactive_use_syntax = 1
+" let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
+" Plugin 'blueyed/vim-diminactive'
 
 Plugin 'lyuts/vim-mymaps'
 
@@ -77,6 +77,8 @@ let g:selBufDoFileOnClose=0
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-function'
+Plugin 'kana/vim-textobj-line'
+Plugin 'kana/vim-textobj-entire'
 
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
