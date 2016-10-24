@@ -8,6 +8,7 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 " Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
+ 
 
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
@@ -66,6 +67,7 @@ let g:CCTreeHilightCallTree=1
 Plugin 'sk1418/QFGrep'
 
 " Utils
+Plugin 'Shougo/neomru.vim'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
@@ -79,6 +81,7 @@ Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-function'
 Plugin 'kana/vim-textobj-line'
 Plugin 'kana/vim-textobj-entire'
+Plugin 'vim-utils/vim-space'
 
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
@@ -245,7 +248,7 @@ Plugin 'chrisbra/csv.vim'
 " autocmd Filetype csv hi CSVColumnOdd  ctermbg=5
 let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'llllllll'
-let g:csv_autocmd_arrange      = 1
+let g:csv_autocmd_arrange = 1
 map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>
 
 " Undotree
