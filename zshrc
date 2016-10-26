@@ -61,6 +61,36 @@ autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
 
+# complete words from tmux pane(s) {{{1
+# Source: http://blog.plenz.com/2012-01/zsh-complete-words-from-tmux-pane.html
+_tmux_pane_words() {
+  local expl
+  local -a w
+  if [[ -z "$TMUX_PANE" ]]; then
+    _message "not running inside tmux!"
+    return 1
+  fi
+  # capture current pane first
+  w=( ${(u)=$(tmux capture-pane -J -p)} )
+  for i in $(tmux list-panes -F '#P'); do
+    # skip current pane (handled above)
+    [[ "$TMUX_PANE" = "$i" ]] && continue
+    w+=( ${(u)=$(tmux capture-pane -J -p -t $i)} )
+  done
+  _wanted values expl 'words from current tmux pane' compadd -a w
+}
+
+zle -C tmux-pane-words-prefix   complete-word _generic
+zle -C tmux-pane-words-anywhere complete-word _generic
+bindkey '^v^v' tmux-pane-words-prefix
+bindkey '^v^V' tmux-pane-words-anywhere
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer _tmux_pane_words
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
+# display the (interactive) menu on first execution of the hotkey
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
+zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
+# }}}
+
 function _showbuffers()
 {
     local nl=$'\n' kr
@@ -112,6 +142,8 @@ setopt inc_append_history_time
 setopt complete_aliases
 
 # Completion
+fpath=(~/.dotfiles/zsh-completions/ $fpath)
+autoload -U compinit && compinit
 zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M emacs '^j' menu-complete
@@ -134,6 +166,10 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*:warnings' format 'No matches for: %d%b'
+zstyle ':completion:*:commands' list-colors '=*=1;31'
+zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
+zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
+zstyle ':completion:*:options' list-colors '=^(-- *)=34'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 setopt nomenu_complete 
 setopt auto_list

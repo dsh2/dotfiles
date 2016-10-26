@@ -1,7 +1,8 @@
 export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-v:execute(vim {})'
 		--bind 'ctrl-o:execute(less {})'
-		--bind 'ctrl-q:execute(print-query)'
+		--bind 'ctrl-t:execute(tmux set-buffer {})'
+		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
 		--history=${HOME}/.fzf_history
 		--no-mouse
 		--exact
@@ -39,7 +40,7 @@ fs() {
 
 ftpane() {
   local panes current_window current_pane target target_session target_window target_pane
-  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty} - #{window_name} #{pane_current_command} #{pane_current_path} ')
+  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty}| - #{pane_width}x#{pane_height} - name:#{=15:window_name} cmd:#{=-15:pane_current_command} dir:#{=15:pane_current_path} title:#{pane_title}')
   current_pane=$(tmux display-message -p '#I:#P')
   current_window=$(tmux display-message -p '#I')
 
@@ -58,17 +59,17 @@ bindkey '\ew' ftpane
 
 # gch - browse chrome history
 gch() {
-  local cols sep
-  cols=$(( COLUMNS / 3 ))
+  local title_width sep
+  title_width=$(( COLUMNS / 2 ))
   sep='{{::}}'
-
   cp -f "/home/dsf/.config/google-chrome-history" /tmp/h
 
-  sqlite3 -separator $sep /tmp/h \
-    "select substr(title, 1, $cols), url from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\n", $1, $2}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs exo-open
+  sqlite3 -separator $sep /tmp/h  \
+	  "select datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), substr(title, 1, $title_width), url from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs exo-open > /dev/null 2>&1
   zle redisplay
+
 }
 zle		-N		gch
 bindkey	'\eU'	gch
