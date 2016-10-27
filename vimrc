@@ -250,6 +250,7 @@ let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'llllllll'
 let g:csv_autocmd_arrange = 1
 map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>
+autocmd BufRead,BufNewFile *.csv set filetype=csv
 
 " Undotree
 Plugin 'mbbill/undotree'
