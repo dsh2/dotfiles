@@ -66,9 +66,7 @@ gch() {
   local title_width sep
   title_width=$(( COLUMNS / 2 ))
   sep='{{::}}'
-  cp -f "/home/dsf/.config/google-chrome-history" /tmp/h
-
-  sqlite3 -separator $sep /tmp/h  \
+  cp -vf "$HOME/.config/google-chrome-history" /tmp/h && sqlite3 -separator $sep /tmp/h  \
 	  "select datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), substr(title, 1, $title_width), url from urls order by last_visit_time desc" |
   awk -F $sep '{printf "%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3}' |
   fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs exo-open > /dev/null 2>&1
