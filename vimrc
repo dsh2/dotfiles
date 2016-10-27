@@ -69,6 +69,7 @@ Plugin 'sk1418/QFGrep'
 " Utils
 Plugin 'Shougo/neomru.vim'
 Plugin 'Shougo/vimproc.vim'
+Plugin 'vim-scripts/AnsiEsc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
 Plugin 'vim-scripts/SelectBuf'
