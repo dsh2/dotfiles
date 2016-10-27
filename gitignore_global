@@ -1,4 +1,9 @@
+# Dev
+*.out
 core
+*.pyc
+
+# Tags
 cscope.files
 cscope.out
 tags
@@ -13,3 +18,6 @@ tags
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
+
+# Windows
+Desktop.ini
