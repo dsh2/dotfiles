@@ -14,6 +14,7 @@ alias adbk='adb shell input keyboard text'
 alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
 alias add='adb devices -l'
 alias ads='adb shell '
+alias aps='adb shell ps '
 ash() {
 		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
 		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
