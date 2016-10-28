@@ -73,7 +73,7 @@ l() {
 alias lt='l -tr'
 alias ltr=lt
 alias fr='fc -R'
-alias ln=lnav
+alias lnn=lnav
 alias r=ranger
 
 # Vim aliases
