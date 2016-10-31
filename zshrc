@@ -16,7 +16,7 @@ PS1=%F{235}$'${(r:$COLUMNS::\u2500:)}'$PS1
 
 # ZLE
 zle_highlight=( \
-	default:fg=green,bg=default,underline \
+	default:fg=default,bg=default \
 	# default:fg=213,bg=red,underline \
 	region:underline \
 	special:fg=black,bg=red \
@@ -217,3 +217,4 @@ source ~/.fzf.zsh
 source ~/.fzfrc
 
 stty -ixon
+source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
