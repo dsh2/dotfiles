@@ -171,32 +171,35 @@ fpath=(~/.dotfiles/zsh-completions/ $fpath)
 fpath=(~/.dotfiles/zsh/zsh-completions/src $fpath)
 autoload -U compinit && compinit
 zmodload zsh/complist
+
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M emacs '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
-zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+
 #zstyle ':completion:*' completions 1
-zstyle ':completion:*' format 'Completing %d'
 #zstyle ':completion:*' glob 1
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' list-dirs-first false
 #zstyle ':completion:*' matcher-list ''kk
 #zstyle ':completion:*' max-errors 2
 #zstyle ':completion:*' substitute 1
-zstyle ':completion:*' menu select
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*:warnings' format 'No matches for: %d%b'
-zstyle ':completion:*:commands' list-colors '=*=1;31'
-zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
-zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
-zstyle ':completion:*:options' list-colors '=^(-- *)=34'
+zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+zstyle ':completion:*' list-dirs-first false
+zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
 zstyle ':completion:*' list-separator "" 
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
+zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
+zstyle ':completion:*:commands' list-colors '=*=1;31'
+zstyle ':completion:*:options' list-colors '=^(-- *)=34'
+zstyle ':completion:*:warnings' format 'No matches for: %d%b'
 setopt nomenu_complete 
 setopt auto_list
 setopt auto_menu
