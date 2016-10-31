@@ -21,3 +21,6 @@ tags
 
 # Windows
 Desktop.ini
+
+# Miscellaneous 
+.zsh_local_history
