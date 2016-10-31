@@ -8,7 +8,6 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 " Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
- 
 
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
@@ -69,6 +68,9 @@ Plugin 'sk1418/QFGrep'
 " Utils
 Plugin 'Shougo/neomru.vim'
 Plugin 'Shougo/vimproc.vim'
+Plugin 'wellle/tmux-complete.vim'
+let g:tmuxcomplete#trigger = 'omnifunc'
+
 Plugin 'vim-scripts/AnsiEsc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
@@ -115,14 +117,12 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 
-Plugin 'vim-scripts/Tail-Bundle'
-Plugin 'vim-scripts/httplog'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 
 " tmux 
 Plugin 'tmux-plugins/vim-tmux'
-autocmd BufRead,BufNewFile tmux.conf set filetype=tmux
+autocmd BufRead tmux.conf set filetype=tmux
 
 " Lua
 Plugin 'xolox/vim-lua-ftplugin'
@@ -131,16 +131,12 @@ Plugin 'xolox/vim-misc'
 
 " Colorschema
 Plugin 'xolox/vim-colorscheme-switcher'
-nmap <F8> :RandomColorScheme<CR>
+nmap <F7> :PrevColorScheme<CR>
+nmap <F8> :NextColorScheme<CR>
 
 Plugin 'tpope/vim-afterimage'
 " json
 Plugin 'elzr/vim-json'
-"function! FormatJSON()
-		":'<,'>!python -m json.tool
-"endfunction
-"map =j :call FormatJSON()<cr>
-
 " NERD Tree
 Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimfiler.vim'
@@ -503,3 +499,11 @@ map <leader>lc :Commits<cr>
 map <leader>lC :BCommits<cr>
 map <leader>lb :Buffers<cr>
 map <leader>TT :Tags<cr>
+
+
+nnoremap <C-W>M <C-W>\| <C-W>_
+nnoremap <C-W>m <C-W>=
+
+function! EnableAutoWrite()
+  exe ":au FocusLost" expand("%") ":update"
+endfunction
