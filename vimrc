@@ -65,12 +65,17 @@ let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
 Plugin 'sk1418/QFGrep'
 
-" Utils
-Plugin 'Shougo/neomru.vim'
+" Unite
+Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/neomru.vim'
+let g:neomru#time_format='%F %T '
+let g:neomru#update_interval=60
+Plugin 'Shougo/vimfiler.vim'
+
+" Utils
 Plugin 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
-
 Plugin 'vim-scripts/AnsiEsc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
@@ -138,8 +143,6 @@ Plugin 'tpope/vim-afterimage'
 " json
 Plugin 'elzr/vim-json'
 " NERD Tree
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/vimfiler.vim'
 Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
 let NERDTreeWinSize=35
