@@ -12,7 +12,7 @@ setopt PROMPT_SUBST
 PS4=PS4:%N:%i:
 RPS1="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 PS1='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
-PS1=%F{235}$'${(r:$COLUMNS::\u2500:)}'$PS1
+PS1=%F{240}$'${(r:$COLUMNS::\u2500:)}'$PS1
 
 # ZLE
 zle_highlight=( \
