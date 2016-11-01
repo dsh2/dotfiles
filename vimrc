@@ -71,7 +71,7 @@ Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
-leto g:neomru#update_interval=60
+let g:neomru#update_interval=60
 Plugin 'Shougo/vimfiler.vim'
 
 " Utils
