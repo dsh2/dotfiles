@@ -128,6 +128,7 @@ typeset -a ealiases
 ealiases=(`alias | sed -e 's/=.*//'`)
 
 _expand-ealias() {
+# TODO: add blacklist for specific aliases not to be expanded
   if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
     zle _expand_alias
     zle expand-word
