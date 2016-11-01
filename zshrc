@@ -163,6 +163,7 @@ setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 zshaddhistory() {
 	print -sr -- ${1%%$'\n'}
+	# TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
 	fc -p .zsh_local_history
 }
 
