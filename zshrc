@@ -1,16 +1,30 @@
-# Zplug init
-if [[ ! -d ~/.zplug ]]; then
-    git clone https://github.com/zplug/zplug ~/.zplug
-    source ~/.zplug/init.zsh && zplug update --self
-fi
-source ~/.zplug/init.zsh
-#zplug 'themes/sorin', from:oh-my-zsh, nice:11
-zplug 'themes/blinks', from:oh-my-zsh, use:"*.zsh-theme", nice:10
-zplug 'themes/jonathan', from:oh-my-zsh, use:"*.zsh-theme", nice:10
-zplug check || zplug install
-zplug load
+# Prompt
+autoload -Uz vcs_info
+autoload -U colors && colors
+zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f '
+zstyle ':vcs_info:*' formats '%F{136}[%F{166}%b%F{136}]%f '
+zstyle ':vcs_info:*' branchformat '%b%F{1}:%F{3}%r'
+zstyle ':vcs_info:*' disable bzr tla
+precmd() { vcs_info;  }
+# PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
+# PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
+setopt PROMPT_SUBST 
+PS4=PS4:%N:%i:
+RPS1="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
+PS1='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
+PS1=%F{235}$'${(r:$COLUMNS::\u2500:)}'$PS1
 
 # ZLE
+zle_highlight=( \
+	default:fg=default,bg=default \
+	# default:fg=213,bg=red,underline \
+	region:underline \
+	special:fg=black,bg=red \
+	suffix:bold \
+	isearch:underline \
+	paste:standout \
+)
+
 bindkey -e
 bindkey '^x^z' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
@@ -120,9 +134,15 @@ _expand-ealias() {
   fi
   zle magic-space
 }
+_expand-ealias-and-execute() {
+	_expand-ealias
+	zle accept-line
+}
 
 zle -N _expand-ealias
+zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
+bindkey '^M' _expand-ealias-and-execute
 bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
 
@@ -131,18 +151,24 @@ SAVEHIST=999999
 HISTSIZE=$SAVEHIST
 HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
+setopt complete_aliases
 setopt extended_history
 setopt hist_find_no_dups
-setopt no_hist_ignore_all_dups
-setopt no_hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
 setopt inc_append_history_time
-setopt complete_aliases
+setopt no_bang_hist
+setopt no_hist_ignore_all_dups
+setopt no_hist_ignore_dups
+zshaddhistory() {
+	print -sr -- ${1%%$'\n'}
+	fc -p .zsh_local_history
+}
 
 # Completion
 fpath=(~/.dotfiles/zsh-completions/ $fpath)
+fpath=(~/.dotfiles/zsh/zsh-completions/src $fpath)
 autoload -U compinit && compinit
 zmodload zsh/complist
 bindkey -M menuselect '^[[Z' reverse-menu-complete
@@ -150,7 +176,6 @@ bindkey -M emacs '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
-autoload -U colors && colors
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 #zstyle ':completion:*' completions 1
@@ -171,6 +196,7 @@ zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
 zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
 zstyle ':completion:*:options' list-colors '=^(-- *)=34'
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+zstyle ':completion:*' list-separator "" 
 setopt nomenu_complete 
 setopt auto_list
 setopt auto_menu
@@ -191,3 +217,4 @@ source ~/.fzf.zsh
 source ~/.fzfrc
 
 stty -ixon
+source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 

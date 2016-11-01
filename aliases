@@ -41,6 +41,7 @@ alias fgr='f . | grep -i --color=auto '
 locl() { loc "$PWD/$*" ; }
 
 # git
+alias g=git
 eval "$(hub alias -s)"
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
@@ -73,7 +74,9 @@ l() {
 alias lt='l -tr'
 alias ltr=lt
 alias fr='fc -R'
-alias ln=lnav
+alias lnn=lnav
+alias r=ranger
+alias zz='source ~/.zshrc'
 
 # Vim aliases
 alias v='vim -X'
