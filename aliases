@@ -11,7 +11,8 @@ alias c=z
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
-alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
+# alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w "~/.logs/adb-$(date "+%Y%m%e-%R:%S").log"'
+alias adl='adb logcat -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav '
 alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
@@ -77,6 +78,8 @@ alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
 alias zz='source ~/.zshrc'
+alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
+alias ms=msf
 
 # Vim aliases
 alias v='vim -X'
