@@ -15,11 +15,12 @@ export FZF_DEFAULT_OPTS="
 
 # fbr - git branch browser
 fbr() {
-  local branches branch
-  branches=$(git branch --all | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+	local branches branch
+	branches=$(git branch -va | grep -v HEAD) &&
+		branch=$(echo "$branches" |
+	fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)| sed "s/.* //" | sed "s#remotes/[^/]*/##"
+	echo Checking out branch $branch...
+	git checkout "$branch" 
 }
 
 # fshow - git commit browser
