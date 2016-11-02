@@ -128,6 +128,7 @@ alias pd='patool diff'
 alias aa='alias|fzf' # TODO: make this zle
 alias q='qiv -uBRfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
+alias xc='xclip -selection clipboard -in'
 
 src_index() {
 		find . \
