@@ -105,4 +105,4 @@ else
 		zle -N run-help-tmux
 		bindkey '^[H' run-help-tmux
 fi
-# vi:set ft=sh
+# vim:ft=sh
