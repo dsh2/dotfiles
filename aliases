@@ -43,7 +43,6 @@ locl() { loc "$PWD/$*" ; }
 
 # git
 alias g=git
-eval "$(hub alias -s)"
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
 alias gcv=gc
@@ -53,6 +52,8 @@ alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb'
 alias gcr='git clone --recursive --verbose '
+alias grv='git remote --verbose'
+alias gfa='git fetch --all --tags --progress --verbose'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
