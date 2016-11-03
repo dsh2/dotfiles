@@ -143,7 +143,7 @@ _expand-ealias-and-execute() {
 zle -N _expand-ealias
 zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
-bindkey '^M' _expand-ealias-and-execute
+# bindkey '^M' _expand-ealias-and-execute
 bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
 
