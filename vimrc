@@ -54,7 +54,7 @@ highlight GitGutterAdd ctermbg=black
 " Cscope
 Plugin 'vim-scripts/cscope-quickfix'
 set cscopepathcomp=2
-set cscopeprg=/opt/local/bin/cscope
+" set cscopeprg=/opt/local/bin/cscope
 set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
@@ -83,6 +83,11 @@ Plugin 'vim-scripts/SelectBuf'
 nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
+Plugin 'mkitt/tabline.vim'
+hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
+Plugin 'milkypostman/vim-togglelist'
 
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-indent'
@@ -111,6 +116,7 @@ let g:peekaboo_compact = 0
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax' 
 let g:pandoc#folding#level=0
+hi Folded ctermbg=black ctermfg=DarkGrey
 
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'kana/vim-smartinput'
@@ -205,8 +211,9 @@ let g:HiCursorWords_debugEchoHiName = 0
 Plugin 'maksimr/vim-yate'
 Plugin 'lzap/vim-selinux'
 Plugin 'tpope/vim-dispatch'
-map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
-map <leader>R :source ~/.vimrc<cr>
+" map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
+map <leader>M :update<cr>:Make<cr>
+map <leader>R :update<cr>:source ~/.vimrc<cr>
 
 " Vim-airline
 Plugin 'bling/vim-airline'
@@ -267,7 +274,9 @@ let g:android_airline_android_glyph = 'U+f17b'
 
 Plugin 'idanarye/vim-vebugger'
 let g:vebugger_leader='<Leader>d'
-let g:vebugger_path_gdb='ggdb'
+let g:vebugger_path_gdb='gdb'
+
+Plugin 'vim-scripts/Conque-GDB'
 
 "Plugin 'alderz/smali-vim'
 Plugin 'kelwin/vim-smali'
@@ -305,7 +314,7 @@ set norelativenumber
 set ruler
 set shiftwidth=4
 set scrolloff=999
-set sidescrolloff=30
+set sidescrolloff=8
 set shellslash
 set shortmess=filnxtToOI
 set showbreak=›
@@ -329,14 +338,14 @@ set wildmode=list:longest,full
 " set winminwidth=10
 
 " Make 'K' lookup vim help for vim files
-" autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
-nmap  <buffer>K :exe "Man " . expand("<cword>") <CR>
-" let g:ft_man_folding_enable = 0
+nmap K :exe "Man " . expand("<cword>") <CR>
+autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
+let g:ft_man_folding_enable = 0
 autocmd FileType vim setl keywordprg=help
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
 " autocmd FileType help wincmd L
-autocmd FileType help wincmd L | vert resize 80
+" autocmd FileType help wincmd L | vert resize 80
 
 " Open log files at the bottom of the file
 autocmd BufReadPost *.log normal G
@@ -503,10 +512,17 @@ map <leader>lC :BCommits<cr>
 map <leader>lb :Buffers<cr>
 map <leader>TT :Tags<cr>
 
-
 nnoremap <C-W>M <C-W>\| <C-W>_
 nnoremap <C-W>m <C-W>=
 
 function! EnableAutoWrite()
   exe ":au FocusLost" expand("%") ":update"
 endfunction
+ 
+nmap <silent> <leader><c-h> :colder<CR>
+nmap <silent> <leader><c-l> :cnewer<CR>
+nmap <silent> <leader>O :copen<CR>
+
+nmap <leader>, gT
+nmap <leader>. gt
+nmap <leader>N :tabnew<cr>
