@@ -132,7 +132,7 @@ alias q='qiv -uBRfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias M=make
-alias Gdb='gdb -ex "b main" -ex run --args '
+alias Gdb='gdb -ex "db -layout expressions source threads stack history" -ex "b main" -ex run --args '
 alias cloc='locate .zsh_local_history | xargs grep --color '
 
 src_index() {
