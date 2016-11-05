@@ -97,6 +97,8 @@ Plugin 'kana/vim-textobj-entire'
 Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'vim-utils/vim-space'
 
+Plugin 'junegunn/goyo.vim'
+
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
 Plugin 'tpope/vim-surround'
@@ -525,3 +527,4 @@ nmap <silent> <leader>O :copen<CR>
 nmap <leader>, gT
 nmap <leader>. gt
 nmap <leader>N :tabnew<cr>
+nmap <leader>G :Goyo<cr>jkkk
