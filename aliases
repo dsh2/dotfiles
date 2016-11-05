@@ -54,6 +54,7 @@ alias gst='git status -sb'
 alias gcr='git clone --recursive --verbose '
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
+alias gco='git checkout '
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
