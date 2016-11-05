@@ -94,6 +94,7 @@ Plugin 'kana/vim-textobj-indent'
 Plugin 'kana/vim-textobj-function'
 Plugin 'kana/vim-textobj-line'
 Plugin 'kana/vim-textobj-entire'
+Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'vim-utils/vim-space'
 
 Plugin 'tpope/vim-unimpaired'
@@ -275,8 +276,6 @@ let g:android_airline_android_glyph = 'U+f17b'
 Plugin 'idanarye/vim-vebugger'
 let g:vebugger_leader='<Leader>d'
 let g:vebugger_path_gdb='gdb'
-
-Plugin 'vim-scripts/Conque-GDB'
 
 "Plugin 'alderz/smali-vim'
 Plugin 'kelwin/vim-smali'
