@@ -1,0 +1,15 @@
+load alias
+alias -c *
+
+alias h help
+alias j jobs -l -x
+alias rr resource /home/dsf/.dotfiles/msfc.rc
+alias sa show advanced
+alias se search
+alias sl sessions -l -x
+alias so show options
+alias r resource
+alias u use
+
+set PROMPT "%bld[%clr%grnmsf%clr: j:%J s:%S%bld]"
+

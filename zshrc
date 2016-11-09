@@ -128,6 +128,7 @@ typeset -a ealiases
 ealiases=(`alias | sed -e 's/=.*//'`)
 
 _expand-ealias() {
+# TODO: add blacklist for specific aliases not to be expanded
   if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
     zle _expand_alias
     zle expand-word
@@ -142,7 +143,7 @@ _expand-ealias-and-execute() {
 zle -N _expand-ealias
 zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
-bindkey '^M' _expand-ealias-and-execute
+# bindkey '^M' _expand-ealias-and-execute
 bindkey '^ ' magic-space          # control-space to bypass completion
 bindkey -M isearch " "  magic-space # normal space during searches
 
@@ -172,32 +173,40 @@ fpath=(~/.dotfiles/zsh-completions/ $fpath)
 fpath=(~/.dotfiles/zsh/zsh-completions/src $fpath)
 autoload -U compinit && compinit
 zmodload zsh/complist
+
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M emacs '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
-zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
 #zstyle ':completion:*' completions 1
-zstyle ':completion:*' format 'Completing %d'
 #zstyle ':completion:*' glob 1
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' list-dirs-first false
 #zstyle ':completion:*' matcher-list ''kk
 #zstyle ':completion:*' max-errors 2
 #zstyle ':completion:*' substitute 1
-zstyle ':completion:*' menu select
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*:warnings' format 'No matches for: %d%b'
-zstyle ':completion:*:commands' list-colors '=*=1;31'
-zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
-zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
-zstyle ':completion:*:options' list-colors '=^(-- *)=34'
+zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
-zstyle ':completion:*' list-separator "" 
+zstyle ':completion:*' list-dirs-first false
+zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+zstyle ':completion:*' list-separator "--" 
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
+zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
+zstyle ':completion:*:commands' list-colors '=*=1;31'
+zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' list-colors '=^(-- *)=34'
+zstyle ':completion:*:warnings' format $'\e[01;31m -- No matches for: %d%b --\e[0m'
+
 setopt nomenu_complete 
 setopt auto_list
 setopt auto_menu

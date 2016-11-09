@@ -11,7 +11,8 @@ alias c=z
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
-alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-$(date "+%Y%m%e-%R:%S").log'
+# alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w "~/.logs/adb-$(date "+%Y%m%e-%R:%S").log"'
+alias adl='adb logcat -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav '
 alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
@@ -42,7 +43,6 @@ locl() { loc "$PWD/$*" ; }
 
 # git
 alias g=git
-eval "$(hub alias -s)"
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
 alias gcv=gc
@@ -52,6 +52,9 @@ alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb'
 alias gcr='git clone --recursive --verbose '
+alias grv='git remote --verbose'
+alias gfa='git fetch --all --tags --progress --verbose'
+alias gco='git checkout '
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -77,6 +80,8 @@ alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
 alias zz='source ~/.zshrc'
+alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
+alias ms=msf
 
 # Vim aliases
 alias v='vim -X'
@@ -122,9 +127,14 @@ alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
 alias pd='patool diff'
-alias aa='alias|fzf' # TODO: make this zle
+alias aa='alias|fzf' # TODO: make this a zle filter
 alias q='qiv -uBRfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
+alias xc='xclip -selection clipboard -in'
+alias M=make
+alias Gdb='gdb -q -ex "b main" -ex run --args '
+alias cloc='locate .zsh_local_history | xargs grep --color '
+alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 
 src_index() {
 		find . \
