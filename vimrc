@@ -67,6 +67,8 @@ Plugin 'sk1418/QFGrep'
 
 " Unite
 Plugin 'Shougo/unite.vim'
+nnoremap <silent> <leader>b :<C-u>Unite buffer file_mru<CR>
+
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
