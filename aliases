@@ -135,6 +135,7 @@ alias M=make
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
+alias -g xr='|xxd -r -p'
 
 src_index() {
 		find . \
