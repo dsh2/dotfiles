@@ -51,6 +51,8 @@ let g:gitgutter_override_sign_column_highlight = 1
 highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
 
+Plugin 'Konfekt/vim-CtrlXA'
+
 " Cscope
 Plugin 'vim-scripts/cscope-quickfix'
 set cscopepathcomp=2
@@ -124,6 +126,7 @@ Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax' 
 let g:pandoc#folding#level=0
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
+hi Folded cterm=NONE
 
 Plugin 'junegunn/rainbow_parentheses.vim'
 " Plugin 'kana/vim-smartinput'
@@ -535,3 +538,5 @@ nmap <leader>, gT
 nmap <leader>. gt
 nmap <leader>N :tabnew<cr>
 nmap <leader>G :Goyo<cr>:redraw!<cr>
+
+hi Folded cterm=NONE
