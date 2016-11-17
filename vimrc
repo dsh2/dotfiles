@@ -282,10 +282,6 @@ let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 "Plugin 'artur-shaik/vim-javacomplete2'
 
-" Plugin 'idanarye/vim-vebugger'
-" let g:vebugger_leader='<Leader>d'
-" let g:vebugger_path_gdb='gdb'
-
 "Plugin 'alderz/smali-vim'
 Plugin 'kelwin/vim-smali'
 autocmd BufRead *.smali set filetype=smali
@@ -313,7 +309,6 @@ set incsearch
 set laststatus=2
 set mouse=a
 set nobackup
-set nocompatible
 set nowrap
 set nowrapscan
 set number
@@ -435,9 +430,8 @@ autocmd FileType qf set norelativenumber
 
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
-
 " FIXME: Setting seems to get lost after some time during a long vim session
-set history=5000
+set history=10000
 
 " Removes trailing spaces
 command! TrimWhiteSpace call TrimWhiteSpace()
@@ -540,3 +534,5 @@ nmap <leader>N :tabnew<cr>
 nmap <leader>G :Goyo<cr>:redraw!<cr>
 
 hi Folded cterm=NONE
+
+set isfname-==
