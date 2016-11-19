@@ -5,6 +5,7 @@ alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
+cdp() { cd /proc/$(pidof $*) }
 source ~/.dotfiles/z/z.sh
 alias c=z
 
