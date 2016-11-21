@@ -198,7 +198,7 @@ let g:ctrlp_cache_dir = $HOME.'/.vim/ctrlp-cache'
 let g:ctrlp_open_multiple_files = 'v'
 let g:ctrlp_mruf_max = 250
 
-" Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 
 " Show tags of current file in separat window
 Plugin 'vim-scripts/taglist.vim'
@@ -536,3 +536,4 @@ nmap <leader>G :Goyo<cr>:redraw!<cr>
 hi Folded cterm=NONE
 
 set isfname-==
+
