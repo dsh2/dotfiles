@@ -157,7 +157,10 @@ alias file='file -z'
 alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
-alias ssv2csv="gsed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
+alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
+alias -g ss2s="|sed -re 's/[[:space:]]+/ /g'"
+alias -g ss2c="|sed -re 's/[[:space:]]+/,/g'"
+alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
