@@ -18,6 +18,7 @@ pathprepend() {
 
 pathprepend "$HOME/bin"
 pathprepend "$HOME/.rvm/bin"
+pathprepend "$HOME/src/GO/bin"
 pathprepend "/opt/local/bin"
 pathprepend "/opt/local/sbin"
 pathprepend "/sbin"
@@ -65,12 +66,13 @@ export SUDO_EDITOR=$VISUAL
 
 # Miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
-export HH_CONFIG=hicolor
-export XENVIRONMENT=$HOME/.Xresources
-export HTML_TIDY=~/.tidy_config
-export USE_CCACHE=1
-export SSLKEYLOGFILE=$HOME/ssl_key_log
 export BROWSER=/usr/bin/google-chrome-stable
+export GOPATH=$HOME/src/GO
+export HH_CONFIG=hicolor
+export HTML_TIDY=~/.tidy_config
+export SSLKEYLOGFILE=$HOME/ssl_key_log
+export USE_CCACHE=1
+export XENVIRONMENT=$HOME/.Xresources
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
