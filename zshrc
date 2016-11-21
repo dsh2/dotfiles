@@ -56,14 +56,6 @@ function run-again-in-vp {
 }
 zle -N run-again-in-vp
 bindkey '^X^X' run-again-in-vp 
-
-function show-aliases {
-	zle up-history
-	zle -U '|&vp'
-}
-zle -N run-again-in-vp
-bindkey '^X^X' run-again-in-vp 
-
 function run-again-in-fzf {
 	zle up-history
 	zle -U '|&fzf'
@@ -77,7 +69,7 @@ bindkey "^X^E" edit-command-line
 
 # complete words from tmux pane(s) {{{1
 # Source: http://blog.plenz.com/2012-01/zsh-complete-words-from-tmux-pane.html
-_tmux_pane_words() {
+function tmux_pane_words() {
   local expl
   local -a w
   if [[ -z "$TMUX_PANE" ]]; then
@@ -96,9 +88,9 @@ _tmux_pane_words() {
 
 zle -C tmux-pane-words-prefix   complete-word _generic
 zle -C tmux-pane-words-anywhere complete-word _generic
-bindkey '^v^v' tmux-pane-words-prefix
-bindkey '^v^V' tmux-pane-words-anywhere
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer _tmux_pane_words
+bindkey '^v^V' tmux-pane-words-prefix
+bindkey '^v^v' tmux-pane-words-anywhere
+zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 # display the (interactive) menu on first execution of the hotkey
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive

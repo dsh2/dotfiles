@@ -122,7 +122,7 @@ gw() { grep --color -Iwri -- "$@" *; }
 alias -g gg='|& grep -i --color '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
-alias agi='sudo apt-get install -y '
+alias agi='sudo apt-get install --fix-missing -y '
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'

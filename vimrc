@@ -51,6 +51,8 @@ let g:gitgutter_override_sign_column_highlight = 1
 highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
 
+Plugin 'Konfekt/vim-CtrlXA'
+
 " Cscope
 Plugin 'vim-scripts/cscope-quickfix'
 set cscopepathcomp=2
@@ -124,6 +126,7 @@ Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax' 
 let g:pandoc#folding#level=0
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
+hi Folded cterm=NONE
 
 Plugin 'junegunn/rainbow_parentheses.vim'
 " Plugin 'kana/vim-smartinput'
@@ -279,10 +282,6 @@ let g:android_sdk_path = $ANDROID_SDK_ROOT
 let g:android_airline_android_glyph = 'U+f17b'
 "Plugin 'artur-shaik/vim-javacomplete2'
 
-" Plugin 'idanarye/vim-vebugger'
-" let g:vebugger_leader='<Leader>d'
-" let g:vebugger_path_gdb='gdb'
-
 "Plugin 'alderz/smali-vim'
 Plugin 'kelwin/vim-smali'
 autocmd BufRead *.smali set filetype=smali
@@ -310,7 +309,6 @@ set incsearch
 set laststatus=2
 set mouse=a
 set nobackup
-set nocompatible
 set nowrap
 set nowrapscan
 set number
@@ -432,9 +430,8 @@ autocmd FileType qf set norelativenumber
 
 " Add vim-umimpair style option switching
 " TODO: toggle auto search highlighting
-
 " FIXME: Setting seems to get lost after some time during a long vim session
-set history=5000
+set history=10000
 
 " Removes trailing spaces
 command! TrimWhiteSpace call TrimWhiteSpace()
@@ -535,3 +532,7 @@ nmap <leader>, gT
 nmap <leader>. gt
 nmap <leader>N :tabnew<cr>
 nmap <leader>G :Goyo<cr>:redraw!<cr>
+
+hi Folded cterm=NONE
+
+set isfname-==
