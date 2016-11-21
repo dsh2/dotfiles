@@ -79,7 +79,17 @@ Plugin 'Shougo/vimfiler.vim'
 
 " Utils
 Plugin 'wellle/tmux-complete.vim'
-let g:tmuxcomplete#trigger = 'omnifunc'
+nnoremap <leader>jj :YcmCompleter GoTo<CR>
+nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+nnoremap <leader>jt :YcmCompleter GetType<CR>
+nnoremap <leader>jk :YcmCompleter GetDoc<CR>
+let g:ycm_error_symbol="E>"
+let g:yvm_warning_symbol="W>"
+let g:ycm_enable_diagnostic_highlighting=1
+let g:ycm_collect_identifiers_from_comments_and_strings=1
+let g:ycm_collect_identifiers_from_tags_files=1
 Plugin 'vim-scripts/AnsiEsc.vim'
 Plugin 'vim-scripts/genutils'
 Plugin 'vim-scripts/multiselect'
