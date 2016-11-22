@@ -121,6 +121,7 @@ alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
 alias -g gg='|& grep -i --color '
+alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
@@ -137,6 +138,7 @@ alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
+alias sc=systemctl 
 
 src_index() {
 		find . \
