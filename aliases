@@ -139,6 +139,9 @@ alias cloc='locate .zsh_local_history | xargs grep --color '
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
 alias sc=systemctl 
+alias dp=dpkg
+alias dpl='dpkg -L'
+alias dpq=dpkg-query
 
 src_index() {
 		find . \
