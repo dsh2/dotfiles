@@ -2,7 +2,7 @@ load alias
 alias -c *
 
 alias h help
-alias j jobs -l -x
+alias j jobs -l -v
 alias rr resource /home/dsf/.dotfiles/msfc.rc
 alias sa show advanced
 alias se sess
