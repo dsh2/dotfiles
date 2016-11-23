@@ -13,7 +13,7 @@ alias c=z
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
 # alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w "~/.logs/adb-$(date "+%Y%m%e-%R:%S").log"'
-alias adl='adb logcat -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav '
+alias adl='adb logcat -v threadtime DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav '
 alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
@@ -142,12 +142,15 @@ alias sc=systemctl
 alias dp=dpkg
 alias dpl='dpkg -L'
 alias dpq=dpkg-query
+alias n="date '+%F %T'"
+alias nn="date '+%F-%T'"
 
 src_index() {
 		find . \
 				-name .repo -prune -o \
 				-name .git -prune -o \
 				-name out -prune -o \
+				-name build -prune -o \
 				-type f \( \
 						-name '*.c' -o \
 						-name '*.cc' -o \
@@ -166,6 +169,7 @@ alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias -g ss2s="|sed -re 's/[[:space:]]+/ /g'"
 alias -g ss2c="|sed -re 's/[[:space:]]+/,/g'"
 alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
+alias w=wireshark
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
