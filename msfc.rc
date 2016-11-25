@@ -1,16 +1,22 @@
 load alias
 alias -c *
 
+alias Q exit -y
+alias b banner
 alias h help
 alias j jobs -l -v
+alias r resource
 alias rr resource /home/dsf/.dotfiles/msfc.rc
 alias sa show advanced
 alias se sess
-alias sr search
 alias sl sessions -l -x
 alias so show options
-alias r resource
+alias V set VERBOSE true
+alias sr search
 alias u use
-# alias -f elevate 'execute -i -c -f /data/local/tmp/x'
 
-set PROMPT "%bld[%clr%grnmsf%clr: j:%J s:%S%bld]"
+setg ConsoleLogging true
+setg LogLevel 3
+setg PROMPT "%bld[%clr%grnmsf%clr: j:%J s:%S%bld]"
+setg SessionLogging true
+setg TimestampOutput true
