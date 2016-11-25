@@ -144,6 +144,7 @@ alias dpl='dpkg -L'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F-%T'"
+alias tgi=telegram-cli
 
 src_index() {
 		find . \
