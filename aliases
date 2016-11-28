@@ -12,8 +12,8 @@ alias c=z
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
-# alias adl='adb logcat -T 10 -v threadtime WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w "~/.logs/adb-$(date "+%Y%m%e-%R:%S").log"'
-alias adl='adb logcat -v threadtime DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav '
+alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-logcat/$(date "+%F-%T").log'
+alias adll='adb logcat -v threadtime |& lnav -w ~/.logs/adb-logcat/$(date "+%F-%T").log'
 alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
