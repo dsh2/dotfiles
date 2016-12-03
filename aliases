@@ -26,6 +26,7 @@ ash() {
 }
 alias a_=ash
 a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 ); }
+a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 if [ "$UNAME" = "Darwin" ]; then
@@ -111,7 +112,7 @@ alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
 pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
-alias tm=tmux
+alias tm=/usr/bin/tmux
 alias tma='tmux attach'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
@@ -134,6 +135,7 @@ alias q='qiv -uBRfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias M=make
+alias ndd=ndk-build
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
@@ -145,6 +147,9 @@ alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F-%T'"
 alias tgi=telegram-cli
+alias ncn=nmcli
+alias ncnn='nmcli dev'
+alias ncnc='nmcli con'
 
 src_index() {
 		find . \
@@ -159,7 +164,6 @@ src_index() {
 						-name '*.h' -o \
 						-name '*.hpp' \
 				\) > cscope.files && command cscope -bi cscope.files;
-		ctags -R;
 }
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
