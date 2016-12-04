@@ -2,6 +2,7 @@ load alias
 alias -c *
 
 alias Q exit -y
+alias V set VERBOSE true
 alias b banner
 alias h help
 alias j jobs -l -v
@@ -11,8 +12,8 @@ alias sa show advanced
 alias se sess
 alias sl sessions -l -x
 alias so show options
-alias V set VERBOSE true
 alias sr search
+alias t threads -l -x
 alias u use
 
 setg ConsoleLogging true
