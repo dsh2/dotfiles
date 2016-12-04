@@ -256,6 +256,7 @@ Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'reedes/vim-colors-pencil'
+Plugin 'Valloric/vim-operator-highlight'
 
 syntax enable
 colorscheme default
@@ -547,3 +548,5 @@ hi Folded cterm=NONE
 
 set isfname-==
 
+nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>                " turn off YCM
+nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>                "turn on YCM
