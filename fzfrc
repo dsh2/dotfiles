@@ -17,8 +17,7 @@ export FZF_DEFAULT_OPTS="
 fbr() {
 	local branches branch
 	branches=$(git branch -va | grep -v HEAD) &&
-		branch=$(echo "$branches" |
-	fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m)| sed "s/.* //" | sed "s#remotes/[^/]*/##"
+		branch=$(echo "$branches" | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) | sed "s/.* //" | sed "s#remotes/[^/]*/##"
 	echo Checking out branch $branch...
 	git checkout "$branch" 
 }
