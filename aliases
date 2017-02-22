@@ -148,6 +148,7 @@ alias n="date '+%F %T'"
 alias nn="date '+%F-%T'"
 alias tgi=telegram-cli
 alias ncn=nmcli
+alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
 
