@@ -78,9 +78,17 @@ Plugin 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
 let g:neomru#update_interval=60
 Plugin 'Shougo/vimfiler.vim'
+let g:vimfiler_define_wrapper_commands = 1
+let g:vimfiler_no_default_key_mappings = 0
+let g:vimfiler_quick_look_command = 'gloobus-preview'
+let g:vimfiler_expand_jump_to_first_child = 0
+let g:vimfiler_time_format = "%Y-%m-%d %H:%M:%S"
+
+Plugin 'Shougo/vinarise.vim'
 
 " Utils
 Plugin 'wellle/tmux-complete.vim'
+let g:tmuxcomplete#trigger = 'omnifunc'
 nnoremap <leader>jj :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
