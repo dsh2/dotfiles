@@ -107,10 +107,6 @@ Plugin 'vim-scripts/SelectBuf'
 nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
-Plugin 'mkitt/tabline.vim'
-hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 Plugin 'milkypostman/vim-togglelist'
 
 Plugin 'kana/vim-textobj-user'
@@ -123,7 +119,11 @@ Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'vim-utils/vim-space'
 
 Plugin 'junegunn/goyo.vim'
-
+Plugin 'junegunn/vim-github-dashboard'
+let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
+Plugin 'gcmt/taboo.vim'
+let g:taboo_tab_format = " %N|%P%f%m%U "
+let g:taboo_renamed_tab_format =" %N|%l%m%U "
 Plugin 'sickill/vim-pasta'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
