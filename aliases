@@ -122,6 +122,7 @@ alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
 alias -g gg='|& grep -i --color '
+alias -g ggs='|& strings | grep -i --color '
 alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
@@ -151,6 +152,7 @@ alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
+alias vv=voltron 
 
 src_index() {
 		find . \
