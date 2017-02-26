@@ -505,6 +505,8 @@ function! s:Redir(cmd) abort
 	set buftype=nofile
 endfunction
 map  
+map  :bnext<cr>
+
 map <leader><c-l> :redraw!<cr>
 
 function! MarkWindowSwap()
@@ -528,15 +530,16 @@ endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
-map <leader>la :Ag<cr>
-map <leader>lf :Files<cr>
-map <leader>lt :Filetypes<cr>
-map <leader>ll :Lines<cr>
-map <leader>lL :BLines<cr>
-map <leader>lc :Commits<cr>
-map <leader>lC :BCommits<cr>
-map <leader>lb :Buffers<cr>
 map <leader>TT :Tags<cr>
+map <leader>lC :BCommits<cr>
+map <leader>lL :BLines<cr>
+map <leader>la :Ag<cr>
+map <leader>lb :Buffers<cr>
+map <leader>lb :Buffers<cr>
+map <leader>lc :Commits<cr>
+map <leader>lf :Files<cr>
+map <leader>ll :Lines<cr>
+map <leader>lt :Filetypes<cr>
 
 nnoremap <C-W>M <C-W>\| <C-W>_
 nnoremap <C-W>m <C-W>=
@@ -557,6 +560,3 @@ nmap <leader>G :Goyo<cr>:redraw!<cr>
 hi Folded cterm=NONE
 
 set isfname-==
-
-nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>                " turn off YCM
-nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>                "turn on YCM
