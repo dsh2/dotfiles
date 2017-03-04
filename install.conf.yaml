@@ -32,6 +32,7 @@
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
     ~/.vim/bundle/Vundle.vim: Vundle.vim
+    ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
     ~/bin/adb-ip-reconnect.sh: bin/adb-ip-reconnect.sh
