@@ -81,5 +81,5 @@ if [ ! $SSH_TTY ]; then
 fi
 
 export MYHOSTNAME=${HOSTNAME/.*/}
-set +x
+[ -e ~/.environment.local ] && source ~/.environment.local 
 # vim: se ft=shell:

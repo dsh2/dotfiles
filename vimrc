@@ -9,6 +9,8 @@ set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'vim-scripts/info.vim'
+
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
 Plugin 'christoomey/vim-system-copy'
@@ -78,9 +80,17 @@ let g:neomru#update_interval=60
 Plugin 'Shougo/vimfiler.vim'
 Plugin 'romgrk/vimfiler-prompt'
 autocmd FileType vimfiler nmap <buffer> i :VimFilerPrompt<CR>
+let g:vimfiler_define_wrapper_commands = 1
+let g:vimfiler_no_default_key_mappings = 0
+let g:vimfiler_quick_look_command = 'gloobus-preview'
+let g:vimfiler_expand_jump_to_first_child = 0
+let g:vimfiler_time_format = "%Y-%m-%d %H:%M:%S"
+
+Plugin 'Shougo/vinarise.vim'
 
 " Utils
 Plugin 'wellle/tmux-complete.vim'
+let g:tmuxcomplete#trigger = 'omnifunc'
 nnoremap <leader>jj :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
@@ -99,10 +109,6 @@ Plugin 'vim-scripts/SelectBuf'
 nmap <silent><M-F3> :Buffers<cr>
 nmap <silent> <F3> <Plug>SelectBuf
 let g:selBufDoFileOnClose=0
-Plugin 'mkitt/tabline.vim'
-hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 Plugin 'milkypostman/vim-togglelist'
 
 Plugin 'kana/vim-textobj-user'
@@ -115,7 +121,11 @@ Plugin 'vim-scripts/argtextobj.vim'
 Plugin 'vim-utils/vim-space'
 
 Plugin 'junegunn/goyo.vim'
-
+Plugin 'junegunn/vim-github-dashboard'
+let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
+Plugin 'gcmt/taboo.vim'
+let g:taboo_tab_format = " %N|%P%f%m%U "
+let g:taboo_renamed_tab_format =" %N|%l%m%U "
 Plugin 'sickill/vim-pasta'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'embear/vim-foldsearch'
