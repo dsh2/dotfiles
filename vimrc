@@ -10,6 +10,16 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'vim-scripts/info.vim'
+let g:markology_textlower = "\t>"
+let g:markology_textupper = "\t}"
+let g:markology_textother = "\t:"
+let g:markology_hlline_lower = 1
+let g:markology_hlline_upper = 1
+let g:markology_hlline_other = 1
+highlight MarkologyHLl ctermfg=Cyan ctermbg=black
+highlight MarkologyHLu ctermfg=Cyan ctermbg=black
+highlight MarkologyHLo ctermfg=Cyan ctermbg=black
+Plugin 'jeetsukumaran/vim-markology'
 
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
@@ -351,7 +361,7 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=4
+set tabstop=8
 set ttimeoutlen=50
 set title
 set titleold=''
@@ -531,6 +541,7 @@ nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
 map <leader>TT :Tags<cr>
+map <leader>HH :Helptags<cr>
 map <leader>lC :BCommits<cr>
 map <leader>lL :BLines<cr>
 map <leader>la :Ag<cr>
