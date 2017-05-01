@@ -1,21 +1,19 @@
 let mapleader = "\<Space>"
+
 " Setup Vundle.vim
 set nocompatible
 filetype off
-
 set runtimepath+=~/.vim/bundle/Vundle.vim
-
-" Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-
 Plugin 'vim-scripts/info.vim'
+let g:markology_enable = 0
 let g:markology_textlower = "\t>"
 let g:markology_textupper = "\t}"
 let g:markology_textother = "\t:"
-let g:markology_hlline_lower = 1
-let g:markology_hlline_upper = 1
-let g:markology_hlline_other = 1
+let g:markology_hlline_lower = 0
+let g:markology_hlline_upper = 0
+let g:markology_hlline_other = 0
 highlight MarkologyHLl ctermfg=Cyan ctermbg=black
 highlight MarkologyHLu ctermfg=Cyan ctermbg=black
 highlight MarkologyHLo ctermfg=Cyan ctermbg=black
