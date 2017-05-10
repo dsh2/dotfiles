@@ -166,7 +166,7 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 
-Plugin 'edsono/vim-matchit'
+Plugin 'bumaociyuan/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 
 " tmux 
