@@ -1,15 +1,23 @@
 let mapleader = "\<Space>"
+
 " Setup Vundle.vim
 set nocompatible
 filetype off
-
 set runtimepath+=~/.vim/bundle/Vundle.vim
-
-" Begin of setup Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-
 Plugin 'vim-scripts/info.vim'
+let g:markology_enable = 0
+let g:markology_textlower = "\t>"
+let g:markology_textupper = "\t}"
+let g:markology_textother = "\t:"
+let g:markology_hlline_lower = 0
+let g:markology_hlline_upper = 0
+let g:markology_hlline_other = 0
+highlight MarkologyHLl ctermfg=Cyan ctermbg=black
+highlight MarkologyHLu ctermfg=Cyan ctermbg=black
+highlight MarkologyHLo ctermfg=Cyan ctermbg=black
+Plugin 'jeetsukumaran/vim-markology'
 
 Plugin 'sukima/xmledit'
 Plugin 'christoomey/vim-sort-motion'
@@ -160,7 +168,7 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 
-Plugin 'edsono/vim-matchit'
+Plugin 'bumaociyuan/vim-matchit'
 Plugin 'vim-scripts/renamer.vim'
 
 " tmux 
@@ -355,7 +363,7 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=4
+set tabstop=8
 set ttimeoutlen=50
 set title
 set titleold=''
@@ -509,6 +517,8 @@ function! s:Redir(cmd) abort
 	set buftype=nofile
 endfunction
 map  
+map  :bnext<cr>
+
 map <leader><c-l> :redraw!<cr>
 
 function! MarkWindowSwap()
@@ -532,15 +542,17 @@ endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
-map <leader>la :Ag<cr>
-map <leader>lf :Files<cr>
-map <leader>lt :Filetypes<cr>
-map <leader>ll :Lines<cr>
-map <leader>lL :BLines<cr>
-map <leader>lc :Commits<cr>
-map <leader>lC :BCommits<cr>
-map <leader>lb :Buffers<cr>
 map <leader>TT :Tags<cr>
+map <leader>HH :Helptags<cr>
+map <leader>lC :BCommits<cr>
+map <leader>lL :BLines<cr>
+map <leader>la :Ag<cr>
+map <leader>lb :Buffers<cr>
+map <leader>lb :Buffers<cr>
+map <leader>lc :Commits<cr>
+map <leader>lf :Files<cr>
+map <leader>ll :Lines<cr>
+map <leader>lt :Filetypes<cr>
 
 nnoremap <C-W>M <C-W>\| <C-W>_
 nnoremap <C-W>m <C-W>=
@@ -561,6 +573,3 @@ nmap <leader>G :Goyo<cr>:redraw!<cr>
 hi Folded cterm=NONE
 
 set isfname-==
-
-nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>                " turn off YCM
-nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>                "turn on YCM

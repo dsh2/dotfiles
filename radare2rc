@@ -1,5 +1,4 @@
 e anal.autoname = true
-e anal.bbsplit = true
 e anal.jmpabove = true
 e anal.jmpref = true
 e anal.jmptbl = true

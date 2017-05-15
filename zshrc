@@ -27,8 +27,9 @@ zle_highlight=( \
 
 bindkey -e
 bindkey '^x^z' vi-cmd-mode
+bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
 }
