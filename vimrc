@@ -86,6 +86,8 @@ Plugin 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
 let g:neomru#update_interval=60
 Plugin 'Shougo/vimfiler.vim'
+Plugin 'romgrk/vimfiler-prompt'
+autocmd FileType vimfiler nmap <buffer> i :VimFilerPrompt<CR>
 let g:vimfiler_define_wrapper_commands = 1
 let g:vimfiler_no_default_key_mappings = 0
 let g:vimfiler_quick_look_command = 'gloobus-preview'
@@ -238,6 +240,7 @@ let Tlist_GainFocus_On_ToggleOpen = 0
 let Tlist_Highlight_Tag_On_BufEnter = 1
 let Tlist_Auto_Open = 1
 let Tlist_Show_One_File = 1
+let Tlist_Ctags_Cmd='/opt/local/bin/ctags'
 map <leader>tt :TlistToggle<cr>
 
 " Highlights words under the cursor
@@ -269,6 +272,8 @@ let g:airline#extensions#whitespace#enabled = 0
 " Colorschemes
 "Plugin 'govindkrjoshi/CSApprox'
 "Plugin 'KevinGoodsell/vim-csexact'
+Plugin 'pwntester/cobalt2.vim'
+Plugin 'pwntester/VimCobaltColourScheme'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
