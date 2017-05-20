@@ -273,6 +273,7 @@ let g:airline#extensions#whitespace#enabled = 0
 "Plugin 'govindkrjoshi/CSApprox'
 "Plugin 'KevinGoodsell/vim-csexact'
 Plugin 'pwntester/cobalt2.vim'
+Plugin 'pwntester/VimCobaltColourScheme'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'jnurmine/Zenburn'
 Plugin 'junegunn/seoul256.vim'
