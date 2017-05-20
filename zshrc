@@ -53,7 +53,7 @@ bindkey '^X^L' run-again-in-lnav
 
 function run-again-in-vp {
 	zle up-history
-	zle -U '|&vp'
+	zle -U ' |&vp'
 }
 zle -N run-again-in-vp
 bindkey '^X^X' run-again-in-vp 
