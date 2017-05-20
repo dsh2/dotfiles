@@ -293,9 +293,9 @@ Plugin 'chrisbra/csv.vim'
 " autocmd Filetype csv hi CSVColumnEven ctermbg=4
 " autocmd Filetype csv hi CSVColumnOdd  ctermbg=5
 let g:csv_no_column_highlight = 0
-let b:csv_arrange_align = 'llllllll'
+let b:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
-map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>
+map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 autocmd BufRead,BufNewFile *.csv set filetype=csv
 
 " Undotree
