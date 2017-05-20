@@ -76,6 +76,7 @@ l() {
 				--time-style='+%F %T' \
 				"$@";
 }
+alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias ltr=lt
 alias fr='fc -R'
@@ -147,13 +148,14 @@ alias dp=dpkg
 alias dpl='dpkg -L'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
-alias nn="date '+%F-%T'"
+alias nn="date '+%F_%T'"
 alias tgi=telegram-cli
 alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
 alias vv=voltron 
+alias k=kill
 
 src_index() {
 		find . \
@@ -178,7 +180,9 @@ alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias -g ss2s="|sed -re 's/[[:space:]]+/ /g'"
 alias -g ss2c="|sed -re 's/[[:space:]]+/,/g'"
 alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
+alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias w=wireshark
+alias ww='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; lnav -t ssldebug'
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
