@@ -73,6 +73,20 @@ autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
 
+# Open man in tmux pane if possible
+# TODO: Strip obvious cruft like like sudo and paths
+if [ -z "$TMUX" ]; then
+		bindkey '^[H' run-help
+else
+		run-help-tmux() {
+				COMMANDS=("${=LBUFFER}")
+				tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
+				zle redisplay
+		}
+		zle -N run-help-tmux
+		bindkey '^[H' run-help-tmux
+fi
+
 # complete words from tmux pane(s) {{{1
 # Source: http://blog.plenz.com/2012-01/zsh-complete-words-from-tmux-pane.html
 function tmux_pane_words() {
