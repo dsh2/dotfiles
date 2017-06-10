@@ -1,4 +1,6 @@
 export FZF_DEFAULT_OPTS="
+		--bind 'ctrl-q:toggle-preview-wrap'
+		--bind 'ctrl-e:toggle-preview'
 		--bind 'ctrl-b:page-up'
 		--bind 'ctrl-f:page-down'
 		--bind 'ctrl-p:previous-history' 
@@ -93,15 +95,4 @@ fzfz-file-widget() {
 zle     -N   fzfz-file-widget
 bindkey '^G' fzfz-file-widget
 
-if [ -z "$TMUX" ]; then
-		bindkey '^[H' run-help
-else
-		run-help-tmux() {
-				COMMANDS=("${=LBUFFER}")
-				tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
-				zle redisplay
-		}
-		zle -N run-help-tmux
-		bindkey '^[H' run-help-tmux
-fi
 # vim:ft=sh
