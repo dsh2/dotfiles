@@ -7,6 +7,7 @@ alias ...='cd ../..'
 alias ..='cd ..'
 cdp() { cd /proc/$(pidof $*) }
 source ~/.dotfiles/z/z.sh
+
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
@@ -96,9 +97,7 @@ viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 
 # Miscellaneous
-alias vbm='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage'
-alias vlc='~/Applications/VLC.app/Contents/MacOS/VLC'
-alias o='exo-open'
+alias o=exo-open
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
@@ -120,6 +119,7 @@ alias rm='trash -v'
 alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
+alias grep='grep --color'
 alias -g gg='|& grep -i --color -- '
 alias -g ggs='|& strings | grep -i --color '
 alias -g ggv='|& grep -v '
