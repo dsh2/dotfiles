@@ -105,7 +105,7 @@ alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks -
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
 alias le=$PAGER
-alias m='vimman'
+alias m=vimman
 alias p='ps -afx | grep -i --color'
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
