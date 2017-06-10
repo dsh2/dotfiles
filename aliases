@@ -7,8 +7,6 @@ alias ...='cd ../..'
 alias ..='cd ..'
 cdp() { cd /proc/$(pidof $*) }
 source ~/.dotfiles/z/z.sh
-alias c=z
-
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text'
