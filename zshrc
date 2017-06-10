@@ -14,6 +14,11 @@ RPS1="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
 PS1='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
 PS1=%F{240}$'${(r:$COLUMNS::\u2500:)}'$PS1
 
+if [ type dircolors > /dev/null 2>&1 ]; then
+		eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+fi
+export LS_COLORS
+
 # ZLE
 zle_highlight=( \
 	default:fg=default,bg=default \
