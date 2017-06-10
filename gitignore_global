@@ -2,6 +2,10 @@
 *.out
 core
 *.pyc
+gmon.out
+*.gcda
+.idea/
+cmake-build-*
 
 # Tags
 cscope.files
