@@ -178,6 +178,7 @@ zshaddhistory() {
 	print -sr -- ${1%%$'\n'}
 	# TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
 	fc -p .zsh_local_history
+	fc -P 
 }
 
 # Completion
@@ -232,11 +233,16 @@ REPORTTIME=10
 
 autoload run-help
 
-#eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
-
 source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
 
 stty -ixon
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
+ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
+ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
+ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
