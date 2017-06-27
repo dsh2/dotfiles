@@ -1,25 +1,80 @@
-# Prompt
+# vim: set foldmethod=marker foldlevel=0:
+
+# Prompts {{{
+setopt prompt_subst
+setopt prompt_cr
+setopt prompt_sp
+# export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< \n missing'
+# export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line (\n missing)'
+export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
 autoload -Uz vcs_info
 autoload -U colors && colors
 zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f '
 zstyle ':vcs_info:*' formats '%F{136}[%F{166}%b%F{136}]%f '
 zstyle ':vcs_info:*' branchformat '%b%F{1}:%F{3}%r'
 zstyle ':vcs_info:*' disable bzr tla
-precmd() { vcs_info;  }
+precmd() { vcs_info; }
+
+# Main prompt {{{
+LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
+LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}'
+PS1=$LINE_SEPARATOR # Add horizontal separator line
+PS1+='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
-setopt PROMPT_SUBST 
-PS4=PS4:%N:%i:
-RPS1="[%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
-PS1='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
-PS1=%F{240}$'${(r:$COLUMNS::\u2500:)}'$PS1
+# }}}
 
+# Right prompt {{{
+ZLE_RPROMPT_INDENT=0
+RPS1=[%{$fg_no_bold[yellow]%} 			# Set beginning of right prompt
+RPS1+=%(0?.ok.err=%{$fg_no_bold[red]%}%?) 	# Add exit status of last job
+RPS1+=%(1j./%{$fg_no_bold[red]%}%j.) 		# Add number of jobs - if any
+RPS1+=%{$reset_color%}]				# End of right prompt
+# }}}
+
+# Trace prompt {{{
+PS4=PS4:%N:%i:
+# }}}
+# }}}
+
+# Dircolors {{{
 if [ type dircolors > /dev/null 2>&1 ]; then
-		eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+    eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 fi
 export LS_COLORS
+# }}}
 
-# ZLE
+# History {{{
+SAVEHIST=999999
+HISTSIZE=$SAVEHIST
+HISTFILE=~/.zsh_history
+HIST_STAMPS="yyyy-mm-dd"
+setopt complete_aliases
+setopt extended_history
+setopt hist_find_no_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_verify
+setopt inc_append_history_time
+setopt no_bang_hist
+setopt no_hist_ignore_all_dups
+setopt no_hist_ignore_dups
+# HISTORY_IGNORE="(^[[:space:]]+.*$)"
+zshaddhistory() {
+    # echo zshaddhistory: checking line \"${1%%$'\n'}\"...
+    # if [[ "$1" =~ $HISTORY_IGNORE ]]; then
+	# echo zshaddhistory: found match \"$MATCH\"
+	# echo zshaddhistory: line skipped
+	# return 1
+    # fi
+    # echo zshaddhistory: line NOT skipped
+    print -sr -- ${1%%$'\n'}
+    # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    fc -p .zsh_local_history
+}
+# }}}
+
+# ZLE {{{
 zle_highlight=( \
 	default:fg=default,bg=default \
 	# default:fg=213,bg=red,underline \
@@ -31,10 +86,10 @@ zle_highlight=( \
 )
 
 bindkey -e
-bindkey '^x^z' vi-cmd-mode
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
+
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
 }
@@ -48,13 +103,6 @@ function run-again-sudo {
 }
 zle -N run-again-sudo
 bindkey '^X^S' run-again-sudo 
-
-function run-again-in-lnav {
-	zle up-history
-	zle -U '|&lnav'
-}
-zle -N run-again-in-lnav
-bindkey '^X^L' run-again-in-lnav 
 
 function run-again-in-vp {
 	zle up-history
@@ -87,7 +135,7 @@ else
 		bindkey '^[H' run-help-tmux
 fi
 
-# complete words from tmux pane(s) {{{1
+# complete words from tmux pane(s)
 # Source: http://blog.plenz.com/2012-01/zsh-complete-words-from-tmux-pane.html
 function tmux_pane_words() {
   local expl
@@ -115,7 +163,6 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 # display the (interactive) menu on first execution of the hotkey
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
-# }}}
 
 function _showbuffers()
 {
@@ -134,70 +181,35 @@ function _showbuffers()
 zle -N showbuffers _showbuffers
 bindkey "^[o" showbuffers
 
-# Aliases
-source ~/.aliases
-typeset -a ealiases
-ealiases=(`alias | sed -e 's/=.*//'`)
-
-_expand-ealias() {
-# TODO: add blacklist for specific aliases not to be expanded
-  if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
-    zle _expand_alias
-    zle expand-word
-  fi
-  zle magic-space
+# TODO: Finish it!
+while-watch() {
+    if [ -n $* ]; then
+	echo while-watch: file/dir cmd
+	exit 1
+    fi
+    local watch
+    echo Watching \"$watch\"...
+    watch=$1
+    shift
+    . $*
+    while inotifywait -e modify ~/.dotfiles; do zz; find /usr/share/; echo $(eval $LINE_SEPARATOR); echo ${(r:$COLUMNS::_:)} ; done
 }
-_expand-ealias-and-execute() {
-	_expand-ealias
-	zle accept-line
-}
+# }}}
 
-zle -N _expand-ealias
-zle -N _expand-ealias-and-execute
-bindkey ' ' _expand-ealias
-# bindkey '^M' _expand-ealias-and-execute
-bindkey '^ ' magic-space          # control-space to bypass completion
-bindkey -M isearch " "  magic-space # normal space during searches
+# Completion {{{
+fpath+=~/.dotfiles/zsh-completions/
+fpath+=~/.dotfiles/zsh/zsh-completions/src
 
-# History
-SAVEHIST=999999
-HISTSIZE=$SAVEHIST
-HISTFILE=~/.zsh_history
-HIST_STAMPS="yyyy-mm-dd"
-setopt complete_aliases
-setopt extended_history
-setopt hist_find_no_dups
-setopt hist_ignore_space
-setopt hist_reduce_blanks
-setopt hist_verify
-setopt inc_append_history_time
-setopt no_bang_hist
-setopt no_hist_ignore_all_dups
-setopt no_hist_ignore_dups
-zshaddhistory() {
-	print -sr -- ${1%%$'\n'}
-	# TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
-	fc -p .zsh_local_history
-	fc -P 
-}
-
-# Completion
-fpath=(~/.dotfiles/zsh-completions/ $fpath)
-fpath=(~/.dotfiles/zsh/zsh-completions/src $fpath)
 autoload -U compinit && compinit
 zmodload zsh/complist
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
-bindkey -M emacs '^j' menu-complete
+bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
 bindkey -M menuselect '^h' backward-char
 
-#zstyle ':completion:*' completions 1
-#zstyle ':completion:*' glob 1
-#zstyle ':completion:*' matcher-list ''kk
-#zstyle ':completion:*' max-errors 2
-#zstyle ':completion:*' substitute 1
+# TODO: Add comments what we suppose to achive with all the zstyles
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
@@ -224,20 +236,18 @@ setopt nomenu_complete
 setopt auto_list
 setopt auto_menu
 setopt list_ambiguous
+# }}}
+
+# Shell options {{{
+autoload run-help
 setopt interactivecomments
 setopt autocd
 setopt cdablevars
-setopt prompt_subst
-
-REPORTTIME=10
-
-autoload run-help
-
-source ~/.environment
-source ~/.fzf.zsh
-source ~/.fzfrc
-
 stty -ixon
+
+REPORTTIME=3
+TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
+
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
 ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
@@ -246,3 +256,36 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
 ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
 ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
 ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
+# }}}
+
+# Setup aliases {{{
+source ~/.aliases
+typeset -a ealiases
+ealiases=(`alias | sed -e 's/=.*//'`)
+
+_expand-ealias() {
+# TODO: add blacklist for specific aliases not to be expanded
+  if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
+    zle _expand_alias
+    zle expand-word
+  fi
+  zle magic-space
+}
+_expand-ealias-and-execute() {
+	_expand-ealias
+	zle accept-line
+}
+
+zle -N _expand-ealias
+zle -N _expand-ealias-and-execute
+bindkey ' ' _expand-ealias
+# bindkey '^M' _expand-ealias-and-execute
+bindkey '^ ' magic-space          # control-space to bypass completion
+bindkey -M isearch " "  magic-space # normal space during searches
+# }}}
+
+# External ressource files {{{
+source ~/.environment
+source ~/.fzf.zsh
+source ~/.fzfrc
+# }}}
