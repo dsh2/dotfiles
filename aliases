@@ -5,8 +5,25 @@ alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
-cdp() { PIDS=(${=$(pidof $*)}); cd /proc/${PIDS[1]}; if [ -n "$PIDS[2]" ]; then echo PIDS = $PIDS; fi; }
-cd() { if [ -d "$*" ]; then builtin cd "$*"; else builtin cd $(dirname "$*"); fi }
+cdp() { 
+    CD_PIDS=(${=$(pidof $*)});
+    if [ -n "$CD_PIDS[1]" ]; then
+	cd /proc/${CD_PIDS[1]};
+	if [ -n "$CD_PIDS[2]" ]; then
+	    echo CD_PIDS = $CD_PIDS;
+	fi; 
+    else
+	echo no process matched \"$*\"
+    fi;
+}
+compdef _pids cdp
+
+cd() { 
+    if ! builtin cd $* 2> /dev/null; then 
+	builtin cd $(dirname "$*"); 
+    fi; 
+}
+
 source ~/.dotfiles/z/z.sh
 
 # AOSP
@@ -82,7 +99,7 @@ alias ltr=lt
 alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
-alias zz='source ~/.zshrc'
+alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 
