@@ -38,4 +38,4 @@
     ~/bin/adb-ip-reconnect.sh: bin/adb-ip-reconnect.sh
 
 - shell:
-    - [vim +PluginInstall +qall, Setting up Vundle.vim]
+    - [vim +PlugInstall +qall, Setting up Vundle.vim]
