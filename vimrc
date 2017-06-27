@@ -50,6 +50,7 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 map <leader>T :Tags<cr>
+map <leader>M :Marks<cr>
 map <leader>H :Helptags<cr>
 map <leader>h :Helptags<cr>
 map <leader>lC :BCommits<cr>
@@ -175,7 +176,8 @@ Plug 'chrisbra/csv.vim'
 " autocmd Filetype csv hi CSVColumnEven ctermbg=4
 " autocmd Filetype csv hi CSVColumnOdd  ctermbg=5
 let g:csv_no_column_highlight = 0
-let b:csv_arrange_align = 'lllllllllllllllllllllllllll'
+let b:csv_arrange_align = 'l*'
+let g:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
 " map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline = 0<cr>
@@ -194,7 +196,6 @@ autocmd BufRead *.smali set filetype=smali
 " }}}
 " Lua {{{
 Plug 'xolox/vim-lua-ftplugin'
-" Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 " }}}
 " Python {{{
@@ -237,18 +238,61 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_lua_checkers = ["luac", "luacheck"]
 let g:syntastic_lua_luacheck_args = "--no-unused-args" 
+let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
+let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:go_list_type = "quickfix"
 " }}}
-" taglist {{{
-Plug 'vim-scripts/taglist.vim'
-let Tlist_Use_Right_Window = 1
-let Tlist_WinWidth = 55
-let Tlist_Display_Prototype = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_GainFocus_On_ToggleOpen = 0
-let Tlist_Highlight_Tag_On_BufEnter = 1
-let Tlist_Auto_Open = 1
-let Tlist_Show_One_File = 1
-map <leader>t :TlistToggle<cr>
+" taglist/tagbar {{{
+" Plug 'vim-scripts/taglist.vim'
+" let Tlist_Use_Right_Window = 1
+" let Tlist_WinWidth = 55
+" let Tlist_Display_Prototype = 1
+" let Tlist_Exit_OnlyWindow = 1
+" let Tlist_GainFocus_On_ToggleOpen = 0
+" let Tlist_Highlight_Tag_On_BufEnter = 1
+" let Tlist_Auto_Open = 1
+" let Tlist_Show_One_File = 1
+" map <leader>t :TlistToggle<cr>
+Plug 'majutsushi/tagbar'
+let g:tagbar_autoclose = 0
+let g:tagbar_width = 50
+let g:tagbar_zoomwidth = 0
+let g:tagbar_compact = 1
+let g:tagbar_indent = 4
+let g:tagbar_show_linenumbers = 0
+let g:tagbar_autoshowtag = 1
+let g:tagbar_autopreview = 0
+
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+	\ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+	\ 'ctagsbin'  : 'gotags',
+	\ 'ctagsargs' : '-sort -silent'
+\ }
+autocmd VimEnter * nested :call tagbar#autoopen(1)
+map <leader>t :TagbarToggle<cr>
 " }}}
 " Markology {{{
 Plug 'jeetsukumaran/vim-markology'
@@ -298,7 +342,7 @@ let g:airline_theme='sol'
 " Dispatch {{{
 Plug 'tpope/vim-dispatch'
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
-map <leader>M :update<cr>:Make<cr>
+" map <leader>M :update<cr>:Make<cr>
 map <leader>R :update<cr>:source ~/.vimrc<cr>
 " }}}
 
@@ -308,7 +352,7 @@ Plug 'embear/vim-foldsearch'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-tbone'
-Plug 'kana/vim-fakeclip'
+" Plug 'kana/vim-fakeclip'
 let g:fakeclip_terminal_multiplexer_type = "tmux"
 let g:tmuxcomplete#trigger = 'omnifunc'
 Plug 'dkprice/vim-easygrep'
@@ -326,7 +370,7 @@ Plug 'chrisbra/Recover.vim'
 
 Plug 'junegunn/vim-peekaboo'
 let g:peekaboo_window = 'vertical botright 51new'
-let g:peekaboo_delay = 100
+let g:peekaboo_delay = 0
 let g:peekaboo_compact = 0
 
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -347,6 +391,8 @@ Plug 'vim-scripts/VCard-syntax'
 Plug 'Chiel92/vim-autoformat'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
+Plug 'fatih/vim-go'
+
 call plug#end()
 " }}}
 " Global options {{{
@@ -514,6 +560,12 @@ function! s:Redir(cmd) abort
 	set buftype=nofile
 endfunction
 
+command! -nargs=0 RelaxSearchPattern call <SID>RelaxSearchPattern()
+function! s:RelaxSearchPattern() abort
+	let @/=substitute(@/, "^\\V", "", "g")
+	let @/=substitute(@/, "_", ".*", "g")
+	let @/ = inputdialog("@/: ", @/)
+endfunction
 
 function! MarkWindowSwap()
     let g:markedWinNum = winnr()
