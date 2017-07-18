@@ -112,7 +112,8 @@ alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
 alias vl=last
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
+compdef _man vimman
 
 # Miscellaneous
 alias o=exo-open
@@ -153,9 +154,12 @@ alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias xcc='tmux show-buffer | xc'
+xp() { echo "$*" | xc }
 alias M=make
 alias ndd=ndk-build
 alias Gdb='gdb -q -ex "b main" -ex run --args '
+alias G='gdbserver :2000 '
+GG() { while true; do G $*; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
@@ -201,7 +205,11 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+alias ww='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:/dev/null" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 &'
+alias wws='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
+alias xpid='xprop  _NET_WM_PID | cut -d= -f2 | trim'
+alias xps='ps axu gg $(xpid)'
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
