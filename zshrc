@@ -104,6 +104,14 @@ function run-again-sudo {
 zle -N run-again-sudo
 bindkey '^X^S' run-again-sudo 
 
+function xp-command {
+	zle up-history
+	zle beginning-of-line
+	zle -U 'xp '
+}
+zle -N xp-command
+bindkey '^X^P' xp-command 
+
 function run-again-in-vp {
 	zle up-history
 	zle -U ' |&vp'
@@ -128,7 +136,8 @@ if [ -z "$TMUX" ]; then
 else
 		run-help-tmux() {
 				COMMANDS=("${=LBUFFER}")
-				tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
+				# tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
+				tmux split -vbp 80 $SHELL -ic "vimman ${COMMANDS[1]}"
 				zle redisplay
 		}
 		zle -N run-help-tmux
