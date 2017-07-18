@@ -103,7 +103,7 @@ function! BuildYCM(info)
     !./install.py
   endif
 endfunction
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 nnoremap <leader>jj :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
@@ -259,8 +259,9 @@ let g:tagbar_autoclose = 0
 let g:tagbar_width = 50
 let g:tagbar_zoomwidth = 0
 let g:tagbar_compact = 1
-let g:tagbar_indent = 4
+let g:tagbar_indent = 1 
 let g:tagbar_show_linenumbers = 0
+let g:tagbar_autofocus = 1
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
 
@@ -347,6 +348,7 @@ map <leader>R :update<cr>:source ~/.vimrc<cr>
 " }}}
 
 Plug 'sickill/vim-pasta'
+let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 Plug 'tpope/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'tpope/vim-rsi'
@@ -367,6 +369,7 @@ Plug 'vim-scripts/info.vim'
 Plug 'romgrk/winteract.vim'
 nmap gw :InteractiveWindow<CR>
 Plug 'chrisbra/Recover.vim'
+Plug 'Shougo/vinarise.vim'
 
 Plug 'junegunn/vim-peekaboo'
 let g:peekaboo_window = 'vertical botright 51new'
@@ -392,6 +395,7 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 Plug 'fatih/vim-go'
+map gD :GoDocBrowser<cr>
 
 call plug#end()
 " }}}
