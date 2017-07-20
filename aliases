@@ -128,7 +128,6 @@ ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
-pss() { port search --line $@ | vim -c "nmap Q :q!<cr>" -c "let b:csv_headerline = 0 " -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "setlocal nomodifiable" -; }
 alias tm=/usr/bin/tmux
 alias tma='tmux attach'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
@@ -208,8 +207,10 @@ alias w=wireshark
 alias ww='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:/dev/null" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 &'
 alias wws='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
-alias xpid='xprop  _NET_WM_PID | cut -d= -f2 | trim'
-alias xps='ps axu gg $(xpid)'
+alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
+alias xpf=xpidof
+alias xps='ps axu gg $(xpidof)'
+alias pss='gdb -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
