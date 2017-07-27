@@ -160,6 +160,9 @@ alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000 '
 GG() { while true; do G $*; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
 alias cloc='locate .zsh_local_history | xargs grep --color '
+alias zloc='fc -p .zsh_local_history'
+alias fcp='fc -P'
+alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
 alias sc=systemctl 
@@ -204,13 +207,14 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:/dev/null" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 &'
-alias wws='${WIRESHARK:-wireshark} -d tcp.port==1025-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:/dev/null" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 &'
+alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
+jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
