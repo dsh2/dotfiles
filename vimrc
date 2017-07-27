@@ -80,7 +80,7 @@ highlight GitGutterAdd ctermbg=black
 " DirDiff {{{
 Plug 'will133/vim-dirdiff'
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-Plug 'rickhowe/diffchar.vim'
+" Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
 " }}}
 " cscope {{{
@@ -103,7 +103,7 @@ function! BuildYCM(info)
     !./install.py
   endif
 endfunction
-" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 nnoremap <leader>jj :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
@@ -370,6 +370,7 @@ Plug 'romgrk/winteract.vim'
 nmap gw :InteractiveWindow<CR>
 Plug 'chrisbra/Recover.vim'
 Plug 'Shougo/vinarise.vim'
+map <leader>V :Vinarise<cr>
 
 Plug 'junegunn/vim-peekaboo'
 let g:peekaboo_window = 'vertical botright 51new'
