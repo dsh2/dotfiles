@@ -17,8 +17,8 @@ precmd() { vcs_info; }
 
 # Main prompt {{{
 LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}'
-PS1=$LINE_SEPARATOR # Add horizontal separator line
+# LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
+PS1=$LINE_SEPARATOR 				# Add horizontal separator line
 PS1+='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -251,6 +251,8 @@ setopt list_ambiguous
 autoload run-help
 setopt interactivecomments
 setopt autocd
+setopt autopushd
+set push
 setopt cdablevars
 stty -ixon
 
