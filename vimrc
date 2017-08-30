@@ -11,7 +11,7 @@ endif
 call plug#begin('~/.vim/plugged')
 " Unite {{{
 Plug 'Shougo/unite.vim'
-nnoremap <silent> <leader>b :<C-u>Unite buffer file_mru<CR>
+nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
 nnoremap <silent> <F3> :Unite buffer<cr>
 
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
@@ -56,7 +56,7 @@ map <leader>h :Helptags<cr>
 map <leader>lC :BCommits<cr>
 map <leader>lL :BLines<cr>
 map <leader>la :Ag<cr>
-map <leader>lb :Buffers<cr>
+map <leader>b :Buffers<cr>
 map <leader>lc :Commits<cr>
 map <leader>lf :Files<cr>
 map <leader>ll :Lines<cr>
@@ -103,7 +103,9 @@ function! BuildYCM(info)
     !./install.py
   endif
 endfunction
+let g:loaded_youcompleteme = 0
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+let g:ycm_autoclose_preview_window_after_insertion = 1
 nnoremap <leader>jj :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
@@ -261,7 +263,7 @@ let g:tagbar_zoomwidth = 0
 let g:tagbar_compact = 1
 let g:tagbar_indent = 1 
 let g:tagbar_show_linenumbers = 0
-let g:tagbar_autofocus = 1
+let g:tagbar_autofocus = 0
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
 
@@ -330,6 +332,13 @@ Plug 'pwntester/cobalt2.vim'
 Plug 'reedes/vim-colors-pencil'
 Plug 'tomasr/molokai'
 Plug 'Valloric/vim-operator-highlight'
+Plug 'mileszs/ack.vim'
+let g:ackhighlight = 1
+let g:ack_autofold_results = 1
+let g:ackpreview = 0
+let g:ack_use_dispatch = 1
+map <leader>a :Ack! <cword><CR>
+
 " }}}
 " VimAirline {{{
 Plug 'bling/vim-airline'
@@ -338,12 +347,12 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#whitespace#enabled = 0
 " let g:airline_theme='raven'
-let g:airline_theme='sol'
+let g:airline_theme='dark'
 " }}}
 " Dispatch {{{
 Plug 'tpope/vim-dispatch'
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
-" map <leader>M :update<cr>:Make<cr>
+map <leader>m :update<cr>:Make<cr>
 map <leader>R :update<cr>:source ~/.vimrc<cr>
 " }}}
 
@@ -397,6 +406,8 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
+
+Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 
 call plug#end()
 " }}}
@@ -453,6 +464,7 @@ set undodir=~/.vim/undodir/
 set undofile
 set updatetime=500
 let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/", "_", "g")
+" set verbose=1
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
@@ -598,6 +610,8 @@ function! EnableAutoWrite()
 endfunction
 
 hi Folded cterm=NONE
+
+inoremap jk <esc>
 
 " }}}
 " }}}
