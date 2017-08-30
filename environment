@@ -67,7 +67,7 @@ export SUDO_EDITOR=$VISUAL
 # Miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
 export BROWSER=/usr/bin/google-chrome-stable
-export GOPATH=$HOME/src/GO
+export GOPATH=$HOME/src/GO:/home/dsf/src/CRYPTO/boringssl/ssl/test/runner
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy_config
 export SSLKEYLOGFILE=$HOME/ssl_key_log
