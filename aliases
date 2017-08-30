@@ -5,8 +5,9 @@ alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
+alias cdd=popd
 cdp() { 
-    CD_PIDS=(${=$(pidof $*)});
+    CD_PIDS=(${=$(pidof "$*")});
     if [ -n "$CD_PIDS[1]" ]; then
 	cd /proc/${CD_PIDS[1]};
 	if [ -n "$CD_PIDS[2]" ]; then
@@ -96,6 +97,7 @@ l() {
 alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias ltr=lt
+alias lsd='l -d'
 alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
@@ -114,6 +116,25 @@ alias vl=last
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
 compdef _man vimman
+run() {
+    print Running \"$*\"...
+    print Start: $(n)
+    $* 
+    print err = $?
+    print Stop: $(n)
+    print -P $LINE_SEPARATOR
+}
+
+RUN() {
+    run $*
+    while true; do 
+	if inotifywait -q -e move_self -e modify "$1" > /dev/null ; then 
+	    sleep 0.1; 
+	    run $*
+	fi;
+	sleep 0.1; 
+    done
+}
 
 # Miscellaneous
 alias o=exo-open
@@ -153,12 +174,12 @@ alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias xcc='tmux show-buffer | xc'
-xp() { echo "$*" | xc }
+xp() { echo "$*" | xc ; }
 alias M=make
 alias ndd=ndk-build
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000 '
-GG() { while true; do G $*; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
+GG() { while true; do G "$*"; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
@@ -176,10 +197,13 @@ alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
-alias vv=voltron 
+alias vv=voltron
 alias k=kill
 alias pf=pidof
 alias fu=fuser
+alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
+alias s=stat
+alias rl='readlink -f '
 
 src_index() {
 		find . \
@@ -195,6 +219,7 @@ src_index() {
 						-name '*.hpp' \
 				\) > cscope.files && command cscope -bi cscope.files;
 }
+
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
@@ -207,7 +232,7 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:/dev/null" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 &'
+alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o tcp.no_subdissector_on_error:false -o ssl.debug_file:- -o ssl.keylog_file:<(cat **/*.keylogfile(.)) -r *.pcapng > /dev/null 2>&1 &'
 alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
