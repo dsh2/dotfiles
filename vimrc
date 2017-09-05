@@ -613,8 +613,8 @@ endfunction
 hi Folded cterm=NONE
 
 inoremap jk <esc>
-noremap dfj :diffget //2<cr>|diffupdate<cr>
-noremap dfk :diffget //3<cr>|diffupdate<cr>
+noremap dfj :diffget //2<cr>|diffupdate
+noremap dfk :diffget //3<cr>|diffupdate
 noremap dfu :diffupdate<cr>
 
 " }}}
