@@ -408,6 +408,7 @@ Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
+Plug 'sgeb/vim-diff-fold' 
 
 call plug#end()
 " }}}
@@ -612,6 +613,9 @@ endfunction
 hi Folded cterm=NONE
 
 inoremap jk <esc>
+noremap dfj :diffget //2<cr>|diffupdate<cr>
+noremap dfk :diffget //3<cr>|diffupdate<cr>
+noremap dfu :diffupdate<cr>
 
 " }}}
 " }}}
