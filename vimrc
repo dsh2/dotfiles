@@ -143,8 +143,8 @@ nmap <leader>N :tabnew<cr>
 " }}}
 " ToggleList {{{
 Plug 'milkypostman/vim-togglelist'
-nmap <silent> <leader><c-h> :colder<CR>
-nmap <silent> <leader><c-l> :cnewer<CR>
+nmap <silent> <leader><c-j> :colder<CR>
+nmap <silent> <leader><c-k> :cnewer<CR>
 nmap <silent> <leader>O :copen<CR>
 " }}}
 " General edit help {{{
@@ -321,7 +321,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 nmap <F6> :NextColorScheme<CR>
 "Plug 'govindkrjoshi/CSApprox'
 "Plug 'KevinGoodsell/vim-csexact'
-Plug 'AlessandroYorba/Monrovia'
+" Plug 'AlessandroYorba/Monrovia'
 Plug 'altercation/vim-colors-solarized'
 Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'jnurmine/Zenburn'
@@ -409,6 +409,7 @@ map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'vim-scripts/diff-fold.vim'
+Plug 'https://github.com/idanarye/vim-merginal'
 
 call plug#end()
 " }}}
@@ -619,5 +620,3 @@ noremap dfu :diffupdate<cr>
 
 " }}}
 " }}}
-
-
