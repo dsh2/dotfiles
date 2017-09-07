@@ -1,0 +1,12 @@
+BoldAsFont=-1
+Locale=C
+Charset=UTF-8
+Columns=271
+Rows=77
+Term=xterm-256color
+CursorType=block
+CursorBlinks=no
+ClicksPlaceCursor=yes
+BellType=0
+FontHeight=11
+Scrollbar=none

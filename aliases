@@ -244,4 +244,8 @@ jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 # Switch profile of running iTerm2 window
 it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
 
+if [ $OSTYPE = "cygwin" ]; then
+    alias sudo="cygstart --action=runas"
+fi
+
 # vim: se ft=sh:
