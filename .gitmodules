@@ -28,3 +28,6 @@
 [submodule "fzf_browser"]
 	path = fzf_browser
 	url = https://github.com/ggVGc/fzf_browser
+[submodule "mintty-colors-solarized"]
+	path = mintty-colors-solarized
+	url = https://github.com/mavnn/mintty-colors-solarized
