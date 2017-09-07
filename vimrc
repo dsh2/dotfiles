@@ -408,7 +408,7 @@ Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
-Plug 'sgeb/vim-diff-fold' 
+Plug 'vim-scripts/diff-fold.vim'
 
 call plug#end()
 " }}}
@@ -619,3 +619,5 @@ noremap dfu :diffupdate<cr>
 
 " }}}
 " }}}
+
+
