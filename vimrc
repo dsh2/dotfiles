@@ -71,6 +71,7 @@ nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
+nmap <leader>gV :GV!<cr>
 Plug 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
@@ -458,7 +459,7 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=8
+set tabstop=4
 set title
 set titleold=''
 set ttimeoutlen=50
@@ -615,8 +616,13 @@ hi Folded cterm=NONE
 
 inoremap jk <esc>
 noremap dfj :diffget //2<cr>|diffupdate
+noremap dfh :diffget //2<cr>|diffupdate
 noremap dfk :diffget //3<cr>|diffupdate
+noremap dfl :diffget //3<cr>|diffupdate
 noremap dfu :diffupdate<cr>
+nmap <leader>DD :diffthis<CR>
+nmap <leader>DO :diffoff<CR>
+nmap <leader>DS :vertical diffsplit<CR>
 
 " }}}
 " }}}
