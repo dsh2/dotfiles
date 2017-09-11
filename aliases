@@ -75,6 +75,7 @@ alias gcr='git clone --recursive --verbose '
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
+alias gk=gitk
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -104,6 +105,8 @@ alias r=ranger
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
+alias mkd='mkdir -p'
+alias mkp=mkd
 
 # Vim aliases
 alias v='vim -X'
