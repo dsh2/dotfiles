@@ -52,7 +52,7 @@ if [ "$UNAME" = "Darwin" ]; then
 		alias loc=glocate
 else
 		alias f=find
-		alias loc=locate
+		loc() { locate "$*" | grep --color "$*"; }
 fi
 alias fdd='f . -type d'
 alias ff='f . -type f'
@@ -76,6 +76,8 @@ alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
 alias gk=gitk
+alias gcp='git cherry-pick'
+alias gpp='git pull --recurse-submodules --jobs=4 --verbose'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -107,6 +109,8 @@ alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 alias mkp=mkd
+alias goo=googler
+alias wh=whence
 
 # Vim aliases
 alias v='vim -X'
@@ -129,9 +133,18 @@ run() {
 }
 
 RUN() {
+	[ -z $1 ] && { echo Nothing to run.; return; }
+	if [ $1 = "--watch" -o $1 = "-w" ]; then
+		WATCH=$2
+		shift 2
+	else 
+		WATCH=$1
+	fi
+	[ -z $WATCH ] && { echo Nothing to watch.; return; }
+	[ -z $1 ] && { echo Nothing to run.; return; }
     run $*
     while true; do 
-	if inotifywait -q -e move_self -e modify "$1" > /dev/null ; then 
+	if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then 
 	    sleep 0.1; 
 	    run $*
 	fi;
@@ -206,7 +219,7 @@ alias pf=pidof
 alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
-alias rl='readlink -f '
+rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
 		find . \
