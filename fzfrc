@@ -1,12 +1,12 @@
 export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-q:toggle-preview-wrap'
 		--bind 'ctrl-e:toggle-preview'
-		--bind 'ctrl-b:page-up'
-		--bind 'ctrl-f:page-down'
+		--bind 'alt-u:page-up'
+		--bind 'alt-d:page-down'
 		--bind 'ctrl-p:previous-history' 
 		--bind 'ctrl-n:next-history'
-		--bind 'ctrl-r:execute(ranger {})'
-		--bind 'ctrl-v:execute(vim {})'
+		--bind 'ctrl-r:execute(tmux split -h ranger {})'
+		--bind 'ctrl-v:execute(tmux split -h vim {})'
 		--bind 'ctrl-t:execute(tmux set-buffer {})'
 		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
 		--history=${HOME}/.fzf_history
@@ -76,17 +76,18 @@ gch() {
   awk -F $sep '{printf "%s #%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3, $4}' |
   fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open > /dev/null 2>&1
   zle redisplay
-
 }
 zle		-N		gch
 bindkey	'\eU'	gch
 
 __fzfz() {
-    eval "z -l|cut -f 2" | fzf --tac --tiebreak=index -m --preview="ls --color=always -al {} " | while read item; do
+	unset REPORTTIME
+	eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " | while read item; do
     printf '%q ' "$item"
   done
   echo
 }
+
 fzfz-file-widget() {
   LBUFFER="${LBUFFER}$(__fzfz)"
   zle redisplay
