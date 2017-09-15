@@ -208,6 +208,7 @@ while-watch() {
 # Completion {{{
 fpath+=~/.dotfiles/zsh-completions/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
+fpath+=~/.dotfiles/googler/auto-completion/zsh
 
 autoload -U compinit && compinit
 zmodload zsh/complist
