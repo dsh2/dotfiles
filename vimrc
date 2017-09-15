@@ -54,12 +54,12 @@ map <leader>M :Marks<cr>
 map <leader>H :Helptags<cr>
 map <leader>h :Helptags<cr>
 map <leader>lC :BCommits<cr>
-map <leader>lL :BLines<cr>
+map <leader>ll :BLines<cr>
 map <leader>la :Ag<cr>
 map <leader>b :Buffers<cr>
 map <leader>lc :Commits<cr>
 map <leader>lf :Files<cr>
-map <leader>ll :Lines<cr>
+map <leader>lL :Lines<cr>
 map <leader>lt :Filetypes<cr>
 " }}}
 " Git {{{
