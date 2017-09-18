@@ -16,7 +16,8 @@ zstyle ':vcs_info:*' disable bzr tla
 precmd() { vcs_info; }
 
 # Main prompt {{{
-LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
+# LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
+LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}'$'\n'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR 				# Add horizontal separator line
 PS1+='%F{240}[%F{244}%n%F{240}] %F{136}%~ ${vcs_info_msg_0_}%f%# '
