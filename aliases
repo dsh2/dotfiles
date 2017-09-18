@@ -25,6 +25,7 @@ cd() {
     fi; 
 }
 cb() { if DIR=$(dirs -lp | uniq | tac | fzf); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
+alias cv=cb
 
 source ~/.dotfiles/z/z.sh
 
