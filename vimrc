@@ -49,6 +49,10 @@ command! -bang -nargs=* Ag
   \                         : fzf#vim#with_preview('right:50%'),
   \                 <bang>0)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+let g:fzf_layout = { 'down': '~70:%' }
+imap <c-x><c-h> <plug>(fzf-complete-path)
+inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
+
 map <leader>T :Tags<cr>
 map <leader>M :Marks<cr>
 map <leader>H :Helptags<cr>
@@ -61,6 +65,7 @@ map <leader>lc :Commits<cr>
 map <leader>lf :Files<cr>
 map <leader>lL :Lines<cr>
 map <leader>lt :Filetypes<cr>
+map <leader>w :Windows<cr>
 " }}}
 " Git {{{
 Plug 'tpope/vim-fugitive'
@@ -423,6 +428,7 @@ set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set cmdheight=1
 set cmdwinheight=10
+set concealcursor=n
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
@@ -611,6 +617,8 @@ nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 function! EnableAutoWrite()
   exe ":au FocusLost" expand("%") ":update"
 endfunction
+
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
 hi Folded cterm=NONE
 
