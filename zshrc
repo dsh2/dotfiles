@@ -33,7 +33,7 @@ PS1+='%f%# '						# Add user status
 ZLE_RPROMPT_INDENT=0
 RPS1=[%{$fg_no_bold[yellow]%} 		# Set beginning of right prompt
 # RPS1+=%(0?.ok.err=%{$fg_no_bold[red]%}%?) 	# Add exit status of last job
-RPS1+=%(1j.%{$fg_no_bold[red]%}%j.0)# Add number of jobs - if any
+RPS1+=%(1j.%{$fg_no_bold[red]%}%j.0) # Add number of jobs - if any
 RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 
@@ -98,6 +98,8 @@ WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
 function _backward_kill_default_word() {
   WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
 }
+bindkey '^?' undo
+
 zle -N backward-kill-default-word _backward_kill_default_word
 bindkey '\e=' backward-kill-default-word   # = is next to backspace
 
