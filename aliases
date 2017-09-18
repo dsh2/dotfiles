@@ -24,6 +24,7 @@ cd() {
 	builtin cd $(dirname "$*"); 
     fi; 
 }
+cb() { if DIR=$(dirs -lp | uniq | tac | fzf); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
 
 source ~/.dotfiles/z/z.sh
 
