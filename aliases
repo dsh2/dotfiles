@@ -99,6 +99,7 @@ l() {
 				--time-style='+%F %T' \
 				"$@";
 }
+alias ls='l --format=across'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias ltr=lt
