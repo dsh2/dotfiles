@@ -42,7 +42,7 @@ nnoremap U <c-r>
 nmap <c-r> :History:<cr>
 nmap <c-e> :History/<cr>
 let g:fzf_tags_command = 'ctags -R'
-command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --margin 30%,0'})
+command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(<q-args>,
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
@@ -336,6 +336,9 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'pwntester/VimCobaltColourScheme'
 Plug 'pwntester/cobalt2.vim'
 Plug 'reedes/vim-colors-pencil'
+Plug 'chriskempson/base16-vim'
+" }}}
+
 Plug 'tomasr/molokai'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'mileszs/ack.vim'
