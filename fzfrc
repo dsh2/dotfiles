@@ -101,7 +101,7 @@ gch() {
   cp -vf "$HOME/.config/google-chrome-history" /tmp/h && sqlite3 -separator $sep /tmp/h  \
 	  "select datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), visit_count, substr(title, 1, $title_width), url from urls order by last_visit_time desc" |
   awk -F $sep '{printf "%s #%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3, $4}' |
-  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open > /dev/null 2>&1
+  fzf --prompt "chrome history ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " --ansi --multi | sed 's#.*\(https*://\)#\2#' | xargs open > /dev/null 2>&1
   zle redisplay
 }
 zle		-N		gch
