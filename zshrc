@@ -127,7 +127,7 @@ zle -N run-again-in-vp
 bindkey '^X^X' run-again-in-vp 
 function run-again-in-fzf {
 	zle up-history
-	zle -U '|&fzf'
+	zle -U ' |&fzf --ansi'
 }
 zle -N run-again-in-fzf
 bindkey '^X^F' run-again-in-fzf 

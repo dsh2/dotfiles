@@ -4,8 +4,10 @@ SESSIONS=(${=$(tmux list-sessions -F "#{session_name}")})
 CLIENTS=(${=$(tmux list-clients -F "#{client_name}")})
 
 if [ ${#SESSIONS} != 2 -o ${#CLIENTS} != 2 ]; then
-	print error: Need exaclty two tmux clients and two tmux sessions. 
+    if [ $1 != "--force" ]; then
+	print error: Need exaclty two tmux clients and two tmux sessions. Add --force to override.
 	exit
+    fi
 fi
 
 SWITCH=(1 2)
