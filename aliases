@@ -24,7 +24,7 @@ cd() {
 	builtin cd $(dirname "$*"); 
     fi; 
 }
-cb() { if DIR=$(dirs -lp | uniq | tac | fzf); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
+cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
 alias cv=cb
 
 source ~/.dotfiles/z/z.sh
@@ -77,7 +77,7 @@ alias gcr='git clone --recursive --verbose '
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
-alias gk='gitk --all'
+alias gk='gitk --all&'
 alias gcp='git cherry-pick'
 alias gpp='git pull --verbose --recurse-submodules --jobs=4'
 
@@ -167,7 +167,7 @@ ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
-alias tm=/usr/bin/tmux
+alias tm=tmux
 alias tma='tmux attach'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
@@ -250,8 +250,8 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o tcp.no_subdissector_on_error:false -o ssl.debug_file:- -o ssl.keylog_file:<(cat **/*.keylogfile(.)) -r *.pcapng > /dev/null 2>&1 &'
-alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o tcp.no_subdissector_on_error:false -o ssl.debug_file:/dev/null -o ssl.keylog_file:<(cat **/*.keylogfile(.)) -r *.pcapng > /dev/null 2>&1 &'
+alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
