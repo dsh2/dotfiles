@@ -37,6 +37,8 @@
     ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
     ~/bin/adb-ip-reconnect.sh: bin/adb-ip-reconnect.sh
+    ~/bin/tmux-cross-over.sh: bin/tmux-cross-over.sh 
+    ~/bin/tmux-random-background-color.sh: bin/tmux-random-background-color.sh
     ~/bin/goo: googler/googler
 
 - shell:
