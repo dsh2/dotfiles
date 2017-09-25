@@ -411,6 +411,7 @@ Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
 Plug 'vim-scripts/VCard-syntax'
 Plug 'Chiel92/vim-autoformat'
+let g:autoformat_verbosemode=1
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 Plug 'fatih/vim-go'
@@ -486,6 +487,7 @@ syntax enable
 nmap Q :qall<cr>
 map  
 map  :bnext<cr>
+map . :bprev<cr>
 map <leader><c-L> :redraw!<cr>
 nnoremap <C-W>M <C-W>\| <C-W>_
 nnoremap <C-W>m <C-W>=
