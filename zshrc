@@ -111,6 +111,13 @@ function run-again-sudo {
 zle -N run-again-sudo
 bindkey '^X^S' run-again-sudo 
 
+function xo-command {
+	zle up-history
+	zle -U ' | xc'
+}
+zle -N xo-command
+bindkey '^X^O' xo-command 
+
 function xp-command {
 	zle up-history
 	zle beginning-of-line
@@ -127,7 +134,7 @@ zle -N run-again-in-vp
 bindkey '^X^X' run-again-in-vp 
 function run-again-in-fzf {
 	zle up-history
-	zle -U ' |&fzf --ansi'
+	zle -U ' |&fzf --ansi --multi'
 }
 zle -N run-again-in-fzf
 bindkey '^X^F' run-again-in-fzf 
