@@ -113,7 +113,7 @@ alias ms=msf
 alias mkd='mkdir -p'
 alias mkp=mkd
 alias goo=googler
-alias wh=whence
+alias wh='whence -sv'
 
 # Vim aliases
 alias v='vim -X'
