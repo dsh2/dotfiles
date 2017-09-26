@@ -107,6 +107,7 @@ alias lsd='l -d'
 alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
+alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
@@ -207,6 +208,7 @@ alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
 alias sc=systemctl 
+alias scc=sysctl 
 alias dp=dpkg
 alias dpl='dpkg -L'
 alias dpq=dpkg-query
@@ -258,7 +260,8 @@ alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
-alias pss='gdb -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
+alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
+alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 
 # Switch profile of running iTerm2 window
