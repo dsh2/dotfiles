@@ -79,7 +79,7 @@ alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
 alias gk='gitk --all&'
 alias gcp='git cherry-pick'
-alias gpp='git pull --verbose --recurse-submodules --jobs=4'
+alias gpp='git pull --recurse-submodules --jobs=4'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
