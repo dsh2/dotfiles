@@ -20,21 +20,22 @@ precmd() { vcs_info; }
 LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}'$'\n'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR 				# Add horizontal separator line
+PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
 PS1+='%F{136}%~ '					# Add current directory 
 PS1+='${vcs_info_msg_0_}'			# Add vcs info
-PS1+='%(0?..err=%{$fg_no_bold[red]%}%? )' 	# Add exit status of last job
+PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )' 	# Add exit status of last job
 PS1+='%f%# '						# Add user status
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
 # }}}
 
 # Right prompt {{{
-ZLE_RPROMPT_INDENT=0
-RPS1=[%{$fg_no_bold[yellow]%} 		# Set beginning of right prompt
+# ZLE_RPROMPT_INDENT=0
+# RPS1=[%{$fg_no_bold[yellow]%} 		# Set beginning of right prompt
 # RPS1+=%(0?.ok.err=%{$fg_no_bold[red]%}%?) 	# Add exit status of last job
-RPS1+=%(1j.%{$fg_no_bold[red]%}%j.0) # Add number of jobs - if any
-RPS1+=%{$reset_color%}]				# End of right prompt
+# RPS1+=%(1j.%{$fg_no_bold[red]%}%j.0) # Add number of jobs - if any
+# RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 
 # Trace prompt {{{
