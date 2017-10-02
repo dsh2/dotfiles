@@ -487,7 +487,7 @@ syntax enable
 nmap Q :qall<cr>
 map  
 map  :bnext<cr>
-map . :bprev<cr>
+map <c-.> :bprev<cr>
 map <leader><c-L> :redraw!<cr>
 nnoremap <C-W>M <C-W>\| <C-W>_
 nnoremap <C-W>m <C-W>=
