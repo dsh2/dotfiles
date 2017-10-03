@@ -306,9 +306,13 @@ _expand-ealias-and-execute() {
 zle -N _expand-ealias
 zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
-# bindkey '^M' _expand-ealias-and-execute
-bindkey '^ ' magic-space          # control-space to bypass completion
-bindkey -M isearch " "  magic-space # normal space during searches
+bindkey -M isearch ' '  magic-space # normal space during searches
+function space-prepend {
+	zle -U ' '
+	zle vi-backward-char 
+}
+zle -N space-prepend
+bindkey '^ ' space-prepend
 # }}}
 
 # External ressource files {{{
