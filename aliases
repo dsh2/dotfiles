@@ -222,6 +222,7 @@ alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
+alias hx=hexdump
 alias vv=voltron
 alias k=kill
 alias pf=pidof
