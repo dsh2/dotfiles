@@ -6,16 +6,16 @@ alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
-cdp() { 
-    CD_PIDS=(${=$(pidof "$*")});
-    if [ -n "$CD_PIDS[1]" ]; then
-	cd /proc/${CD_PIDS[1]};
-	if [ -n "$CD_PIDS[2]" ]; then
-	    echo CD_PIDS = $CD_PIDS;
-	fi; 
-    else
-	echo no process matched \"$*\"
-    fi;
+cdp() {
+	CD_PIDS=(${=$(pidof "$*")})
+	if [ -n "$CD_PIDS[1]" ]; then
+		cd /proc/${CD_PIDS[1]}
+		if [ -n "$CD_PIDS[2]" ]; then
+			echo CD_PIDS = $CD_PIDS
+		fi;
+	else
+		echo no process matched \"$*\"
+	fi;
 }
 compdef _pids cdp
 
@@ -73,13 +73,13 @@ alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
 alias gst='git status -sb --show-stash'
-alias gcr='git clone --recursive --verbose '
+alias gcr='git clone --recursive --jobs=8 --verbose'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
 alias gk='gitk --all&'
 alias gcp='git cherry-pick'
-alias gpp='git pull --recurse-submodules --jobs=4'
+alias gpp='git pull --recurse-submodules --jobs=8'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -102,6 +102,7 @@ l() {
 alias ls='l --format=across'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
+alias lts='l -rS'
 alias ltr=lt
 alias lsd='l -d'
 alias fr='fc -R'
@@ -146,10 +147,12 @@ RUN() {
 	fi
 	[ -z $WATCH ] && { echo Nothing to watch.; return; }
 	[ -z $1 ] && { echo Nothing to run.; return; }
+	clear -x
     run $*
     while true; do 
 	if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then 
 	    sleep 0.1; 
+		clear -x
 	    run $*
 	fi;
 	sleep 0.1; 
