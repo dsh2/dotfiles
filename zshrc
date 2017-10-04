@@ -308,8 +308,7 @@ zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
 function space-prepend {
-	zle -U ' '
-	zle vi-backward-char 
+	zle -U ' '
 }
 zle -N space-prepend
 bindkey '^ ' space-prepend
