@@ -178,6 +178,7 @@ alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias rm='trash -v'
+alias rmm='\rm'
 alias tl='trash-list|fzf'
 alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
@@ -229,6 +230,9 @@ alias pf=pidof
 alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
+alias wl='wc -l'
+alias suu='sort | uniq'
+alias lv=lnav
 rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
