@@ -116,6 +116,9 @@ alias mkd='mkdir -p'
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
+alias whh=whence 
+alias prr=print
+alias j=jobs
 
 # Vim aliases
 alias v='vim -X'
@@ -215,6 +218,7 @@ alias sc=systemctl
 alias scc=sysctl 
 alias dp=dpkg
 alias dpl='dpkg -L'
+alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F_%T'"
