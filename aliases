@@ -119,6 +119,7 @@ alias wh='whence -sv'
 alias whh=whence 
 alias prr=print
 alias j=jobs
+alias d='diff -u'
 
 # Vim aliases
 alias v='vim -X'
