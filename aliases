@@ -14,7 +14,8 @@ cdp() {
 			echo CD_PIDS = $CD_PIDS
 		fi;
 	else
-		echo no process matched \"$*\"
+		echo no process matched \"$*\". Changing to proc root...
+		cd /proc/
 	fi;
 }
 compdef _pids cdp
@@ -118,6 +119,7 @@ alias goo=googler
 alias wh='whence -sv'
 alias whh=whence 
 alias prr=print
+alias prl='print -l'
 alias j=jobs
 alias d='diff -u'
 
@@ -131,6 +133,7 @@ alias glast='gv -S ~/.vim/lastsession'
 alias vl=last
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
+
 compdef _man vimman
 run() {
     print Running \"$*\"...
@@ -181,6 +184,7 @@ alias tma='tmux attach'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
+alias vpp=vpcsv
 alias rm='trash -v'
 alias rmm='\rm'
 alias tl='trash-list|fzf'
@@ -194,6 +198,7 @@ alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
+alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview "apt-cache show {}")'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
@@ -206,12 +211,37 @@ alias xcc='tmux show-buffer | xc'
 xp() { echo "$*" | xc ; }
 alias M=make
 alias ndd=ndk-build
+
 alias Gdb='gdb -q -ex "b main" -ex run --args '
-alias G='gdbserver :2000 '
-GG() { while true; do G "$*"; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
+alias G='gdbserver :2000'
+GG() { 
+	(while true; do 
+		print -P $LINE_SEPARATOR
+		print "[$(n)] Launching \"$*\""
+		print -P $LINE_SEPARATOR
+		G $* 
+		print -P $LINE_SEPARATOR
+		print "Restarting gdbserver"
+		sleep 1
+	done) &
+	while true; do 
+		read 
+		print "Killing gdbserver"
+		kill $(pidof gdbserver)
+		kill ${${(v)jobstates##*:*:}%=*} 
+		return 
+		sleep 1
+	done 
+}
+
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
+alias func=function
+alias fuc=function
+alias fncc=functions
+alias funcc=functions
+alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
@@ -228,16 +258,24 @@ alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
-alias hx=hexdump
+alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
 alias pf=pidof
+compdef _ps pf
+compdef _ps pidof
 alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
 alias wl='wc -l'
 alias suu='sort | uniq'
+alias uu=uniq
 alias lv=lnav
+alias e=echo 
+alias tf='grc tail -f /var/log/messages &'
+alias tff='lnav /var/log/messages'
+alias vis=sudoedit
+
 rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
@@ -267,8 +305,11 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o tcp.no_subdissector_on_error:false -o ssl.debug_file:/dev/null -o ssl.keylog_file:<(cat **/*.keylogfile(.)) -r *.pcapng > /dev/null 2>&1 &'
-alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+alias ww='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/null -r cap.pcapng &'
+alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/stdout -r cap.pcapng &'
+alias wws='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug'
+alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
