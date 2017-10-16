@@ -407,6 +407,8 @@ Plug 'tmux-plugins/vim-tmux'
 autocmd BufRead tmux.conf set filetype=tmux
 Plug 'wellle/tmux-complete.vim'
 
+Plug 'https://github.com/vim-utils/vim-man'
+
 Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
 Plug 'vim-scripts/VCard-syntax'
@@ -437,6 +439,7 @@ set dir=~/.vim/swo
 set encoding=utf8
 set exrc
 set foldlevelstart=99
+set foldopen=hor,mark,percent,quickfix,search,tag,undo
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
@@ -528,12 +531,14 @@ endfunction
 
 " Make 'K' lookup vim help for vim files
 nmap K :exe "Man " . expand("<cword>") <CR>
+let g:ft_man_open_mode = 'vert'
+let g:ft_man_folding_enable = 1
 autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
-let g:ft_man_folding_enable = 0
 autocmd FileType vim setl keywordprg=help
+set keywordprg=:Man
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
-" autocmd FileType help wincmd L
+autocmd FileType help wincmd L
 " autocmd FileType help wincmd L | vert resize 80
 
 " Add a cursorline(/cursorcolumn) to the active window
@@ -628,11 +633,11 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 hi Folded cterm=NONE
 
 inoremap jk <esc>
-noremap dfj :diffget //2<cr>|diffupdate
-noremap dfh :diffget //2<cr>|diffupdate
-noremap dfk :diffget //3<cr>|diffupdate
-noremap dfl :diffget //3<cr>|diffupdate
-noremap dfu :diffupdate<cr>
+" noremap dfj :diffget //2<cr>|diffupdate
+" noremap dfh :diffget //2<cr>|diffupdate
+" noremap dfk :diffget //3<cr>|diffupdate
+" noremap dfl :diffget //3<cr>|diffupdate
+" noremap dfu :diffupdate<cr>
 nmap <leader>DD :diffthis<CR>
 nmap <leader>DO :diffoff<CR>
 nmap <leader>DS :vertical diffsplit<CR>
