@@ -10,12 +10,11 @@ export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-t:execute(tmux set-buffer {})'
 		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
 		--history=${HOME}/.fzf_history
-		--no-mouse
 		--exact
 		--prompt=\"fzf: \"
 "
 export FZF_TMUX=1
-export FZF_TMUX_HEIGHT=75%
+export FZF_TMUX_HEIGHT=85%
 
 # fbr - checkout git branch (including remote branches)
 fbr() {
