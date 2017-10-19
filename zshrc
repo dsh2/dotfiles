@@ -192,9 +192,9 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 function _start_tmux_logging() 
 { 
 	print -P $LINE_SEPARATOR
-	print literal command = \"$1\"
-	print compact command = \"$2\"
-	print full cmd = \"$3\"
+	print literal:  $1
+	# print compact command = \"$2\"
+	print full: $3
 	print -P $LINE_SEPARATOR
 	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
