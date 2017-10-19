@@ -37,7 +37,7 @@ Plug 'romgrk/vimfiler-prompt'
 " FZF! {{{
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-let g:fzf_prefer_tmux = 1
+let g:fzf_prefer_tmux = 0
 nnoremap U <c-r>
 nmap <c-r> :History:<cr>
 nmap <c-e> :History/<cr>
@@ -373,15 +373,14 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-tbone'
 " Plug 'kana/vim-fakeclip'
-let g:fakeclip_terminal_multiplexer_type = "tmux"
-let g:tmuxcomplete#trigger = 'omnifunc'
+" let g:fakeclip_terminal_multiplexer_type = "tmux"
 Plug 'dkprice/vim-easygrep'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'vim-scripts/AnsiEsc.vim'
+map <leader>W :AnsiEsc<cr>
 Plug 'sukima/xmledit'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'vim-scripts/info.vim'
 Plug 'romgrk/winteract.vim'
@@ -402,12 +401,14 @@ Plug 'bumaociyuan/vim-matchit'
 Plug 'vim-scripts/renamer.vim'
 Plug 'tpope/vim-afterimage'
 
-" tmux 
+" tmux integration 
 Plug 'tmux-plugins/vim-tmux'
 autocmd BufRead tmux.conf set filetype=tmux
+Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wellle/tmux-complete.vim'
+let g:tmuxcomplete#trigger = 'omnifunc'
 
-Plug 'https://github.com/vim-utils/vim-man'
+" Plug 'https://github.com/vim-utils/vim-man'
 
 Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
@@ -421,7 +422,7 @@ map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'vim-scripts/diff-fold.vim'
-Plug 'https://github.com/idanarye/vim-merginal'
+Plug 'idanarye/vim-merginal'
 
 call plug#end()
 " }}}
@@ -450,6 +451,7 @@ set incsearch
 set isfname-==
 set laststatus=2
 set mouse=a
+set mousefocus
 set nobackup
 set norelativenumber
 set nospell
@@ -472,7 +474,7 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=4
+set tabstop=8
 set title
 set titleold=''
 set ttimeoutlen=50
@@ -631,6 +633,8 @@ endfunction
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
 hi Folded cterm=NONE
+
+match ErrorMsg '\%80v\+'
 
 inoremap jk <esc>
 " noremap dfj :diffget //2<cr>|diffupdate
