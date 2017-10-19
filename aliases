@@ -81,6 +81,7 @@ alias gco='git checkout '
 alias gk='gitk --all&'
 alias gcp='git cherry-pick'
 alias gpp='git pull --recurse-submodules --jobs=8'
+alias gaa='git apply --verbose --check --3way'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -114,6 +115,7 @@ alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
+mkt() {TMP=tmp-$(nn); mkd $TMP; cd $TMP; }
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
@@ -254,6 +256,7 @@ alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F_%T'"
 alias tgi=telegram-cli
+alias tgii='/home/dsf/Downloads/tsetup.1.1.23/Telegram/Telegram'
 alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
@@ -305,10 +308,10 @@ alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
 alias w=wireshark
-export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+export WS_OPTIONS=(-o tls_strip.export_file:cap-tls-stripped.pcapng -o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias ww='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/null -r cap.pcapng &'
-alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/stdout -r cap.pcapng &'
-alias wws='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug'
+alias wwss='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/stdout -r cap.pcapng'
+alias wws='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug && tmux split -d lnav ssldebug'
 alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
