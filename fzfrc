@@ -9,6 +9,8 @@ export FZF_DEFAULT_OPTS="
 		--bind 'alt-d:page-down'
 		--bind 'alt-u:page-up'
 		--bind 'ctrl-q:toggle-preview'
+		--bind 'ctrl-alt-j:preview-page-down'
+		--bind 'ctrl-alt-k:preview-page-up'
 		--bind 'ctrl-l:cancel'
 		--bind 'ctrl-o:toggle-all'
 		--bind 'ctrl-n:next-history'
@@ -17,7 +19,6 @@ export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
 		--bind 'tab:toggle-up'
 		--bind 'btab:toggle-down'
-		--bind 'ctrl-space:toggle-up'
 		--ansi
 		--inline-info
 		--history=${HOME}/.fzf_history
