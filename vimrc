@@ -302,6 +302,9 @@ let g:tagbar_type_go = {
 \ }
 autocmd VimEnter * nested :call tagbar#autoopen(1)
 map <leader>t :TagbarToggle<cr>
+autocmd FileType tagbar map <buffer> ; p
+autocmd FileType tagbar map <buffer> l za
+autocmd FileType tagbar map <buffer> h za
 " }}}
 " Markology {{{
 Plug 'jeetsukumaran/vim-markology'
