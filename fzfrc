@@ -1,20 +1,31 @@
+# TODO
+# -Add binding to pin current item to then relax the filter in order to explore the environment
+# -Add some means to add an ordering to the selection of --multi
+# -Add some means to match content in a particular column
+
 export FZF_DEFAULT_OPTS="
-		--bind 'ctrl-q:toggle-preview-wrap'
-		--bind 'ctrl-e:toggle-preview'
-		--bind 'alt-u:page-up'
+		--bind 'alt-a:select-all'
+		--bind 'alt-b:deselect-all'
 		--bind 'alt-d:page-down'
-		--bind 'ctrl-p:previous-history' 
+		--bind 'alt-u:page-up'
+		--bind 'ctrl-q:toggle-preview'
+		--bind 'ctrl-l:cancel'
+		--bind 'ctrl-o:toggle-all'
 		--bind 'ctrl-n:next-history'
-		--bind 'ctrl-r:execute(tmux split -h ranger {})'
-		--bind 'ctrl-v:execute(tmux split -h vim {})'
+		--bind 'ctrl-p:previous-history' 
 		--bind 'ctrl-t:execute(tmux set-buffer {})'
 		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
+		--bind 'tab:toggle-up'
+		--bind 'btab:toggle-down'
+		--bind 'ctrl-space:toggle-up'
+		--ansi
+		--inline-info
 		--history=${HOME}/.fzf_history
 		--exact
 		--prompt=\"fzf: \"
 "
 export FZF_TMUX=1
-export FZF_TMUX_HEIGHT=85%
+export FZF_TMUX_HEIGHT=100%
 
 # fbr - checkout git branch (including remote branches)
 fbr() {
