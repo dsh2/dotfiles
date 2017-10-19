@@ -18,7 +18,7 @@
 	url = https://github.com/seebi/dircolors-solarized
 [submodule "fzf"]
 	path = fzf
-	url = https://github.com/junegunn/fzf.git
+	url = git@github.com:dsh2/fzf.git
 [submodule "zsh/zsh-completions"]
 	path = zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions
