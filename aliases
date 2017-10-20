@@ -213,6 +213,7 @@ alias xcc='tmux show-buffer | xc'
 xp() { echo "$*" | xc ; }
 alias M=make
 alias ndd=ndk-build
+alias tss=typeset
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000'
