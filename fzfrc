@@ -11,6 +11,7 @@ export FZF_DEFAULT_OPTS="
 		--bind 'ctrl-q:toggle-preview'
 		--bind 'ctrl-alt-j:preview-page-down'
 		--bind 'ctrl-alt-k:preview-page-up'
+		--bind 'ctrl-alt-l:toggle-preview-wrap'
 		--bind 'ctrl-l:cancel'
 		--bind 'ctrl-o:toggle-all'
 		--bind 'ctrl-n:next-history'
