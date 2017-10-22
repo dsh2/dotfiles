@@ -426,6 +426,13 @@ map gD :GoDocBrowser<cr>
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'vim-scripts/diff-fold.vim'
 Plug 'idanarye/vim-merginal'
+Plug 'MarcWeber/vim-addon-qf-layout'
+Plug 'skywind3000/asyncrun.vim'
+map <leader>B :AsyncRun binwalk %<cr>
+let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
+augroup vimrc
+    autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
+augroup END
 
 call plug#end()
 " }}}
