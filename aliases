@@ -308,6 +308,9 @@ alias -g ss2c="|sed -re 's/[[:space:]]+/,/g'"
 alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
+alias -g DN="> /dev/null"
+alias -g DN2="2> /dev/null"
+alias -g DNN="> /dev/null 2>&1"
 alias w=wireshark
 export WS_OPTIONS=(-o tls_strip.export_file:cap-tls-stripped.pcapng -o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias ww='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/null -r cap.pcapng &'
