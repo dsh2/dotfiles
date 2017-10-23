@@ -129,11 +129,14 @@ zle -N xp-command
 bindkey '^X^P' xp-command
 
 function run-again-in-vp {
-	zle up-history
-	zle -U ' |&vp'
+	# zle up-history
+	# less ~/.tmux-log/$(($(print -P '%!')-1))
+	# TODO: Make this work without tmux. Read man zshzle!
+	tmux split -bp 99 vim ~/.tmux-log/$(($(print -P '%!')-1))
 }
 zle -N run-again-in-vp
 bindkey '^X^X' run-again-in-vp
+
 function run-again-in-fzf {
 	zle up-history
 	zle -U ' |&fzf --ansi --multi'
@@ -147,14 +150,14 @@ bindkey "^X^E" edit-command-line
 
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
-if [ -z "$TMUX" ]; then
-	bindkey '^[H' run-help
+if [ -n "$TMUX" ]; then
+    bindkey '^[H' run-help
 else
-	run-help-tmux() {
-	COMMANDS=("${=LBUFFER}")
-	# tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
-	tmux split -vbp 80 $SHELL -ic "vimman ${COMMANDS[1]}"
-	zle redisplay
+run-help-tmux() {
+    COMMANDS=("${=LBUFFER}")
+    # tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
+    tmux split -vbp 80 $SHELL -ic "vimman ${COMMANDS[1]}"
+    zle redisplay
 }
 zle -N run-help-tmux
 bindkey '^[H' run-help-tmux
@@ -191,12 +194,17 @@ zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a
 
 function _start_tmux_logging() 
 { 
-	print -P $LINE_SEPARATOR
-	print literal:  $1
-	# print compact command = \"$2\"
-	print full: $3
-	print -P $LINE_SEPARATOR
-	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
+    # TODO: Add colors to output
+    print -P $LINE_SEPARATOR
+    print literal:  $1
+    # print compact command = \"$2\"
+    print full: $3
+    print -P $LINE_SEPARATOR
+    # TODO: Add logging for
+    # -environment
+    # -literal and full command
+    # -report times
+    tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
 
 function _stop_tmux_logging() 
@@ -313,8 +321,8 @@ ealiases=(`alias | sed -e 's/=.*//'`)
 _expand-ealias() {
 # TODO: add blacklist for specific aliases not to be expanded
 if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
-	zle _expand_alias
-	zle expand-word
+    zle _expand_alias
+    zle expand-word
 fi
 zle magic-space
 }
@@ -328,7 +336,7 @@ zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
 function space-prepend {
-	zle -U ' '
+    zle -U ' '
 }
 zle -N space-prepend
 bindkey '^ ' space-prepend
