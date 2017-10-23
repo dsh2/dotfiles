@@ -41,6 +41,7 @@
     ~/bin/tmux-random-background-color.sh: bin/tmux-random-background-color.sh
     ~/bin/tmux-fzf-panes.sh: bin/tmux-fzf-panes.sh
     ~/bin/tmux-select-buffer.sh: bin/tmux-select-buffer.sh
+    ~/bin/tmux-log.sh: bin/tmux-log.sh 
     ~/bin/goo: googler/googler
 
 - shell:
