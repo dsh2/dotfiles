@@ -1,5 +1,6 @@
 # TODO
-# -Add binding to pin current item to then relax the filter in order to explore the environment
+# -Add binding to pin current item to then relax the filter in order to
+#  explore the environment
 # -Add some means to add an ordering to the selection of --multi
 # -Add some means to match content in a particular column
 
@@ -37,7 +38,6 @@ fbr() {
            fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
-
 
 # fbrr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
 fbrr() {
@@ -85,10 +85,7 @@ fs() {
 
 ftpane() {
   # TODO: check if already running
-  local panes current_window current_pane target target_session target_window target_pane
-  # panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty}|#{pane_width}x#{pane_height}\tname:#{=15:window_name}\t\ttitle:#{pane_title}\t\tcmd:#{=-15:pane_current_command}\t\tdir:#{pane_current_path}')
-  # TODO: add column header to fzf
-  panes=$(tmux list-panes -a -F '#S:#I:#P:#{pane_tty}|#{pane_width}x#{pane_height}\tname:#{=15:window_name}\t\tcmd:#{=-15:pane_current_command}\t\tdir:#{pane_current_path}')
+  panes=$(tmux list-panes -aF '#{session_name}:#{window_index}:#{pane_index}:#{pane_tty}|#{pane_width}x#{pane_height}(#{pane_id})\tname:#{=15:window_name}\t\tcmd:#{=-15:pane_current_command}\t\tdir:#{pane_current_path}')
   current_pane=$(tmux display-message -p '#I:#P')
   current_window=$(tmux display-message -p '#I')
 
@@ -99,11 +96,7 @@ ftpane() {
   target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$3}' | cut -c 1)
 
   tmux switch-client -t $target_session:$target_window.$target_pane
-  zle redisplay
 }
-
-zle     -N   ftpane
-bindkey '\ew' ftpane
 
 # gch - browse chrome history
 gch() {
