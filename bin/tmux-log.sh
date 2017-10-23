@@ -38,7 +38,7 @@ fi
 if [[ -n $SHOW ]]; then
     print OUTPUT: ${$(cat $log_file | wc):gfs,  , ,:gs, ,/,} 
     # "("$(du -sm $log_file)" MiB)"
-    head -10 $log_file
+    head -100 $log_file
 fi
 
 if [[ -n $EDIT ]]; then
