@@ -49,6 +49,7 @@ pathprepend "$NDK"
 # Pager
 export LESS=cRMiWSJ
 export PAGER=less
+# export PAGER="/home/dsf/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
 export GIT_PAGER='less -F'
 alias less=$PAGER
 alias zless=$PAGER
@@ -73,6 +74,8 @@ export HTML_TIDY=~/.tidy_config
 export SSLKEYLOGFILE=$HOME/ssl_key_log
 export USE_CCACHE=1
 export XENVIRONMENT=$HOME/.Xresources
+export TSHARK=/usr/bin/tshark
+export WIRESHARK=/usr/bin/wireshark
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
