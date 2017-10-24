@@ -22,7 +22,8 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
-PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
+# PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
+PS1+='%F{240}[%F{244}(%!)%n%F{240}] '	# Add user name
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'			# Add vcs info
 PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )'	# Add exit status of last job
@@ -128,21 +129,24 @@ function xp-command {
 zle -N xp-command
 bindkey '^X^P' xp-command
 
-function run-again-in-vp {
+function last-output-vp {
 	# zle up-history
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
 	# TODO: Make this work without tmux. Read man zshzle!
-	tmux split -bp 99 vim ~/.tmux-log/$(($(print -P '%!')-1))
+	# TODO(zsh): Somehow use (%)-flag 
+	tmux split -bp 75 vim ~/.tmux-log/$(($(print -P '%!')-1)) +AnsiEsc
+	tmux resize-pane -Z
 }
-zle -N run-again-in-vp
-bindkey '^X^X' run-again-in-vp
+zle -N last-output-vp
+bindkey '^X^X' last-output-vp
 
-function run-again-in-fzf {
+function last-output-fzf {
 	zle up-history
-	zle -U ' |&fzf --ansi --multi'
+	# zle -U ' |&fzf --ansi --multi'
+	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi
 }
-zle -N run-again-in-fzf
-bindkey '^X^F' run-again-in-fzf
+zle -N last-output-fzf
+bindkey '^X^F' last-output-fzf
 
 autoload -z edit-command-line
 zle -N edit-command-line
@@ -150,7 +154,7 @@ bindkey "^X^E" edit-command-line
 
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
-if [ -n "$TMUX" ]; then
+if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
 run-help-tmux() {
@@ -204,6 +208,8 @@ function _start_tmux_logging()
     # -environment
     # -literal and full command
     # -report times
+    # -name of tmux session name
+    # TODO: Check if tmux is running
     tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
 
