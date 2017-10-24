@@ -200,7 +200,7 @@ alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
-alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview "apt-cache show {}")'
+alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
@@ -214,6 +214,7 @@ xp() { echo "$*" | xc ; }
 alias M=make
 alias ndd=ndk-build
 alias tss=typeset
+alias rh=rehash
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000'
