@@ -258,6 +258,8 @@ while-watch() {
 fpath+=~/.dotfiles/zsh-completions/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
 fpath+=~/.dotfiles/googler/auto-completion/zsh
+fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
+fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
 
 autoload -U compinit && compinit
 zmodload zsh/complist
