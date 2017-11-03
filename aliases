@@ -7,22 +7,22 @@ alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
 cdp() {
-	CD_PIDS=(${=$(pidof "$*")})
-	if [ -n "$CD_PIDS[1]" ]; then
-		cd /proc/${CD_PIDS[1]}
-		if [ -n "$CD_PIDS[2]" ]; then
-			echo CD_PIDS = $CD_PIDS
-		fi;
-	else
-		echo no process matched \"$*\". Changing to proc root...
-		cd /proc/
-	fi;
+    CD_PIDS=(${=$(pidof "$*")})
+    if [ -n "$CD_PIDS[1]" ]; then
+        cd /proc/${CD_PIDS[1]}
+        if [ -n "$CD_PIDS[2]" ]; then
+            echo CD_PIDS = $CD_PIDS
+        fi;
+    else
+        echo no process matched \"$*\". Changing to proc root...
+        cd /proc/
+    fi;
 }
 compdef _pids cdp
 
 cd() { 
     if ! builtin cd $* 2> /dev/null; then 
-	builtin cd $(dirname "$*"); 
+        builtin cd $(dirname "$*"); 
     fi; 
 }
 cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
@@ -39,11 +39,11 @@ alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
 ash() {
-		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
-		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
-		type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
-		echo $ANDROID_SERIAL: $@
-		adb shell $@
+	    [ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
+	    [ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
+	    type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
+	    echo $ANDROID_SERIAL: $@
+	    adb shell $@
 }
 alias a_=ash
 a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 ); }
@@ -51,11 +51,11 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 if [ "$UNAME" = "Darwin" ]; then
-		alias f=gfind
-		alias loc=glocate
+	    alias f=gfind
+	    alias loc=glocate
 else
-		alias f=find
-		loc() { locate "$*" | grep --color "$*"; }
+	    alias f=find
+	    loc() { locate "$*" | grep --color "$*"; }
 fi
 alias fdd='f . -type d'
 alias ff='f . -type f'
@@ -85,21 +85,21 @@ alias gaa='git apply --verbose --check --3way'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
-		LS_CMD=gls
+    LS_CMD=gls
 else
-		LS_CMD=ls
+    LS_CMD=ls
 fi
-l() { 
-		$LS_CMD \
-				--almost-all \
-				--author \
-				--color=always \
-				--file-type \
-				--format=long \
-				--indicator-style=slash \
-				--quoting-style=shell \
-				--time-style='+%F %T' \
-				"$@";
+l() {
+    $LS_CMD \
+        --almost-all \
+        --author \
+        --color=always \
+        --file-type \
+        --format=long \
+        --indicator-style=slash \
+        --quoting-style=shell \
+        --time-style='+%F %T' \
+        "$@";
 }
 alias ls='l --format=across'
 alias lD='l --group-directories-first'
@@ -147,24 +147,24 @@ run() {
 }
 
 RUN() {
-	[ -z $1 ] && { echo Nothing to run.; return; }
-	if [ $1 = "--watch" -o $1 = "-w" ]; then
-		WATCH=$2
-		shift 2
-	else 
-		WATCH=$1
-	fi
-	[ -z $WATCH ] && { echo Nothing to watch.; return; }
-	[ -z $1 ] && { echo Nothing to run.; return; }
-	clear -x
+    [ -z $1 ] && { echo Nothing to run.; return; }
+    if [ $1 = "--watch" -o $1 = "-w" ]; then
+        WATCH=$2
+        shift 2
+    else 
+        WATCH=$1
+    fi
+    [ -z $WATCH ] && { echo Nothing to watch.; return; }
+    [ -z $1 ] && { echo Nothing to run.; return; }
+    clear -x
     run $*
     while true; do 
-	if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then 
-	    sleep 0.1; 
-		clear -x
-	    run $*
-	fi;
-	sleep 0.1; 
+        if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then
+            sleep 0.1; 
+            clear -x
+            run $*
+        fi;
+        sleep 0.1; 
     done
 }
 
@@ -201,6 +201,7 @@ alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
 alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
+alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
@@ -215,6 +216,8 @@ alias M=make
 alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
+alias ipp='ipython3 -- '
+alias ip='ip -c'
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000'
@@ -284,18 +287,18 @@ alias vis=sudoedit
 rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
-		find . \
-				-name .repo -prune -o \
-				-name .git -prune -o \
-				-name out -prune -o \
-				-name build -prune -o \
-				-type f \( \
-						-name '*.c' -o \
-						-name '*.cc' -o \
-						-name '*.cpp' -o \
-						-name '*.h' -o \
-						-name '*.hpp' \
-				\) > cscope.files && command cscope -bi cscope.files;
+    find . \
+        -name .repo -prune -o \
+        -name .git -prune -o \
+        -name out -prune -o \
+        -name build -prune -o \
+        -type f \( \
+            -name '*.c' -o \
+            -name '*.cc' -o \
+            -name '*.cpp' -o \
+            -name '*.h' -o \
+            -name '*.hpp' \
+        \) > cscope.files && command cscope -bi cscope.files;
 }
 
 alias s3='/usr/local/bin/sqlite3'
