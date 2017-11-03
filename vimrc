@@ -4,9 +4,9 @@ let mapleader = "\<Space>""
 " Plugins {{{
 set nocompatible
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/plugged')
 " Unite {{{
@@ -44,10 +44,10 @@ nmap <c-e> :History/<cr>
 let g:fzf_tags_command = 'ctags -R'
 command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
 command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%'),
-  \                 <bang>0)
+	    \ call fzf#vim#ag(<q-args>,
+	    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+	    \                         : fzf#vim#with_preview('right:50%'),
+	    \                 <bang>0)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 let g:fzf_layout = { 'down': '~70:%' }
 imap <c-x><c-h> <plug>(fzf-complete-path)
@@ -98,31 +98,36 @@ set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
 nnoremap <C-n> :cn<cr>
 nnoremap <C-p> :cp<cr>
-Plug 'hari-rangarajan/CCTree' 
+Plug 'hari-rangarajan/CCTree'
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
 Plug 'sk1418/QFGrep'
 " }}}
+" {{{ Completor
+Plug 'maralla/completor.vim'
+
+" }}}
+
 " YouCompleteMe {{{
-function! BuildYCM(info)
-  if a:info.status == 'installed' || a:info.force
-    !./install.py
-  endif
-endfunction
-let g:loaded_youcompleteme = 0
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-let g:ycm_autoclose_preview_window_after_insertion = 1
-nnoremap <leader>jj :YcmCompleter GoTo<CR>
-nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
-nnoremap <leader>jt :YcmCompleter GetType<CR>
-nnoremap <leader>jk :YcmCompleter GetDoc<CR>
-let g:ycm_error_symbol="E>"
-let g:yvm_warning_symbol="W>"
-let g:ycm_enable_diagnostic_highlighting=1
-let g:ycm_collect_identifiers_from_comments_and_strings=1
-let g:ycm_collect_identifiers_from_tags_files=1
+" function! BuildYCM(info)
+"   if a:info.status == 'installed' || a:info.force
+"     !./install.py
+"   endif
+" endfunction
+" let g:loaded_youcompleteme = 0
+" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+" let g:ycm_autoclose_preview_window_after_insertion = 1
+" nnoremap <leader>jj :YcmCompleter GoTo<CR>
+" nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+" nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
+" nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+" nnoremap <leader>jt :YcmCompleter GetType<CR>
+" nnoremap <leader>jk :YcmCompleter GetDoc<CR>
+" let g:ycm_error_symbol="E>"
+" let g:yvm_warning_symbol="W>"
+" let g:ycm_enable_diagnostic_highlighting=1
+" let g:ycm_collect_identifiers_from_comments_and_strings=1
+" let g:ycm_collect_identifiers_from_tags_files=1
 " }}}
 " Text objects {{{
 Plug 'kana/vim-textobj-user'
@@ -170,7 +175,7 @@ nnoremap <F4> :UndotreeToggle<cr>
 " }}}
 " pandoc {{{
 Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax' 
+Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level=0
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 hi Folded cterm=NONE
@@ -216,8 +221,8 @@ Plug 'vim-scripts/indentpython.vim'
 Plug 'elzr/vim-json'
 " }}}
 " NERD Tree {{{
-Plug 'scrooloose/nerdtree' 
-let NERDTreeIgnore=['\~$[file]', '\.pyc$[file]']
+Plug 'scrooloose/nerdtree'
+let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
 let NERDTreeWinSize=40
 autocmd FileType nerdtree map <buffer> l oj^
 "autocmd FileType nerdtree map <buffer> O mo
@@ -235,22 +240,32 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 " }}}
-" Syntastic {{{
-Plug 'scrooloose/syntastic'
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_lua_checkers = ["luac", "luacheck"]
-let g:syntastic_lua_luacheck_args = "--no-unused-args" 
-let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
-let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-let g:go_list_type = "quickfix"
-" }}}
+" " Syntastic {{{
+" Plug 'scrooloose/syntastic'
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_lua_checkers = ["luac", "luacheck"]
+" let g:syntastic_lua_luacheck_args = "--no-unused-args"
+" let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
+" let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
+" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+" let g:go_list_type = "quickfix"
+" " }}}
+" {{{ ALE - Asynchronous Lint Engine
+Plug 'w0rp/ale'
+let g:airline#extensions#ale#enabled = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 1
+let g:ale_keep_list_window_open = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = "never"
 " taglist/tagbar {{{
 " Plug 'vim-scripts/taglist.vim'
 " let Tlist_Use_Right_Window = 1
@@ -267,39 +282,39 @@ let g:tagbar_autoclose = 0
 let g:tagbar_width = 50
 let g:tagbar_zoomwidth = 0
 let g:tagbar_compact = 1
-let g:tagbar_indent = 1 
+let g:tagbar_indent = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_autofocus = 0
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
 
 let g:tagbar_type_go = {
-	\ 'ctagstype' : 'go',
-	\ 'kinds'     : [
-		\ 'p:package',
-		\ 'i:imports:1',
-		\ 'c:constants',
-		\ 'v:variables',
-		\ 't:types',
-		\ 'n:interfaces',
-		\ 'w:fields',
-		\ 'e:embedded',
-		\ 'm:methods',
-		\ 'r:constructor',
-		\ 'f:functions'
-	\ ],
-	\ 'sro' : '.',
-	\ 'kind2scope' : {
-		\ 't' : 'ctype',
-		\ 'n' : 'ntype'
-	\ },
-	\ 'scope2kind' : {
-		\ 'ctype' : 't',
-		\ 'ntype' : 'n'
-	\ },
-	\ 'ctagsbin'  : 'gotags',
-	\ 'ctagsargs' : '-sort -silent'
-\ }
+	    \ 'ctagstype' : 'go',
+	    \ 'kinds'     : [
+	    \ 'p:package',
+	    \ 'i:imports:1',
+	    \ 'c:constants',
+	    \ 'v:variables',
+	    \ 't:types',
+	    \ 'n:interfaces',
+	    \ 'w:fields',
+	    \ 'e:embedded',
+	    \ 'm:methods',
+	    \ 'r:constructor',
+	    \ 'f:functions'
+	    \ ],
+	    \ 'sro' : '.',
+	    \ 'kind2scope' : {
+	    \ 't' : 'ctype',
+	    \ 'n' : 'ntype'
+	    \ },
+	    \ 'scope2kind' : {
+	    \ 'ctype' : 't',
+	    \ 'ntype' : 'n'
+	    \ },
+	    \ 'ctagsbin'  : 'gotags',
+	    \ 'ctagsargs' : '-sort -silent'
+	    \ }
 autocmd VimEnter * nested :call tagbar#autoopen(1)
 map <leader>t :TagbarToggle<cr>
 autocmd FileType tagbar map <buffer> ; p
@@ -346,10 +361,10 @@ Plug 'tomasr/molokai'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'mileszs/ack.vim'
 let g:ackhighlight = 1
-let g:ack_autofold_results = 1
+let g:ack_autofold_results = 0
 let g:ackpreview = 0
 let g:ack_use_dispatch = 1
-map <leader>a :Ack! <cword><CR>
+map <leader>a :Ack! \\b<cword\\b><CR>
 
 " }}}
 " VimAirline {{{
@@ -404,7 +419,7 @@ Plug 'bumaociyuan/vim-matchit'
 Plug 'vim-scripts/renamer.vim'
 Plug 'tpope/vim-afterimage'
 
-" tmux integration 
+" tmux integration
 Plug 'tmux-plugins/vim-tmux'
 autocmd BufRead tmux.conf set filetype=tmux
 Plug 'tmux-plugins/vim-tmux-focus-events'
@@ -418,6 +433,7 @@ Plug 'lzap/vim-selinux'
 Plug 'vim-scripts/VCard-syntax'
 Plug 'Chiel92/vim-autoformat'
 let g:autoformat_verbosemode=1
+map <leader>A :Autoformat<cr>
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 Plug 'fatih/vim-go'
@@ -426,12 +442,15 @@ map gD :GoDocBrowser<cr>
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'vim-scripts/diff-fold.vim'
 Plug 'idanarye/vim-merginal'
-Plug 'MarcWeber/vim-addon-qf-layout'
+" Plug 'MarcWeber/vim-addon-qf-layout'
 Plug 'skywind3000/asyncrun.vim'
 map <leader>B :AsyncRun binwalk %<cr>
 augroup vimrc
     autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
 augroup END
+
+Plug 'justinmk/vim-sneak'
+map S <Plug>Sneak_s
 
 call plug#end()
 " }}}
@@ -527,17 +546,17 @@ autocmd BufReadPost * call RestorePosition()
 autocmd VimLeave * mksession! ~/.vim/lastsession
 
 function! RestorePosition()
-   if !exists("b:_goto_pos") || b:_goto_po
-      if line("'\"") > 0
-         if line("'\"") <= line("$")
-            execute "norm `\""
-         else
-            execute "norm $"
-         endif
-      endif
-   else
-      let b:_goto_pos = 1
-   endif
+    if !exists("b:_goto_pos") || b:_goto_po
+	if line("'\"") > 0
+	    if line("'\"") <= line("$")
+		execute "norm `\""
+	    else
+		execute "norm $"
+	    endif
+	endif
+    else
+	let b:_goto_pos = 1
+    endif
 endfunction
 
 " Make 'K' lookup vim help for vim files
@@ -554,12 +573,12 @@ autocmd FileType help wincmd L
 
 " Add a cursorline(/cursorcolumn) to the active window
 autocmd BufWinLeave * set nocursorline |
-		\ highlight CursorLineNr ctermbg=grey
+	    \ highlight CursorLineNr ctermbg=grey
 
 autocmd BufWinEnter * set cursorline |
-		\ highlight CursorLineNr ctermfg=white |
-		\ highlight CursorLineNr ctermbg=red |
-		\ highlight CursorLine cterm=underline
+	    \ highlight CursorLineNr ctermfg=white |
+	    \ highlight CursorLineNr ctermbg=red |
+	    \ highlight CursorLine cterm=underline
 set cursorline
 
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
@@ -576,11 +595,12 @@ autocmd FileType man set sidescrolloff=0
 " FIXME: does not work :(
 " autocmd QuickfixCmdPre :copen<CR>
 autocmd FileType qf set norelativenumber
+autocmd FileType qf wincmd J
 
 " Removes trailing spaces
 command! TrimWhiteSpace call TrimWhiteSpace()
 function! TrimWhiteSpace()
-        %s/\s*$//
+    %s/\s*$//
 endfunction
 
 set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
@@ -594,24 +614,24 @@ autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 
 command! -nargs=1 Redir call <SID>Redir(<f-args>)
 function! s:Redir(cmd) abort
-	let l:oldz = @z
-	redir @z
-	silent! exe a:cmd
-	redir END
-	new
-	silent! put z
-	let @z = l:oldz
-	" Remove blank lines and superfluous greater-than symbol (silently)
-	silent! %g/^[\s>]*$/d
-	" Make the buffer not related to any sort of file, and will never be written
-	set buftype=nofile
+    let l:oldz = @z
+    redir @z
+    silent! exe a:cmd
+    redir END
+    new
+    silent! put z
+    let @z = l:oldz
+    " Remove blank lines and superfluous greater-than symbol (silently)
+    silent! %g/^[\s>]*$/d
+    " Make the buffer not related to any sort of file, and will never be written
+    set buftype=nofile
 endfunction
 
 command! -nargs=0 RelaxSearchPattern call <SID>RelaxSearchPattern()
 function! s:RelaxSearchPattern() abort
-	let @/=substitute(@/, "^\\V", "", "g")
-	let @/=substitute(@/, "_", ".*", "g")
-	let @/ = inputdialog("@/: ", @/)
+    let @/=substitute(@/, "^\\V", "", "g")
+    let @/=substitute(@/, "_", ".*", "g")
+    let @/ = inputdialog("@/: ", @/)
 endfunction
 
 function! MarkWindowSwap()
@@ -619,31 +639,31 @@ function! MarkWindowSwap()
 endfunction
 
 function! DoWindowSwap()
-	"Mark destination
-	let curNum = winnr()
-	let curBuf = bufnr( "%" )
-	exe g:markedWinNum . "wincmd w"
-	"Switch to source and shuffle dest->source
-	let markedBuf = bufnr( "%" )
-	"Hide and open so that we aren't prompted and keep history
-	exe 'hide buf' curBuf
-	"Switch to dest and shuffle source->dest
-	exe curNum . "wincmd w"
-	"Hide and open so that we aren't prompted and keep history
-	exe 'hide buf' markedBuf 
+    "Mark destination
+    let curNum = winnr()
+    let curBuf = bufnr( "%" )
+    exe g:markedWinNum . "wincmd w"
+    "Switch to source and shuffle dest->source
+    let markedBuf = bufnr( "%" )
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' curBuf
+    "Switch to dest and shuffle source->dest
+    exe curNum . "wincmd w"
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' markedBuf
 endfunction
 nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
 function! EnableAutoWrite()
-  exe ":au FocusLost" expand("%") ":update"
+    exe ":au FocusLost" expand("%") ":update"
 endfunction
 
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
 hi Folded cterm=NONE
 
-match ErrorMsg '\%80v\+'
+" match ErrorMsg '\%80v\+'
 
 inoremap jk <esc>
 " noremap dfj :diffget //2<cr>|diffupdate
