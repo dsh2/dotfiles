@@ -23,5 +23,6 @@
 [alias]
 	ctags = !.git/hooks/ctags
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	g = grep --break --heading --line-number
 [gc]
 	reflogexpire = 900

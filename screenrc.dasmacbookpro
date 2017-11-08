@@ -1,2 +1,0 @@
-caption always "%?%F%{= b.}%:%{= K.}%?%{Y} %D %y-%02m-%02d %0c %{k}|%{G} %H %l %{k}|%{W} %-w%{+b}%n %t%{-b}%+w"
-bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?dsh0@^m0" "msgminwait 1"

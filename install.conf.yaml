@@ -4,8 +4,8 @@
   - [git submodule update --init --recursive, Installing submodules]
   - [mkdir -p ~/.config/, Creating base config directory]
   - [mkdir -p ~/bin/, Setting up directory for local bin]
-  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/bundle ~/.vim/undodir, Setting up directories for vim]
-  - [curl -fLo ~/.vim/autoload/plug.vim --create-dirs https\://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
+  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/undodir, Setting up directories for vim]
+  - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
 
 - link:
     ~/.aliases: aliases
@@ -18,7 +18,7 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
-    ~/.config/ranger/: ranger/
+    ~/.config/ranger: ranger
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
@@ -33,11 +33,16 @@
     ~/.screenrc: screenrc
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
-    ~/.vim/bundle/Vundle.vim: Vundle.vim
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
     ~/bin/repo: bin/repo
     ~/bin/adb-ip-reconnect.sh: bin/adb-ip-reconnect.sh
+    ~/bin/tmux-cross-over.sh: bin/tmux-cross-over.sh 
+    ~/bin/tmux-random-background-color.sh: bin/tmux-random-background-color.sh
+    ~/bin/tmux-fzf-panes.sh: bin/tmux-fzf-panes.sh
+    ~/bin/tmux-select-buffer.sh: bin/tmux-select-buffer.sh
+    ~/bin/tmux-log.sh: bin/tmux-log.sh 
+    ~/bin/goo: googler/googler
 
 - shell:
-    - [vim +PlugInstall +qall, Setting up Vundle.vim]
+    - [vim +PlugInstall +qall, Configuring vim]

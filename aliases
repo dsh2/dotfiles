@@ -6,24 +6,27 @@ alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
-cdp() { 
-    CD_PIDS=(${=$(pidof "$*")});
+cdp() {
+    CD_PIDS=(${=$(pidof "$*")})
     if [ -n "$CD_PIDS[1]" ]; then
-	cd /proc/${CD_PIDS[1]};
-	if [ -n "$CD_PIDS[2]" ]; then
-	    echo CD_PIDS = $CD_PIDS;
-	fi; 
+        cd /proc/${CD_PIDS[1]}
+        if [ -n "$CD_PIDS[2]" ]; then
+            echo CD_PIDS = $CD_PIDS
+        fi;
     else
-	echo no process matched \"$*\"
+        echo no process matched \"$*\". Changing to proc root...
+        cd /proc/
     fi;
 }
 compdef _pids cdp
 
 cd() { 
     if ! builtin cd $* 2> /dev/null; then 
-	builtin cd $(dirname "$*"); 
+        builtin cd $(dirname "$*"); 
     fi; 
 }
+cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
+alias cv=cb
 
 source ~/.dotfiles/z/z.sh
 
@@ -36,11 +39,11 @@ alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
 ash() {
-		[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
-		[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
-		type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
-		echo $ANDROID_SERIAL: $@
-		adb shell $@
+	    [ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
+	    [ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
+	    type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
+	    echo $ANDROID_SERIAL: $@
+	    adb shell $@
 }
 alias a_=ash
 a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 ); }
@@ -48,11 +51,11 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 if [ "$UNAME" = "Darwin" ]; then
-		alias f=gfind
-		alias loc=glocate
+	    alias f=gfind
+	    alias loc=glocate
 else
-		alias f=find
-		loc() { locate "$*" | grep --color "$*"; }
+	    alias f=find
+	    loc() { locate "$*" | grep --color "$*"; }
 fi
 alias fdd='f . -type d'
 alias ff='f . -type f'
@@ -70,47 +73,57 @@ alias gca='git commit -va'
 alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
-alias gst='git status -sb'
-alias gcr='git clone --recursive --verbose '
+alias gst='git status -sb --show-stash'
+alias gcr='git clone --recursive --jobs=8 --verbose'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout '
-alias gk='gitk --all'
+alias gk='gitk --all&'
 alias gcp='git cherry-pick'
-alias gpp='git pull --verbose --recurse-submodules --jobs=4'
+alias gpp='git pull --recurse-submodules --jobs=8'
+alias gaa='git apply --verbose --check --3way'
 
 # ls
 if [ "$UNAME" = "Darwin" ]; then
-		LS_CMD=gls
+    LS_CMD=gls
 else
-		LS_CMD=ls
+    LS_CMD=ls
 fi
-l() { 
-		$LS_CMD \
-				--almost-all \
-				--author \
-				--color=always \
-				--file-type \
-				--format=long \
-				--indicator-style=slash \
-				--quoting-style=shell \
-				--time-style='+%F %T' \
-				"$@";
+l() {
+    $LS_CMD \
+        --almost-all \
+        --author \
+        --color=always \
+        --file-type \
+        --format=long \
+        --indicator-style=slash \
+        --quoting-style=shell \
+        --time-style='+%F %T' \
+        "$@";
 }
+alias ls='l --format=across'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
+alias lts='l -rS'
 alias ltr=lt
 alias lsd='l -d'
 alias fr='fc -R'
 alias lnn=lnav
 alias r=ranger
+alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
+mkt() {TMP=tmp-$(nn); mkd $TMP; cd $TMP; }
 alias mkp=mkd
 alias goo=googler
-alias wh=whence
+alias wh='whence -sv'
+alias whh=whence 
+alias prr=print
+alias prl='print -l'
+alias j=jobs
+alias d='diff -u'
 
 # Vim aliases
 alias v='vim -X'
@@ -122,6 +135,7 @@ alias glast='gv -S ~/.vim/lastsession'
 alias vl=last
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
+
 compdef _man vimman
 run() {
     print Running \"$*\"...
@@ -133,22 +147,24 @@ run() {
 }
 
 RUN() {
-	[ -z $1 ] && { echo Nothing to run.; return; }
-	if [ $1 = "--watch" -o $1 = "-w" ]; then
-		WATCH=$2
-		shift 2
-	else 
-		WATCH=$1
-	fi
-	[ -z $WATCH ] && { echo Nothing to watch.; return; }
-	[ -z $1 ] && { echo Nothing to run.; return; }
+    [ -z $1 ] && { echo Nothing to run.; return; }
+    if [ $1 = "--watch" -o $1 = "-w" ]; then
+        WATCH=$2
+        shift 2
+    else 
+        WATCH=$1
+    fi
+    [ -z $WATCH ] && { echo Nothing to watch.; return; }
+    [ -z $1 ] && { echo Nothing to run.; return; }
+    clear -x
     run $*
     while true; do 
-	if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then 
-	    sleep 0.1; 
-	    run $*
-	fi;
-	sleep 0.1; 
+        if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then
+            sleep 0.1; 
+            clear -x
+            run $*
+        fi;
+        sleep 0.1; 
     done
 }
 
@@ -165,12 +181,15 @@ ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -g3'
 alias pt='pstree -s'
 alias p_s='port search --line'
-alias tm=/usr/bin/tmux
+alias tm=tmux
 alias tma='tmux attach'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
+alias vpp=vpcsv
 alias rm='trash -v'
+alias rmm='\rm'
+alias tl='trash-list|fzf'
 alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
@@ -181,6 +200,8 @@ alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
+alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
+alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
@@ -193,47 +214,91 @@ alias xcc='tmux show-buffer | xc'
 xp() { echo "$*" | xc ; }
 alias M=make
 alias ndd=ndk-build
+alias tss=typeset
+alias rh=rehash
+alias ipp='ipython3 -- '
+alias ip='ip -c'
+
 alias Gdb='gdb -q -ex "b main" -ex run --args '
-alias G='gdbserver :2000 '
-GG() { while true; do G "$*"; echo -n Restarting gdbserver...; sleep 1; echo -n " 3..."; sleep 1; echo -n " 2..."; sleep 1; echo -n " 1..."; sleep 1; echo GO\!; done }
+alias G='gdbserver :2000'
+GG() { 
+	(while true; do 
+		print -P $LINE_SEPARATOR
+		print "[$(n)] Launching \"$*\""
+		print -P $LINE_SEPARATOR
+		G $* 
+		print -P $LINE_SEPARATOR
+		print "Restarting gdbserver"
+		sleep 1
+	done) &
+	while true; do 
+		read 
+		print "Killing gdbserver"
+		kill $(pidof gdbserver)
+		kill ${${(v)jobstates##*:*:}%=*} 
+		return 
+		sleep 1
+	done 
+}
+
 alias cloc='locate .zsh_local_history | xargs grep --color '
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
+alias func=function
+alias fuc=function
+alias fncc=functions
+alias funcc=functions
+alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
 alias sc=systemctl 
+alias scc=sysctl 
 alias dp=dpkg
 alias dpl='dpkg -L'
+alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F_%T'"
 alias tgi=telegram-cli
+alias tgii='/home/dsf/Downloads/tsetup.1.1.23/Telegram/Telegram'
 alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias ncnc='nmcli con'
+alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
 alias pf=pidof
+compdef _ps pf
+compdef _ps pidof
 alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
+alias wl='wc -l'
+alias suu='sort | uniq'
+alias uu=uniq
+alias lv=lnav
+alias e=echo 
+alias tf='grc tail -f /var/log/messages &'
+alias tff='lnav /var/log/messages'
+alias vis=sudoedit
+
 rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
-		find . \
-				-name .repo -prune -o \
-				-name .git -prune -o \
-				-name out -prune -o \
-				-name build -prune -o \
-				-type f \( \
-						-name '*.c' -o \
-						-name '*.cc' -o \
-						-name '*.cpp' -o \
-						-name '*.h' -o \
-						-name '*.hpp' \
-				\) > cscope.files && command cscope -bi cscope.files;
+    find . \
+        -name .repo -prune -o \
+        -name .git -prune -o \
+        -name out -prune -o \
+        -name build -prune -o \
+        -type f \( \
+            -name '*.c' -o \
+            -name '*.cc' -o \
+            -name '*.cpp' -o \
+            -name '*.h' -o \
+            -name '*.hpp' \
+        \) > cscope.files && command cscope -bi cscope.files;
 }
 
 alias s3='/usr/local/bin/sqlite3'
@@ -247,14 +312,21 @@ alias -g ss2c="|sed -re 's/[[:space:]]+/,/g'"
 alias -g ss2t="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g ss2tt="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g sd2t="|sed -re 's/ - /\t/'"
+alias -g DN="> /dev/null"
+alias -g DN2="2> /dev/null"
+alias -g DNN="> /dev/null 2>&1"
 alias w=wireshark
-alias ww='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o tcp.no_subdissector_on_error:false -o ssl.debug_file:- -o ssl.keylog_file:<(cat **/*.keylogfile(.)) -r *.pcapng > /dev/null 2>&1 &'
-alias wws='${WIRESHARK:-wireshark} -d tcp.port==1-65535,ssl -o "tcp.no_subdissector_on_error:false" -o "ssl.debug_file:$(pwd)/ssldebug" -o "ssl.keylog_file:$(readlink -f *.keylogfile)" -r *.pcapng > /dev/null 2>&1 & touch ssldebug; tmux split lnav -t ssldebug'
+export WS_OPTIONS=(-o tls_strip.export_file:cap-tls-stripped.pcapng -o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+alias ww='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/null -r cap.pcapng &'
+alias wwss='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/stdout -r cap.pcapng'
+alias wws='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug && tmux split -d lnav ssldebug'
+alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
-alias pss='gdb -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
+alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
+alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 
 # Switch profile of running iTerm2 window
