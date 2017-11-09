@@ -1,10 +1,28 @@
 msource() { for f in $*; do [ -r "$f" ] && source "$f"; done; }
 msource \ 
-		$HOME/.aliases \
-		$HOME/.bashrc.$(uname) \
-		$HOME/.bashrc.local
+	    $HOME/.aliases \
+	    $HOME/.bashrc.$(uname) \
+	    $HOME/.bashrc.local
 
-shopt -s autocd 
+pathprepend() {
+	if [ -n "$2" ]; then 
+		path_env="$2"
+	else
+		path_env=PATH
+	fi
+	if [ -e "$1" ]; then
+		if [ -d "$1" ]; then
+			if [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
+				eval $path_env=$1:$(eval echo \$$path_env)
+			fi
+		else
+			echo $0: WARNING: "$1" is not a directory
+		fi
+	fi
+}
+
+
+shopt -s autocd
 shopt -s cdable_vars
 shopt -s checkjobs
 shopt -s checkwinsize
@@ -36,16 +54,17 @@ complete -o default -o nospace -F _logdog logdog
 
 # Setup prompt
 if [ "$MYHOSTNAME" != "P3-01882" -a "$MYHOSTNAME" != "P3-01910" ]; then
-		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
-				source ~/.dotfiles/liquidprompt/liquidprompt
-		fi
+    if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
+	source ~/.dotfiles/liquidprompt/liquidprompt
+    fi
 fi
+
 if ! grep -q history <<< $PROMPT_COMMAND; then
 		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 fi
 
 if [ type dircolors > /dev/null 2>&1 ]; then
-		eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+    eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 fi
 export LS_COLORS
 

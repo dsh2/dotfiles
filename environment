@@ -1,21 +1,4 @@
 # Path
-pathprepend() {
-	if [ -n "$2" ]; then 
-		path_env="$2"
-	else
-		path_env=PATH
-	fi
-	if [ -e "$1" ]; then
-		if [ -d "$1" ]; then
-			if [[ ! $PATH =~ (^|:)$1(:|$) ]]; then
-				eval $path_env=$1:$(eval echo \$$path_env)
-			fi
-		else
-			echo $0: WARNING: "$1" is not a directory
-		fi
-	fi
-}
-
 pathprepend "$HOME/bin"
 pathprepend "$HOME/.rvm/bin"
 pathprepend "$HOME/src/GO/bin"

@@ -209,13 +209,15 @@ function _start_tmux_logging()
     # -literal and full command
     # -report times
     # -name of tmux session name
-    # TODO: Check if tmux is running
-    tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
+    whence tmux > /dev/null && \
+	tmux has-session && \
+	mkdir -p ~/.tmux-log && \
+	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
 
 function _stop_tmux_logging() 
 { 
-	tmux pipe-pane
+    whence tmux > /dev/null && tmux has-session && tmux pipe-pane 
 }
 
 autoload -U add-zsh-hook
@@ -350,6 +352,14 @@ zle -N space-prepend
 bindkey '^ ' space-prepend
 # }}}
 
+pathprepend() {
+    local path_element=$1
+    [ -z $path_element ] && return
+    local -l path_env=${2:-path}
+    integer path_index=${${(P)path_env}[(i)$1]}
+    (($path_index <= ${#${(P)path_env}})) && eval "${path_env}[$path_index]=()"
+    eval "${path_env}=($path_element ${(P)path_env})"
+}
 # External ressource files {{{
 source ~/.environment
 source ~/.fzf.zsh
