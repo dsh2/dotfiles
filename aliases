@@ -1,5 +1,20 @@
 UNAME=$(uname)
 
+if [ "$UNAME" = "Darwin" ]; then
+# TODO: check if gnu core utils is installed
+    alias find=gfind
+    alias locate=glocate
+    alias ls=gls
+    alias sed=gsed
+    alias tac=gtac
+    # Switch profile of running iTerm2 window
+    it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
+fi
+
+if [ $OSTYPE = "cygwin" ]; then
+    alias sudo="cygstart --action=runas"
+fi
+
 # Change directory
 alias .....='cd ../../../..'
 alias ....='cd ../../..'
@@ -50,13 +65,8 @@ a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 ); }
 a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
-if [ "$UNAME" = "Darwin" ]; then
-	    alias f=gfind
-	    alias loc=glocate
-else
-	    alias f=find
-	    loc() { locate "$*" | grep --color "$*"; }
-fi
+alias f=find
+loc() { locate "$*" | grep --color "$*"; }
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
@@ -84,13 +94,8 @@ alias gpp='git pull --recurse-submodules --jobs=8'
 alias gaa='git apply --verbose --check --3way'
 
 # ls
-if [ "$UNAME" = "Darwin" ]; then
-    LS_CMD=gls
-else
-    LS_CMD=ls
-fi
 l() {
-    $LS_CMD \
+    ls \
         --almost-all \
         --author \
         --color=always \
@@ -201,6 +206,7 @@ alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
 alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
+alias p_ss='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
 alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 alias r22='rabin2 -gx'
 alias pl='patool list'
@@ -328,12 +334,4 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
-
-# Switch profile of running iTerm2 window
-it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
-
-if [ $OSTYPE = "cygwin" ]; then
-    alias sudo="cygstart --action=runas"
-fi
-
 # vim: se ft=sh:
