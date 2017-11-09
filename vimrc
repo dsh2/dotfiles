@@ -90,7 +90,8 @@ let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 let g:DiffUnit = 'Word1'
 " }}}
 " cscope {{{
-Plug 'vim-scripts/cscope-quickfix'
+" Plug 'vim-scripts/cscope-quickfix'
+Plug 'Ilink//cscope-quickfix'
 set cscopepathcomp=2
 " set cscopeprg=/opt/local/bin/cscope
 set cscopetag
@@ -440,7 +441,7 @@ Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
-Plug 'vim-scripts/diff-fold.vim'
+Plug 'inkarkat/diff-fold.vim'
 Plug 'idanarye/vim-merginal'
 " Plug 'MarcWeber/vim-addon-qf-layout'
 Plug 'skywind3000/asyncrun.vim'
