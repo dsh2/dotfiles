@@ -77,6 +77,9 @@ nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
+autocmd FileType GV map <buffer> ; o
+autocmd FileType GV map <buffer>  O
+
 Plug 'airblade/vim-gitgutter'
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
