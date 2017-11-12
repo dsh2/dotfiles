@@ -34,3 +34,6 @@
 [submodule "googler"]
 	path = googler
 	url = https://github.com/jarun/googler/
+[submodule "src/find_forks"]
+	path = src/find_forks
+	url = https://github.com/frost-nzcr4/find_forks
