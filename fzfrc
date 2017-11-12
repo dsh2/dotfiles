@@ -5,28 +5,28 @@
 # -Add some means to match content in a particular column
 
 export FZF_DEFAULT_OPTS="
-		--bind 'alt-a:select-all'
-		--bind 'alt-b:deselect-all'
-		--bind 'alt-d:page-down'
-		--bind 'alt-u:page-up'
-		--bind 'ctrl-q:toggle-preview'
-		--bind 'ctrl-alt-j:preview-page-down'
-		--bind 'ctrl-alt-k:preview-page-up'
-		--bind 'ctrl-alt-l:toggle-preview-wrap'
-		--bind 'ctrl-l:cancel'
-		--bind 'ctrl-o:toggle-all'
-		--bind 'alt-c:toggle-all'
-		--bind 'ctrl-n:next-history'
-		--bind 'ctrl-p:previous-history' 
-		--bind 'ctrl-t:execute(tmux set-buffer {})'
-		--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
-		--bind 'tab:toggle-up'
-		--bind 'btab:toggle-down'
-		--ansi
-		--inline-info
-		--history=${HOME}/.fzf_history
-		--exact
-		--prompt=\"fzf: \"
+	    --bind 'alt-a:select-all'
+	    --bind 'alt-b:deselect-all'
+	    --bind 'alt-d:page-down'
+	    --bind 'alt-u:page-up'
+	    --bind 'ctrl-q:toggle-preview'
+	    --bind 'ctrl-alt-j:preview-page-down'
+	    --bind 'ctrl-alt-k:preview-page-up'
+	    --bind 'ctrl-alt-l:toggle-preview-wrap'
+	    --bind 'ctrl-l:cancel'
+	    --bind 'ctrl-o:toggle-all'
+	    --bind 'alt-c:toggle-all'
+	    --bind 'ctrl-n:next-history'
+	    --bind 'ctrl-p:previous-history'
+	    --bind 'ctrl-t:execute(tmux set-buffer {})'
+	    --bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
+	    --bind 'tab:toggle-up'
+	    --bind 'btab:toggle-down'
+	    --ansi
+	    --inline-info
+	    --history=${HOME}/.fzf_history
+	    --exact
+	    --prompt=\"fzf: \"
 "
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=100%
@@ -135,5 +135,18 @@ fzfz-file-widget() {
 
 zle     -N   fzfz-file-widget
 bindkey '^G' fzfz-file-widget
+
+__fzflocate() {
+    unset REPORTTIME
+    \locate \*  | fzf --prompt='locate: ' --preview="file {}"
+}
+
+fzf-locate-widget() {
+  LBUFFER="${LBUFFER}$(__fzflocate)"
+  zle redisplay
+}
+
+zle     -N   fzf-locate-widget
+bindkey '^x^l' fzf-locate-widget
 
 # vim:ft=sh
