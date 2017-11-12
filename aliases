@@ -218,6 +218,7 @@ alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
 alias ip='ip -c'
+yt() { echo -e $* \\nquit | nc localhost 5038 }
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias G='gdbserver :2000'
