@@ -94,10 +94,11 @@ alias gkk='vim +GV'
 alias gcp='git cherry-pick'
 alias gpp='git pull --recurse-submodules --jobs=8'
 alias gaa='git apply --verbose --check --3way'
+alias gbb='git for-each-ref --sort=committerdate refs/heads/ --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset))  %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))"'
 
 # ls
 l() {
-    ls \
+    \ls \
         --almost-all \
         --author \
         --color=always \
