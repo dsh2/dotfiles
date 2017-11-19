@@ -51,7 +51,7 @@ command! -bang -nargs=* Ag
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 let g:fzf_layout = { 'down': '~70:%' }
 imap <c-x><c-h> <plug>(fzf-complete-path)
-inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
+" inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
 
 map <leader>T :Tags<cr>
 map <leader>M :Marks<cr>
@@ -108,7 +108,7 @@ let g:CCTreeHilightCallTree=1
 Plug 'sk1418/QFGrep'
 " }}}
 " {{{ Completor
-Plug 'maralla/completor.vim'
+" Plug 'maralla/completor.vim'
 
 " }}}
 
@@ -400,6 +400,8 @@ Plug 'dkprice/vim-easygrep'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'vim-scripts/AnsiEsc.vim'
 map <leader>W :AnsiEsc<cr>
+" Remove ansi escape sequence
+map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
 Plug 'sukima/xmledit'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
