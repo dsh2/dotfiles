@@ -78,6 +78,7 @@ Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
 autocmd FileType GV map <buffer> ; o
+autocmd FileType GV map <buffer> l ;
 autocmd FileType GV map <buffer>  O
 
 Plug 'airblade/vim-gitgutter'
@@ -244,7 +245,7 @@ vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
 nmap gX OpenBrowserCurrent
 " }}}
-" " Syntastic {{{
+" Syntastic {{{
 " Plug 'scrooloose/syntastic'
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
@@ -412,6 +413,10 @@ nmap gw :InteractiveWindow<CR>
 Plug 'chrisbra/Recover.vim'
 Plug 'Shougo/vinarise.vim'
 map <leader>V :Vinarise<cr>
+
+Plug 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
 
 Plug 'junegunn/vim-peekaboo'
 let g:peekaboo_window = 'vertical botright 51new'
