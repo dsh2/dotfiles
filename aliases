@@ -94,7 +94,8 @@ alias gkk='vim +GV'
 alias gcp='git cherry-pick'
 alias gpp='git pull --recurse-submodules --jobs=8'
 alias gaa='git apply --verbose --check --3way'
-alias gbb='git for-each-ref --sort=committerdate refs/heads/ --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset))  %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))"'
+# TODO: add to fbr
+alias gbb='git for-each-ref --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate '
 
 # ls
 l() {
@@ -131,6 +132,7 @@ alias whh=whence
 alias prr=print
 alias prl='print -l'
 alias j=jobs
+alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
 
 # Vim aliases
@@ -230,6 +232,7 @@ alias ip='ip -c'
 yt() { echo -e $* \\nquit | nc localhost 5038 }
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
+alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
 alias G='gdbserver :2000'
 GG() { 
 	(while true; do 
@@ -325,12 +328,15 @@ alias -g sd2t="|sed -re 's/ - /\t/'"
 alias -g DN="> /dev/null"
 alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
+alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 alias w=wireshark
-export WS_OPTIONS=(-o tls_strip.export_file:cap-tls-stripped.pcapng -o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
-alias ww='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/null -r cap.pcapng &'
-alias wwss='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:/dev/stdout -r cap.pcapng'
-alias wws='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug && tmux split -d lnav ssldebug'
-alias wwso='${WIRESHARK:-wireshark} $WS_OPTIONS -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
+export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+alias lvs='tmux split -d lnav ssldebug'
+alias tsv='truncate -s0 ssldebug'
+alias ww='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/null -r cap.pcapng &'
+alias wwss='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/stdout -r cap.pcapng'
+alias wws='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug'
+alias wwso='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
 alias xpf=xpidof
