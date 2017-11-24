@@ -143,7 +143,7 @@ bindkey '^X^X' last-output-vp
 function last-output-fzf {
 	zle up-history
 	# zle -U ' |&fzf --ansi --multi'
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi
+	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
 }
 zle -N last-output-fzf
 bindkey '^X^F' last-output-fzf
@@ -205,19 +205,23 @@ function _start_tmux_logging()
     print full: $3
     print -P $LINE_SEPARATOR
     # TODO: Add logging for
+    # -exit code
+    # -directory (in case .zsh_local_history is not possible)
     # -environment
     # -literal and full command
     # -report times
     # -name of tmux session name
-    whence tmux > /dev/null && \
-	tmux has-session && \
-	mkdir -p ~/.tmux-log && \
+    whence tmux > /dev/null && 
+	tmux has-session >& /dev/null && 
+	mkdir -p ~/.tmux-log && 
 	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
 
 function _stop_tmux_logging() 
 { 
-    whence tmux > /dev/null && tmux has-session && tmux pipe-pane 
+    whence tmux > /dev/null && 
+	tmux has-session >& /dev/null && 
+	tmux pipe-pane 
 }
 
 autoload -U add-zsh-hook
