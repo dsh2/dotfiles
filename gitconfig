@@ -26,3 +26,6 @@
 	g = grep --break --heading --line-number
 [gc]
 	reflogexpire = 900
+[rerere]
+	enabled = true
+	autoupdate = true
