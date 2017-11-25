@@ -268,6 +268,7 @@ alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
 alias sc=systemctl 
 alias scc=sysctl 
+alias sct=sysctl
 alias dp=dpkg
 alias dpl='dpkg -L'
 alias dps='dpkg -S'
