@@ -36,37 +36,28 @@ ee() {
     typeset | fzf --multi | cut -d= -f1 
 }
 
-# fbr - checkout git branch (including remote branches)
 fbr() {
-  local branches branch
-  branches=$(git branch --all | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //")
+    local refs_filter=${*}
+    local object
+    object=$(git -c color.ui=always for-each-ref \
+	${refs_filter} \
+	  --format="%(HEAD)%(color:red)%(objectname:short)%(color:reset) %09 (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" \
+	  --sort=-committerdate |
+      fzf-tmux --tabstop=14 --ansi --no-sort | cut -f 1 | tr -d \*)
+    echo sha1 = $object
+    git checkout $=object
 }
 
-# fbrr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
-fbrr() {
-  local branches branch
-  branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+fbT() {
+    fbr "refs/tags"
 }
 
-# fco - checkout git branch/tag
-fco() {
-  local tags branches target
-  tags=$(
-    git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
-  branches=$(
-    git branch --all | grep -v HEAD             |
-    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
-    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
-  target=$(
-    (echo "$tags"; echo "$branches") |
-    fzf-tmux -l30 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
-  git checkout $(echo "$target" | awk '{print $2}')
+fbS() {
+    fbr "refs/stash"
+}
+
+fbR() {
+    fbr "refs/heads"
 }
 
 # fshow - git commit browser
