@@ -96,6 +96,7 @@ alias gpp='git pull --recurse-submodules --jobs=8'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git for-each-ref --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate '
+alias gcs='git config --show-origin'
 
 # ls
 l() {
@@ -296,7 +297,8 @@ alias e=echo
 alias tf='grc tail -f /var/log/messages &'
 alias tff='lnav /var/log/messages'
 alias vis=sudoedit
-
+alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
+alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
 
 src_index() {
