@@ -123,11 +123,12 @@ gchb() {
 zle -N gchb; bindkey '\eB' gchb
 
 __fzfz() {
-		unset REPORTTIME
-		eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " | while read item; do
-    printf '%q ' "$item"
-  done
-  echo
+	unset REPORTTIME
+	eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " |
+	while read item; do
+		printf '%q ' "$item"
+	done
+	echo
 }
 
 fzfz-file-widget() {
@@ -144,8 +145,8 @@ __fzflocate() {
 }
 
 fzf-locate-widget() {
-  LBUFFER="${LBUFFER}$(__fzflocate)"
-  zle redisplay
+	LBUFFER="${LBUFFER}$(__fzflocate)"
+	zle redisplay
 }
 
 zle     -N   fzf-locate-widget
