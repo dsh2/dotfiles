@@ -9,6 +9,7 @@ export FZF_DEFAULT_OPTS="
 			--bind 'alt-b:deselect-all'
 			--bind 'alt-d:page-down'
 			--bind 'alt-u:page-up'
+			--bind 'ctrl-r:toggle-sort'
 			--bind 'ctrl-q:toggle-preview'
 			--bind 'ctrl-alt-j:preview-page-down'
 			--bind 'ctrl-alt-k:preview-page-up'
@@ -111,6 +112,15 @@ gch() {
 	zle && zle redisplay
 }
 zle -N gch; bindkey '\eU' gch
+
+# gchb - browse chrome bookmarks
+gchb() {
+	setopt pipefail
+	local urls
+	urls=$(chrome-bookmarks.rb | sort -r | fzf --ansi --multi | cut -f 3) &&
+	    exo-open $=urls
+}
+zle -N gchb; bindkey '\eB' gchb
 
 __fzfz() {
 		unset REPORTTIME
