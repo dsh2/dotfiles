@@ -35,14 +35,6 @@
     ~/.vimrc: vimrc
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
-    ~/bin/repo: bin/repo
-    ~/bin/adb-ip-reconnect.sh: bin/adb-ip-reconnect.sh
-    ~/bin/tmux-cross-over.sh: bin/tmux-cross-over.sh 
-    ~/bin/tmux-random-background-color.sh: bin/tmux-random-background-color.sh
-    ~/bin/tmux-fzf-panes.sh: bin/tmux-fzf-panes.sh
-    ~/bin/tmux-select-buffer.sh: bin/tmux-select-buffer.sh
-    ~/bin/tmux-log.sh: bin/tmux-log.sh 
-    ~/bin/goo: googler/googler
 
 - shell:
     - [vim +PlugInstall +qall, Configuring vim]

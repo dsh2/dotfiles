@@ -2,6 +2,7 @@
 pathprepend "$HOME/bin"
 pathprepend "$HOME/.rvm/bin"
 pathprepend "$HOME/src/GO/bin"
+pathprepend "$HOME/.dotfiles/bin"
 pathprepend "/sbin"
 pathprepend "/usr/sbin"
 pathprepend "/usr/local/bin"
