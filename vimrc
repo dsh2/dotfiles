@@ -686,5 +686,6 @@ nmap <leader>DD :diffthis<CR>
 nmap <leader>DO :diffoff<CR>
 nmap <leader>DS :vertical diffsplit<CR>
 
+imap <NUL> <space>h
 " }}}
 " }}}
