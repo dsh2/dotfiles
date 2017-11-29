@@ -91,12 +91,15 @@ alias gco='git checkout'
 alias gcom='git checkout master'
 alias gk='gitk --all&'
 alias gkk='vim +GV'
+alias gss='vim . +Gstatus'
 alias gcp='git cherry-pick'
 alias gpp='git pull --recurse-submodules --jobs=8'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git for-each-ref --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate '
 alias gcs='git config --show-origin'
+alias gra='git rebase --abort'
+alias gri='git rebase -i HEAD~10'
 
 # ls
 l() {
@@ -115,6 +118,7 @@ alias ls='l --format=across'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias lts='l -rS'
+alias ltsh='l -rS -h'
 alias ltr=lt
 alias lsd='l -d'
 alias fr='fc -R'
@@ -143,7 +147,8 @@ alias v.=vs
 gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
-alias vl=last
+alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
+
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
 
