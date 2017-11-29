@@ -204,6 +204,8 @@ function _start_tmux_logging()
     # print compact command = \"$2\"
     print full: $3
     print -P $LINE_SEPARATOR
+    # TODO: Do not log for
+    # -vim, hop
     # TODO: Add logging for
     # -exit code
     # -directory (in case .zsh_local_history is not possible)
