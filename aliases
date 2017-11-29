@@ -135,7 +135,7 @@ alias goo=googler
 alias wh='whence -sv'
 alias whh=whence 
 alias prr=print
-alias prl='print -l'
+alias prl='print -l -- '
 alias j=jobs
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
@@ -338,7 +338,8 @@ alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
 alias w=wireshark
-export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+# export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
+export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias lvs='tmux split -d lnav ssldebug'
 alias tsv='truncate -s0 ssldebug'
 alias ww='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/null -r cap.pcapng &'
