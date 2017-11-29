@@ -27,11 +27,11 @@ cdp() {
         cd /proc/${CD_PIDS[1]}
         if [ -n "$CD_PIDS[2]" ]; then
             echo CD_PIDS = $CD_PIDS
-        fi;
+        fi
     else
         echo no process matched \"$*\". Changing to proc root...
         cd /proc/
-    fi;
+    fi
 }
 compdef _pids cdp
 
@@ -40,7 +40,7 @@ cd() {
         builtin cd $(dirname "$*"); 
     fi; 
 }
-cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else; echo Abort.; fi; }
+cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else echo Abort.; fi }
 alias cv=cb
 
 source ~/.dotfiles/z/z.sh
@@ -125,7 +125,7 @@ alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
-mkt() {TMP=tmp-$(nn); mkd $TMP; cd $TMP; }
+mkt() { TMP=tmp-$(nn); mkd $TMP; cd $TMP; }
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
@@ -223,7 +223,7 @@ alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias xcc='tmux show-buffer | xc'
-xp() { echo "$*" | xc ; }
+xp() { echo "$*" | xc }
 alias M=make
 alias ndd=ndk-build
 alias tss=typeset
