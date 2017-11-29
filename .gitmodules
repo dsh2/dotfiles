@@ -37,3 +37,6 @@
 [submodule "src/find_forks"]
 	path = src/find_forks
 	url = https://github.com/frost-nzcr4/find_forks
+[submodule "zsh/zsh-socat-completion"]
+	path = zsh/zsh-socat-completion
+	url = https://github.com/dsh2/zsh-socat-completion

@@ -263,9 +263,9 @@ while-watch() {
 # }}}
 
 # Completion {{{
-fpath+=~/.dotfiles/zsh-completions/
+fpath+=~/.dotfiles/zsh/zsh-completions-org/
+fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
-fpath+=~/.dotfiles/googler/auto-completion/zsh
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
 
