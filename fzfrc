@@ -32,11 +32,6 @@ export FZF_DEFAULT_OPTS="
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=100%
 
-# TODO: add binding for vared
-ee() {
-    typeset | fzf --multi | cut -d= -f1 
-}
-
 fbr() {
     local refs_filter=${*}
     local object
@@ -139,16 +134,17 @@ fzfz-file-widget() {
 zle     -N   fzfz-file-widget
 bindkey '^G' fzfz-file-widget
 
-__fzflocate() {
-    unset REPORTTIME
-    \locate \*  | fzf --prompt='locate: ' --preview="file {}"
-}
-
-fzf-locate-widget() {
-	LBUFFER="${LBUFFER}$(__fzflocate)"
+fzf-dlocate-widget() {
+LBUFFER="${LBUFFER}$(command dlocate \* | fzf --prompt='dlocate: ' --preview="echo $(echo {} | cut -d: -f1)")"
 	zle redisplay
 }
+zle     -N   fzf-dlocate-widget
+bindkey '^x^o' fzf-dlocate-widget
 
+fzf-locate-widget() {
+	LBUFFER="${LBUFFER}$(command locate \* | fzf --prompt='locate: ' --preview="file {}")"
+	zle redisplay
+}
 zle     -N   fzf-locate-widget
 bindkey '^x^l' fzf-locate-widget
 
