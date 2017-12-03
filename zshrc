@@ -368,6 +368,7 @@ pathprepend() {
     (($path_index <= ${#${(P)path_env}})) && eval "${path_env}[$path_index]=()"
     eval "${path_env}=($path_element ${(P)path_env})"
 }
+
 # External ressource files {{{
 source ~/.environment
 source ~/.fzf.zsh
