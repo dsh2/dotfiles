@@ -330,9 +330,10 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # }}}
 
 # Setup aliases {{{
+[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 source ~/.aliases
 typeset -a ealiases
-ealiases=(`alias | sed -e 's/=.*//'`)
+ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
 
 _expand-ealias() {
 # TODO: add blacklist for specific aliases not to be expanded
@@ -343,14 +344,15 @@ fi
 zle magic-space
 }
 _expand-ealias-and-execute() {
-_expand-ealias
-zle accept-line
+    _expand-ealias
+    zle accept-line
 }
 
 zle -N _expand-ealias
 zle -N _expand-ealias-and-execute
 bindkey ' ' _expand-ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
+
 function space-prepend {
     zle -U ' '
 }
