@@ -358,6 +358,12 @@ function space-prepend {
 }
 zle -N space-prepend
 bindkey '^ ' space-prepend
+
+ee() {
+    LBUFFER="${LBUFFER}$( typeset | fzf --multi | cut -d= -f1 )"
+}
+zle -N ee
+bindkey '^x^e' ee
 # }}}
 
 pathprepend() {
@@ -373,5 +379,4 @@ pathprepend() {
 source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
-[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 # }}}
