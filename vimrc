@@ -94,8 +94,7 @@ let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 let g:DiffUnit = 'Word1'
 " }}}
 " cscope {{{
-" Plug 'vim-scripts/cscope-quickfix'
-Plug 'Ilink//cscope-quickfix'
+Plug 'Ilink/cscope-quickfix'
 set cscopepathcomp=2
 " set cscopeprg=/opt/local/bin/cscope
 set cscopetag
@@ -390,7 +389,7 @@ map <leader>R :update<cr>:source ~/.vimrc<cr>
 
 Plug 'sickill/vim-pasta'
 let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
-Plug 'tpope/vim-unimpaired'
+Plug 'dsh2/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-eunuch'
@@ -437,7 +436,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
 
-" Plug 'https://github.com/vim-utils/vim-man'
+Plug 'vim-utils/vim-man'
 
 Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
@@ -570,38 +569,38 @@ function! RestorePosition()
     endif
 endfunction
 
-" Make 'K' lookup vim help for vim files
-nmap K :exe "Man " . expand("<cword>") <CR>
+" Add support for reading manual pages
+runtime! ftplugin/man.vim
+autocmd FileType man set sidescrolloff=0
+set keywordprg=:Man
+nmap K :exe "Vman " . expand("<cword>") <CR>
 let g:ft_man_open_mode = 'vert'
 let g:ft_man_folding_enable = 1
-autocmd FileType vim nmap  K :exe "help " . expand("<cword>") <CR>
+
+" Make 'K' lookup vim help for vim files
+autocmd FileType vim nmap  K :exe "help " . expand("<cword>")<CR>
 autocmd FileType vim setl keywordprg=help
-set keywordprg=:Man
 autocmd FileType help set nonumber
 autocmd FileType help set sidescrolloff=0
 autocmd FileType help wincmd L
 " autocmd FileType help wincmd L | vert resize 80
 
 " Add a cursorline(/cursorcolumn) to the active window
-autocmd BufWinLeave * set nocursorline |
-	    \ highlight CursorLineNr ctermbg=grey
+" autocmd BufWinLeave * set nocursorline |
+" 	    \ highlight CursorLineNr ctermbg=grey
 
 autocmd BufWinEnter * set cursorline |
 	    \ highlight CursorLineNr ctermfg=white |
 	    \ highlight CursorLineNr ctermbg=red |
 	    \ highlight CursorLine cterm=underline
 set cursorline
+set cursorcolumn
 
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
-
 
 " Enable spell checking for commit messages
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
-
-" Add support for reading manual pages
-runtime! ftplugin/man.vim
-autocmd FileType man set sidescrolloff=0
 
 " FIXME: does not work :(
 " autocmd QuickfixCmdPre :copen<CR>
