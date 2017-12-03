@@ -247,19 +247,18 @@ function _showbuffers()
 zle -N showbuffers _showbuffers
 bindkey "^[o" showbuffers
 
-# TODO: Finish it!
-while-watch() {
-	if [ -n $* ]; then
-		echo while-watch: file/dir cmd
-		exit 1
-	fi
-	local watch
-	echo Watching \"$watch\"...
-	watch=$1
-	shift
-	. $*
-	while inotifywait -e modify ~/.dotfiles; do zz; find /usr/share/; echo $(eval $LINE_SEPARATOR); echo ${(r:$COLUMNS::_:)} ; done
+# Change cursor when switching to vicmd
+zle-keymap-select() { 
+    case $KEYMAP in
+	vicmd) echo -ne "\e]12;darkgreen\a";;
+	vioop) echo -ne "\e]12;yellow\a";;
+	visual) echo -ne "\e]12;darkyellow\a";;
+	*) echo -ne "\e]12;darkred\a";;
+    esac 
 }
+echo -ne "\e]12;darkred\a"
+zle -N zle-keymap-select
+
 # }}}
 
 # Completion {{{
