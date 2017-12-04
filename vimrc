@@ -462,6 +462,12 @@ augroup END
 Plug 'justinmk/vim-sneak'
 map S <Plug>Sneak_s
 
+Plug 'flatcap/vim-keyword'
+map <leader>k <plug>KeywordToggle\|:set nohlsearch<cr>
+map <leader>K :call keyword#KeywordClear()<cr>
+let g:keyword_group = 'keyword_group'
+let g:keyword_highlight = 'ctermbg=red cterm=underline'
+
 call plug#end()
 " }}}
 " Global options {{{
