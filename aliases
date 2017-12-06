@@ -8,10 +8,10 @@ if [ "$UNAME" = "Darwin" ]; then
     alias sed=gsed
     alias tac=gtac
     # Switch profile of running iTerm2 window
-    it2prof() { echo -e "\033]50;SetProfile=$@\a"; }
+    it2prof() { printf '\033]50;SetProfile=$@\a'; }
 fi
 
-if [ $OSTYPE = "cygwin" ]; then
+if [ "$OSTYPE" = "cygwin" ]; then
     alias sudo="cygstart --action=runas"
 fi
 
@@ -229,14 +229,14 @@ alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias xcc='tmux show-buffer | xc'
-xp() { echo "$*" | xc }
+xp() { echo "$*" | xc; }
 alias M=make
 alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
 alias ip='ip -c'
-yt() { echo -e $* \\nquit | nc localhost 5038 }
+yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
 alias bd=bindkey
 
