@@ -356,6 +356,7 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
-cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done }
+cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
+faketty () { script -qfc "$(printf "%q " "$@")"; }
 
 # vim: se ft=sh:
