@@ -72,8 +72,10 @@ Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
 nmap <leader>gs :Gstatus<cr>
+nmap <leader>gS :Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
+autocmd FileType gitcommit map ; odvzi
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
