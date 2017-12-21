@@ -148,6 +148,7 @@ alias v.=vs
 gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
+alias sl='cp ~/.tmux-log/*(.om[1]) $(nn)-'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
