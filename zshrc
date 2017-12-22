@@ -107,9 +107,9 @@ zle -N backward-kill-default-word _backward_kill_default_word
 bindkey '\e=' backward-kill-default-word   # = is next to backspace
 
 function run-again-sudo {
-	zle up-history
-	zle beginning-of-line
-	zle -U 'sudo '
+    [[ -z $BUFFER ]] && zle up-history
+    zle beginning-of-line
+    zle -U 'sudo '
 }
 zle -N run-again-sudo
 bindkey '^X^S' run-again-sudo
