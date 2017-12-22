@@ -122,9 +122,9 @@ alias lt='l -tr'
 alias lts='l -rS'
 alias ltsh='l -rS -h'
 alias ltr=lt
+alias ltrr='ls -al \**/*(.om) '
 alias lsd='l -d'
 alias fr='fc -R'
-alias lnn=lnav
 alias r=ranger
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
@@ -141,6 +141,7 @@ alias prl='print -l -- '
 alias j=jobs
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
+alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 # Vim aliases
 alias v='vim -X'
@@ -150,9 +151,10 @@ gv() { gvim "$*"; raiseX; }
 alias last='v -S ~/.vim/lastsession'
 alias glast='gv -S ~/.vim/lastsession'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
+alias vll='v *(.om[1])'
 
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "set cursorline" "+/example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+/example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 
@@ -219,7 +221,7 @@ alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
 alias agi='sudo apt-get install --fix-missing -y '
-alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
+alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- | fzf --ansi --multi --sort --preview-window=top:50% --preview "apt-cache show {}")'
 alias p_ss='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
 alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 alias r22='rabin2 -gx'
@@ -241,6 +243,7 @@ alias ip='ip -c'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
 alias bd=bindkey
+alias sgi=signal-cli
 
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
@@ -303,7 +306,7 @@ alias s=stat
 alias wl='wc -l'
 alias suu='sort | uniq'
 alias uu=uniq
-alias lv=lnav
+alias lv='lnav -r'
 alias e=echo 
 alias tf='grc tail -f /var/log/messages &'
 alias tff='lnav /var/log/messages'
