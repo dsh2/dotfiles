@@ -75,7 +75,7 @@ nmap <leader>gs :Gstatus<cr>
 nmap <leader>gS :Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
-autocmd FileType gitcommit map <buffer> ; odvzi
+autocmd FileType gitcommit map <buffer> ; odvlzi
 autocmd FileType gitcommit map <buffer> C cvc
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
