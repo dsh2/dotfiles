@@ -75,7 +75,7 @@ nmap <leader>gs :Gstatus<cr>
 nmap <leader>gS :Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
-autocmd FileType gitcommit map <buffer> ; odvlzi
+autocmd FileType gitcommit map <buffer> ; odvjlzi
 autocmd FileType gitcommit map <buffer> C cvc
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
@@ -380,8 +380,11 @@ Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#whitespace#enabled = 0
+let g:airline_detect_modified=1
+let g:airline_detect_spelllang=1
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 " let g:airline_theme='raven'
-let g:airline_theme='dark'
+let g:airline_theme='qwq'
 " }}}
 " Dispatch {{{
 Plug 'tpope/vim-dispatch'
@@ -462,8 +465,8 @@ augroup vimrc
     autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
 augroup END
 
-Plug 'justinmk/vim-sneak'
-map S <Plug>Sneak_s
+" Plug 'justinmk/vim-sneak'
+" map S <Plug>Sneak_s
 
 Plug 'flatcap/vim-keyword'
 map <leader>k <plug>KeywordToggle\|:set nohlsearch<cr>
