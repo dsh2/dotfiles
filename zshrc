@@ -370,10 +370,16 @@ bindkey '^x^e' ee
 pathprepend() {
     local path_element=$1
     [ -z $path_element ] && return
-    local -l path_env=${2:-path}
-    integer path_index=${${(P)path_env}[(i)$1]}
-    (($path_index <= ${#${(P)path_env}})) && eval "${path_env}[$path_index]=()"
-    eval "${path_env}=($path_element ${(P)path_env})"
+    local path_env_name=${2:-path}
+    if [[ -v $path_env_name ]]; then
+	integer path_element_index=${${(P)path_env_name}[(i)$1]}
+	if (($path_element_index <= ${#${(P)path_env_name}})) then
+	    eval "${path_env_name}[$path_element_index]=()"
+	fi
+	eval "${path_env_name}=($path_element ${(P)path_env_name})"
+    else
+	eval "${path_env_name}=$path_element"
+    fi
 }
 
 # External ressource files {{{
