@@ -268,6 +268,7 @@ fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
+fpath+=~/src/RE/radare2/doc/zsh
 
 autoload -U compinit && compinit
 zmodload zsh/complist
