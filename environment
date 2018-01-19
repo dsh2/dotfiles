@@ -1,14 +1,17 @@
 # Path
-pathprepend "$HOME/bin"
-pathprepend "$HOME/.rvm/bin"
-pathprepend "$HOME/src/GO/bin"
-pathprepend "$HOME/.dotfiles/bin"
-pathprepend "/sbin"
-pathprepend "/usr/sbin"
-pathprepend "/usr/local/bin"
-pathprepend "/usr/local/sbin"
-pathprepend "/opt/local/bin"
-pathprepend "/opt/local/sbin"
+pathprepend $HOME/bin
+# pathprepend $HOME/.rvm/bin
+pathprepend $HOME/src/GO/bin
+pathprepend $HOME/.dotfiles/bin
+pathprepend $HOME/.dotfiles/bin
+pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
+pathprepend /sbin
+pathprepend /usr/sbin
+pathprepend /usr/local/bin
+pathprepend /usr/local/sbin
+pathprepend /opt/local/bin
+pathprepend /opt/local/sbin
+pathprepend /usr/lib/ccache
 pathprepend "/opt/local/share/man" "MANPATH"
 
 # Android 
