@@ -84,7 +84,8 @@ alias gca='git commit -va'
 alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
-alias gst='git -c color.ui=always status -sb --show-stash'
+# alias gst='git -c color.ui=always status -sb --show-stash'
+alias gst='git status -sb --show-stash'
 alias gcr='git clone --recursive --jobs=8 --verbose'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
@@ -132,7 +133,7 @@ alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
-mkt() { TMP=tmp-$(nn); mkd $TMP; cd $TMP; }
+mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
@@ -145,12 +146,9 @@ alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 # Vim aliases
-alias v='vim -X'
+alias v=vim
 vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
-alias v.=vs
 gv() { gvim "$*"; raiseX; }
-alias last='v -S ~/.vim/lastsession'
-alias glast='gv -S ~/.vim/lastsession'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
 alias D='ls -l ~/Downloads/*(.om[1])'
@@ -159,8 +157,8 @@ viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+/example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
-
 compdef _man vimman
+
 run() {
     print Running \"$*\"...
     print Start: $(n)
@@ -173,6 +171,7 @@ run() {
 RUN() {
     [ -z $1 ] && { echo Nothing to run.; return; }
     if [ $1 = "--watch" -o $1 = "-w" ]; then
+	print_variables() { for v in $*; do print $v = ${(P)v}; done }                                                                            |~
         WATCH=$2
         shift 2
     else 
@@ -230,7 +229,6 @@ alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
 alias pd='patool diff'
-alias aa='alias|fzf' # TODO: make this a zle filter
 alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
@@ -304,8 +302,11 @@ compdef _ps pidof
 alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
-alias wl='wc -l'
-alias suu='sort | uniq'
+alias sd=sysdig
+alias st='strace -a $(($COLUMNS - 5)) -r -f'
+alias sudo='sudo '
+alias -g wl=' | wc -l'
+alias -g suu='| sort | uniq'
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
@@ -364,5 +365,15 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty () { script -qfc "$(printf "%q " "$@")"; }
+
+bash_source() {
+  alias shopt=':'
+  alias _expand=_bash_expand
+  alias _complete=_bash_comp
+  emulate -L sh
+  setopt kshglob noshglob braceexpand
+
+  source "$@"
+}
 
 # vim: se ft=sh:
