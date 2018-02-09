@@ -12,9 +12,9 @@ pathprepend /usr/local/sbin
 pathprepend /opt/local/bin
 pathprepend /opt/local/sbin
 pathprepend /usr/lib/ccache
-pathprepend "/opt/local/share/man" "MANPATH"
+pathprepend /opt/local/share/man MANPATH
 
-# Android 
+# Android
 export ANDROID_AVD_HOME="$HOME/.android/avd/"
 export ANDROID_SDK="$HOME/src/android-sdk"
 export ANDROID_SDK_ROOT=$ANDROID_SDK
