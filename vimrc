@@ -245,7 +245,7 @@ let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
-nmap gX OpenBrowserCurrent
+map gX OpenBrowserCurrent
 " }}}
 " Syntastic {{{
 " Plug 'scrooloose/syntastic'
@@ -702,5 +702,8 @@ set diffopt=
 au BufEnter,BufNew * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
 
 imap <NUL> <space>h
+nmap gF :tabedit <cfile><cr>
+
+au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}
