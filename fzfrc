@@ -123,13 +123,13 @@ gchb() {
 zle -N gchb; bindkey '\eB' gchb
 
 __fzfz() {
-	unset REPORTTIME
-	eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " |
+    unset REPORTTIME
+    eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " |
 	while read item; do
-		printf '%q ' "$item"
+	    printf '%q ' "$item"
 	done
 	echo
-}
+    }
 
 fzfz_file_widget() {
   LBUFFER="${LBUFFER}$(__fzfz)"
@@ -140,8 +140,16 @@ zle     -N   fzfz_file_widget
 bindkey '^G' fzfz_file_widget
 
 fzf_locate_widget() {
-	LBUFFER="${LBUFFER}$(command locate \* | fzf --prompt='locate: ' --preview="file {}")"
-	zle redisplay
+    BUFFER="$LBUFFER$(
+	command locate \* | 
+	    fzf --multi --prompt='locate: ' --preview="file {}" |
+	    while read file; do
+		qfile="${(q)file} "
+		CURSOR+=$#qfile # FIXME: cursor does not advance
+		echo -n $qfile
+	    done
+    )$RBUFFER"
+    zle redisplay
 }
 zle -N fzf_locate_widget; bindkey '^x^l' fzf_locate_widget
 
