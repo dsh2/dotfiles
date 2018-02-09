@@ -147,8 +147,6 @@ alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 # Vim aliases
 alias v=vim
-vs() { v "$1" && echo -e "\nSourcing \"$1\"..."; time source "$1"; echo -e "\nDone sourcing \"$1\"...";}
-gv() { gvim "$*"; raiseX; }
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
 alias D='ls -l ~/Downloads/*(.om[1])'
@@ -305,8 +303,6 @@ alias s=stat
 alias sd=sysdig
 alias st='strace -a $(($COLUMNS - 5)) -r -f'
 alias sudo='sudo '
-alias -g wl=' | wc -l'
-alias -g suu='| sort | uniq'
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
@@ -347,6 +343,9 @@ alias -g DN="> /dev/null"
 alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"'
+alias -g wl=' | wc -l'
+alias -g suu='| sort | uniq'
+
 alias w=wireshark
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
