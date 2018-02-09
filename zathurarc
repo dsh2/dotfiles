@@ -1,7 +1,7 @@
 map <Esc> quit
 map <C-c> abort
-map <Space> navigate full-down
-map <S-Space> navigate full-up
+map <Space> full-down
+map <S-Space> full-up
 map ] navigate full-down
 map [ navigate full-up
 
@@ -31,3 +31,5 @@ set guioptions =
 
 set statusbar-basename true
 set selection-clipboard "clipboard"
+
+set recolor-lightcolor "#333333"
