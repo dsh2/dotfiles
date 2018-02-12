@@ -25,9 +25,9 @@ export ANDROID_NDK_ROOT=$ANDROID_NDK
 export NDK=$ANDROID_NDK
 export AOSP_HOME=$HOME/src/AOSP
 export GRADLE_HOME=/opt/local/share/java/gradle
-pathprepend "$ANDROID_SDK/platform-tools"
-pathprepend "$ANDROID_SDK/tools"
-pathprepend "$NDK"
+pathprepend $ANDROID_SDK/platform-tools
+pathprepend $ANDROID_SDK/tools
+pathprepend $NDK
 # export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 # export JAVA_BINDIR=$JAVA_HOME/bin
 # export JDK_HOME=$JAVA_HOME
