@@ -37,3 +37,6 @@
 [submodule "zsh/zsh-socat-completion"]
 	path = zsh/zsh-socat-completion
 	url = https://github.com/dsh2/zsh-socat-completion
+[submodule "zsh-completions/zsh-pandoc-completion"]
+	path = zsh-completions/zsh-pandoc-completion
+	url = https://github.com/anntzer/zsh-pandoc-completion/
