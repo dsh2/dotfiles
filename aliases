@@ -209,7 +209,7 @@ alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArr
 alias vpp=vpcsv
 alias rm='trash -v'
 alias rmm='\rm'
-alias tl='trash-list|fzf'
+alias tl='trash-list|sort|fzf --tac'
 alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
