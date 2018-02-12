@@ -67,87 +67,109 @@ setopt inc_append_history_time
 setopt no_bang_hist
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
+
+# TODO: Tidy this mess up: do not log empty lines
 # HISTORY_IGNORE="(^[[:space:]]+.*$)"
 zshaddhistory() {
-	# echo zshaddhistory: checking line \"${1%%$'\n'}\"...
-	# if [[ "$1" =~ $HISTORY_IGNORE ]]; then
-	# echo zshaddhistory: found match \"$MATCH\"
-	# echo zshaddhistory: line skipped
-	# return 1
-	# fi
-	# echo zshaddhistory: line NOT skipped
-	print -sr -- ${1%%$'\n'}
-	# TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
-	fc -p .zsh_local_history
+    # echo zshaddhistory: checking line \"${1%%$'\n'}\"...
+    # if [[ "$1" =~ $HISTORY_IGNORE ]]; then
+    # echo zshaddhistory: found match \"$MATCH\"
+    # echo zshaddhistory: line skipped
+    # return 1
+    # fi
+    # echo zshaddhistory: line NOT skipped
+    print -sr -- ${1%%$'\n'}
+    # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    fc -p .zsh_local_history
 }
 # }}}
 
 # ZLE {{{
-zle_highlight=( \
-	default:fg=default,bg=default \
-	# default:fg=213,bg=red,underline \
-	region:underline \
-	special:fg=black,bg=red \
-	suffix:bold \
-	isearch:underline \
-	paste:standout \
-	)
+zle_highlight=( 
+    default:fg=default,bg=default
+    special:fg=black,bg=red
+    region:underline
+    suffix:bold
+    isearch:underline
+    paste:underline
+)
+
+# TODO: Use throughout file
+function bindkey_func {
+    zle -N $2
+    bindkey $1 $2
+}
 
 bindkey -e
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
-
-function _backward_kill_default_word() {
-	WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' zle backward-kill-word
-}
 bindkey '^?' undo
 
-zle -N backward-kill-default-word _backward_kill_default_word
-bindkey '\e=' backward-kill-default-word   # = is next to backspace
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
+function backward_kill_default_word() {
+    WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+    zle backward-kill-word
+}
+bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
-function run-again-sudo {
+function run_sudo {
     [[ -z $BUFFER ]] && zle up-history
     zle beginning-of-line
     zle -U 'sudo '
 }
-zle -N run-again-sudo
-bindkey '^X^S' run-again-sudo
+zle -N run_sudo
+bindkey '^X^S' run_sudo
 
-function xo-command {
+function xo_command {
 	zle up-history
 	zle -U ' | xc'
 }
-zle -N xo-command
-bindkey '^X^O' xo-command
+zle -N xo_command
+bindkey '^X^O' xo_command
 
-function xp-command {
+function xp_command {
 	zle up-history
 	zle beginning-of-line
 	zle -U 'xp '
 }
-zle -N xp-command
-bindkey '^X^P' xp-command
+zle -N xp_command
+bindkey '^X^P' xp_command
 
-function last-output-vp {
+# TODO: Factor out as general inline zle substituion function
+function select_aliases {
+    OLD_BUFFER_LEN=$#BUFFER
+    MARK=CURSOR
+    BUFFER="$LBUFFER$(builtin alias | sed -e 's/\([^=]*\)=\(.*\)/\1\t\2/ ' | fzf --tabstop=20 --tac | cut -f 2 )$RBUFFER"
+    CURSOR+=$(($#BUFFER - $OLD_BUFFER_LEN))
+    REGION_ACTIVE=1
+    zle redisplay
+}
+bindkey_func '^X^A' select_aliases
+
+function page_last_output {
 	# zle up-history
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
 	# TODO: Make this work without tmux. Read man zshzle!
 	# TODO(zsh): Somehow use (%)-flag 
-	tmux split -bp 75 vim ~/.tmux-log/$(($(print -P '%!')-1)) +AnsiEsc
-	tmux resize-pane -Z
+	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) +AnsiEsc
+	# tmux resize-pane -Z
 }
-zle -N last-output-vp
-bindkey '^X^X' last-output-vp
+zle -N page_last_output
+bindkey '^X^X' page_last_output
 
-function last-output-fzf {
-	zle up-history
-	# zle -U ' |&fzf --ansi --multi'
+function filter_last_output {
 	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
 }
-zle -N last-output-fzf
-bindkey '^X^F' last-output-fzf
+zle -N filter_last_output
+bindkey '^X^F' filter_last_output
 
+function diff_last_two_outputs {
+	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
+}
+zle -N diff_last_two_outputs
+bindkey '^X^D' diff_last_two_outputs
+
+# TODO: Instead split vim with new script containing current line and RUN-split
 autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
@@ -196,17 +218,17 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
-function _start_tmux_logging() 
+function start_tmux_logging() 
 { 
     # TODO: Add colors to output
     print -P $LINE_SEPARATOR
-    print literal:  $1
+    # print literal:  $1
     # print compact command = \"$2\"
-    print full: $3
-    print -P $LINE_SEPARATOR
+    # print full: $3
+    # print -P $LINE_SEPARATOR
     # TODO: Do not log for
-    # -vim, hop
-    # TODO: Add logging for
+    # -vim, htop, mutt, atop, powertop, lnav
+    # TODO: Add logging (probably best in directories) for
     # -exit code
     # -directory (in case .zsh_local_history is not possible)
     # -environment
@@ -219,7 +241,7 @@ function _start_tmux_logging()
 	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
 }
 
-function _stop_tmux_logging() 
+function stop_tmux_logging() 
 { 
     whence tmux > /dev/null && 
 	tmux has-session >& /dev/null && 
@@ -227,24 +249,24 @@ function _stop_tmux_logging()
 }
 
 autoload -U add-zsh-hook
-add-zsh-hook preexec _start_tmux_logging
-add-zsh-hook precmd _stop_tmux_logging
+add-zsh-hook preexec start_tmux_logging
+add-zsh-hook precmd stop_tmux_logging
 
-function _showbuffers()
+function showbuffers()
 {
-	local nl=$'\n' kr
-	typeset -T kr KR $'\n'
-	KR=($killring)
-	typeset +g -a buffers
-	buffers+="      Pre: ${PREBUFFER:-$nl}"
-	buffers+="  Buffer: $BUFFER$nl"
-	buffers+="     Cut: $CUTBUFFER$nl"
-	buffers+="       L: $LBUFFER$nl"
-	buffers+="       R: $RBUFFER$nl"
-	buffers+="Killring:$nl$nl$kr"
-	zle -M "$buffers"
+    local nl=$'\n' kr
+    typeset -T kr KR $'\n'
+    KR=($killring)
+    typeset +g -a buffers
+    buffers+="     Pre: ${PREBUFFER:-$nl}"
+    buffers+="  Buffer: $BUFFER$nl"
+    buffers+="     Cut: $CUTBUFFER$nl"
+    buffers+="       L: $LBUFFER$nl"
+    buffers+="       R: $RBUFFER$nl"
+    buffers+="Killring:$nl$nl$kr"
+    zle -M "$buffers"
 }
-zle -N showbuffers _showbuffers
+zle -N showbuffers showbuffers
 bindkey "^[o" showbuffers
 
 # Change cursor when switching to vicmd
@@ -266,6 +288,7 @@ fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
+# TODO: add repo to .dotfiles
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
 fpath+=~/src/RE/radare2/doc/zsh
@@ -273,7 +296,7 @@ fpath+=~/src/RE/radare2/doc/zsh
 autoload -U compinit && compinit
 zmodload zsh/complist
 
-bindkey -M menuselect '^[[Z' reverse-menu-complete
+bindkey -M menuselect '^[[z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
@@ -336,50 +359,56 @@ source ~/.aliases
 typeset -a ealiases
 ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
 
-_expand-ealias() {
-# TODO: add blacklist for specific aliases not to be expanded
-if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
-    zle _expand_alias
-    zle expand-word
-fi
-zle magic-space
+expand_ealias() {
+    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
+	zle _expand_alias
+	# zle expand-word
+    fi
+    zle magic-space
 }
-_expand-ealias-and-execute() {
-    _expand-ealias
-    zle accept-line
-}
-
-zle -N _expand-ealias
-zle -N _expand-ealias-and-execute
-bindkey ' ' _expand-ealias
+bindkey_func ' ' expand_ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
 
-function space-prepend {
+function space_prepend {
     zle -U ' '
 }
-zle -N space-prepend
-bindkey '^ ' space-prepend
+bindkey_func '^ ' space_prepend
 
-ee() {
-    LBUFFER="${LBUFFER}$( typeset | fzf --multi | cut -d= -f1 )"
+env_vars() {
+    LBUFFER="$LBUFFER$( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
 }
-zle -N ee
-bindkey '^x^e' ee
+bindkey_func '^x^e' env_vars
 # }}}
+
+print_variables() { 
+    for v in $*; do 
+	print $v = ${(P)v};
+    done 
+}
 
 pathprepend() {
     local path_element=$1
     [ -z $path_element ] && return
     local path_env_name=${2:-path}
-    if [[ -v $path_env_name ]]; then
+    # print_variables path_env_name path_element
+    # echo -n typeset:
+    # typeset $path_env_name
+    if [[ -n ${(P)path_env_name} ]]; then
+	# print NOT empty
 	integer path_element_index=${${(P)path_env_name}[(i)$1]}
 	if (($path_element_index <= ${#${(P)path_env_name}})) then
 	    eval "${path_env_name}[$path_element_index]=()"
 	fi
 	eval "${path_env_name}=($path_element ${(P)path_env_name})"
     else
-	eval "${path_env_name}=$path_element"
+	# print EMPTY
+	eval "${path_env_name}=($path_element)"
     fi
+    # echo -n typeset:
+    # typeset $path_env_name
+    # echo path: ${(P)path_env_name}
+    # HACK: rework this whole thing!
+    eval "${path_env_name}=($path_element ${(P)path_env_name})"
 }
 
 # External ressource files {{{
