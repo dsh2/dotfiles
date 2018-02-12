@@ -456,7 +456,7 @@ Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
-Plug 'inkarkat/diff-fold.vim'
+Plug 'dsh2/diff-fold.vim'
 Plug 'idanarye/vim-merginal'
 " Plug 'MarcWeber/vim-addon-qf-layout'
 Plug 'skywind3000/asyncrun.vim'
