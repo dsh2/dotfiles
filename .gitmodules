@@ -37,6 +37,9 @@
 [submodule "zsh/zsh-socat-completion"]
 	path = zsh/zsh-socat-completion
 	url = https://github.com/dsh2/zsh-socat-completion
+[submodule "bin/find_forks"]
+	path = bin/find_forks
+	url = https://github.com/frost-nzcr4/find_forks
 [submodule "zsh-completions/zsh-pandoc-completion"]
 	path = zsh-completions/zsh-pandoc-completion
 	url = https://github.com/anntzer/zsh-pandoc-completion/
