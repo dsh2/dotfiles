@@ -4,7 +4,7 @@
   - [git submodule update --init --recursive, Installing submodules]
   - [mkdir -p ~/.config/, Creating base config directory]
   - [mkdir -p ~/bin/, Setting up directory for local bin]
-  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/undodir, Setting up directories for vim]
+  - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
 
 - link:
@@ -30,11 +30,10 @@
         force: true
     ~/.minttyrc: minttyrc
     ~/.config/radare2rc: radare2rc
-    ~/.screenrc: screenrc
     ~/.tmux.conf: tmux.conf
     ~/.vimrc: vimrc
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
 
 - shell:
-    - [vim +PlugInstall +qall, Configuring vim]
+    - [vim +PlugClean! +PlugUpgrade +PlugInstall +PlugUpdate +qall, Configuring vim]
