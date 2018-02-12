@@ -147,6 +147,10 @@ alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 # Vim aliases
 alias v=vim
+gv() { gvim "$*"; raiseX; }
+alias last='v -S ~/.vim/lastsession'
+alias glast='gv -S ~/.vim/lastsession'
+alias sl='cp ~/.tmux-log/*(.om[1]) $(nn)-'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
 alias D='ls -l ~/Downloads/*(.om[1])'
