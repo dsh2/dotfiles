@@ -6,7 +6,7 @@
 	url = https://github.com/nojhan/liquidprompt.git
 [submodule "z"]
 	path = z
-	url = https://github.com/rupa/z.git
+	url = https://github.com/dsh2/z.git
 [submodule "Vundle.vim"]
 	path = Vundle.vim
 	url = https://github.com/gmarik/Vundle.vim.git
