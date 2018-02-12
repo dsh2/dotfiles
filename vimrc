@@ -442,7 +442,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
 
-Plug 'vim-utils/vim-man'
+Plug 'dsh2/vim-man'
 
 Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
