@@ -280,6 +280,7 @@ alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias -g xr='|xxd -r -p'
+alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias sc=systemctl 
 alias scc=sysctl 
 alias sct=sysctl
