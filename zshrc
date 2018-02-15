@@ -23,7 +23,7 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
 # PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
-PS1+='%F{240}[%F{244}(%!)%n%F{240}] '	# Add user name
+PS1+='%F{255}[%F{244}%n@%m%F{255}] '	# Add user name and host name
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'			# Add vcs info
 PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )'	# Add exit status of last job
