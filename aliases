@@ -245,7 +245,7 @@ alias ip='ip -c'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
 alias bd=bindkey
-
+alias kc='source ~/.keychain/*-sh(.om[1])'
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
 alias G='gdbserver :2000'
