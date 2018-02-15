@@ -151,7 +151,7 @@ function page_last_output {
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
 	# TODO: Make this work without tmux. Read man zshzle!
 	# TODO(zsh): Somehow use (%)-flag 
-	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) +AnsiEsc
+	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) '+set buftype=nofile' +AnsiEsc 
 	# tmux resize-pane -Z
 }
 zle -N page_last_output
