@@ -415,4 +415,5 @@ pathprepend() {
 source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
+type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
 # }}}
