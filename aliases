@@ -286,6 +286,8 @@ alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
 alias dpl='dpkg -L'
+dpL() { dpl $(dps $(whh $*) | cut -d: -f 1) }
+compdef _command_names dpL
 alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
