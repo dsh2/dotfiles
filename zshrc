@@ -414,7 +414,7 @@ pathprepend() {
     eval "${path_env_name}=($path_element ${(P)path_env_name})"
 }
 
-watch=all
+watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
