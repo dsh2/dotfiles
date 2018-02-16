@@ -444,6 +444,8 @@ let g:tmuxcomplete#trigger = 'omnifunc'
 
 Plug 'dsh2/vim-man'
 
+Plug 'francoiscabrol/ranger.vim'
+
 Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
 Plug 'vim-scripts/VCard-syntax'
