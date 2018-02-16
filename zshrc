@@ -17,10 +17,12 @@ precmd() { vcs_info; }
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-# LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}'$'\n'
-LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
+LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
+# LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
+# PS1+=$'\r'$'\f'
+PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
 # PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
 PSVAR+=$SSH_CLIENT
