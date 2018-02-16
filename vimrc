@@ -461,6 +461,8 @@ map gD :GoDocBrowser<cr>
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'dsh2/diff-fold.vim'
 Plug 'idanarye/vim-merginal'
+map <leader>y :MerginalToggle<cr>
+
 " Plug 'MarcWeber/vim-addon-qf-layout'
 Plug 'skywind3000/asyncrun.vim'
 map <leader>B :AsyncRun binwalk %<cr>
