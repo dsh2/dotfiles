@@ -357,7 +357,7 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # }}}
 
 # Setup aliases {{{
-[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+# [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 source ~/.aliases
 typeset -a ealiases
 ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
@@ -412,6 +412,20 @@ pathprepend() {
     # echo path: ${(P)path_env_name}
     # HACK: rework this whole thing!
     eval "${path_env_name}=($path_element ${(P)path_env_name})"
+}
+
+bash_source() {
+  alias shopt=':'
+  alias _expand=_bash_expand
+  alias _complete=_bash_comp
+  emulate -L sh
+  setopt kshglob noshglob braceexpand
+  source "$@"
+}
+
+have() {
+  unset have
+  (( ${+commands[$1]} )) && have=yes
 }
 
 watch=notme
