@@ -362,6 +362,7 @@ Plug 'pwntester/VimCobaltColourScheme'
 Plug 'pwntester/cobalt2.vim'
 Plug 'reedes/vim-colors-pencil'
 Plug 'chriskempson/base16-vim'
+Plug 'Lokaltog/vim-distinguished'
 " }}}
 
 Plug 'tomasr/molokai'
