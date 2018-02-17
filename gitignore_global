@@ -1,13 +1,11 @@
 # Dev
-*.out
 core
-*.pyc
 gmon.out
+*.out
+*.pyc
 *.gcda
 .idea/
 cmake-build-*
-
-# Tags
 cscope.files
 cscope.out
 tags
@@ -28,3 +26,4 @@ Desktop.ini
 
 # Miscellaneous 
 .zsh_local_history
+tmp-*
