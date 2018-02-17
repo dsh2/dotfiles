@@ -148,13 +148,9 @@ alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 # Vim aliases
 alias v=vim
 gv() { gvim "$*"; raiseX; }
-alias last='v -S ~/.vim/lastsession'
-alias glast='gv -S ~/.vim/lastsession'
 alias sl='cp ~/.tmux-log/*(.om[1]) $(nn)-'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
-alias D='ls -l ~/Downloads/*(.om[1])'
-
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+/example"; }
 alias m=vimman
@@ -334,6 +330,7 @@ src_index() {
         \) > cscope.files && command cscope -bi cscope.files;
 }
 
+alias D='ls -l ~/Downloads/*(.om[1])'
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
@@ -370,15 +367,5 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty () { script -qfc "$(printf "%q " "$@")"; }
-
-bash_source() {
-  alias shopt=':'
-  alias _expand=_bash_expand
-  alias _complete=_bash_comp
-  emulate -L sh
-  setopt kshglob noshglob braceexpand
-
-  source "$@"
-}
 
 # vim: se ft=sh:
