@@ -3,7 +3,10 @@ ForwardX11Timeout 1s
 # TODO: figure out how to setup ssh to only use the specified identity but
 # accept this identity from the agent
 # IdentitiesOnly yes
-IdentityFile ~/.ssh/hosts/%h/id_key
+IdentityFile ~/.ssh/hosts/%h/%r.key
+ControlMaster yes
+ControlPath ~/.ssh/hosts/%h/control_master-%p-%r
+ControlPersist 4h
 
 Include ~/.ssh/config.local
 
