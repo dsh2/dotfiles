@@ -337,6 +337,7 @@ setopt list_ambiguous
 # }}}
 
 # Shell options {{{
+autoload zmv
 autoload run-help
 setopt interactivecomments
 setopt autocd
