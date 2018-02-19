@@ -455,6 +455,9 @@ let g:autoformat_verbosemode=1
 map <leader>A :Autoformat<cr>
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
+autocmd FileType sshconfig setlocal commentstring=#\ %s
+autocmd FileType sshdconfig setlocal commentstring=#\ %s
+
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
