@@ -144,7 +144,7 @@ bindkey '^X^P' xp_command
 function select_aliases {
     OLD_BUFFER_LEN=$#BUFFER
     MARK=CURSOR
-    BUFFER="$LBUFFER$(builtin alias | sed -e 's/\([^=]*\)=\(.*\)/\1\t\2/ ' | fzf --tabstop=20 --tac | cut -f 2 )$RBUFFER"
+    BUFFER=$LBUFFER$(builtin alias | sed -e "s/\([^=]*\)=[' ]*\([^']*\)[']*/\1\t\2/ " | fzf --tabstop=28 --tac | cut -f 2 )$RBUFFER
     CURSOR+=$(($#BUFFER - $OLD_BUFFER_LEN))
     REGION_ACTIVE=1
     zle redisplay
