@@ -110,6 +110,12 @@ bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
+function focus_backgroud {
+    [[ $#BUFFER -eq 0 ]] && fg
+    # TODO: || think about something other useful
+}
+bindkey_func '^z' focus_backgroud
+
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
