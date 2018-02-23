@@ -369,10 +369,10 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 source ~/.aliases
 typeset -a ealiases
-ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
+ealiases=($(alias | sed -e s/=.\*// -e s/\\./\\\\./g -e /l/d -e /ls/d))
 
 expand_ealias() {
-    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
+    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
 	zle _expand_alias
 	# zle expand-word
     fi
