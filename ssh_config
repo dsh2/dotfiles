@@ -4,7 +4,7 @@ ForwardX11Timeout 1s
 # accept this identity from the agent
 # IdentitiesOnly yes
 IdentityFile ~/.ssh/hosts/%h/%r.key
-ControlMaster yes
+ControlMaster auto
 ControlPath ~/.ssh/hosts/%h/control_master-%p-%r
 ControlPersist 4h
 
