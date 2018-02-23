@@ -16,7 +16,6 @@ if [ "$OSTYPE" = "cygwin" ]; then
 fi
 
 # Change directory
-alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
@@ -150,7 +149,6 @@ alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || ifdata -pa
 # Vim aliases
 alias v=vim
 gv() { gvim "$*"; raiseX; }
-alias sl='cp ~/.tmux-log/*(.om[1]) $(nn)-'
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
@@ -316,6 +314,8 @@ alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
+
+alias sl='ssh-add -l; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do echo $key; ssh-add $k; done'
 
 src_index() {
     find . \
