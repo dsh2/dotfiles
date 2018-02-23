@@ -373,6 +373,7 @@ ealiases=($(alias | sed -e s/=.\*// -e s/\\./\\\\./g -e /l/d -e /ls/d))
 
 expand_ealias() {
     if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
+	# print MATCH: $MATCH $MBEGIN $MEND
 	zle _expand_alias
 	# zle expand-word
     fi
@@ -447,6 +448,6 @@ source ~/.fzf.zsh
 source ~/.fzfrc
 type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
 
-umask 0227
+umask 027
 
 # }}}
