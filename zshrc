@@ -110,6 +110,12 @@ bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
+function focus_backgroud {
+    [[ $#BUFFER -eq 0 ]] && fg
+    # TODO: || think about something other useful
+}
+bindkey_func '^z' focus_backgroud
+
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
@@ -363,10 +369,10 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 source ~/.aliases
 typeset -a ealiases
-ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
+ealiases=($(alias | sed -e s/=.\*// -e s/\\./\\\\./g -e /l/d -e /ls/d))
 
 expand_ealias() {
-    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
+    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
 	zle _expand_alias
 	# zle expand-word
     fi
@@ -440,4 +446,7 @@ source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
 type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
+
+umask 0227
+
 # }}}
