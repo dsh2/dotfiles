@@ -50,9 +50,11 @@ PS4=PS4:%N:%i:
 # }}}
 
 # Dircolors {{{
-if type dircolors > /dev/null; then
-    eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
-    # eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.ansi-light)
+type dircolors > /dev/null && DIR_COLORS=dircolors
+type gdircolors > /dev/null && DIR_COLORS=gdircolors
+if [ -n $DIR_COLORS ]; then
+    eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+    # eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.ansi-light)
     export LS_COLORS
 fi
 # }}}
