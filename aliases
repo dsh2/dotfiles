@@ -1,10 +1,11 @@
 UNAME=$(uname)
 
+LS_COMMAND=ls
 if [ "$UNAME" = "Darwin" ]; then
 # TODO: check if gnu core utils is installed
     alias find=gfind
     alias locate=glocate
-    alias ls=gls
+    LS_COMMAND=gls
     alias sed=gsed
     alias tac=gtac
     # Switch profile of running iTerm2 window
@@ -105,27 +106,16 @@ alias gri='git rebase -i HEAD~10'
 alias gsm='git submodule' 
 
 # ls
-l() {
-    \ls \
-        --almost-all \
-        --author \
-        --color=always \
-        --file-type \
-        --format=long \
-        --indicator-style=slash \
-        --quoting-style=shell \
-        --time-style='+%F %T' \
-        "$@";
-}
-alias ls='l --format=across'
+alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
+alias l='ls -l'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias lts='l -rS'
 alias ltsh='l -rS -h'
-alias ltr=lt
-alias ltrr='ls -al \**/*(.om) '
+alias ltr='ls -al \**/*(.om) '
 alias lsd='l -d'
 alias fr='fc -R'
+
 alias lnn=lnav
 alias r=ranger
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
