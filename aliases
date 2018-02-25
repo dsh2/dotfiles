@@ -172,7 +172,9 @@ RUN() {
     # TODO
     # -Watch several files
     # -Run through watch to show diffs in output
+    # -Meassure runtime 
     # -Log output in tmux-log or similar
+    # -Option to clear -x or not
     [ -z $1 ] && { echo Nothing to run.; return; }
     if [ $1 = "--watch" -o $1 = "-w" ]; then
         WATCH=$2
@@ -193,7 +195,7 @@ RUN() {
 	    echo inotifywait failed!
 	    return
 	fi
-	# clear -x
+	clear -x
 	run $*
     done
 }
