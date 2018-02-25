@@ -71,8 +71,7 @@ map <leader>w :Windows<cr>
 Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
-nmap <leader>gs :Gstatus<cr>
-nmap <leader>gS :Gstatus<cr>o
+nmap <leader>gs :Gstatus<cr>:only<cr>
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 autocmd FileType gitcommit map <buffer> ; odvjlzi
