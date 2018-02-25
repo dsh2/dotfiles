@@ -144,7 +144,7 @@ alias j=jobs
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
-alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || ifdata -pa $if; done'
+alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
 
 # Vim aliases
 alias v=vim
