@@ -712,5 +712,7 @@ imap <NUL> <space>h
 nmap gF :tabedit <cfile><cr>
 
 au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
+
+map <c-w>v <c-w>v<c-w>l
 " }}}
 " }}}
