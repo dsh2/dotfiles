@@ -158,7 +158,6 @@ function select_aliases {
 bindkey_func '^X^A' select_aliases
 
 function page_last_output {
-	# zle up-history
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
 	# TODO: Make this work without tmux. Read man zshzle!
 	# TODO(zsh): Somehow use (%)-flag 
@@ -169,7 +168,12 @@ zle -N page_last_output
 bindkey '^X^X' page_last_output
 
 function filter_last_output {
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
+    RBUFFER=$(
+	cat ~/.tmux-log/$(($(print -P '%!')-1)) | 
+	    sed -e 's,$,,' -e '$ d' |
+	    fzf --tac --multi --no-sort
+    )
+    zle redisplay
 }
 zle -N filter_last_output
 bindkey '^X^F' filter_last_output
