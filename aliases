@@ -167,25 +167,32 @@ run() {
 }
 
 RUN() {
+    # TODO
+    # -Watch several files
+    # -Run through watch to show diffs in output
+    # -Log output in tmux-log or similar
     [ -z $1 ] && { echo Nothing to run.; return; }
     if [ $1 = "--watch" -o $1 = "-w" ]; then
-	print_variables() { for v in $*; do print $v = ${(P)v}; done }                                                                            |~
         WATCH=$2
         shift 2
     else 
         WATCH=$1
     fi
     [ -z $WATCH ] && { echo Nothing to watch.; return; }
+    [ ! -e $WATCH ] && WATCH=$(whence $WATCH) 
+    echo Watching \"$WATCH\"...
+    [ ! -x $WATCH ] && { echo Watch from path not executable; return; }
     [ -z $1 ] && { echo Nothing to run.; return; }
+
     clear -x
     run $*
     while true; do 
-        if inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then
-            sleep 0.1; 
-            clear -x
-            run $*
-        fi;
-        sleep 0.1; 
+        if ! inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then
+	    echo inotifywait failed!
+	    return
+	fi
+	# clear -x
+	run $*
     done
 }
 
