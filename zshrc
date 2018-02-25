@@ -177,6 +177,7 @@ function filter_last_output {
 }
 zle -N filter_last_output
 bindkey '^X^F' filter_last_output
+bindkey '^X^K' filter_last_output
 
 function diff_last_two_outputs {
 	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
