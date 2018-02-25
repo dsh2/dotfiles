@@ -160,9 +160,11 @@ compdef _man vimman
 run() {
     print Running \"$*\"...
     print Start: $(n)
+    print -P $LINE_SEPARATOR
     $* 
-    print err = $?
+    print -P $LINE_SEPARATOR
     print Stop: $(n)
+    print err = $?
     print -P $LINE_SEPARATOR
 }
 
