@@ -180,10 +180,12 @@ bindkey '^X^F' filter_last_output
 bindkey '^X^K' filter_last_output
 
 function diff_last_two_outputs {
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
+    tmux new-window vimdiff \
+	~/.tmux-log/$(($(print -P '%!')-1)) \
+	~/.tmux-log/$(($(print -P '%!')-2)) 
 }
 zle -N diff_last_two_outputs
-bindkey '^X^D' diff_last_two_outputs
+bindkey '^X^M' diff_last_two_outputs
 
 # TODO: Instead split vim with new script containing current line and RUN-split
 autoload -z edit-command-line
@@ -379,7 +381,7 @@ ealiases=($(alias | sed \
     -e s/\\./\\\\./g \
     -e /^l$/d \
     -e /^ls$/d \
-    -e /^vl$/d \
+    # -e /^vl$/d \
 ))
 
 expand_ealias() {
