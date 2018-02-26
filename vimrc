@@ -487,12 +487,16 @@ call plug#end()
 " Global options {{{
 " colorscheme seoul256
 colorscheme Tomorrow-Night
+
+" set verbose=1
+let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/", "_", "g")
 set autoindent
 set autowrite
 set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set cmdheight=1
 set cmdwinheight=10
+set complete+=k
 set concealcursor=n
 set dir=~/.vim/swo
 set encoding=utf8
@@ -528,6 +532,7 @@ set showfulltag
 set showmatch
 set sidescroll=15
 set sidescrolloff=8
+set dictionary+=/usr/share/dict/american-english
 set smartcase
 set smartindent
 set smarttab
@@ -539,11 +544,10 @@ set ttimeoutlen=50
 set undodir=~/.vim/undodir/
 set undofile
 set updatetime=500
-let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/", "_", "g")
-" set verbose=1
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
+
 syntax enable
 " }}}
 " Mappings {{{
