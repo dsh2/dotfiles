@@ -129,7 +129,7 @@ alias goo=googler
 alias wh='whence -sv'
 alias whh=whence 
 alias prr=print
-alias prl='print -l -- '
+alias prl='print -rl -- '
 alias j=jobs
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
