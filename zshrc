@@ -243,10 +243,12 @@ function start_tmux_logging()
 { 
     # TODO: Add colors to output
     print -P $LINE_SEPARATOR
-    # print literal:  $1
-    # print compact command = \"$2\"
-    # print full: $3
-    # print -P $LINE_SEPARATOR
+    if [[ -v $ZSH_DEBUG ]]; then
+	print literal:  $1
+	# print compact command = \"$2\"
+	print full: $3
+	print -P $LINE_SEPARATOR
+    fi
     # TODO: Do not log for
     # -vim, htop, mutt, atop, powertop, lnav
     # TODO: Add logging (probably best in directories) for
