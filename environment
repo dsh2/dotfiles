@@ -58,9 +58,10 @@ export BROWSER=/usr/bin/google-chrome-stable
 export GOPATH=$HOME/src/GO:/home/dsf/src/CRYPTO/boringssl/ssl/test/runner
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy_config
-export SSLKEYLOGFILE=$HOME/ssl_key_log
+export SSLKEYLOGFILE=$HOME/.ssl/keys && mkdir -p -m 0700 $SSLKEYLOGFILE:h
 export USE_CCACHE=1
 export XENVIRONMENT=$HOME/.Xresources
+export RANGER_LOAD_DEFAULT_RC=FALSE
 export TSHARK=/usr/bin/tshark
 export WIRESHARK=/usr/bin/wireshark
 

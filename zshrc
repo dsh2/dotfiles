@@ -50,9 +50,11 @@ PS4=PS4:%N:%i:
 # }}}
 
 # Dircolors {{{
-if type dircolors > /dev/null; then
-    eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
-    # eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.ansi-light)
+type dircolors > /dev/null && DIR_COLORS=dircolors
+type gdircolors > /dev/null && DIR_COLORS=gdircolors
+if [ -n $DIR_COLORS ]; then
+    eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+    # eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.ansi-light)
     export LS_COLORS
 fi
 # }}}
@@ -110,6 +112,12 @@ bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
+function focus_backgroud {
+    [[ $#BUFFER -eq 0 ]] && fg
+    # TODO: || think about something other useful
+}
+bindkey_func '^z' focus_backgroud
+
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
@@ -152,7 +160,6 @@ function select_aliases {
 bindkey_func '^X^A' select_aliases
 
 function page_last_output {
-	# zle up-history
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
 	# TODO: Make this work without tmux. Read man zshzle!
 	# TODO(zsh): Somehow use (%)-flag 
@@ -163,16 +170,25 @@ zle -N page_last_output
 bindkey '^X^X' page_last_output
 
 function filter_last_output {
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
+    RBUFFER=$(
+	cat ~/.tmux-log/$(($(print -P '%!')-1)) | 
+	    sed -e 's,$,,' -e '$ d' |
+	    fzf --tac --multi --no-sort
+    )
+    zle redisplay
 }
 zle -N filter_last_output
 bindkey '^X^F' filter_last_output
+bindkey '^X^K' filter_last_output
 
 function diff_last_two_outputs {
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | fzf --tac --multi --no-sort
+    tmux new-window vimdiff \
+	~/.tmux-log/$(($(print -P '%!')-1)) \
+	~/.tmux-log/$(($(print -P '%!')-2)) \
+	"+ map q Q"
 }
 zle -N diff_last_two_outputs
-bindkey '^X^D' diff_last_two_outputs
+bindkey '^X^M' diff_last_two_outputs
 
 # TODO: Instead split vim with new script containing current line and RUN-split
 autoload -z edit-command-line
@@ -227,10 +243,12 @@ function start_tmux_logging()
 { 
     # TODO: Add colors to output
     print -P $LINE_SEPARATOR
-    # print literal:  $1
-    # print compact command = \"$2\"
-    # print full: $3
-    # print -P $LINE_SEPARATOR
+    if [[ -v $ZSH_DEBUG ]]; then
+	print literal:  $1
+	# print compact command = \"$2\"
+	print full: $3
+	print -P $LINE_SEPARATOR
+    fi
     # TODO: Do not log for
     # -vim, htop, mutt, atop, powertop, lnav
     # TODO: Add logging (probably best in directories) for
@@ -363,10 +381,17 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 source ~/.aliases
 typeset -a ealiases
-ealiases=($(alias | sed -e s/=.\*// -e /l/d -e /ls/d))
+ealiases=($(alias | sed \
+    -e s/=.\*// \
+    -e s/\\./\\\\./g \
+    -e /^l$/d \
+    -e /^ls$/d \
+    # -e /^vl$/d \
+))
 
 expand_ealias() {
-    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})\$" ]]; then
+    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
+	# print MATCH: $MATCH $MBEGIN $MEND
 	zle _expand_alias
 	# zle expand-word
     fi
@@ -381,7 +406,7 @@ function space_prepend {
 bindkey_func '^ ' space_prepend
 
 env_vars() {
-    LBUFFER="$LBUFFER$( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
+    LBUFFER="$LBUFFER echo $( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
 }
 bindkey_func '^x^e' env_vars
 # }}}
@@ -440,4 +465,7 @@ source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
 type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
+
+umask 027
+
 # }}}

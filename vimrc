@@ -71,8 +71,8 @@ map <leader>w :Windows<cr>
 Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
-nmap <leader>gs :Gstatus<cr>
-nmap <leader>gS :Gstatus<cr>o
+" TODO: Actually, make Gstatus a new tab and don't "only"
+nmap <leader>gs :Gstatus<cr>:only<cr>
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 autocmd FileType gitcommit map <buffer> ; odvjlzi
@@ -268,7 +268,7 @@ Plug 'w0rp/ale'
 let g:airline#extensions#ale#enabled = 1
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
-let g:ale_open_list = 1
+let g:ale_open_list = 0
 let g:ale_keep_list_window_open = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
@@ -455,6 +455,9 @@ let g:autoformat_verbosemode=1
 map <leader>A :Autoformat<cr>
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
+autocmd FileType sshconfig setlocal commentstring=#\ %s
+autocmd FileType sshdconfig setlocal commentstring=#\ %s
+
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
@@ -708,11 +711,13 @@ nmap <leader>DS :vertical diffsplit<CR>
 set diffopt=
 " set diffopt=filler,context:4
 
-au BufEnter,BufNew * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
+au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
 
 imap <NUL> <space>h
 nmap gF :tabedit <cfile><cr>
 
 au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
+
+map <c-w>v <c-w>v<c-w>l
 " }}}
 " }}}

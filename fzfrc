@@ -21,6 +21,7 @@ export FZF_DEFAULT_OPTS="
 			--bind 'ctrl-p:previous-history'
 			--bind 'ctrl-t:execute(tmux set-buffer {})'
 			--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
+			--bind 'ctrl-v:execute(tmux split -v vim +set\ bt=nofile +let\ @\\\"=\\\"{+}\\\" +normal\ pgg0)' \
 			--bind 'tab:toggle-up'
 			--bind 'btab:toggle-down'
 			--ansi
