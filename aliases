@@ -351,7 +351,8 @@ src_index() {
         \) > cscope.files && command cscope -bi cscope.files;
 }
 
-alias D='ls -l ~/Downloads/*(.om[1])'
+D() { set -x; $*; set +x }
+alias Dl='ls -l ~/Downloads/*(.om[1])'
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
