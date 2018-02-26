@@ -184,7 +184,8 @@ bindkey '^X^K' filter_last_output
 function diff_last_two_outputs {
     tmux new-window vimdiff \
 	~/.tmux-log/$(($(print -P '%!')-1)) \
-	~/.tmux-log/$(($(print -P '%!')-2)) 
+	~/.tmux-log/$(($(print -P '%!')-2)) \
+	"+ map q Q"
 }
 zle -N diff_last_two_outputs
 bindkey '^X^M' diff_last_two_outputs
