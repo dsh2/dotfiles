@@ -266,7 +266,25 @@ GG() {
 	done 
 }
 
-alias cloc='locate .zsh_local_history | xargs grep --color '
+cloc() { 
+    locate --existing -0 .zsh_local_history | 
+	xargs -0 grep --color=always --line-number -e "$*" |
+	sort -k 2
+}
+
+clocd() { 
+    locate --existing -0 .zsh_local_history | 
+	xargs -0 grep --files-with-matches -e "$*" |
+	sort -u
+}
+
+clocdf() { 
+    clocd $* | 
+	fzf --preview "
+	    grep --color=always -e "$*" {}
+    "
+}
+
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
 alias func=function
