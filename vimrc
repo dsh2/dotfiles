@@ -71,6 +71,7 @@ map <leader>w :Windows<cr>
 Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
 nmap <leader>gc :Gcommit --verbose<cr>
+" TODO: Actually, make Gstatus a new tab and don't "only"
 nmap <leader>gs :Gstatus<cr>:only<cr>
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
