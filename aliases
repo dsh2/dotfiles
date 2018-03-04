@@ -115,6 +115,7 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al \**/*(.om) '
 alias lsd='l -d'
 alias fr='fc -R'
+alias term_title='wmctrl -r :ACTIVE: -N'
 
 alias lnn=lnav
 alias r=ranger
