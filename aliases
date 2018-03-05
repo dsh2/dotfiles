@@ -112,9 +112,10 @@ alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias lts='l -rS'
 alias ltsh='l -rS -h'
-alias ltr='ls -al \**/*(.om) '
+alias ltr='ls -al **/*(.om) '
 alias lsd='l -d'
 alias fr='fc -R'
+alias term_title='wmctrl -r :ACTIVE: -N'
 
 alias lnn=lnav
 alias r=ranger
@@ -197,7 +198,13 @@ alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks -
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
 alias le=$PAGER
-alias p='ps -afx | grep -i --color'
+# TODO
+# -use zsh prepend
+p() { 
+    pattern=$*
+    pattern=${pattern:gfs,  , ,:gs, ,.\*,}
+    grep --color=always -e "$pattern" =( ps aux )
+}
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='pstree -paglU | fzf --tac --no-sort --query="!chrome " '

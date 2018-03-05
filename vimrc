@@ -244,8 +244,13 @@ Plug 'tyru/open-browser.vim'
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
-command! OpenBrowserCurrent execute "OpenBrowser" "file:///" . expand('%:p:gs?\\?/?')
+command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
 map gX OpenBrowserCurrent
+let g:openbrowser_browser_commands = [
+        \   {'name': 'google-chome',
+        \    'args': ['start', '{browser}', '{uri}']}
+        \]
+
 " }}}
 " Syntastic {{{
 " Plug 'scrooloose/syntastic'
@@ -476,6 +481,7 @@ augroup END
 " Plug 'justinmk/vim-sneak'
 " map S <Plug>Sneak_s
 
+" TODO: Make this work
 Plug 'flatcap/vim-keyword'
 map <leader>k <plug>KeywordToggle\|:set nohlsearch<cr>
 map <leader>K :call keyword#KeywordClear()<cr>
@@ -711,7 +717,7 @@ nmap <leader>DS :vertical diffsplit<CR>
 set diffopt=
 " set diffopt=filler,context:4
 
-au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
+" au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
 
 imap <NUL> <space>h
 nmap gF :tabedit <cfile><cr>
@@ -719,5 +725,12 @@ nmap gF :tabedit <cfile><cr>
 au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 
 map <c-w>v <c-w>v<c-w>l
+
+hi SpellBad ctermbg=none ctermfg=red cterm=undercurl
+nmap zz ]seas
+nmap zZ :spellr<cr>
+set lazyredraw
+au BufRead *.md if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+
 " }}}
 " }}}
