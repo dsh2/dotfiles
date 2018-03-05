@@ -118,6 +118,7 @@ alias fr='fc -R'
 
 alias lnn=lnav
 alias r=ranger
+alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
@@ -334,7 +335,7 @@ alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RA
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
 
-alias sl='ssh-add -l; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do echo $key; ssh-add $k; done'
+alias sl='ssh-add -l; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do echo $key; ssh-add $key; done'
 
 src_index() {
     find . \
