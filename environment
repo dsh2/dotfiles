@@ -37,7 +37,7 @@ pathprepend $NDK
 export LESS=cRMiWSJ
 export PAGER=less
 # export PAGER="/home/dsf/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
-export GIT_PAGER='less -F'
+# export GIT_PAGER='less -F'
 alias less=$PAGER
 alias zless=$PAGER
 
