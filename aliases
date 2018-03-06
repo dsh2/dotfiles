@@ -126,6 +126,14 @@ alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
+mcd() { 
+    DIR=$*
+    if [[ -z $DIR ]]; then 
+	echo usage: mcd NEWDIR
+	return
+    fi
+    mkd $DIR && cd $DIR
+}
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
