@@ -32,6 +32,7 @@
     ~/.minttyrc: minttyrc
     ~/.config/radare2rc: radare2rc
     ~/.tmux.conf: tmux.conf
+    ~/.vim/scripts.vim: scripts.vim
     ~/.vimrc: vimrc
     ~/.ssh/config: ssh_config
     ~/.config/zathura/zathurarc: zathurarc
