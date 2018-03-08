@@ -321,6 +321,10 @@ fpath+=~/src/RE/radare2/doc/zsh
 autoload -U compinit && compinit
 zmodload zsh/complist
 
+# TODO: check fpath vs. source
+source ~/.dotfiles/t/etc/t-completion.zsh
+compdef _t t
+
 bindkey -M menuselect '^[[z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
