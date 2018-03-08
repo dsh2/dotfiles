@@ -394,6 +394,7 @@ ealiases=($(alias | sed \
     -e s/\\./\\\\./g \
     -e /^l$/d \
     -e /^ls$/d \
+    -e /^pst$/d \
     # -e /^vl$/d \
 ))
 
