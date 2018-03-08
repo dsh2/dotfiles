@@ -462,6 +462,7 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 autocmd FileType sshconfig setlocal commentstring=#\ %s
 autocmd FileType sshdconfig setlocal commentstring=#\ %s
+autocmd FileType shell setlocal commentstring=#\ %s
 
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
