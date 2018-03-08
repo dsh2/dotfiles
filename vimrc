@@ -246,10 +246,10 @@ nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
 map gX OpenBrowserCurrent
-let g:openbrowser_browser_commands = [
-        \   {'name': 'google-chome',
-        \    'args': ['start', '{browser}', '{uri}']}
-        \]
+" let g:openbrowser_browser_commands = [
+"         \   {'name': 'google-chome',
+"         \    'args': ['start', '{browser}', '{uri}']}
+"         \]
 
 " }}}
 " Syntastic {{{
