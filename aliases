@@ -105,6 +105,7 @@ alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
 alias gsm='git submodule' 
+alias gl='git lg | less'
 
 # ls
 alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
