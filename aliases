@@ -100,6 +100,7 @@ alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git for-each-ref --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate '
+alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
