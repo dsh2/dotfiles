@@ -120,7 +120,7 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
+WORDCHARS='*?_-.[]~=&!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
     zle backward-kill-word
