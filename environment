@@ -64,6 +64,7 @@ export XENVIRONMENT=$HOME/.Xresources
 export RANGER_LOAD_DEFAULT_RC=FALSE
 export TSHARK=/usr/bin/tshark
 export WIRESHARK=/usr/bin/wireshark
+export INTERACTIVE_COMMANDS=( vim lnav atop htop r2 ranger )
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
