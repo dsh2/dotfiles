@@ -477,4 +477,13 @@ type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
 
 umask 027
 
+function in_array() {
+    prl $1 $2
+    prl ${1[(i)$2]} 
+    prl ${#2}
+    [[ ${1[(i)$2]} -gt 0 ]]
+    prl ret = $?
+    return $?
+}
+
 # }}}
