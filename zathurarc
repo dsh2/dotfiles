@@ -27,9 +27,15 @@ set statusbar-fg "#606060"
 set inputbar-bg "#202020" 
 set inputbar-fg "#909090"
 
-set guioptions = 
+set guioptions = shv
+set incremental-search = true
+set page-cache-size = 50
+set pages-per-row = 5
+
 
 set statusbar-basename true
 set selection-clipboard "clipboard"
 
 set recolor-lightcolor "#333333"
+set recolor-keephue = true
+set recolor-reverse-video = true
