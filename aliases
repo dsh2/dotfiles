@@ -297,10 +297,10 @@ clocd() {
 }
 
 clocdf() { 
-    clocd $* | 
+    cd $(clocd $* | 
 	fzf --preview "
 	    grep --color=always -e "$*" {}
-    "
+    ")
 }
 
 alias zloc='fc -p .zsh_local_history'
