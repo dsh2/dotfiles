@@ -25,12 +25,13 @@ PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
-# PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
-# PSVAR+=$SSH_CLIENT
+PS1+='(%!) '						# Add number of next shell event
 PSVAR+=$SSH_TTY
-PS1+='%F{255}[%F{244}%n%(1V.%{$fg_no_bold[red]%}@%m.)%F{255}] '	# Add user name, add host name for ssh connections
+PS1+='%F{255}[%F{244}%n%'				# Add user name
+PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
+PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
-PS1+='${vcs_info_msg_0_}'			# Add vcs info
+PS1+='${vcs_info_msg_0_}'				# Add vcs info
 PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )'	# Add exit status of last job
 PS1+='%f%# '						# Add user status
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
