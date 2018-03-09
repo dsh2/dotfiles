@@ -40,3 +40,6 @@
 [submodule "zsh-completions/zsh-pandoc-completion"]
 	path = zsh-completions/zsh-pandoc-completion
 	url = https://github.com/anntzer/zsh-pandoc-completion/
+[submodule "src/ranger"]
+	path = src/ranger
+	url = https://github.com/dsh2/ranger
