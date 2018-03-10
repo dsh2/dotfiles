@@ -17,19 +17,21 @@ precmd() { vcs_info; }
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
+LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
+# LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}%j%F{240}].)'	# Add number of jobs - if any
-# PS1+='%F{240}[%F{244}%n%F{240}] '	# Add user name
-# PSVAR+=$SSH_CLIENT
+PS1+='(%!) '						# Add number of next shell event
 PSVAR+=$SSH_TTY
-PS1+='%F{255}[%F{244}%n%(1V.%{$fg_no_bold[red]%}@%m.)%F{255}] '	# Add user name, add host name for ssh connections
+PS1+='%F{255}[%F{244}%n%'				# Add user name
+PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
+PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
-PS1+='${vcs_info_msg_0_}'			# Add vcs info
+PS1+='${vcs_info_msg_0_}'				# Add vcs info
 PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )'	# Add exit status of last job
 PS1+='%f%# '						# Add user status
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
@@ -69,7 +71,9 @@ setopt hist_find_no_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
-setopt inc_append_history_time
+setopt no_inc_append_history_time
+setopt no_inc_append_history
+setopt share_history
 setopt no_bang_hist
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
@@ -117,7 +121,7 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>|'
+WORDCHARS='*?_-.[]~=&!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
     zle backward-kill-word
@@ -318,6 +322,10 @@ fpath+=~/src/RE/radare2/doc/zsh
 autoload -U compinit && compinit
 zmodload zsh/complist
 
+# TODO: check fpath vs. source
+source ~/.dotfiles/t/etc/t-completion.zsh
+compdef _t t
+
 bindkey -M menuselect '^[[z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
@@ -385,6 +393,7 @@ ealiases=($(alias | sed \
     -e s/\\./\\\\./g \
     -e /^l$/d \
     -e /^ls$/d \
+    -e /^pst$/d \
     # -e /^vl$/d \
 ))
 
@@ -466,5 +475,14 @@ source ~/.fzfrc
 type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
 
 umask 027
+
+function in_array() {
+    prl $1 $2
+    prl ${1[(i)$2]} 
+    prl ${#2}
+    [[ ${1[(i)$2]} -gt 0 ]]
+    prl ret = $?
+    return $?
+}
 
 # }}}

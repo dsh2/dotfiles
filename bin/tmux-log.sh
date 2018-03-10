@@ -44,9 +44,9 @@ fi
 print SIZE: \
     ${${$(wc $log_file):gfs,  , ,:gs, ,/,}[1,3]} \
     "("${$(du -h --apparent-size $log_file)[1]}")"
-# print DIR: adapt cloc
+# print DIR: $(locate .zsh_local_history | xargs grep --color ')
 # TODO: fix the following line sepeartor to respect full screen width
-print -P ${(r:$((COLUMNS - 1))::\u2500:)}
+print -P ${(r:$COLUMNS * 4 - 16 ::\u2d:)} 
 head -1000 $log_file | sed -e 's,$,,' -e '$ d' 
-print -P ${(r:$((COLUMNS - 1))::\u2500:)}
+print -P ${(r:$COLUMNS * 4 - 16 ::\u2d:)} 
 exit 0

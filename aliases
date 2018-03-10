@@ -297,10 +297,10 @@ clocd() {
 }
 
 clocdf() { 
-    clocd $* | 
+    cd $(clocd $* | 
 	fzf --preview "
 	    grep --color=always -e "$*" {}
-    "
+    ")
 }
 
 alias zloc='fc -p .zsh_local_history'
@@ -346,7 +346,7 @@ alias uu=uniq
 alias lv=lnav
 alias e=echo 
 alias tf='grc tail -f /var/log/messages &'
-alias tff='lnav /var/log/messages'
+alias tff='(cd /var/log; sudo lnav -r messages auth.log fail2ban.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
