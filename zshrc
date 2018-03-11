@@ -324,7 +324,7 @@ autoload -U compinit && compinit
 zmodload zsh/complist
 
 # TODO: check fpath vs. source
-source ~/.dotfiles/t/etc/t-completion.zsh
+source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
 
 bindkey -M menuselect '^[[z' reverse-menu-complete
