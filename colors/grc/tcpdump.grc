@@ -1,0 +1,27 @@
+# Title
+regexp=on ([^,]+), link-type (\S+)
+colours=unchanged, bold green, green
+-
+# Basic Line (-nS)
+regexp=^(\d+):(\d+):(\d+\.\d+) (\S+,?) (\S+) (>) (\S+):
+colours=unchanged,bold white,bright_white,dark white,cyan, bright_green, bold red, bright_blue
+-
+# IP4 address
+regexp=(?:\d{1,3}\.){3}(?:\d{1,3})
+colours=bold
+-
+# IPv6 address
+regexp=\x{1,4}
+colour=red
+-
+# TCP Flags
+regexp=(Flags [[])(F)
+color=unchanged, red
+-
+# UDP
+regexp=UDP
+color=yellow
+-
+# Summary
+regexp=^(\d+) packets
+colours=unchanged,bold green
