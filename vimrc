@@ -733,5 +733,10 @@ nmap zZ :spellr<cr>
 set lazyredraw
 au BufRead *.md if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
 
+vmap DP :diffput<cr>
+vmap DG :diffget<cr>
+vmap Gv :GV!<cr>
+vmap GV :GV?<cr>
+
 " }}}
 " }}}
