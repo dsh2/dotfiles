@@ -230,6 +230,7 @@ Plug 'elzr/vim-json'
 " NERD Tree {{{
 Plug 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
+let NERDTreeShowHidden=1
 let NERDTreeWinSize=40
 autocmd FileType nerdtree map <buffer> l oj^
 "autocmd FileType nerdtree map <buffer> O mo
