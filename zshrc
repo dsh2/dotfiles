@@ -52,7 +52,8 @@ PS4=PS4:%N:%i:
 # }}}
 
 # Dircolors {{{
-type dircolors > /dev/null && DIR_COLORS=dircolors || type gdircolors > /dev/null && DIR_COLORS=gdircolors
+type dircolors > /dev/null && DIR_COLORS=dircolors
+type gdircolors > /dev/null && DIR_COLORS=gdircolors
 if [ -n $DIR_COLORS ]; then
     eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.256dark)
     # eval $($DIR_COLORS ~/.dotfiles/dircolors-solarized/dircolors.ansi-light)
@@ -472,6 +473,7 @@ logcheck=30
 source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
+
 type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
 
 umask 027
