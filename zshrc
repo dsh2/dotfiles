@@ -205,9 +205,12 @@ if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
 run-help-tmux() {
-    COMMANDS=("${=LBUFFER}")
-    # tmux split -vbp 80 vim -R -c "Man ${COMMANDS[1]}" -c "bdelete 1" -c "setlocal nomodifiable"
-    tmux split -vbp 80 $SHELL -ic "vimman ${COMMANDS[1]}"
+    for command in ${(Oaz)LBUFFER}; do 
+	if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
+	    tmux split -vbp 80 $SHELL -ic "vimman $command"
+	    break
+	fi
+    done
     zle redisplay
 }
 zle -N run-help-tmux
