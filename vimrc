@@ -719,7 +719,7 @@ inoremap jk <esc>
 nmap <leader>DD :diffthis<CR>
 nmap <leader>DO :diffoff<CR>
 nmap <leader>DS :vertical diffsplit<CR>
-set diffopt=
+set diffopt=filler
 " set diffopt=filler,context:4
 
 " au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
