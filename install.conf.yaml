@@ -2,7 +2,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config ~/.config/ranger ~/.config/zathura, Creating base config directory]
+  - [mkdir -p ~/.config/ranger ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts, Setting up directory for local ssh]
   - [mkdir -p ~/.vim/ ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
@@ -19,7 +19,9 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
-    ~/.config/ranger: ranger-config
+    ~/.config/ranger/scope.sh: ranger/scope.sh
+    ~/.config/ranger/rifle.conf: ranger/rifle.conf
+    ~/.config/ranger/rc.conf: ranger/rc.conf
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
