@@ -99,7 +99,7 @@ zshaddhistory() {
 zle_highlight=( 
     default:fg=default,bg=default
     special:fg=black,bg=red
-    region:underline
+    region:underline,bg=green
     suffix:bold
     isearch:underline
     paste:underline
