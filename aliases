@@ -373,6 +373,7 @@ src_index() {
 
 D() { set -x; $*; set +x }
 alias Dl='ls -l ~/Downloads/*(.om[1])'
+alias Dlp='px ~/Downloads/*(.om[1])'
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
