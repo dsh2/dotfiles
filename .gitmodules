@@ -1,5 +1,5 @@
 [submodule "VBoxManage-completion"]
-    path = VBoxManage-completion
+	path = zsh/zsh-vbox-completion
     url = https://github.com/alexandregz/VBoxManage-completion
 
 [submodule "bin/find_forks"]
