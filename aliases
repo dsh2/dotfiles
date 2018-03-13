@@ -314,6 +314,7 @@ alias funcc=functions
 alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
+alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias -g xr='|xxd -r -p'
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias sc=systemctl 
