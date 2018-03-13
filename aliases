@@ -257,6 +257,7 @@ alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
+alias pz=python
 alias ip='ip -c'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
