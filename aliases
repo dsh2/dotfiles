@@ -355,7 +355,9 @@ alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
-
+mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
+alias mvO=mvOFF
+mvON() { for f in *-OFF; do mv -v -- $f ${f%-OFF}; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
 
 src_index() {
