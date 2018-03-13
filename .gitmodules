@@ -38,6 +38,10 @@
     path = src/find_forks
     url = https://github.com/frost-nzcr4/find_forks
 
+[submodule "src/gitk"]
+    path = src/gitk
+    url = ./src/gitk
+
 [submodule "src/ranger"]
     path = src/ranger
     url = https://github.com/dsh2/ranger
