@@ -226,6 +226,8 @@ Plug 'vim-scripts/indentpython.vim'
 " }}}
 " json {{{
 Plug 'elzr/vim-json'
+" autocmd FileType json set conceallevel=0
+let g:vim_json_syntax_concealcursor = 0
 " }}}
 " NERD Tree {{{
 Plug 'scrooloose/nerdtree'
@@ -506,6 +508,7 @@ set cmdheight=1
 set cmdwinheight=10
 set complete+=k
 set concealcursor=n
+set conceallevel=0
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
