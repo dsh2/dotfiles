@@ -22,6 +22,7 @@
     ~/.config/ranger/scope.sh: ranger/scope.sh
     ~/.config/ranger/rifle.conf: ranger/rifle.conf
     ~/.config/ranger/rc.conf: ranger/rc.conf
+    ~/.config/ranger/commands.py: ranger/commands.py
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
