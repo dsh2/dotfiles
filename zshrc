@@ -116,6 +116,12 @@ bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
+function repeat_immediately {
+    zle up-history
+    zle accept-line
+}
+bindkey_func '^j' repeat_immediately
+
 function focus_backgroud {
     [[ $#BUFFER -eq 0 ]] && fg
     # TODO: || think about something other useful
