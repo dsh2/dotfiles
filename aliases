@@ -123,6 +123,7 @@ alias term_title='wmctrl -r :ACTIVE: -N'
 
 alias lnn=lnav
 alias r=ranger
+alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
