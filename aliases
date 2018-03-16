@@ -99,11 +99,14 @@ alias gpp='git pull --recurse-submodules --jobs=8'
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
-alias gbb='git for-each-ref --format="%(HEAD) %(color:red)%(objectname:short)%(color:reset) (%(color:green)%(committerdate:local) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate '
+alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=15 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
 alias gsm='git submodule' 
+alias gl='git lg | less'
+alias glssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
 
 # ls
 alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
@@ -113,6 +116,7 @@ alias lt='l -tr'
 alias lts='l -rS'
 alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
+alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
 alias fr='fc -R'
 alias term_title='wmctrl -r :ACTIVE: -N'
@@ -126,6 +130,14 @@ alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
+mcd() { 
+    DIR=$*
+    if [[ -z $DIR ]]; then 
+	echo usage: mcd NEWDIR
+	return
+    fi
+    mkd $DIR && cd $DIR
+}
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
@@ -134,6 +146,7 @@ alias prr=print
 alias prl='print -rl -- '
 alias j=jobs
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
+alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
@@ -246,6 +259,7 @@ alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
+alias pz=python
 alias ip='ip -c'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
@@ -287,10 +301,10 @@ clocd() {
 }
 
 clocdf() { 
-    clocd $* | 
+    cd $(clocd $* | 
 	fzf --preview "
 	    grep --color=always -e "$*" {}
-    "
+    ")
 }
 
 alias zloc='fc -p .zsh_local_history'
@@ -302,6 +316,7 @@ alias funcc=functions
 alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
+alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias -g xr='|xxd -r -p'
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias sc=systemctl 
@@ -330,19 +345,19 @@ alias fu=fuser
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
 alias sd=sysdig
-alias st='strace -a $(($COLUMNS - 5)) -r -f'
+alias st='strace -a $(($COLUMNS - 12)) -r -f'
 alias sudo='sudo '
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
 alias tf='grc tail -f /var/log/messages &'
-alias tff='lnav /var/log/messages'
+alias tff='(cd /var/log; sudo lnav -r messages auth.log fail2ban.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
 
-alias sl='ssh-add -l; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do echo $key; ssh-add $key; done'
+alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
 
 src_index() {
     find . \
@@ -361,6 +376,7 @@ src_index() {
 
 D() { set -x; $*; set +x }
 alias Dl='ls -l ~/Downloads/*(.om[1])'
+alias Dlp='px ~/Downloads/*(.om[1])'
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'

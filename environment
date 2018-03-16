@@ -12,7 +12,7 @@ pathprepend /usr/local/sbin
 pathprepend /opt/local/bin
 pathprepend /opt/local/sbin
 pathprepend /usr/lib/ccache
-pathprepend /opt/local/share/man MANPATH
+# pathprepend /opt/local/share/man MANPATH
 
 # Android
 export ANDROID_AVD_HOME="$HOME/.android/avd/"
@@ -37,7 +37,7 @@ pathprepend $NDK
 export LESS=cRMiWSJ
 export PAGER=less
 # export PAGER="/home/dsf/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
-export GIT_PAGER='less -F'
+# export GIT_PAGER='less -F'
 alias less=$PAGER
 alias zless=$PAGER
 
@@ -64,6 +64,7 @@ export XENVIRONMENT=$HOME/.Xresources
 export RANGER_LOAD_DEFAULT_RC=FALSE
 export TSHARK=/usr/bin/tshark
 export WIRESHARK=/usr/bin/wireshark
+export INTERACTIVE_COMMANDS=( vim lnav atop htop r2 ranger )
 
 if [ ! $SSH_TTY ]; then
 	if [ -z $DISPLAY  ]; then
@@ -73,4 +74,3 @@ fi
 
 export MYHOSTNAME=${HOSTNAME/.*/}
 [ -e ~/.environment.local ] && source ~/.environment.local 
-# vim: se ft=shell:

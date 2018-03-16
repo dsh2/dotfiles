@@ -17,6 +17,7 @@
 [http]
 	cookiefile = ~/.gitcookies
 [core]
+	pager = cat
 	excludesfile = ~/.gitignore_global
 [init]
 	templatedir = ~/.git_template

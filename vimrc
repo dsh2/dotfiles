@@ -226,10 +226,13 @@ Plug 'vim-scripts/indentpython.vim'
 " }}}
 " json {{{
 Plug 'elzr/vim-json'
+" autocmd FileType json set conceallevel=0
+let g:vim_json_syntax_concealcursor = 0
 " }}}
 " NERD Tree {{{
 Plug 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
+let NERDTreeShowHidden=1
 let NERDTreeWinSize=40
 autocmd FileType nerdtree map <buffer> l oj^
 "autocmd FileType nerdtree map <buffer> O mo
@@ -246,10 +249,10 @@ nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
 map gX OpenBrowserCurrent
-let g:openbrowser_browser_commands = [
-        \   {'name': 'google-chome',
-        \    'args': ['start', '{browser}', '{uri}']}
-        \]
+" let g:openbrowser_browser_commands = [
+"         \   {'name': 'google-chome',
+"         \    'args': ['start', '{browser}', '{uri}']}
+"         \]
 
 " }}}
 " Syntastic {{{
@@ -462,6 +465,7 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
 autocmd FileType sshconfig setlocal commentstring=#\ %s
 autocmd FileType sshdconfig setlocal commentstring=#\ %s
+autocmd FileType shell setlocal commentstring=#\ %s
 
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
@@ -504,6 +508,7 @@ set cmdheight=1
 set cmdwinheight=10
 set complete+=k
 set concealcursor=n
+set conceallevel=0
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
@@ -731,6 +736,11 @@ nmap zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
 au BufRead *.md if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+
+vmap DP :diffput<cr>
+vmap DG :diffget<cr>
+vmap Gv :GV!<cr>
+vmap GV :GV?<cr>
 
 " }}}
 " }}}
