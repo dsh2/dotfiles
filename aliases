@@ -95,7 +95,7 @@ alias gk='gitk --all&'
 alias gkk='vim +GV'
 alias gss='vim . +Gstatus'
 alias gcp='git cherry-pick'
-alias gpp='git pull --recurse-submodules --jobs=8'
+alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --recursive'
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
