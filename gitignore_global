@@ -5,6 +5,7 @@ gmon.out
 *.pyc
 *.gcda
 .idea/
+.mypy_cache
 cmake-build-*
 cscope.files
 cscope.out
