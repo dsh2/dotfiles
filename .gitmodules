@@ -1,10 +1,14 @@
 [submodule "VBoxManage-completion"]
-	path = zsh/zsh-vbox-completion
+    path = zsh/zsh-vbox-completion
     url = https://github.com/alexandregz/VBoxManage-completion
 
 [submodule "bin/find_forks"]
     path = bin/find_forks
     url = https://github.com/frost-nzcr4/find_forks
+
+[submodule "colors/dynamic-colors"]
+    path = colors/dynamic-colors
+    url = https://github.com/sos4nt/dynamic-colors
 
 [submodule "dircolors-solarized"]
     path = colors/dircolors-solarized
@@ -16,7 +20,7 @@
 
 [submodule "fzf"]
     path = fzf
-    url = git@github.com:dsh2/fzf.git
+    url = git@github.com:dsh2/fzf
 
 [submodule "fzf_browser"]
     path = fzf_browser
@@ -40,15 +44,15 @@
 
 [submodule "src/gitk"]
     path = src/gitk
-    url = ./src/gitk
+    url = git@github.com:dsh2/gitk
 
 [submodule "src/ranger"]
     path = src/ranger
-    url = https://github.com/dsh2/ranger
+    url = git@github.com:dsh2/ranger
 
 [submodule "z"]
     path = z
-    url = https://github.com/dsh2/z.git
+    url = git@github.com:dsh2/z
 
 [submodule "zsh-completions/zsh-pandoc-completion"]
     path = zsh-completions/zsh-pandoc-completion
@@ -56,11 +60,8 @@
 
 [submodule "zsh/zsh-socat-completion"]
     path = zsh/zsh-socat-completion
-    url = https://github.com/dsh2/zsh-socat-completion
+    url = git@github.com:dsh2/zsh-socat-completion
 
 [submodule "zsh/zsh-syntax-highlighting"]
     path = zsh/zsh-syntax-highlighting
     url = https://github.com/zsh-users/zsh-syntax-highlighting
-[submodule "colors/dynamic-colors"]
-	path = colors/dynamic-colors
-	url = https://github.com/sos4nt/dynamic-colors
