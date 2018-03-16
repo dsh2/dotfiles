@@ -484,7 +484,7 @@ source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
 
-type keychain > /dev/null && eval $(keychain --eval --timeout 120 --quiet)
+type keychain > /dev/null && eval $(keychain --eval --timeout 360 --quiet)
 
 umask 027
 
