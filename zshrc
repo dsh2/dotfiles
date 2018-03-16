@@ -329,6 +329,7 @@ zmodload zsh/complist
 # TODO: check fpath vs. source
 source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
+source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
