@@ -8,5 +8,6 @@ ControlMaster auto
 ControlPath ~/.ssh/hosts/%h/control_master-%p-%r
 ControlPersist 4h
 
+EscapeChar ^^
 Include ~/.ssh/config.local
 
