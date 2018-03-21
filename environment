@@ -72,6 +72,7 @@ export GOPATH=$HOME/src/GO
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy_config
 export INTERACTIVE_COMMANDS=(vim lnav atop htop r2 ranger)
+export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
 export RANGER_LOAD_DEFAULT_RC=FALSE
 export SSLKEYLOGFILE=$HOME/.ssl/keys && mkdir -p -m 0700 $SSLKEYLOGFILE:h
@@ -79,7 +80,6 @@ export TSHARK=/usr/bin/tshark
 export USE_CCACHE=1
 export WIRESHARK=/usr/bin/wireshark
 export XENVIRONMENT=$HOME/.Xresources
-export MOSH_ESCAPE_KEY=
 
 
 # Source local envars like token, etc.
