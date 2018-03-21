@@ -121,6 +121,7 @@ alias lsd='l -d'
 alias fr='fc -R'
 alias term_title='wmctrl -r :ACTIVE: -N'
 
+alias ln='ln -rsv'
 alias lnn=lnav
 alias r=ranger
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
