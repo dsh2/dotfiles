@@ -38,6 +38,12 @@ lesskey - <<EOF
 #line-edit
 ^P up
 ^N down
+^B left
+^F right
+^D delete
+\ed word-delete
+\ef word-right
+#
 EOF
 alias less=$PAGER
 alias zless=$PAGER
