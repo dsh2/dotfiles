@@ -453,6 +453,9 @@ let g:tmuxcomplete#trigger = 'omnifunc'
 
 Plug 'dsh2/vim-man'
 
+Plug 'ervandew/matchem'
+Plug 'tpope/vim-dadbod'
+
 Plug 'francoiscabrol/ranger.vim'
 
 Plug 'maksimr/vim-yate'
