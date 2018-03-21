@@ -211,7 +211,7 @@ if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
 run-help-tmux() {
-    for command in ${(Oaz)LBUFFER}; do 
+    for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
 	if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
 	    tmux split -vbp 80 $SHELL -ic "vimman $command"
 	    break
