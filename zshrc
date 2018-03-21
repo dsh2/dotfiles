@@ -486,7 +486,8 @@ source ~/.fzfrc
 
 type keychain > /dev/null && eval $(keychain --eval --timeout 360 --quiet)
 
-umask 027
+# TODO: Think about a way how to select umask for sudo
+# umask 027
 
 function in_array() {
     prl $1 $2
