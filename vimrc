@@ -70,13 +70,13 @@ map <leader>w :Windows<cr>
 " Git {{{
 Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
-nmap <leader>gc :Gcommit --verbose<cr>
-" TODO: Actually, make Gstatus a new tab and don't "only"
-nmap <leader>gs :tabnew<cr>:Gstatus<cr>:only<cr>
+nmap <leader>gs :tabnew<cr>:Gstatus<cr>
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 autocmd FileType gitcommit map <buffer> ; odvjlzi
-autocmd FileType gitcommit map <buffer> C cvc
+autocmd FileType gitcommit map <buffer> pp :Gpull<cr>
+autocmd FileType gitcommit map <buffer> P :Gpush<cr>
+autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 Plug 'junegunn/gv.vim'
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
