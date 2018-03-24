@@ -34,7 +34,7 @@
         path: inputrc
         force: true
     ~/.minttyrc: minttyrc
-    ~/.config/radare2rc: radare2rc
+    ~/.config/radare2/radare2rc: radare2rc
     ~/.tmux.conf: tmux.conf
     ~/.vim/scripts.vim: scripts.vim
     ~/.vimrc: vimrc
