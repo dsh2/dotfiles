@@ -94,4 +94,5 @@ e stack.size = 128
 e time.fmt = %Y-%m-%d %H:%M:%S %z
 e zoom.to = -1
 eco solarized
-(r22 ,  . ~/.config/radare2rc)
+?e Sourced radare2rc
+$R=. source ~/.config/radare2rc
