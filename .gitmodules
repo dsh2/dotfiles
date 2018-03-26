@@ -65,3 +65,6 @@
 [submodule "zsh/zsh-syntax-highlighting"]
     path = zsh/zsh-syntax-highlighting
     url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule "zsh/zsh-pandoc-completion"]
+	path = zsh/zsh-pandoc-completion
+	url = https://github.com/srijanshetty/zsh-pandoc-completion

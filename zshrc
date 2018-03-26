@@ -324,6 +324,7 @@ fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-completions/src
+fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
 # TODO: add repo to .dotfiles
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
