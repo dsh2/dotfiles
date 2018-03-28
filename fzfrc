@@ -114,14 +114,20 @@ gch() {
 }
 zle -N gch; bindkey '\eU' gch
 
-# gchb - browse chrome bookmarks
-gchb() {
+# gcb - browse chrome bookmarks
+gcb() {
 	setopt pipefail
 	local urls
-	urls=$(chrome-bookmarks.rb | sort -r | fzf --ansi --multi | cut -f 3) &&
+	urls=$(chrome-bookmarks.rb | 
+	    sort -r | 
+	    fzf \
+		--ansi \
+		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " \
+		--multi | 
+	    cut -f 3) &&
 	    exo-open $=urls
 }
-zle -N gchb; bindkey '\eB' gchb
+zle -N gcb; bindkey '\eB' gcb
 
 __fzfz() {
     unset REPORTTIME
