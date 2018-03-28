@@ -325,7 +325,7 @@ alias sc=systemctl
 alias scc=sysctl 
 alias sct=sysctl
 alias dp=dpkg
-alias dpl='dpkg -L'
+dpl() { apt-cache show $* && dpkg -L $*}
 dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 compdef _command_names dpL
 alias dps='dpkg -S'
