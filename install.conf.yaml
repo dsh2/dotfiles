@@ -39,6 +39,7 @@
     ~/.vim/scripts.vim: scripts.vim
     ~/.vimrc: vimrc
     ~/.ssh/config: ssh_config
+    ~/.tidy.conf: tidy.conf
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
 
