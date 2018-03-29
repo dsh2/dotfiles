@@ -124,6 +124,7 @@ alias term_title='wmctrl -r :ACTIVE: -N'
 alias ln='ln -rsv'
 alias lnn=lnav
 alias r=ranger
+alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
