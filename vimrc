@@ -254,6 +254,9 @@ map gX OpenBrowserCurrent
 "         \    'args': ['start', '{browser}', '{uri}']}
 "         \]
 
+Plug 'rhysd/open-pdf.vim'
+let g:pdf_convert_on_edit = 1
+let g:pdf_convert_on_read = 1
 " }}}
 " Syntastic {{{
 " Plug 'scrooloose/syntastic'
