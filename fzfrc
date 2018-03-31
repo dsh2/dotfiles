@@ -129,6 +129,22 @@ gcb() {
 }
 zle -N gcb; bindkey '\eB' gcb
 
+# twf - browse twitter favorites
+twf() {
+	setopt pipefail
+	local tweed_ids
+	# sed -n '/^[[:digit:]]\{15,\}/{x;p;d};H;x;s/\r\n/ /g;x'
+	tweed_ids=$(t favorites --long --number 10 | 
+	    fzf \
+		--ansi \
+		--prompt "twitter favs: " \
+		--multi | 
+	    sed -nE 's,([0-9]* ).*,https://twitter.com/statuses/\1,p' ) &&
+	    exo-open $=tweed_ids
+}
+zle -N twf; bindkey '\eT' twf
+
+
 __fzfz() {
     unset REPORTTIME
     eval "z -l|cut -f 2" | fzf --prompt='z (dirs): ' --tac --tiebreak=index -m --preview="ls --color=always -al {} " |
