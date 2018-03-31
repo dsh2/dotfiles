@@ -749,5 +749,12 @@ vmap DG :diffget<cr>
 vmap Gv :GV!<cr>
 vmap GV :GV?<cr>
 
+if has("autocmd") && exists("+omnifunc")
+    autocmd Filetype *
+		\	if &omnifunc == "" |
+		\		setlocal omnifunc=syntaxcomplete#Complete |
+		\	endif
+endif
+
 " }}}
 " }}}
