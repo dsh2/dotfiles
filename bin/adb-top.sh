@@ -1,2 +1,2 @@
 set -x
-adb shell top -m $((LINES - 3))
+adb shell top -m $(($(tput lines) - 3))
