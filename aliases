@@ -159,6 +159,7 @@ alias v=vim
 gv() { gvim "$*"; raiseX; }
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
+alias cl='cat ~/.tmux-log/*(.om[1])'
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+/example"; }
 alias m=vimman
