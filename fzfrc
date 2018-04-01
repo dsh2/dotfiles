@@ -134,7 +134,7 @@ twf() {
 	setopt pipefail
 	local tweed_ids
 	# sed -n '/^[[:digit:]]\{15,\}/{x;p;d};H;x;s/\r\n/ /g;x'
-	tweed_ids=$(t favorites --long --number 10 | 
+	tweed_ids=$(t favorites --long --number 1000 | 
 	    fzf \
 		--ansi \
 		--prompt "twitter favs: " \
