@@ -158,6 +158,7 @@ let g:taboo_renamed_tab_format =" %N|%l%m%U "
 nmap <leader>, gT
 nmap <leader>. gt
 nmap <leader>N :tabnew<cr>
+nmap <leader>tc :tabclose<cr>
 " }}}
 " ToggleList {{{
 Plug 'milkypostman/vim-togglelist'
