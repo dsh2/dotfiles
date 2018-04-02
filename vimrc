@@ -679,6 +679,7 @@ function! s:Redir(cmd) abort
     " Make the buffer not related to any sort of file, and will never be written
     set buftype=nofile
 endfunction
+command! -nargs=0 Messages call <SID>Redir("messages")
 
 command! -nargs=0 RelaxSearchPattern call <SID>RelaxSearchPattern()
 function! s:RelaxSearchPattern() abort
