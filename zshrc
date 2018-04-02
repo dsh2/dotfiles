@@ -433,7 +433,7 @@ bindkey_func '^x^e' env_vars
 
 print_variables() { 
     for v in $*; do 
-	print $v = ${(P)v};
+	print $v\($#v\) = ${(P)v};
     done 
 }
 
