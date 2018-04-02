@@ -466,7 +466,7 @@ Plug 'maksimr/vim-yate'
 Plug 'lzap/vim-selinux'
 Plug 'vim-scripts/VCard-syntax'
 Plug 'Chiel92/vim-autoformat'
-let g:autoformat_verbosemode=1
+let g:autoformat_verbosemode=0
 map <leader>A :Autoformat<cr>
 Plug 'wannesm/wmgraphviz.vim'
 Plug 'tpope/vim-commentary'
