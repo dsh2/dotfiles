@@ -25,6 +25,10 @@ tags
 # Windows
 Desktop.ini
 
+# LibreOffice
+.~lock.*
+
 # Miscellaneous 
+.vimrc
 .zsh_local_history
 tmp-*
