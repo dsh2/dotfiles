@@ -173,41 +173,54 @@ run() {
     print Start: $(n)
     print -P $LINE_SEPARATOR
     $* 
+    err=$?
     print -P $LINE_SEPARATOR
     print Stop: $(n)
-    print err = $?
+    print err = $err
     print -P $LINE_SEPARATOR
+    return $err
 }
 
 RUN() {
     # TODO
-    # -Watch several files
     # -Run through watch to show diffs in output
-    # -Meassure runtime 
+    # -Measure runtime 
     # -Log output in tmux-log or similar
     # -Option to clear -x or not
-    [ -z $1 ] && { echo Nothing to run.; return; }
-    if [ $1 = "--watch" -o $1 = "-w" ]; then
-        WATCH=$2
-        shift 2
-    else 
-        WATCH=$1
+
+    if ! zparseopts -D \
+	D=DEBUG -debug=DEBUG \
+	w+:=WATCH_OBJS -watch+:=WATCH_OBJS \
+	d=DIFF_OUTPUT -diff-output=DIFF_OUTPUT \
+	o:=OUTPUT_DIR -output-dir:=OUTPUT_DIR \
+	t:=MEASSURE_RUNTIME -meassure-runtime:=MEASSURE_RUNTIME \
+	v=VERBOSE -verbose=VERBOSE ;
+    then
+	print ERROR: Failed to parse command line.
+	return
     fi
-    [ -z $WATCH ] && { echo Nothing to watch.; return; }
-    [ ! -e $WATCH ] && WATCH=$(whence $WATCH) 
-    echo Watching \"$WATCH\"...
-    [ ! -x $WATCH ] && { echo Watch from path not executable; return; }
+    # [[ -n $DEBUG ]] && set_debug
+    WATCH_OBJS=${WATCH_OBJS:gs:--watch:::gs:-w::} # HELP: This cannot be - by no means - zsh-idiomatics
+    print_variables WATCH_OBJS 
+    prl REST: $* 
+    [ -z $1 ] && { echo Nothing to run.; return; }
+    [ -z $WATCH_OBJS ] && { echo Nothing to watch.; return; }
+    # [ ! -e $WATCH ] && WATCH=$(whence $WATCH) 
+    # echo Watching \"$WATCH\"...
+    # [ ! -x $WATCH ] && { echo Watch from path not executable; return; }
     [ -z $1 ] && { echo Nothing to run.; return; }
 
     clear -x
     run $*
     while true; do 
-        if ! inotifywait -q -e move_self -e modify $WATCH > /dev/null ; then
+        if ! inotifywait -q -e move_self -e modify $=WATCH_OBJS > /dev/null ; then
 	    echo inotifywait failed!
 	    return
 	fi
 	clear -x
 	run $*
+	# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
+	sleep 0.1
     done
 }
 
