@@ -103,8 +103,11 @@ set cscopepathcomp=2
 set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
-nnoremap <C-n> :cn<cr>
-nnoremap <C-p> :cp<cr>
+" TODO: make map check if quickfix or location list is open 
+nnoremap <C-n> :lnext<cr>
+nnoremap <C-p> :lprevious<cr>
+" nnoremap <C-n> :cnext<cr>
+" nnoremap <C-p> :cprevious<cr>
 Plug 'hari-rangarajan/CCTree'
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
