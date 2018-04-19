@@ -103,11 +103,15 @@ set cscopepathcomp=2
 set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
-" TODO: make map check if quickfix or location list is open 
-nnoremap <C-n> :lnext<cr>
-nnoremap <C-p> :lprevious<cr>
-" nnoremap <C-n> :cnext<cr>
-" nnoremap <C-p> :cprevious<cr>
+" nnoremap <C-n> :lnext<cr>
+function! QfLlNext()
+    windo if &l:buftype == "quickfix" | cnext | if &l:buftype == "location" | lnext | endif | endif
+endfunction
+function! QfLlPrevious()
+    windo if &l:buftype == "quickfix" | cprevious | if &l:buftype == "location" | lprevious | endif | endif
+endfunction
+nnoremap <C-n> :call QfLlNext()<cr>
+nnoremap <C-p> :call QfLlPrevious()<cr>
 Plug 'hari-rangarajan/CCTree'
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
