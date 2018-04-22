@@ -27,7 +27,6 @@ let g:vimfiler_as_default_explorer = 0
 let g:vimfiler_define_wrapper_commands = 1
 let g:vimfiler_expand_jump_to_first_child = 0
 let g:vimfiler_no_default_key_mappings = 0
-let g:vimfiler_quick_look_command = 'gloobus-preview'
 let g:vimfiler_safe_mode_by_default = 0
 let g:vimfiler_time_format = "%Y-%m-%d %H:%M:%S"
 nnoremap <F5> :VimFilerDouble -find<cr>
@@ -38,6 +37,7 @@ Plug 'romgrk/vimfiler-prompt'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 let g:fzf_prefer_tmux = 0
+let g:fzf_command_prefix = 'Fzf'
 nnoremap U <c-r>
 nmap <c-r> :History:<cr>
 nmap <c-e> :History/<cr>
@@ -53,19 +53,18 @@ let g:fzf_layout = { 'down': '~70:%' }
 imap <c-x><c-h> <plug>(fzf-complete-path)
 " inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
 
-map <leader>T :Tags<cr>
-map <leader>M :Marks<cr>
-map <leader>H :Helptags<cr>
-map <leader>h :Helptags<cr>
-map <leader>lC :BCommits<cr>
-map <leader>ll :BLines<cr>
-map <leader>la :Ag<cr>
-map <leader>b :Buffers<cr>
-map <leader>lc :Commits<cr>
-map <leader>lf :Files<cr>
-map <leader>lL :Lines<cr>
-map <leader>lt :Filetypes<cr>
-map <leader>w :Windows<cr>
+map <leader>T :FzfTags<cr>
+map <leader>M :FzfMarks<cr>
+map <leader>h :tabnew<cr>:Helptags<cr>:only<cr>
+map <leader>lC :FzfBCommits<cr>
+map <leader>ll :FzfBLines<cr>
+map <leader>la :FzfAg<cr>
+map <leader>b :FzfBuffers<cr>
+map <leader>lc :FzfCommits<cr>
+map <leader>lf :FzfFiles<cr>
+map <leader>lL :FzfLines<cr>
+map <leader>lt :FzfFiletypes<cr>
+map <leader>w :FzfWindows<cr>
 " }}}
 " Git {{{
 Plug 'tpope/vim-fugitive'
