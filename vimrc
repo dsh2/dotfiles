@@ -396,12 +396,13 @@ Plug 'Lokaltog/vim-distinguished'
 
 Plug 'tomasr/molokai'
 Plug 'Valloric/vim-operator-highlight'
-Plug 'mileszs/ack.vim'
-let g:ackhighlight = 1
-let g:ack_autofold_results = 0
-let g:ackpreview = 0
-let g:ack_use_dispatch = 1
-map <leader>a :Ack! \\b<cword\\b><CR>
+" Plug 'mileszs/ack.vim'
+" let g:ackhighlight = 1
+" let g:ack_autofold_results = 0
+" let g:ackpreview = 0
+" let g:ack_use_dispatch = 1
+" map <leader>a :Ack! \\b<cword\\b><CR>
+Plug 'brookhong/ag.vim'
 
 " }}}
 " VimAirline {{{
@@ -420,7 +421,7 @@ let g:airline_theme='qwq'
 Plug 'tpope/vim-dispatch'
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
 map <leader>m :update<cr>:Make<cr>
-map <leader>R :update<cr>:source ~/.vimrc<cr>
+map <leader>R :source ~/.vimrc<cr>
 " }}}
 
 Plug 'sickill/vim-pasta'
@@ -520,7 +521,7 @@ call plug#end()
 " }}}
 " Global options {{{
 " colorscheme seoul256
-colorscheme Tomorrow-Night
+map <leader>n :colorscheme Tomorrow-Night<cr>
 colorscheme solarized
 
 " set verbose=1
