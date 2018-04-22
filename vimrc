@@ -190,13 +190,17 @@ nnoremap <F4> :UndotreeToggle<cr>
 " pandoc {{{
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-let g:pandoc#folding#level = 0
-let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
+let g:pandoc#folding#level = 9
+" let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
+let g:pandoc#formatting#mode = 'h' " soft wraps 
+" let g:pandoc#formatting#mode = 's' " soft wraps 
 " let g:pandoc#formatting#mode = 'a' " autoformatting
 " let g:pandoc#formatting#mode = 'A' " smart autoformatting (watch out for source code)
 let g:pandoc#formatting#textwidth=79
 let g:pandoc#modules#disabled = ["chdir"]
-let g:pandoc#formatting#smart_autoformat_on_cursormoved = 1
+let g:pandoc#formatting#extra_equalprg="--atx-headers"
+" let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
+let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
 
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 hi Folded cterm=NONE
