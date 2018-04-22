@@ -104,10 +104,10 @@ set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
 " nnoremap <C-n> :lnext<cr>
 function! QfLlNext()
-    windo if &l:buftype == "quickfix" | cnext | if &l:buftype == "location" | lnext | endif | endif
+    windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
 endfunction
 function! QfLlPrevious()
-    windo if &l:buftype == "quickfix" | cprevious | if &l:buftype == "location" | lprevious | endif | endif
+    windo if &l:buftype == "quickfix" | silent! cprevious | if &l:buftype == "location" | silent! lprevious | endif | endif
 endfunction
 nnoremap <C-n> :call QfLlNext()<cr>
 nnoremap <C-p> :call QfLlPrevious()<cr>
