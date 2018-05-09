@@ -196,6 +196,7 @@ bindsym $SUPER+shift+l exec $LOCKER
 
 # Autostart
 exec_always --no-startup-id xset -b -c r rate 200 140
+exec_always --no-startup-id sleep 3 && parcellite
 # exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always xautolock
 # TODO: add notifier to xautolock
@@ -203,7 +204,6 @@ exec --no-startup-id nm-applet
 exec --no-startup-id pa-applet
 # exec --no-startup-id batti # Battery indicator
 # exec google-chrome-stable
-exec_always --no-startup-id sleep 3 && parcelite
 # exec_always --no-startup-id sleep 3 && xmodmap ~/.xmodmap
 
-# vim:filetype=i3
+# vim:filetype=i3config
