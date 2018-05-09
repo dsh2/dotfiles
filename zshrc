@@ -181,15 +181,21 @@ bindkey '^X^X' page_last_output
 
 function filter_last_output {
     RBUFFER=$(
-	cat ~/.tmux-log/$(($(print -P '%!')-1)) | 
-	    sed -e 's,$,,' -e '$ d' |
+	(cat ~/.tmux-log/$(($(print -P '%!')-1)) | 
+	    sed -e 's,$,,' -e '$ d' ;
+	    print -P $LINE_SEPARATOR )|
 	    fzf --tac --multi --no-sort
+	    # TODO: Add preview to show various transformations of 
+	    # current line, i.e. filter IP, numbers, strings, etc
+	    # and add shortcuts to select them as return value
     )
     zle redisplay
 }
 zle -N filter_last_output
 bindkey '^X^F' filter_last_output
 bindkey '^X^K' filter_last_output
+bindkey '^K^K' filter_last_output
+# TODO: add mapping to jump to first line of output
 
 function diff_last_two_outputs {
     tmux new-window vimdiff \
