@@ -491,7 +491,10 @@ Plug 'tpope/vim-commentary'
 autocmd FileType sshconfig setlocal commentstring=#\ %s
 autocmd FileType sshdconfig setlocal commentstring=#\ %s
 autocmd FileType shell setlocal commentstring=#\ %s
+autocmd FileType shell setlocal commentstring=#\ %s
+autocmd FileType i3config setlocal commentstring=#\ %s
 
+Plug 'mboughaba/i3config.vim'
 Plug 'fatih/vim-go'
 map gD :GoDocBrowser<cr>
 
@@ -522,7 +525,8 @@ call plug#end()
 " Global options {{{
 " colorscheme seoul256
 map <leader>n :colorscheme Tomorrow-Night<cr>
-colorscheme solarized
+colorscheme Tomorrow-Night
+" colorscheme solarized
 
 " set verbose=1
 let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/", "_", "g")
