@@ -1,0 +1,209 @@
+# Set variables
+set $SUPER Mod4
+set $ALT Mod1
+set $CTRL Control
+
+set $up k
+set $down j
+set $left h
+set $right l
+
+set $LOCKER xautolock -locknow && sleep 1
+
+# TODO: add bindsym to i3-input to rename a WS
+set $ws1 "root"
+set $ws2 "logging"
+set $ws3 "comms"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+
+# Colors
+# class                 border  backgr. text    indicator child_border
+client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+client.background       #ffffff
+
+# Set options
+floating_modifier $ALT
+floating_modifier $SUPER
+focus_follows_mouse yes
+hide_edge_borders both
+no_focus [window_role="pop-up"]
+force_display_urgency_hint 500 ms
+popup_during_fullscreen leave_fullscreen
+# popup_during_fullscreen ignore
+# popup_during_fullscreen smart
+show_marks yes
+workspace_layout tabbed
+workspace_auto_back_and_forth yes
+
+# Font
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font pango:monospace 10
+# font pango:DejaVu Sans Mono 11
+# font pango:Noto Sans Mono 11
+
+# Key bindings
+
+# rofi
+bindsym $ALT+Tab exec rofi -lines 20 -window-format '{w} {t} {n} {r} {c}' show-icons -show window
+
+bindsym $ALT+space exec rofi -mesg ok -fullscreen -show combi
+bindsym $SUPER+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $SUPER+Tab workspace next
+bindsym $SUPER+shift+Tab workspace prev
+
+
+# Focus standard applications
+bindsym $ALT+shift+1 [window_role="(?i)browser"] focus
+# bindsym $ALT+shift+1 [class="(?i)chrome"] focus
+# bindsym $ALT+shift+3 exec rofi -e Terminal
+bindsym $ALT+shift+3 [class="(?i)terminal"] focus
+
+# Kill focused window
+bindsym $SUPER+shift+q kill
+
+# Change focus
+bindsym $SUPER+$left focus left
+bindsym $SUPER+$right focus right
+bindsym $SUPER+$up focus up
+bindsym $SUPER+$down focus down
+bindsym $SUPER+a focus parent
+bindsym $SUPER+d focus child
+bindsym $SUPER+Shift+p focus output primary
+bindsym $SUPER+Shift+s sticky toggle
+
+# Change split
+bindsym $SUPER+shift+v split h
+bindsym $SUPER+v split v
+
+# Change container layout
+bindsym $SUPER+s layout stacking
+bindsym $SUPER+w layout tabbed
+bindsym $SUPER+e layout toggle split
+
+bindsym $SUPER+f fullscreen
+
+# Toggle tiling / floating
+bindsym $SUPER+shift+f floating toggle
+bindsym $SUPER+control+shift+f focus mode_toggle
+
+# Scratchpad
+# bindsym $SUPER+m move scratchpad
+# bindsym $SUPER+o scratchpad show
+
+# Start a terminal
+bindsym $SUPER+Return exec i3-sensible-terminal
+
+# Border changing
+bindsym $SUPER+b border toggle
+
+# Pulse audio volume control
+bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -- '-5%'
+bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
+bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
+
+bindsym $SUPER+Shift+w exec i3-input -F 'rename workspace to "%s"' -P 'New name: '
+
+# Switch to workspace
+bindsym $SUPER+1 workspace $ws1
+bindsym $SUPER+2 workspace $ws2
+bindsym $SUPER+3 workspace $ws3
+bindsym $SUPER+4 workspace $ws4
+bindsym $SUPER+8 workspace $ws5
+bindsym $SUPER+9 workspace $ws6
+bindsym $SUPER+0 workspace $ws7
+
+# Move focused container to workspace
+bindsym $SUPER+Shift+1 move container to workspace $ws1
+bindsym $SUPER+Shift+2 move container to workspace $ws2
+bindsym $SUPER+Shift+3 move container to workspace $ws3
+bindsym $SUPER+Shift+4 move container to workspace $ws4
+bindsym $SUPER+Shift+5 move container to workspace $ws5
+bindsym $SUPER+Shift+6 move container to workspace $ws6
+bindsym $SUPER+Shift+7 move container to workspace $ws7
+bindsym $SUPER+Shift+8 move container to workspace $ws8
+bindsym $SUPER+Shift+9 move container to workspace $ws9
+bindsym $SUPER+Shift+0 move container to workspace $ws10
+
+# restart/exit
+bindsym $SUPER+shift+r restart
+bindsym $SUPER+shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# Mouse bindings
+# TODO: Does not seem to work... test more
+bindsym --while-window $SUPER+button1 floating toggle
+
+mode "modify" {
+    bindsym $left resize shrink width 10 px or 10 ppt
+    bindsym $up resize grow height 10 px or 10 ppt
+    bindsym $down resize shrink height 10 px or 10 ppt
+    bindsym $right resize grow width 10 px or 10 ppt
+
+    bindsym shift+$left move left
+    bindsym shift+$up move up
+    bindsym shift+$down move down
+    bindsym shift+$right move right
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $SUPER+r mode "default"
+}
+bindsym $SUPER+r mode "modify"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+    status_command i3status
+    # position top
+    # mode hide
+    # modifier $SUPER
+    tray_output primary
+    workspace_buttons yes
+}
+
+# Passthrough mode
+mode "passthrough" {
+        bindsym $SUPER+p mode "default"
+}
+bindsym $SUPER+p mode "passthrough"
+
+# Multiple screens
+bindsym $SUPER+u move workspace to output right
+
+
+set $mode_system (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (S) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $LOCKER, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id $LOCKER && systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id $LOCKER && systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id  systemctl poweroff -i, mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $SUPER+f mode "default"
+    bindsym $SUPER+o mode "default"
+}
+bindsym $SUPER+o mode "$mode_system"
+bindsym $SUPER+shift+l exec $LOCKER
+
+# Autostart
+exec_always --no-startup-id xset -b -c r rate 200 140
+# exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+exec_always xautolock
+# TODO: add notifier to xautolock
+exec --no-startup-id nm-applet
+exec --no-startup-id pa-applet
+# exec --no-startup-id batti # Battery indicator
+# exec google-chrome-stable
+exec_always --no-startup-id sleep 3 && parcelite
+# exec_always --no-startup-id sleep 3 && xmodmap ~/.xmodmap
+
+# vim:filetype=i3
