@@ -55,7 +55,7 @@ imap <c-x><c-h> <plug>(fzf-complete-path)
 
 map <leader>T :FzfTags<cr>
 map <leader>M :FzfMarks<cr>
-map <leader>h :tabnew<cr>:Helptags<cr>:only<cr>
+map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>lC :FzfBCommits<cr>
 map <leader>ll :FzfBLines<cr>
 map <leader>la :FzfAg<cr>
