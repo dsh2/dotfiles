@@ -403,6 +403,7 @@ D() { set -x; $*; set +x }
 alias Dl='ls -l ~/Downloads/*(.om[1])'
 alias Dlp='px ~/Downloads/*(.om[1])'
 alias Dll='Dlp && r *(/om[1])'
+# TODO: rename Downloads to INCOMING
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
@@ -439,6 +440,8 @@ alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
+alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
+# TODO: make C a zle binding
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty () { script -qfc "$(printf "%q " "$@")"; }
