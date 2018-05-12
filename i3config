@@ -80,7 +80,8 @@ bindsym $SUPER+s layout stacking
 bindsym $SUPER+t layout tabbed
 bindsym $SUPER+e layout toggle split
 
-bindsym $SUPER+f fullscreen
+bindsym $SUPER+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+bindsym $SUPER+shift+f fullscreen
 
 # Toggle tiling / floating
 bindsym $SUPER+c floating toggle
