@@ -120,7 +120,49 @@ bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -- '-5%'
 bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
 bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
 
-bindsym $SUPER+Shift+w exec i3-input -F 'rename workspace to "%s"' -P 'New name: '
+set $MODE_RETURN mode "default"
+set $MODE_I3 "I3"
+mode $MODE_I3 {
+    bindsym r exec i3-input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
+    bindsym t exec i3-input -F 'mark "%s"' -P 'Tag: ', $MODE_RETURN
+    # bindsym m exec i3-input -F 'mark %s' -l 1 -P 'Mark: ', $MODE_RETURN
+    bindsym m exec i3-input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
+    bindsym n workspace new, exec i3-sensible-terminal, $MODE_RETURN
+    bindsym Shift+n move container to workspace new, $MODE_RETURN
+    # bindsym o exec i3-input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
+
+    # Focus standard workspaces
+    bindsym 1 workspace $WS_ROOT, $MODE_RETURN
+    bindsym 9 workspace $WS_COMS, $MODE_RETURN
+    bindsym 0 workspace $WS_LOG, $MODE_RETURN
+
+    # Move to focused container to workspace
+    bindsym Shift+1 move container to workspace $WS_ROOT, $MODE_RETURN
+    bindsym Shift+9 move container to workspace $WS_COMS, $MODE_RETURN
+    bindsym Shift+0 move container to workspace $WS_LOG, $MODE_RETURN
+
+    # Exit mode
+    bindsym Return $MODE_RETURN
+    bindsym Escape $MODE_RETURN
+    bindsym $SUPER+i $MODE_RETURN
+}
+bindsym $SUPER+i mode $MODE_I3
+
+# WS_COM
+# TODO: Make these work
+assign [class="google-chrome" title="Telegram Web"] $WS_COMS
+assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
+assign [class="wireshark"] 8
+
+# WS_ROOT
+
+# Workspace setup
+# TODO: add bindsym to i3-input to rename a WS
+# Define standard workspaces
+set $WS_ROOT "1: root"
+# TODO: add WS_CAL
+set $WS_COMS "9: comms"
+set $WS_LOG "0: log"
 
 # Workspace setup
 # TODO: add bindsym to i3-input to rename a WS
