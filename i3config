@@ -1,3 +1,9 @@
+# TODO:
+# -add more mouse bindings
+# -add default sizes
+#  -thunderbird reminders
+#  -youtube floating
+# -empty node cleanup
 # Set variables
 set $SUPER Mod4
 set $ALT Mod1
@@ -42,6 +48,11 @@ font pango:monospace 10
 # Key bindings
 
 # rofi
+# TODO: 
+# -add binding to move selected window to 
+#  -current container
+#  -new split
+#  -new tab
 # bindsym $ALT+Tab exec rofi -lines 20 -window-format '{w} {t} {n} {r} {c}' show-icons -show window
 bindsym $ALT+Tab exec rofi -lines 20  -show-icons -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
