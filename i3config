@@ -138,11 +138,31 @@ bindsym $SUPER+u move workspace to output right
 # TODO: Does not seem to work... test more
 # bindsym --while-window $SUPER+button1 floating toggle
 
-mode "modify" {
+set $MODE_MOVE "MOVE"
+mode $MODE_MOVE {
+    bindsym $left move left
+    bindsym $up move up
+    bindsym $down move down
+    bindsym $right move right
+    # TODO: add shift mod to move faster (i.e. more pixels)
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $SUPER+m mode "default"
+    bindsym $SUPER+r mode $MODE_RESIZE
+    bindsym $SUPER+shift+m mode $MODE_MANIPULATE
+}
+bindsym $SUPER+m mode $MODE_MOVE
+
+set $MODE_RESIZE "RESIZE"
+mode $MODE_RESIZE {
     bindsym $left resize shrink width 10 px or 10 ppt
-    bindsym $up resize grow height 10 px or 10 ppt
-    bindsym $down resize shrink height 10 px or 10 ppt
+    bindsym $up resize shrink height 10 px or 10 ppt
+    bindsym $down resize grow height 10 px or 10 ppt
     bindsym $right resize grow width 10 px or 10 ppt
+
+    bindsym $CTRL+$left resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+    bindsym $CTRL+$up resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+    bindsym $CTRL+$down resize grow height 10 px or 10 ppt; resize grow width 10 px or 10 ppt
 
     bindsym shift+$left move left
     bindsym shift+$up move up
@@ -152,8 +172,35 @@ mode "modify" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $SUPER+r mode "default"
+    bindsym $SUPER+m mode $MODE_MOVE
+    bindsym $SUPER+shift+m mode $MODE_MANIPULATE
 }
-bindsym $SUPER+r mode "modify"
+bindsym $SUPER+r mode $MODE_RESIZE
+
+set $MODE_MANIPULATE "MANIPULATE"
+mode $MODE_MANIPULATE {
+    bindsym $left resize shrink width 10 px or 10 ppt
+    bindsym $up resize shrink height 10 px or 10 ppt
+    bindsym $down resize grow height 10 px or 10 ppt
+    bindsym $right resize grow width 10 px or 10 ppt
+
+    bindsym $CTRL+$left resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+    bindsym $CTRL+$up resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+    bindsym $CTRL+$down resize grow height 10 px or 10 ppt; resize grow width 10 px or 10 ppt
+
+    bindsym shift+$left move left
+    bindsym shift+$up move up
+    bindsym shift+$down move down
+    bindsym shift+$right move right
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $SUPER+r mode $MODE_RESIZE
+    bindsym $SUPER+m mode $MODE_MANIPULATE
+    bindsym $SUPER+shift+m mode "default"
+}
+bindsym $SUPER+shift+m mode $MODE_MANIPULATE
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
