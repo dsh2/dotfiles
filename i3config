@@ -60,16 +60,15 @@ font pango:monospace 10
 bindsym $ALT+Tab exec rofi -lines 20  -show-icons -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
 # bindsym $ALT+Tab workspace back_and_forth
-
 bindsym $ALT+space exec rofi -mesg ok -fullscreen -show combi
 bindsym $SUPER+space exec rofi -show run -sidebar-mode -lines 0
 
 # Focus standard applications
 # bindsym $ALT+shift+1 [window_role="(?i)browser"] focus
-# bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
-bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome"] focus
+bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
+# bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome"] focus
 # bindsym $ALT+shift+3 exec rofi -e Terminal
-bindsym $ALT+shift+3 fullscreen disable; [class="(?i)terminal"] focus
+bindsym $ALT+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"] focus
 
 # Kill focused window
 bindsym $SUPER+shift+q kill
@@ -166,26 +165,20 @@ set $WS_LOG "0: log"
 
 # Workspace setup
 # TODO: add bindsym to i3-input to rename a WS
+# Define standard workspaces
 set $WS_ROOT "1: root"
-set $WS_LOG "9: log"
-set $WS_COMS "0: comms"
+set $WS_COMS "9: comms"
+set $WS_LOG "0: log"
+
+# Change workspaces
 bindsym $SUPER+1 workspace prev
 bindsym $SUPER+2 workspace next
+# TODO: Make these work
+# bindsym $SUPER+, workspace prev
+# bindsym $SUPER+. workspace next
 bindsym $SUPER+3 workspace back_and_forth
-
-# # Switch to workspace
-# bindsym $SUPER+1 workspace $ws1
-# bindsym $SUPER+2 workspace $ws2
-# bindsym $SUPER+3 workspace $ws3
-# bindsym $SUPER+4 workspace $ws4
-# bindsym $SUPER+8 workspace $ws5
-# bindsym $SUPER+9 workspace $ws6
-# bindsym $SUPER+0 workspace $ws7
-
-# # Move focused container to workspace
-# bindsym $SUPER+Shift+1 move container to workspace $ws1
-# bindsym $SUPER+Shift+2 move container to workspace $ws2
-# bindsym $SUPER+Shift+3 move container to workspace $ws3
+bindsym $SUPER+9 workspace $WS_COMS
+bindsym $SUPER+0 workspace $WS_LOG
 
 # restart/exit
 bindsym $SUPER+shift+r restart
@@ -205,9 +198,11 @@ mode $MODE_MOVE {
     bindsym $down move down
     bindsym $right move right
     # TODO: add shift mod to move faster (i.e. more pixels)
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $SUPER+m mode "default"
+
+    # Exit mode
+    bindsym Return $MODE_RETURN
+    bindsym Escape $MODE_RETURN
+    bindsym $SUPER+m $MODE_RETURN
     bindsym $SUPER+r mode $MODE_RESIZE
     bindsym $SUPER+shift+m mode $MODE_MANIPULATE
 }
@@ -229,9 +224,10 @@ mode $MODE_RESIZE {
     bindsym shift+$down move down
     bindsym shift+$right move right
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $SUPER+r mode "default"
+    # Exit mode
+    bindsym Return $MODE_RETURN
+    bindsym Escape $MODE_RETURN
+    bindsym $SUPER+r $MODE_RETURN
     bindsym $SUPER+m mode $MODE_MOVE
     bindsym $SUPER+shift+m mode $MODE_MANIPULATE
 }
@@ -253,14 +249,14 @@ mode $MODE_MANIPULATE {
     bindsym shift+$down move down
     bindsym shift+$right move right
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+    # Exit mode
+    bindsym Return $MODE_RETURN
+    bindsym Escape $MODE_RETURN
+    bindsym $SUPER+shift+m $MODE_RETURN
     bindsym $SUPER+r mode $MODE_RESIZE
     bindsym $SUPER+m mode $MODE_MANIPULATE
-    bindsym $SUPER+shift+m mode "default"
 }
 bindsym $SUPER+shift+m mode $MODE_MANIPULATE
-
 
 # i3bars
 # TODO: add long bars for big screens
@@ -275,26 +271,26 @@ bar {
 
 # Passthrough mode
 mode "passthrough" {
-        bindsym $SUPER+p mode "default"
+        bindsym $SUPER+p $MODE_RETURN
 }
 bindsym $SUPER+p mode "passthrough"
 
-set $mode_system (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (S) shutdown
-mode "$mode_system" {
-    bindsym l exec --no-startup-id $LOCKER, mode "default"
-    bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym s exec --no-startup-id $LOCKER && systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id $LOCKER && systemctl hibernate, mode "default"
-    bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id  systemctl poweroff -i, mode "default"
+set $MODE_SYSTEM  (s)uspend, (h)ibernate, (l)ock, (e)xit
+mode "$MODE_SYSTEM" {
+    bindsym l exec --no-startup-id $LOCKER, $MODE_RETURN
+    bindsym e exec --no-startup-id i3-msg exit, $MODE_RETURN
+    bindsym s exec --no-startup-id $LOCKER && systemctl suspend, $MODE_RETURN
+    bindsym h exec --no-startup-id $LOCKER && systemctl hibernate, $MODE_RETURN
+    # bindsym r exec --no-startup-id systemctl reboot, $MODE_RETURN
+    # bindsym Shift+s exec --no-startup-id  systemctl poweroff -i, $MODE_RETURN
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $SUPER+f mode "default"
-    bindsym $SUPER+o mode "default"
+    bindsym Return $MODE_RETURN
+    bindsym Escape $MODE_RETURN
+    bindsym $SUPER+f $MODE_RETURN
+    bindsym $SUPER+o $MODE_RETURN
 }
-bindsym $SUPER+o mode "$mode_system"
-bindsym $SUPER+Del exec $LOCKER
+bindsym $SUPER+o mode "$MODE_SYSTEM"
+# bindsym $SUPER+Del exec $LOCKER
 
 # Autostart
 exec_always --no-startup-id xset -b -c r rate 200 140
