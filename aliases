@@ -423,7 +423,7 @@ alias -g SUU='| sort | uniq'
 
 ut2nt() { date -d@$1 '+%F %T'}
 
-alias w=wireshark
+alias ws=wireshark
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias lvs='tmux split -d lnav ssldebug'
