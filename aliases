@@ -94,8 +94,8 @@ alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
 alias gcom='git checkout master'
 alias gk='gitk --all&'
-alias gkk='vim +GV'
-alias gss='vim . +Gstatus +only'
+alias gkk='v +GV'
+alias gss='v . +Gstatus +only'
 alias gcp='git cherry-pick'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --recursive'
 alias gppp='gpp && git push'
@@ -157,7 +157,8 @@ alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
 
 # Vim aliases
-alias v=vim
+alias v='vim -X'
+# alias v=vim
 gv() { gvim "$*"; raiseX; }
 alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 alias vll='v *(.om[1])'
