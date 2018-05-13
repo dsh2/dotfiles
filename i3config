@@ -29,6 +29,8 @@ client.background       #ffffff
 floating_modifier $ALT
 floating_modifier $SUPER
 focus_follows_mouse yes
+focus_wrapping no
+# focus_wrapping force
 hide_edge_borders both
 no_focus [window_role="pop-up"]
 force_display_urgency_hint 500 ms
@@ -37,10 +39,19 @@ popup_during_fullscreen leave_fullscreen
 # popup_during_fullscreen smart
 show_marks yes
 for_window [class=".*"] title_format "%title"
+# for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+# for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
 # TODO: make this work
 bindsym $SUPER+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 workspace_layout tabbed
 workspace_auto_back_and_forth yes
+
+floating_minimum_size 75 x 50
+floating_maximum_size 200 x 200
+
+for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
+for_window [class="wireshark"] floating enable
+bindsym $SUPER+z exec --no-startup-id i3-msg 'workspace 5; exec wireshark; workspace 1'
 
 # Font
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -120,7 +131,9 @@ bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
 bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
 
 set $MODE_RETURN mode "default"
+
 set $MODE_I3 "I3"
+set $MODE_I3_KEY i
 mode $MODE_I3 {
     bindsym r exec i3-input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
     bindsym t exec i3-input -F 'mark "%s"' -P 'Tag: ', $MODE_RETURN
@@ -143,25 +156,24 @@ mode $MODE_I3 {
     # Exit mode
     bindsym Return $MODE_RETURN
     bindsym Escape $MODE_RETURN
-    bindsym $SUPER+i $MODE_RETURN
+    bindsym $SUPER+$MODE_I3_KEY $MODE_RETURN
 }
-bindsym $SUPER+i mode $MODE_I3
-
-# WS_COM
-# TODO: Make these work
-assign [class="google-chrome" title="Telegram Web"] $WS_COMS
-assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
-assign [class="wireshark"] 8
-
-# WS_ROOT
+bindsym $SUPER+$MODE_I3_KEY mode $MODE_I3
 
 # Workspace setup
-# TODO: add bindsym to i3-input to rename a WS
 # Define standard workspaces
 set $WS_ROOT "1: root"
 # TODO: add WS_CAL
 set $WS_COMS "9: comms"
 set $WS_LOG "0: log"
+
+# WS_COM
+# TODO: Make these work
+assign [class="google-chrome" title="Telegram Web"] $WS_COMS
+assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
+for_window [class="wireshark"] move to workspace 5
+
+# WS_ROOT
 
 # Workspace setup
 # TODO: add bindsym to i3-input to rename a WS
