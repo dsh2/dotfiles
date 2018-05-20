@@ -32,6 +32,7 @@ pathprepend $NDK
 
 # Pager
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
+# export PAGER=fzf
 export PAGER=less
 export LESS=cRMiWSJ
 lesskey - <<EOF
@@ -72,10 +73,12 @@ export GOPATH=$HOME/src/GO
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy.conf
 export INTERACTIVE_COMMANDS=(vim lnav atop htop r2 ranger)
+export JCOLOR=1
 export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
 export RANGER_LOAD_DEFAULT_RC=FALSE
 export SSLKEYLOGFILE=$HOME/.ssl/keys && mkdir -p -m 0700 $SSLKEYLOGFILE:h
+export TERMINAL=xfce4-terminal
 export TSHARK=/usr/bin/tshark
 export USE_CCACHE=1
 export WIRESHARK=/usr/bin/wireshark
