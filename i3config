@@ -68,11 +68,12 @@ font pango:monospace 10
 #  -new split
 #  -new tab
 # bindsym $ALT+Tab exec rofi -lines 20 -window-format '{w} {t} {n} {r} {c}' show-icons -show window
-bindsym $ALT+Tab exec rofi -lines 20  -show-icons -show window
+bindsym $ALT+Tab exec rofi -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
 # bindsym $ALT+Tab workspace back_and_forth
 bindsym $ALT+space exec rofi -mesg ok -fullscreen -show combi
 bindsym $SUPER+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $ALT+$CTRL+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
 
 # Focus standard applications
 # bindsym $ALT+shift+1 [window_role="(?i)browser"] focus
@@ -83,6 +84,7 @@ bindsym $ALT+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"]
 
 # Kill focused window
 bindsym $SUPER+shift+q kill
+bindsym $Alt+F4 kill
 
 # Change focus
 bindsym $SUPER+$left focus left
@@ -306,6 +308,7 @@ bindsym $SUPER+o mode "$MODE_SYSTEM"
 
 # Autostart
 exec_always --no-startup-id xset -b -c r rate 200 140
+exec_always --no-startup-id shutter
 exec_always --no-startup-id parcellite
 exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 # TODO: add notifier to xautolock
