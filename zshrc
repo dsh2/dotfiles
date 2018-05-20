@@ -143,6 +143,7 @@ function run_sudo {
 zle -N run_sudo
 bindkey '^X^S' run_sudo
 
+# TODO: Make this work without pipe and external program
 function xo_command {
 	zle up-history
 	zle -U ' | xc'
@@ -150,6 +151,7 @@ function xo_command {
 zle -N xo_command
 bindkey '^X^O' xo_command
 
+# TODO: Make this work without pipe and external program
 function xp_command {
 	zle up-history
 	zle beginning-of-line
@@ -195,12 +197,14 @@ zle -N filter_last_output
 bindkey '^X^F' filter_last_output
 bindkey '^X^K' filter_last_output
 bindkey '^K^K' filter_last_output
-# TODO: add mapping to jump to first line of output
+# TODO: 
+# -add mapping to jump to first line of output
+# -prefilter for IP, numbers, paths, etc., cf. above.
 
 function diff_last_two_outputs {
     tmux new-window vimdiff \
-	~/.tmux-log/$(($(print -P '%!')-1)) \
 	~/.tmux-log/$(($(print -P '%!')-2)) \
+	~/.tmux-log/$(($(print -P '%!')-1)) \
 	"+ map q Q"
 }
 zle -N diff_last_two_outputs
@@ -510,6 +514,7 @@ type keychain > /dev/null && eval $(keychain --eval --timeout 360 --quiet)
 # TODO: Think about a way how to select umask for sudo
 # umask 027
 
+# TODO: Implement this
 function in_array() {
     prl $1 $2
     prl ${1[(i)$2]} 
