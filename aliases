@@ -87,7 +87,7 @@ alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
 alias gst='git status -sb --show-stash'
 alias gstt='gst .'
-gcr() { set -x; git clone --recursive --jobs=8 --verbose $1 && cd ${1:t} && r .}
+gcr() { set -x; git clone --recursive --jobs=8 --verbose $1 && cd ${1:t} && ranger .}
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
@@ -113,6 +113,7 @@ alias glssh='git remote set-url origin $(git remote get-url --push origin | sed 
 # ls
 alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
 alias l='ls -l'
+alias l1='ls -1'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
 alias lts='l -rS'
@@ -384,6 +385,7 @@ alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setop
 alias sll='eval $(. ~/.keychain/dsf-debian-sh)'
 alias Rl='ranger ~/Downloads'
 alias dcl='dynamic-colors cycle'
+alias hc=herbstclient
 
 src_index() {
     find . \
