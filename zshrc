@@ -296,6 +296,18 @@ autoload -U add-zsh-hook
 add-zsh-hook preexec start_tmux_logging
 add-zsh-hook precmd stop_tmux_logging
 
+add-zsh-hook precmd set_terminal_title
+
+function set_terminal_title() 
+{ 
+    # TODO: 
+    # -add more sensible stuff here
+    # -check esc sequences instead of wmctrl
+    # -move seq to term_title alias
+    wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
+    return 0
+}
+
 function showbuffers()
 {
     local nl=$'\n' kr
