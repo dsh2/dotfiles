@@ -20,10 +20,12 @@
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
     ~/.config/i3/config: i3config
+    ~/.config/herbstluftwm: herbstluftwm/
     ~/.config/ranger/scope.sh: ranger/scope.sh
     ~/.config/ranger/rifle.conf: ranger/rifle.conf
     ~/.config/ranger/rc.conf: ranger/rc.conf
     ~/.config/ranger/commands.py: ranger/commands.py
+    ~/.config/rofi/config.rasi: rofi
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
