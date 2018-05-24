@@ -304,7 +304,8 @@ function set_terminal_title()
     # -add more sensible stuff here
     # -check esc sequences instead of wmctrl
     # -move seq to term_title alias
-    wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
+    which wmctrl >/dev/null &&
+	wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
     return 0
 }
 
