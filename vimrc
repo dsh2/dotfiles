@@ -39,8 +39,8 @@ Plug 'junegunn/fzf.vim'
 let g:fzf_prefer_tmux = 0
 let g:fzf_command_prefix = 'Fzf'
 nnoremap U <c-r>
-nmap <c-r> :History:<cr>
-nmap <c-e> :History/<cr>
+nmap <c-r> :FzfHistory:<cr>
+nmap <c-e> :FzfHistory/<cr>
 let g:fzf_tags_command = 'ctags -R'
 command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
 command! -bang -nargs=* Ag
