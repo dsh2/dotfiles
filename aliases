@@ -130,6 +130,7 @@ alias r=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
+alias zs=zstyle
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
@@ -156,6 +157,7 @@ alias jk9=jkk
 alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
+alias pvv=print_variables
 
 # Vim aliases
 alias v='vim -X'
@@ -220,6 +222,7 @@ RUN() {
 	    return
 	fi
 	clear -x
+	sleep 0.1
 	run $*
 	# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
 	sleep 0.1
@@ -422,6 +425,7 @@ alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g DN="> /dev/null"
 alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
+alias -g SE="2>&1"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
 alias -g WL=' | wc -l'
 alias -g SUU='| sort | uniq'
