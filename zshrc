@@ -158,11 +158,12 @@ function copy_last_output {
 bindkey_func '^x^o' copy_last_output
 
 function page_last_output {
-	# less ~/.tmux-log/$(($(print -P '%!')-1))
-	# TODO: Make this work without tmux. Read man zshzle!
-	# TODO(zsh): Somehow use (%)-flag 
-	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) '+set buftype=nofile' +AnsiEsc '+set ff=unix' 
-	# tmux resize-pane -Z
+	# TODO: Make this work without tmux. Read man zshzle how to exec within widget
+	# TODO(zsh): Somehow use (%)-flag instead of %!
+	# TODO: add all cleanup to tmux logging to stop_tmux_logging
+	tmux split -bp 80 \
+	    vim $tmux_log_file '+set buftype=nofile' +AnsiEsc 
+	tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
 
