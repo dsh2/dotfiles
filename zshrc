@@ -395,32 +395,41 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Add comments what we suppose to achive with all the zstyles
+# TODO: Figure out why compdef ls does not show options, but only files
+# TODO: Add 'something' which completes the current value when assigning a value
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
-zstyle ':completion:*' list-dirs-first false
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+# zstyle ':completion:*' completer _complete 
+zstyle ':completion:*:approximate:::' max-errors 6 numeric
+zstyle ':completion:*:matches' group yes
+zstyle ':completion:*' group-name '' # Show each type of match in its own group
+zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' list-separator "--"
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' menu select
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' select-prompt '%Slines=%l matches=%m (%p)%s'
 zstyle ':completion:*' verbose true
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # Use same colors as GNU ls in lists
+# TODO: Think about ma, hi, du markers
 zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
 zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
 zstyle ':completion:*:commands' list-colors '=*=1;31'
-zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
-zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
-zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:parameter' list-colors '=*=1;31' # TODO: Make this work
 zstyle ':completion:*:options' list-colors '=^(-- *)=34'
-zstyle ':completion:*:warnings' format $'\e[01;31m -- No matches for: %d%b --\e[0m'
+# zstyle ':completion:*:options' list-colors '=(#b)(*)(--)(*)=34=7=1'
+zstyle ':completion:*:options' auto-description 'Specify %d'
+# zstyle ':completion:*:options' description yes
+# zstyle ':completion:*:options' complete-options yes
+zstyle ':completion:*' format '[%UCompleting %d%u]'
+# zstyle ':completion:*' show-completer
+# zstyle ':completion:*' show-ambiguity
+# zstyle ':completion:*' single-ignored menu
+zstyle ':completion:*' strip-comments
+zstyle ':completion:*:messages' format $'\e[01;35m -- Message: %d --\e[0m'
+zstyle ':completion:*:warnings' format $'\e[01;31m -- No matches for: %d%b \e[0m--'
+zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
-setopt nomenu_complete
-setopt auto_list
-setopt auto_menu
-setopt list_ambiguous
+setopt menu_complete
 # }}}
 
 # Shell options {{{
