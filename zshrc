@@ -135,40 +135,27 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
-function run_sudo {
-    [[ -z $BUFFER ]] && zle up-history
-    zle beginning-of-line
-    zle -U 'sudo '
-}
-zle -N run_sudo
-bindkey '^X^S' run_sudo
-
-# TODO: Make this work without pipe and external program
-function xo_command {
-	zle up-history
-	zle -U ' | xc'
+function kill-line-xclip {
+    zle kill-line
+    echo $CUTBUFFER | xclip -selection clipboard -in
 }
 bindkey_func '^k' kill-line-xclip
 
-# TODO: Make this work without pipe and external program
-function xp_command {
+# Copy last command to xclipboard
+function copy_last_command {
 	zle up-history
-	zle beginning-of-line
-	zle -U 'xp '
+	zle kill-whole-line
+	echo $CUTBUFFER | xclip -selection clipboard -in
 }
-zle -N xp_command
-bindkey '^X^P' xp_command
+bindkey_func '^x^k' copy_last_command
 
-# TODO: Factor out as general inline zle substituion function
-function select_aliases {
-    OLD_BUFFER_LEN=$#BUFFER
-    MARK=CURSOR
-    BUFFER=$LBUFFER$(builtin alias | sed -e "s/\([^=]*\)=[' ]*\([^']*\)[']*/\1\t\2/ " | fzf --tabstop=28 --tac | cut -f 2 )$RBUFFER
-    CURSOR+=$(($#BUFFER - $OLD_BUFFER_LEN))
-    REGION_ACTIVE=1
-    zle redisplay
+# Copy last command's output to xclipboard
+function copy_last_output {
+    [ -z $tmux_log_file ] && return
+    echo LOG: $tmux_log_file 
+    cat $tmux_log_file | xclip -selection clipboard -in
 }
-bindkey_func '^X^A' select_aliases
+bindkey_func '^x^o' copy_last_output
 
 function page_last_output {
 	# less ~/.tmux-log/$(($(print -P '%!')-1))
