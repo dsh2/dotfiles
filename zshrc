@@ -394,6 +394,8 @@ bindkey -M menuselect '^n' vi-forward-blank-word
 bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
+# TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
+compdef _gnu_generic fzf pv
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
