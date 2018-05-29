@@ -485,6 +485,7 @@ print_variables() {
 	fi
     done 
 }
+compdef _parameter print_variables
 
 pathprepend() {
     local path_element=$1
