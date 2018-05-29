@@ -36,10 +36,11 @@ hc keybind $SUPER-Return spawn ${TERMINAL:-xfce4-terminal} # use your $TERMINAL 
 
 # basic movement
 # focusing clients
-hc keybind $SUPER-h focus left
-hc keybind $SUPER-j focus down
-hc keybind $SUPER-k focus up
-hc keybind $SUPER-l focus right
+# TODO: Not only fullscreen false but unmaximize.sh
+hc keybind $SUPER-h chain X fullscreen false X focus left
+hc keybind $SUPER-j chain X fullscreen false X focus down
+hc keybind $SUPER-k chain X fullscreen false X focus up
+hc keybind $SUPER-l chain X fullscreen false X focus right
 
 # moving clients
 hc keybind $SUPER-Shift-h shift left
