@@ -105,9 +105,9 @@ zle_highlight=(
     paste:underline
 )
 
-# TODO: Use throughout file
 function bindkey_func {
     zle -N $2
+    # bindkey -M command $1 $2
     bindkey $1 $2
 }
 
@@ -148,8 +148,7 @@ function xo_command {
 	zle up-history
 	zle -U ' | xc'
 }
-zle -N xo_command
-bindkey '^X^O' xo_command
+bindkey_func '^k' kill-line-xclip
 
 # TODO: Make this work without pipe and external program
 function xp_command {
@@ -178,8 +177,7 @@ function page_last_output {
 	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) '+set buftype=nofile' +AnsiEsc '+set ff=unix' 
 	# tmux resize-pane -Z
 }
-zle -N page_last_output
-bindkey '^X^X' page_last_output
+bindkey_func '^x^x' page_last_output
 
 function filter_last_output {
     RBUFFER=$(
@@ -193,13 +191,8 @@ function filter_last_output {
     )
     zle redisplay
 }
-zle -N filter_last_output
-bindkey '^X^F' filter_last_output
-bindkey '^X^K' filter_last_output
-bindkey '^K^K' filter_last_output
-# TODO: 
-# -add mapping to jump to first line of output
-# -prefilter for IP, numbers, paths, etc., cf. above.
+# bindkey_func '^l^l' filter_last_output
+bindkey_func '^o' filter_last_output
 
 function diff_last_two_outputs {
     tmux new-window vimdiff \
@@ -207,30 +200,46 @@ function diff_last_two_outputs {
 	~/.tmux-log/$(($(print -P '%!')-1)) \
 	"+ map q Q"
 }
-zle -N diff_last_two_outputs
-bindkey '^X^M' diff_last_two_outputs
+bindkey_func '^x^m' diff_last_two_outputs
+
+function run_sudo {
+    [[ -z $BUFFER ]] && zle up-history
+    zle beginning-of-line
+    zle -U 'sudo '
+}
+bindkey_func '^x^s' run_sudo
+
+# TODO: Factor out as general inline zle substituion function
+# TODO: Re-write using ${aliases}
+function select_aliases {
+    OLD_BUFFER_LEN=$#BUFFER
+    MARK=CURSOR
+    BUFFER=$LBUFFER$(builtin alias | sed -e "s/\([^=]*\)=[' ]*\([^']*\)[']*/\1\t\2/ " | fzf --tabstop=28 --tac | cut -f 2 )$RBUFFER
+    CURSOR+=$(($#BUFFER - $OLD_BUFFER_LEN))
+    REGION_ACTIVE=1
+    zle redisplay
+}
+bindkey_func '^x^a' select_aliases
 
 # TODO: Instead split vim with new script containing current line and RUN-split
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey "^X^E" edit-command-line
+# autoload -z edit-command-line
+# bindkey_func "^x^e" edit-command-line
 
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
 if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
-run-help-tmux() {
-    for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
-	if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
-	    tmux split -vbp 80 $SHELL -ic "vimman $command"
-	    break
-	fi
-    done
-    zle redisplay
-}
-zle -N run-help-tmux
-bindkey '^[H' run-help-tmux
+    run-help-tmux() {
+	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
+	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
+		tmux split -vbp 80 $SHELL -ic "vimman $command"
+		break
+	    fi
+	done
+	zle redisplay
+    }
+    bindkey_func '^[H' run-help-tmux
 fi
 
 # complete words from tmux pane(s)
@@ -326,8 +335,7 @@ function showbuffers()
     buffers+="Killring:$nl$nl$kr"
     zle -M "$buffers"
 }
-zle -N showbuffers showbuffers
-bindkey "^[o" showbuffers
+bindkey_func "^[o" showbuffers
 
 # Change cursor when switching to vicmd
 zle-keymap-select() { 
