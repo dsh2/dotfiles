@@ -63,7 +63,7 @@ hc keybind $SUPER-Control-k       resize up +$resizestep
 hc keybind $SUPER-Control-l       resize right +$resizestep
 
 # tags
-tag_names=(root www log coms)
+tag_names=(log mail coms root)
 tag_keys=( {1..9} 0 )
 
 hc rename default "${tag_names[0]}" || true
@@ -166,6 +166,10 @@ hc rule focus=on # normally focus new clients
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+
+hc rule instance=crx_nckgahadagoaajjgafhacjanaoiihapd tag=coms focus=on
+hc rule title="Telegram Web - Google Chrome" tag=coms
+hc rule class=Thunderbird tag=mail
 
 # unlock, just to be sure
 hc unlock
