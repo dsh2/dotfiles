@@ -83,11 +83,18 @@ hc keybind $SUPER-comma use_index -1 --skip-visible
 hc keybind $SUPER-2 use_index +1 --skip-visible
 hc keybind $SUPER-period use_index +1 --skip-visible
 # hc keybind $SUPER-2 use_index +1 
+hc keybind $SUPER-3 use_previous
+# TODO: Think about how FO could help here...
+hc keybind $SUPER+9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
+hc keybind $SUPER+0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
+
+hc keybind $SUPER-n chain X add NEW X use NEW X spawn ${BROWSER:-google-chrome-stable} X
 
 # layouting
 hc keybind $SUPER-r remove
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-space spawn sh -c $hc_bin/windowmenu.sh
+hc keybind $SUPER-z chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh
 hc keybind $SUPER-f chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh X
 hc keybind $SUPER-Shift-f fullscreen toggle
 hc keybind $SUPER-p pseudotile toggle
@@ -117,9 +124,7 @@ hc keybind $SUPER-c cycle
 hc keybind $SUPER-i jumpto urgent
 hc keybind $ALT+Shift+1 spawn sh -c "$hc_bin/jumpto.sh chrome"
 hc keybind $ALT+Shift+2 spawn sh -c "$hc_bin/jumpto.sh thunderbird"
-hc keybind $ALT+Shift+3 spawn sh -c "$hc_bin/jumpto.sh ${TERMINAL:-terminal}"
-hc keybind $SUPER+9 use coms
-hc keybind $SUPER+0 use log
+hc keybind $ALT+Shift+3 spawn sh -c "$hc_bin/jumpto.sh ${TERMINAL:-xfce4-terminal}"
 
 # theme
 hc attr theme.tiling.reset 1
