@@ -77,10 +77,12 @@ for i in ${!tag_names[@]} ; do
 done
 
 # cycle through tags
-# hc keybind $SUPER-1 use_index -1 --skip-visible
-hc keybind $SUPER-1 use_index -1 
-# hc keybind $SUPER-2 use_index +1 --skip-visible
-hc keybind $SUPER-2 use_index +1 
+hc keybind $SUPER-1 use_index -1 --skip-visible
+hc keybind $SUPER-comma use_index -1 --skip-visible
+# hc keybind $SUPER-1 use_index -1 
+hc keybind $SUPER-2 use_index +1 --skip-visible
+hc keybind $SUPER-period use_index +1 --skip-visible
+# hc keybind $SUPER-2 use_index +1 
 
 # layouting
 hc keybind $SUPER-r remove
