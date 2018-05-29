@@ -57,7 +57,6 @@ type gdircolors > /dev/null && DIR_COLORS=gdircolors
 if [ -n $DIR_COLORS ]; then
     eval $($DIR_COLORS ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
     # eval $($DIR_COLORS ~/.dotfiles/colors/dircolors-solarized/dircolors.ansi-light)
-    export LS_COLORS
 fi
 # }}}
 
@@ -91,6 +90,7 @@ zshaddhistory() {
     # echo zshaddhistory: line NOT skipped
     print -sr -- ${1%%$'\n'}
     # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    # TODO: log local history for read-only directories somewhere else
     fc -p .zsh_local_history
 }
 # }}}
@@ -117,6 +117,8 @@ bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
 function repeat_immediately {
+    [[ $#BUFFER -eq 0 ]] || return
+    # TODO: && think about something useful
     zle up-history
     zle accept-line
 }
@@ -124,7 +126,7 @@ bindkey_func '^j' repeat_immediately
 
 function focus_backgroud {
     [[ $#BUFFER -eq 0 ]] && fg
-    # TODO: || think about something other useful
+    # TODO: || think about something useful
 }
 bindkey_func '^z' focus_backgroud
 
@@ -497,7 +499,7 @@ env_vars() {
 	fzf \
 	    --tac --multi \
 	    --preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
-    LBUFFER="$LBUFFER echo $( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
+	    --preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
 }
 bindkey_func '^x^e' env_vars
 # }}}
