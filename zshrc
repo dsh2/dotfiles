@@ -463,9 +463,26 @@ env_vars() {
 bindkey_func '^x^e' env_vars
 # }}}
 
-print_variables() { 
-    for v in $*; do 
-	print $v\($#v\) = ${(P)v};
+print_variables() {
+    zparseopts -D -A opts h
+    show_hidden=$+opts[-h]
+    vars=(${*:-${(ko)parameters}})
+    for var in $vars; do
+	type=${(tP)var}
+	print -n -- $var \($type, ${(P)#var}\)
+	if [[ $type = *hideval* && $show_hidden = 0 ]]; then
+	    print  \ = VALUE HIDDEN
+	    continue
+	fi
+	if [[ $type = *assoc* ]]; then
+	    print -n : \(
+	    for k v in ${(kvP)var}; do
+		print -n -- $k: $v,\ 
+	    done
+	    print \)
+	else
+	    print -- \ = ${(P)var}
+	fi
     done 
 }
 
