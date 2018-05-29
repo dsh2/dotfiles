@@ -458,6 +458,10 @@ function space_prepend {
 bindkey_func '^ ' space_prepend
 
 env_vars() {
+    LBUFFER="$LBUFFER$(print_variables |
+	fzf \
+	    --tac --multi \
+	    --preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
     LBUFFER="$LBUFFER echo $( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
 }
 bindkey_func '^x^e' env_vars
