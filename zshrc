@@ -262,16 +262,21 @@ bindkey -s rq "r2 -Nqc '' -"
 
 function start_tmux_logging() 
 { 
+    tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
     # TODO: Add colors to output
+    export ZSH_DEBUG=1
     print -P $LINE_SEPARATOR
     if [[ -v $ZSH_DEBUG ]]; then
-	print literal:  $1
-	# print compact command = \"$2\"
-	print full: $3
+	# print -l params = \"$@\"
+	print literal = \"$1\"
+	# print compact: \"$2\"
+	print full: \"$3\"
+	print time: $(n)
+	print event id: ${$(echo $3 | sha1sum)[1]}
+	print tmux_log_file: $tmux_log_file
 	print -P $LINE_SEPARATOR
     fi
-    # TODO: Do not log for
-    # -vim, htop, mutt, atop, powertop, lnav
+    # TODO: Do not log for INTERACTIVE_COMMANDS
     # TODO: Add logging (probably best in directories) for
     # -exit code
     # -directory (in case .zsh_local_history is not possible)
@@ -279,24 +284,19 @@ function start_tmux_logging()
     # -literal and full command
     # -report times
     # -name of tmux session name
-    whence tmux > /dev/null && 
-	tmux has-session >& /dev/null && 
-	mkdir -p ~/.tmux-log && 
-	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
+    # -create log_file_name from cmdline contents and timestamp as history event
+    #  number does not seem to be stable enough
+    tmux pipe-pane "cat > $tmux_log_file"
 }
 
 function stop_tmux_logging() 
 { 
-    whence tmux > /dev/null && 
-	tmux has-session >& /dev/null && 
-	tmux pipe-pane 
+    [ -z $tmux_log_file ] && return
+    tmux pipe-pane 
+    # HACK: Convert tmux line endings
+    # TODO: Check tmux src
+    sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
-
-autoload -U add-zsh-hook
-add-zsh-hook preexec start_tmux_logging
-add-zsh-hook precmd stop_tmux_logging
-
-add-zsh-hook precmd set_terminal_title
 
 function set_terminal_title() 
 { 
@@ -307,6 +307,17 @@ function set_terminal_title()
     wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
     return 0
 }
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd set_terminal_title
+
+if whence tmux > /dev/null \
+    && tmux has-session >& /dev/null \
+    && mkdir -p ~/.tmux-log ;
+then
+    add-zsh-hook preexec start_tmux_logging
+    add-zsh-hook precmd stop_tmux_logging
+fi 
 
 function showbuffers()
 {
