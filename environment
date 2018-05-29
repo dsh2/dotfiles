@@ -72,7 +72,7 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 export GOPATH=$HOME/src/GO
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy.conf
-export INTERACTIVE_COMMANDS=(vim lnav atop htop r2 ranger)
+export INTERACTIVE_COMMANDS=(atop htop lnav mutt powertop r2 ranger vim)
 export JCOLOR=1
 export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
