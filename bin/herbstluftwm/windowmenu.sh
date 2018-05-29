@@ -17,7 +17,7 @@ action_list() {
     for tag in $(herbstclient complete 1 move); do
 	if [ "$tag" != "$current_tag" ]; then
 	    "$a" "Move to '$tag'" herbstclient move "$tag"
-	    "$a" "Move to '$tag' and focus" herbstclient chain X move "$tag" X use "$tag" X
+	    "$a" "Move to '$tag' and focus" herbstclient chain I move "$tag" I use "$tag"
 	fi
     done
 }
