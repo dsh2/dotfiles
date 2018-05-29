@@ -360,19 +360,39 @@ fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
 fpath+=~/src/RE/radare2/doc/zsh
 
-autoload -U compinit && compinit
 zmodload zsh/complist
+autoload -U compinit && compinit
+autoload -U zed
 
 # TODO: check fpath vs. source
 source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
 source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
-bindkey -M menuselect '^[[z' reverse-menu-complete
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
+bindkey -M menuselect '^l^l' forward-char
 bindkey -M menuselect '^h' backward-char
+bindkey -M menuselect '^f' forward-word
+bindkey -M menuselect '^b' backward-word
+bindkey -M menuselect '^ ' accept-and-hold
+bindkey -M menuselect '^o' accept-and-infer-next-history
+# TODO: Add infer-next-history-or-accept
+# bindkey -M menuselect '^m' accept-and-infer-next-history
+bindkey -M menuselect '^n' vi-forward-blank-word
+# TODO: 
+# -patch zsh to support custom widgets
+# -patch zsh to support vi-backward-blank-word-first natively
+# vi-backward-blank-word-first() {
+#     zle vi-backward-blank-word
+#     zle vi-backward-blank-word
+#     zle vi-forward-blank-word
+# }
+# zle -N vi-backward-blank-word-first
+bindkey -M menuselect '^p' vi-backward-blank-word
+bindkey -M menuselect '/' vi-insert
 
 # TODO: Add comments what we suppose to achive with all the zstyles
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
