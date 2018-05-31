@@ -541,11 +541,14 @@ set cmdwinheight=10
 set complete+=k
 set concealcursor=n
 set conceallevel=0
+set diffopt=
+" set diffopt=filler,context:4
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
 set foldlevelstart=99
-set foldopen=hor,mark,percent,quickfix,search,tag,undo
+" set foldopen=hor,mark,percent,quickfix,search,tag,undo
+set foldopen=hor,mark,percent,quickfix,tag
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
