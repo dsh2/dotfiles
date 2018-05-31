@@ -30,6 +30,7 @@ hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn python ~/.dotfiles/bin/rofimoji.py
 
+# TODO: make frame disappear after last windows 
 hc keybind $SUPER-Shift-q close
 hc keybind $SUPER-Shift-r reload
 hc keybind $SUPER-Return spawn ${TERMINAL:-xfce4-terminal} # use your $TERMINAL with xterm as fallback
@@ -57,10 +58,10 @@ hc keybind $SUPER-Control-space split explode
 
 # resizing frames
 resizestep=0.05
-hc keybind $SUPER-Control-h       resize left +$resizestep
-hc keybind $SUPER-Control-j       resize down +$resizestep
-hc keybind $SUPER-Control-k       resize up +$resizestep
-hc keybind $SUPER-Control-l       resize right +$resizestep
+hc keybind $SUPER-Shift-h resize left +$resizestep
+hc keybind $SUPER-Shift-j resize down +$resizestep
+hc keybind $SUPER-Shift-k resize up +$resizestep
+hc keybind $SUPER-Shift-l resize right +$resizestep
 
 # tags
 tag_names=(log mail coms root)
