@@ -49,6 +49,7 @@ nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>o
 nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>o
 nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
+nmap <leader>gp :Gpush<cr>
 nmap <leader>gw :Gwrite<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 autocmd FileType gitcommit map <buffer> ; odvjlzi
