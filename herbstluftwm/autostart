@@ -44,10 +44,10 @@ hc keybind $SUPER-k chain X fullscreen false X focus up
 hc keybind $SUPER-l chain X fullscreen false X focus right
 
 # moving clients
-hc keybind $SUPER-Shift-h shift left
-hc keybind $SUPER-Shift-j shift down
-hc keybind $SUPER-Shift-k shift up
-hc keybind $SUPER-Shift-l shift right
+hc keybind $SUPER-$CTRL-h shift left
+hc keybind $SUPER-$CTRL-j shift down
+hc keybind $SUPER-$CTRL-k shift up
+hc keybind $SUPER-$CTRL-l shift right
 
 # splitting frames
 # create an empty frame at the specified direction
