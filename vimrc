@@ -154,17 +154,19 @@ Plug 'kana/vim-textobj-lastpat'
 Plug 'vim-scripts/argtextobj.vim'
 Plug 'vim-utils/vim-space'
 " }}}
-" github dashboard {{{
-Plug 'junegunn/vim-github-dashboard'
-let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
-" }}}
-" Taboo {{{
-Plug 'gcmt/taboo.vim'
-let g:taboo_tab_format = " %N|%P%f%m%U "
-let g:taboo_renamed_tab_format =" %N|%l%m%U "
+Plug 'gcmt/taboo.vim' "{{{
+let g:taboo_tab_format = "[%N|%f%m(%W)] "
+" let g:taboo_tab_format = "[%N|%a/%f%m(%W)] "
+let g:taboo_renamed_tab_format ="[%N|%l%m(%W)] "
+nmap <leader>tR :TabooReset<cr>
+nmap <leader>tr :TabooRename 
+nmap <leader>to :TabooOpen 
 nmap <leader>, gT
 nmap <leader>. gt
+map <c-1> gT
+map <c-2> gt
 nmap <leader>N :tabnew<cr>
+nmap <leader>tn :$tabnew<cr>
 nmap <leader>tc :tabclose<cr>
 " }}}
 " ToggleList {{{
