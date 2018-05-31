@@ -159,6 +159,7 @@ hc set smart_window_surroundings 0
 hc set smart_frame_surroundings 1
 hc set mouse_recenter_gap 0
 hc set auto_detect_monitors 1
+hc set focus_stealing_prevention 0
 hc set swap_monitors_to_get_tag 1
 hc set raise_on_focus 0
 # hc set tree_style '╾│ ├└╼─┐'
