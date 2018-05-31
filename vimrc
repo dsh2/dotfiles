@@ -604,9 +604,8 @@ map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
 map <leader><c-L> :redraw!<cr>
-nnoremap <C-W>M <C-W>\| <C-W>_
-nnoremap <C-W>m <C-W>=
-
+nnoremap <C-W>m <C-W>\| <C-W>_
+nnoremap <C-W>M <C-W>=
 nmap <leader>o :silent !open "%"<cr>
 
 " Split navigations
