@@ -172,7 +172,7 @@ let g:pandoc#formatting#extra_equalprg="--atx-headers"
 " let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
 let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
 "}}}
-Plug 'chrisbra/csv.vim' "{{{
+Plug 'chrisbra/csv.vim', { 'for':  'csv' } "{{{
 " hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 " hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 " hi link CSVColumnOdd MoreMsg
@@ -207,7 +207,7 @@ Plug 'elzr/vim-json' "{{{
 " autocmd FileType json set conceallevel=0
 let g:vim_json_syntax_concealcursor = 0
 " }}}
-Plug 'scrooloose/nerdtree' , { 'on':  'NERDTreeFind' } "{{{
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' } "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
 let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
 let NERDTreeShowHidden=1
