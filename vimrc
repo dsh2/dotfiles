@@ -531,7 +531,8 @@ colorscheme Tomorrow-Night
 " colorscheme solarized
 
 " set verbose=1
-let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/", "_", "g")
+" let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
+let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
 set autoindent
 set autowrite
 set backspace=indent,eol,start
