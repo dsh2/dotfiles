@@ -1,5 +1,4 @@
-" vim: set foldmethod=marker foldlevel=0:
-" .vimrc of dsh2 {{{
+" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3
 let mapleader = "\<Space>""
 " Plugins {{{
 set nocompatible
@@ -510,6 +509,7 @@ Plug 'skywind3000/asyncrun.vim'
 map <leader>B :AsyncRun binwalk %<cr>
 augroup vimrc
     autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
+    nnoremap <buffer> <silent> <cr> 0f/lgf
 augroup END
 
 " Plug 'justinmk/vim-sneak'
