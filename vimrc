@@ -10,14 +10,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 call plug#begin('~/.vim/plugged')
 " }}}
-Plug 'Shougo/unite.vim' "{{{
-nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
-nnoremap <silent> <F3> :Unite buffer<cr>
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'Shougo/neomru.vim'
-let g:neomru#time_format='%F %T '
-let g:neomru#update_interval=60
-"}}}
 Plug 'junegunn/fzf' "{{{
 Plug 'junegunn/fzf.vim'
 let g:fzf_prefer_tmux = 0
@@ -49,8 +41,23 @@ map <leader>lL :FzfLines<cr>
 map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
 " }}}
-Plug 'junegunn/vim-github-dashboard' "{{{
-let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
+Plug 'tpope/vim-fugitive' "{{{
+" HELP: Find out why the screwed up map works and the other one NOT!
+" nmap <leader>gd :Gvdiff<cr><c-w>l
+nmap <leader>gd :Gvdiff<cr>:ERROR<cr>:wincmd L<cr>
+nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>o
+nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>o
+nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
+nmap <leader>gb :Gblame<cr>
+nmap <leader>gw :Gwrite<cr>
+nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
+autocmd FileType gitcommit map <buffer> ; odvjlzi
+autocmd FileType gitcommit map <buffer> pp :Gpull<cr>
+autocmd FileType gitcommit map <buffer> P :Gpush<cr>
+" autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
+" Enable spell checking for commit messages
+autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
+autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " }}}
 Plug 'junegunn/gv.vim' "{{{
 nmap <leader>gv :GV<cr>
@@ -67,7 +74,18 @@ let g:gitgutter_override_sign_column_highlight = 1
 highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
 " }}}
-Plug 'will133/vim-dirdiff' "{{{
+Plug 'junegunn/vim-github-dashboard', {'on': 'GHActivity'} "{{{
+let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
+" }}}
+Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
+nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
+nnoremap <silent> <F3> :Unite buffer<cr>
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'Shougo/neomru.vim'
+let g:neomru#time_format='%F %T '
+let g:neomru#update_interval=60
+"}}}
+Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
@@ -90,33 +108,13 @@ nnoremap <C-p> :call QfLlPrevious()<cr>
 " FIXME: does not work :(
 autocmd FileType qf set norelativenumber
 autocmd FileType qf wincmd J
-Plug 'hari-rangarajan/CCTree'
+"}}}
+Plug 'hari-rangarajan/CCTree' "{{{
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
 " TODO: 
 " -add command to load db to cscope load event
 " -use async-run or similar for that
-" }}}
-" Plug YouCompleteMe {{{
-" function! BuildYCM(info)
-"   if a:info.status == 'installed' || a:info.force
-"     !./install.py
-"   endif
-" endfunction
-" let g:loaded_youcompleteme = 0
-" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-" let g:ycm_autoclose_preview_window_after_insertion = 1
-" nnoremap <leader>jj :YcmCompleter GoTo<CR>
-" nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-" nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
-" nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
-" nnoremap <leader>jt :YcmCompleter GetType<CR>
-" nnoremap <leader>jk :YcmCompleter GetDoc<CR>
-" let g:ycm_error_symbol="E>"
-" let g:yvm_warning_symbol="W>"
-" let g:ycm_enable_diagnostic_highlighting=1
-" let g:ycm_collect_identifiers_from_comments_and_strings=1
-" let g:ycm_collect_identifiers_from_tags_files=1
 " }}}
 " Plug 'text objects' {{{
 Plug 'kana/vim-textobj-user'
@@ -149,7 +147,7 @@ nmap <silent> <leader><c-j> :colder<CR>
 nmap <silent> <leader><c-k> :cnewer<CR>
 nmap <silent> <leader>O :copen<CR>
 " }}}
-Plug 'mbbill/undotree' "{{{
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 " let g:undotree_DiffCommand = "diff -y"
@@ -158,7 +156,7 @@ let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
 " }}}
-Plug 'vim-pandoc/vim-pandoc' "{{{
+Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level = 9
 " let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
@@ -172,7 +170,7 @@ let g:pandoc#formatting#extra_equalprg="--atx-headers"
 " let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
 let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
 "}}}
-Plug 'chrisbra/csv.vim', { 'for':  'csv' } "{{{
+Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
 " hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 " hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 " hi link CSVColumnOdd MoreMsg
@@ -187,27 +185,27 @@ let g:csv_autocmd_arrange = 1
 map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline = 0<cr>
 autocmd BufRead,BufNewFile *.csv set filetype=csv
 " }}}
-Plug 'hsanson/vim-android' "{{{
-let g:android_sdk_path = $ANDROID_SDK_ROOT
-let g:android_airline_android_glyph = 'U+f17b'
-" }}}
-Plug 'kelwin/vim-smali' "{{{
+" Plug 'hsanson/vim-android' "{{{
+" let g:android_sdk_path = $ANDROID_SDK_ROOT
+" let g:android_airline_android_glyph = 'U+f17b'
+" " }}}
+Plug 'kelwin/vim-smali', {'for': 'smali'} "{{{
 "Plug 'alderz/smali-vim'
 autocmd BufRead *.smali set filetype=smali
 " }}}
-Plug 'xolox/vim-lua-ftplugin' "{{{
+Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 Plug 'xolox/vim-misc'
 " }}}
-Plug 'vim-scripts/indentpython.vim' "{{{
+Plug 'vim-scripts/indentpython.vim', {'for': 'python'} "{{{
 " Plug 'nvie/vim-flake8'
 " Plug 'davidhalter/jedi-vim'
 " let g:jedi#use_splits_not_buffers = "right"
 " }}}
-Plug 'elzr/vim-json' "{{{
+Plug 'elzr/vim-json', {'for': 'json'}  "{{{
 " autocmd FileType json set conceallevel=0
 let g:vim_json_syntax_concealcursor = 0
 " }}}
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeFind' } "{{{
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeFind' } "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
 let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
 let NERDTreeShowHidden=1
@@ -230,36 +228,11 @@ map gX OpenBrowserCurrent
 "         \    'args': ['start', '{browser}', '{uri}']}
 "         \]
 "}}}
-Plug 'rhysd/open-pdf.vim' "{{{
+Plug 'rhysd/open-pdf.vim', {'for': 'pdf'}  "{{{
 let g:pdf_convert_on_edit = 1
 let g:pdf_convert_on_read = 1
 " }}}
-" Plug 'scrooloose/syntastic' "{{{
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_lua_checkers = ["luac", "luacheck"]
-" let g:syntastic_lua_luacheck_args = "--no-unused-args"
-" let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
-" let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
-" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-" let g:go_list_type = "quickfix"
-" }}}
-Plug 'w0rp/ale' "{{{
-let g:airline#extensions#ale#enabled = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_open_list = 0
-let g:ale_keep_list_window_open = 1
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = "never"
-" }}}
-" Plug 'vim-scripts/taglist.vim'{{{
+" Plug 'vim-scripts/taglist.vim', {'on': 'TlistToggle'}  {{{
 " let Tlist_Use_Right_Window = 1
 " let Tlist_WinWidth = 55
 " let Tlist_Display_Prototype = 1
@@ -270,7 +243,7 @@ let g:ale_lint_on_text_changed = "never"
 " let Tlist_Show_One_File = 1
 " map <leader>t :TlistToggle<cr>
 " }}}
-Plug 'majutsushi/tagbar' " {{{
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}  " {{{
 let g:tagbar_autoclose = 0
 let g:tagbar_width = 50
 let g:tagbar_zoomwidth = 0
@@ -326,14 +299,14 @@ highlight MarkologyHLl ctermfg=Cyan ctermbg=black
 highlight MarkologyHLu ctermfg=Cyan ctermbg=black
 highlight MarkologyHLo ctermfg=Cyan ctermbg=black
 " }}}
-" Plug 'mileszs/ack.vim'{{{
+" Plug 'mileszs/ack.vim', {'on': 'Ack'} {{{
 " let g:ackhighlight = 1
 " let g:ack_autofold_results = 0
 " let g:ackpreview = 0
 " let g:ack_use_dispatch = 1
 " map <leader>a :Ack! \\b<cword\\b><CR>
 " }}}
-Plug 'brookhong/ag.vim' "{{{
+Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
 map <leader>a :Ag! \\b<cword\\b><CR>
 "}}}
 Plug 'bling/vim-airline' "{{{
@@ -354,18 +327,18 @@ map <leader>m :update<cr>:Make<cr>
 Plug 'sickill/vim-pasta' "{{{
 let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 "}}}
-Plug 'christoomey/vim-system-copy' "{{{
+Plug 'vim-scripts/AnsiEsc.vim', {'on': 'AnsiEsc'} "{{{
 map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
 map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
 "}}}
-Plug 'romgrk/winteract.vim' "{{{
+Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 nmap gw :InteractiveWindow<CR>
 "}}}
-Plug 'Shougo/vinarise.vim' "{{{
+Plug 'Shougo/vinarise.vim', {'on': 'Vinarise'} "{{{
 map <leader>V :Vinarise<cr>
 "}}}
-Plug 'nathanaelkane/vim-indent-guides' "{{{
+Plug 'nathanaelkane/vim-indent-guides', {'on': 'IndentGuidesToggle'} "{{{
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 "}}}
@@ -374,7 +347,7 @@ let g:peekaboo_window = 'vertical botright 51new'
 let g:peekaboo_delay = 0
 let g:peekaboo_compact = 0
 "}}}
-Plug 'Chiel92/vim-autoformat' "{{{
+Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 let g:autoformat_verbosemode=0
 map <leader>A :Autoformat<cr>
 "}}}
@@ -385,19 +358,19 @@ autocmd FileType shell setlocal commentstring=#\ %s
 autocmd FileType shell setlocal commentstring=#\ %s
 autocmd FileType i3config setlocal commentstring=#\ %s
 "}}}
-Plug 'fatih/vim-go' "{{{
+Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
 "}}}
-Plug 'dsh2/diff-fold.vim' "{{{
+Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
 autocmd FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 hi Folded cterm=NONE
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 "}}}
-Plug 'idanarye/vim-merginal' "{{{
+Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
 map <leader>gm :MerginalToggle<cr>
 map <leader>y :MerginalToggle<cr>
 "}}}
-Plug 'skywind3000/asyncrun.vim' "{{{
+Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 augroup vimrc
     autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
@@ -409,35 +382,62 @@ let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 " }}}
-Plug 'flatcap/vim-keyword' "{{{
+Plug 'flatcap/vim-keyword', {'on': 'KeywordToggle'} "{{{
 " TODO: Make this work
-map <leader>k <plug>KeywordToggle\|:set nohlsearch<cr>
+map <leader>k <plug>KeywordToggle
 map <leader>K :call keyword#KeywordClear()<cr>
 let g:keyword_group = 'keyword_group'
 " let g:keyword_highlight = 'ctermbg=darkred cterm=underline'
 let g:keyword_highlight = 'ctermbg=darkred'
 "}}}
-" Plug git {{{
-Plug 'tpope/vim-fugitive'
-" HELP: Find out why the screwed up map works and the other one NOT!
-" nmap <leader>gd :Gvdiff<cr><c-w>l
-nmap <leader>gd :Gvdiff<cr>:ERROR<cr>:wincmd L<cr>
-nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>o
-nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>o
-nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
-nmap <leader>gb :Gblame<cr>
-nmap <leader>gw :Gwrite<cr>
-nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
-autocmd FileType gitcommit map <buffer> ; odvjlzi
-autocmd FileType gitcommit map <buffer> pp :Gpull<cr>
-autocmd FileType gitcommit map <buffer> P :Gpush<cr>
-" autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
-" Enable spell checking for commit messages
-autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
-autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
+" Plug 'scrooloose/syntastic' "{{{
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_lua_checkers = ["luac", "luacheck"]
+" let g:syntastic_lua_luacheck_args = "--no-unused-args"
+" let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
+" let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
+" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+" let g:go_list_type = "quickfix"
 " }}}
-" Plug tmux stuff{{{
-Plug 'tmux-plugins/vim-tmux'
+Plug 'w0rp/ale' "{{{
+let g:airline#extensions#ale#enabled = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_open_list = 0
+let g:ale_keep_list_window_open = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = "never"
+" }}}
+" Plug YouCompleteMe {{{
+" function! BuildYCM(info)
+"   if a:info.status == 'installed' || a:info.force
+"     !./install.py
+"   endif
+" endfunction
+" let g:loaded_youcompleteme = 0
+" Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+" let g:ycm_autoclose_preview_window_after_insertion = 1
+" nnoremap <leader>jj :YcmCompleter GoTo<CR>
+" nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+" nnoremap <leader>jD :YcmCompleter GoToDeclaration<CR>
+" nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+" nnoremap <leader>jt :YcmCompleter GetType<CR>
+" nnoremap <leader>jk :YcmCompleter GetDoc<CR>
+" let g:ycm_error_symbol="E>"
+" let g:yvm_warning_symbol="W>"
+" let g:ycm_enable_diagnostic_highlighting=1
+" let g:ycm_collect_identifiers_from_comments_and_strings=1
+" let g:ycm_collect_identifiers_from_tags_files=1
+" }}}
+" Plug tmux {{{
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 autocmd BufRead tmux.conf set filetype=tmux
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wellle/tmux-complete.vim'
@@ -468,16 +468,17 @@ Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'bumaociyuan/vim-matchit'
 Plug 'chrisbra/Recover.vim'
+Plug 'christoomey/vim-system-copy'
 Plug 'dkprice/vim-easygrep'
 Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
 Plug 'dsh2/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'ervandew/matchem'
-Plug 'francoiscabrol/ranger.vim'
+Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
 Plug 'junegunn/rainbow_parentheses.vim'
-Plug 'lzap/vim-selinux'
-Plug 'maksimr/vim-yate'
-Plug 'mboughaba/i3config.vim'
+Plug 'lzap/vim-selinux', {'for': 'te'}
+Plug 'maksimr/vim-yate', {'for': 'yate'}
+Plug 'mboughaba/i3config.vim', {'for': 'i3config'}
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'tpope/vim-afterimage'
 Plug 'tpope/vim-dadbod'
@@ -485,10 +486,10 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-tbone'
 Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'vim-scripts/VCard-syntax'
-Plug 'vim-scripts/info.vim'
-Plug 'vim-scripts/renamer.vim'
-Plug 'wannesm/wmgraphviz.vim'
+Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
+Plug 'vim-scripts/info.vim', {'on': 'Info'}
+Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
+Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 " }}}
 call plug#end()
@@ -518,7 +519,7 @@ set encoding=utf8
 set exrc
 set foldlevelstart=99
 " set foldopen=hor,mark,percent,quickfix,search,tag,undo
-set foldopen=hor,mark,percent,quickfix,tag
+set foldopen=hor,quickfix,tag
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
