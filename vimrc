@@ -355,7 +355,7 @@ let g:tagbar_type_go = {
 	    \ 'ctagsargs' : '-sort -silent'
 	    \ }
 autocmd VimEnter * nested :call tagbar#autoopen(1)
-map <leader>t :TagbarToggle<cr>
+map <leader>tt :TagbarToggle<cr>
 autocmd FileType tagbar map <buffer> ; p
 autocmd FileType tagbar map <buffer> l za
 autocmd FileType tagbar map <buffer> h za
