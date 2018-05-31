@@ -30,7 +30,7 @@ hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn python ~/.dotfiles/bin/rofimoji.py
 
-# TODO: make frame disappear after last windows 
+# TODO: make frame disappear after last window was closed
 hc keybind $SUPER-Shift-q close
 hc keybind $SUPER-Shift-r reload
 hc keybind $SUPER-Return spawn ${TERMINAL:-xfce4-terminal} # use your $TERMINAL with xterm as fallback
@@ -111,7 +111,6 @@ hc keybind $SUPER-t                                                           \
 hc mouseunbind --all
 hc mousebind $SUPER-Button1 move
 hc mousebind $SUPER-Button2 zoom
-hc mousebind $CTRL-$SUPER-$ALT-Button2 call close-or-remove
 hc mousebind $SUPER-Button3 resize
 hc mousebind Mod1-B4 call substitute WID clients.dragged.winid spawn transset --inc -i WID 0.05
 hc mousebind Mod1-B5 call substitute WID clients.dragged.winid spawn transset --dec -i WID -m 0.2
