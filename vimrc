@@ -590,6 +590,7 @@ nmap <leader>DS :vertical diffsplit<CR>
 " TODO: Clean this up...
 nnoremap <leader>cd :execute ":lcd " . substitute(expand("%:p:h"), ' ', '\\ ', 'g')<cr>:pwd<cr>"<cr>
 nnoremap U <c-r>
+nmap <c-q> :cq<cr>
 
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
