@@ -69,6 +69,8 @@ map <leader>w :FzfWindows<cr>
 " Git {{{
 Plug 'tpope/vim-fugitive'
 nmap <leader>gd :Gvdiff<cr>
+nmap <leader>gc :Gcommit --verbose<cr>
+nmap <leader>gC :Gcommit --verbose --amend<cr>
 nmap <leader>gs :tabnew<cr>:Gstatus<cr>
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
