@@ -408,8 +408,10 @@ Plug 'Valloric/vim-operator-highlight'
 Plug 'brookhong/ag.vim'
 
 " }}}
-" VimAirline {{{
-Plug 'bling/vim-airline'
+Plug 'brookhong/ag.vim' "{{{
+map <leader>a :Ag! \\b<cword\\b><CR>
+"}}}
+Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
