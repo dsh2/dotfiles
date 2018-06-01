@@ -148,6 +148,9 @@ nmap <leader>N :tabnew<cr>:pwd<cr>
 nmap <leader>tn :$tabnew<cr>
 nmap <leader>tc :tabclose<cr>
 " }}}
+Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
+map <leader>f :Ranger<cr>
+"}}}
 Plug 'milkypostman/vim-togglelist' "{{{
 nmap <silent> <leader><c-j> :colder<CR>
 nmap <silent> <leader><c-k> :cnewer<CR>
