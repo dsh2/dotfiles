@@ -123,6 +123,7 @@ gcb() {
 	    sort -r | 
 	    fzf \
 		--ansi \
+		--bind 'ctrl-x:execute(cut -f 3 <<< {} | xclip -selection clipboard -in)' \
 		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " \
 		--multi | 
 	    cut -f 3) &&
