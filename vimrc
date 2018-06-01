@@ -61,7 +61,6 @@ autocmd FileType gitcommit map <buffer> ; odvlzi
 " Enable spell checking for commit messages
 autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | nunmap ;
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
-autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " }}}
 Plug 'junegunn/gv.vim' "{{{
 nmap <leader>gv :GV<cr>
@@ -615,8 +614,6 @@ autocmd BufReadPost *.log :set filetype=messages
 "}}}
 " Restore last position in file upon opening a file{{{
 autocmd BufReadPost * call RestorePosition()
-autocmd VimLeave * mksession! ~/.vim/lastsession
-
 function! RestorePosition()
     if !exists("b:_goto_pos") || b:_goto_po
 	if line("'\"") > 0
@@ -630,6 +627,12 @@ function! RestorePosition()
 	let b:_goto_pos = 1
     endif
 endfunction
+"}}}
+" Setup session handling{{{
+" TODO:
+" -prepend timestamp to session name
+" -save session periodically
+autocmd VimLeave * mksession! ~/.vim/lastsession
 "}}}
 " Configure help system {{{
 runtime! ftplugin/man.vim
