@@ -59,7 +59,7 @@ autocmd FileType gitcommit map <buffer> ; odvlzi
 " autocmd FileType gitcommit map <buffer> ; :only<cr>dv
 " autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
-autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | nunmap ;
+autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 " }}}
 Plug 'junegunn/gv.vim' "{{{
