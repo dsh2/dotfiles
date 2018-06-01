@@ -247,7 +247,7 @@ let g:pdf_convert_on_read = 1
 " let Tlist_Show_One_File = 1
 " map <leader>t :TlistToggle<cr>
 " }}}
-Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}  " {{{
+Plug 'majutsushi/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
 let g:tagbar_autoclose = 0
 let g:tagbar_width = 50
 let g:tagbar_zoomwidth = 0
@@ -370,7 +370,9 @@ autocmd FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 hi Folded cterm=NONE
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 "}}}
-Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
+" TODO: Find out why on-load tag does not work
+" Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
+Plug 'idanarye/vim-merginal' "{{{
 map <leader>gm :MerginalToggle<cr>
 map <leader>y :MerginalToggle<cr>
 "}}}
@@ -698,7 +700,7 @@ function! s:RelaxSearchPattern() abort
     let @/=substitute(@/, "^\\V", "", "g")
     let @/=substitute(@/, "_", ".*", "g")
     let @/=substitute(@/, " ", ".*", "g")
-    let @/ = inputdialog("@/: ", @/)
+    let @/ = inputdialog("New search pattern: ", @/)
 endfunction
 " TODO: Find out why first mapping does not work
 " nmap <leader>/ call RelaxSearchPattern()
