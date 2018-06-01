@@ -14,6 +14,9 @@ Plug 'junegunn/fzf' "{{{
 Plug 'junegunn/fzf.vim'
 let g:fzf_prefer_tmux = 0
 let g:fzf_command_prefix = 'Fzf'
+" TODO
+" -make edit of command default (not c-e)
+" -add support for Redir
 nmap <c-r> :FzfHistory:<cr>
 nmap <c-e> :FzfHistory/<cr>
 let g:fzf_tags_command = 'ctags -R'
@@ -71,11 +74,12 @@ autocmd FileType GV map <buffer> ; o
 autocmd FileType GV map <buffer> l ;
 autocmd FileType GV map <buffer>  O
 " }}}
-Plug 'airblade/vim-gitgutter' "{{{
+Plug 'airblade/vim-gitgutter', {'on': 'GitGutterToggle'} "{{{
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
 highlight clear SignColumn
 highlight GitGutterAdd ctermbg=black
+map <leader>gG :GitGutterToggle<cr>
 " }}}
 Plug 'junegunn/vim-github-dashboard', {'on': 'GHActivity'} "{{{
 let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
@@ -254,7 +258,8 @@ let g:pdf_convert_on_read = 1
 " }}}
 Plug 'majutsushi/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
 let g:tagbar_autoclose = 0
-let g:tagbar_width = 50
+" TODO: Add support for percent instead of number of characters
+let g:tagbar_width = 40
 let g:tagbar_zoomwidth = 0
 let g:tagbar_compact = 1
 let g:tagbar_indent = 1
