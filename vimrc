@@ -44,19 +44,22 @@ map <leader>w :FzfWindows<cr>
 Plug 'tpope/vim-fugitive' "{{{
 " HELP: Find out why the screwed up map works and the other one NOT!
 " nmap <leader>gd :Gvdiff<cr><c-w>l
-nmap <leader>gd :Gvdiff<cr>:ERROR<cr>:wincmd L<cr>
-nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>o
-nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>o
+nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
+nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
+nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
+nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>:only<cr>
 nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gp :Gpush<cr>
 nmap <leader>gw :Gwrite<cr>
+nmap <leader>gg :Git 
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
-autocmd FileType gitcommit map <buffer> ; odvjlzi
-autocmd FileType gitcommit map <buffer> pp :Gpull<cr>
-autocmd FileType gitcommit map <buffer> P :Gpush<cr>
+" TODO: Find out why this end up in the left window
+autocmd FileType gitcommit map <buffer> ; odvlzi
+" autocmd FileType gitcommit map <buffer> ; :only<cr>dv
 " autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
+autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | nunmap ;
 autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell
 " }}}
