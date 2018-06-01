@@ -1,69 +1,58 @@
-#!/usr/bin/env bash
-set -x
-
-hc() {
-    herbstclient "$@"
-}
+#!env bash
+# vim: foldmethod=marker 
+hc() { herbstclient "$@"; }
+# Reset configuration{{{
 hc_bin=$HOME/.dotfiles/bin/herbstluftwm
-
 hc emit_hook reload
-
-# x3setroot -solid '#5A8E3A'
-xsetroot -solid '#000000'
-xset -b -c r rate 200 140
+hc keyunbind --all
+hc unrule -F
+#}}}
+# External autostart{{{
+$hc_bin/alt-tab.sh&
 shutter &
 parcellite &
 dunst &
 xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep &
-
-# remove all existing keybindings
-hc keyunbind --all
-
-# keybindings
+xset -b -c r rate 200 140
+#}}}
+# Aliases{{{
 SUPER=Mod4
 ALT=Mod1
 CTRL=Control
-
-# rofi
+#}}}
+# Keybindings for rofi{{{
 hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}' 
 hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn python ~/.dotfiles/bin/rofimoji.py
-
+#}}}
+# Miscellaneous keybindings{{{
 # TODO: make frame disappear after last window was closed
 hc keybind $SUPER-Shift-q close
 hc keybind $SUPER-Shift-r reload
-hc keybind $SUPER-Return spawn ${TERMINAL:-xfce4-terminal} # use your $TERMINAL with xterm as fallback
-
-# basic movement
-# focusing clients
-# TODO: Not only fullscreen false but unmaximize.sh
-hc keybind $SUPER-h chain X fullscreen false X focus left
-hc keybind $SUPER-j chain X fullscreen false X focus down
-hc keybind $SUPER-k chain X fullscreen false X focus up
-hc keybind $SUPER-l chain X fullscreen false X focus right
-
-# moving clients
+hc keybind $SUPER-Return spawn ${TERMINAL:-xfce4-terminal} 
+#}}}
+# Keybindings for moving clients{{{
 hc keybind $SUPER-$CTRL-h shift left
 hc keybind $SUPER-$CTRL-j shift down
 hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
-
-# splitting frames
+#}}}
+# Keybindings for splitting frames{{{
 # create an empty frame at the specified direction
 hc keybind $SUPER-u split   bottom  0.5
 hc keybind $SUPER-o split   right   0.5
 # let the current frame explode into subframes
 hc keybind $SUPER-Control-space split explode
-
-# resizing frames
+#}}}
+# Keybindings for resizing frames{{{
 resizestep=0.05
 hc keybind $SUPER-Shift-h resize left +$resizestep
 hc keybind $SUPER-Shift-j resize down +$resizestep
 hc keybind $SUPER-Shift-k resize up +$resizestep
 hc keybind $SUPER-Shift-l resize right +$resizestep
-
-# tags
+#}}}
+# Setup basic tags{{{
 tag_names=(log mail coms root)
 tag_keys=( {1..9} 0 )
 
@@ -76,8 +65,8 @@ for i in ${!tag_names[@]} ; do
         hc keybind "$SUPER-Shift-$key" move_index "$i"
     fi
 done
-
-# cycle through tags
+#}}}
+# Keybindings to cycle through tags{{{
 hc keybind $SUPER-1 use_index -1 --skip-visible
 hc keybind $SUPER-comma use_index -1 --skip-visible
 # hc keybind $SUPER-1 use_index -1 
@@ -88,10 +77,8 @@ hc keybind $SUPER-3 use_previous
 # TODO: Think about how FO could help here...
 hc keybind $SUPER+9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
 hc keybind $SUPER+0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
-
-hc keybind $SUPER-n chain X add NEW X use NEW X spawn ${BROWSER:-google-chrome-stable} X
-
-# layouting
+#}}}
+# Keybindings to change layout{{{
 hc keybind $SUPER-r remove
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-space spawn sh -c $hc_bin/windowmenu.sh
@@ -102,12 +89,11 @@ hc keybind $SUPER-p pseudotile toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
-hc keybind $SUPER-t                                                           \
-            or , and . compare tags.focus.curframe_wcount = 2                   \
-                     . cycle_layout +1 vertical horizontal max vertical grid    \
-               , cycle_layout +1
-
-# mouse
+hc keybind $SUPER-e \
+	or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal grid \
+		, cycle_layout +1 vertical horizontal
+#}}}
+# Mouse bindings{{{
 hc mouseunbind --all
 hc mousebind $SUPER-Button1 move
 hc mousebind $SUPER-Button2 zoom
@@ -115,8 +101,8 @@ hc mousebind $SUPER-Button3 resize
 hc mousebind Mod1-B4 call substitute WID clients.dragged.winid spawn transset --inc -i WID 0.05
 hc mousebind Mod1-B5 call substitute WID clients.dragged.winid spawn transset --dec -i WID -m 0.2
 hc set focus_follows_mouse 1
-
-# focus
+#}}}
+# Keybindings to change focus{{{
 hc keybind $SUPER-BackSpace   cycle_monitor
 # hc keybind $SUPER-Tab         cycle_all +1
 # hc keybind $SUPER-Shift-Tab   cycle_all -1
@@ -125,8 +111,16 @@ hc keybind $SUPER-i jumpto urgent
 hc keybind $ALT+Shift+1 spawn sh -c "$hc_bin/jumpto.sh chrome"
 hc keybind $ALT+Shift+2 spawn sh -c "$hc_bin/jumpto.sh thunderbird"
 hc keybind $ALT+Shift+3 spawn sh -c "$hc_bin/jumpto.sh ${TERMINAL:-xfce4-terminal}"
-
-# theme
+hc keybind $SUPER-n chain X add NEW X use NEW X spawn ${BROWSER:-google-chrome-stable} X
+# TODO: Not only fullscreen false but unmaximize.sh
+hc keybind $SUPER-h chain X fullscreen false X focus left
+hc keybind $SUPER-j chain X fullscreen false X focus down
+hc keybind $SUPER-k chain X fullscreen false X focus up
+hc keybind $SUPER-l chain X fullscreen false X focus right
+#}}}
+# Colortheme{{{
+xsetroot -solid '#000000'
+# x3setroot -solid '#5A8E3A'
 hc attr theme.tiling.reset 1
 hc attr theme.floating.reset 1
 hc set frame_border_active_color '#222222'
@@ -151,7 +145,8 @@ hc attr theme.floating.outer_color black
 hc attr theme.active.inner_color '#3E4A00'
 hc attr theme.active.outer_color '#3E4A00'
 hc attr theme.background_color '#141414'
-
+#}}}
+# Settings{{{
 hc set window_gap 0
 hc set frame_padding 0
 hc set smart_window_surroundings 0
@@ -163,31 +158,27 @@ hc set swap_monitors_to_get_tag 1
 hc set raise_on_focus 0
 # hc set tree_style '╾│ ├└╼─┐'
 hc set tree_style '╾│ ├╰╼─╮'
-
-# rules
-hc unrule -F
+#}}}
+# Rules{{{
 hc rule focus=on 
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 
-hc rule instance=crx_nckgahadagoaajjgafhacjanaoiihapd tag=coms focus=on
+# Tag: coms
+hc rule instance=crx_nckgahadagoaajjgafhacjanaoiihapd tag=coms focus=true
 hc rule title="Telegram Web - Google Chrome" tag=coms
+
+# Tag: mail
 hc rule class=Thunderbird tag=mail
-
-# unlock, just to be sure
-hc unlock
-
-# do multi monitor setup here, e.g.:
-# hc set_monitors 1280x1024+0+0 1280x1024+1280+0
-# or simply:
-hc detect_monitors
-
-# find the panel
+#}}}
+# Setup panels{{{
 panel=~/.config/herbstluftwm/panel.sh
 [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     # start it on each monitor
     "$panel" $monitor &
 done
-$hc_bin/alt-tab.sh&
+#}}}
+hc unlock
+hc detect_monitors
