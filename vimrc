@@ -129,9 +129,11 @@ Plug 'vim-scripts/argtextobj.vim'
 Plug 'vim-utils/vim-space'
 " }}}
 Plug 'gcmt/taboo.vim' "{{{
-let g:taboo_tab_format = "[%N|%f%m(%W)] "
-" let g:taboo_tab_format = "[%N|%a/%f%m(%W)] "
+let g:taboo_tab_format = "[%N|%f(%W)%m] "
+" let g:taboo_tab_format = "[%N|%a/%f(%W)%m] "
 let g:taboo_renamed_tab_format ="[%N|%l%m(%W)] "
+" TODO: Make this work
+let g:taboo_unnamed_tab_label = '%a'
 nmap <leader>tR :TabooReset<cr>
 nmap <leader>tr :TabooRename 
 nmap <leader>to :TabooOpen 
@@ -139,7 +141,8 @@ nmap <leader>, gT
 nmap <leader>. gt
 map <c-1> gT
 map <c-2> gt
-nmap <leader>N :tabnew<cr>
+" TODO: Make this indeed pwd, same for TabooOpen
+nmap <leader>N :tabnew<cr>:pwd<cr>
 nmap <leader>tn :$tabnew<cr>
 nmap <leader>tc :tabclose<cr>
 " }}}
