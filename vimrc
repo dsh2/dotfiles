@@ -375,6 +375,8 @@ hi Folded cterm=NONE
 " TODO: Find out why on-load tag does not work
 " Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
 Plug 'idanarye/vim-merginal' "{{{
+" Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "
+" TODO: Find out why on-load tag does not work
 map <leader>gm :MerginalToggle<cr>
 map <leader>y :MerginalToggle<cr>
 "}}}
