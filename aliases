@@ -416,7 +416,7 @@ alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
 alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
-
+alias slp=sleep
 alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
