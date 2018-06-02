@@ -40,10 +40,9 @@ hc keybind $SUPER-$CTRL-l shift right
 #}}}
 # Keybindings for splitting frames{{{
 # create an empty frame at the specified direction
-hc keybind $SUPER-u split   bottom  0.5
-hc keybind $SUPER-o split   right   0.5
-# let the current frame explode into subframes
-hc keybind $SUPER-Control-space split explode
+hc keybind $SUPER-7 chain I split right 0.5 I focus right I spawn ${TERMINAL:-xfce4-terminal} 
+hc keybind $SUPER-8 chain I split bottom 0.5 I focus bottom I spawn ${TERMINAL:-xfce4-terminal} 
+hc keybind $SUPER-6 split explode
 #}}}
 # Keybindings for resizing frames{{{
 resizestep=0.05
