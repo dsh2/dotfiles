@@ -462,11 +462,13 @@ Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
 "}}}
 " Plug colorschemes {{{
-" Plug 'govindkrjoshi/CSApprox'
-" Plug 'KevinGoodsell/vim-csexact'
-" Plug 'AlessandroYorba/Monrovia'
+Plug 'rhysd/vim-color-spring-night'
 Plug 'Lokaltog/vim-distinguished'
 Plug 'altercation/vim-colors-solarized'
+let g:solarized_termcolors=256
+let g:solarized_contrast="normal"
+let g:solarized_visibility="normal"
+let g:solarized_diffmode="high"
 Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'jnurmine/Zenburn'
 Plug 'junegunn/seoul256.vim'
@@ -476,8 +478,9 @@ Plug 'pwntester/cobalt2.vim'
 Plug 'reedes/vim-colors-pencil'
 Plug 'tomasr/molokai'
 Plug 'xolox/vim-colorscheme-switcher'
-nmap <F6> :NextColorScheme<CR>
-" au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
+" Plug 'govindkrjoshi/CSApprox'
+" Plug 'KevinGoodsell/vim-csexact'
+" Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
 Plug 'tpope/vim-surround'
