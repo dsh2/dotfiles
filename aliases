@@ -231,6 +231,8 @@ RUN() {
 
 # Miscellaneous
 alias o=exo-open
+alias ax=autorandr
+alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
@@ -363,6 +365,7 @@ alias ncnc='nmcli con'
 alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
+alias kk='kill -STOP '
 alias pf=pidof
 compdef _ps pf
 compdef _ps pidof
