@@ -380,8 +380,6 @@ autocmd FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 hi Folded cterm=NONE
 " hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 "}}}
-" TODO: Find out why on-load tag does not work
-" Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
 Plug 'idanarye/vim-merginal' "{{{
 " Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "
 " TODO: Find out why on-load tag does not work
