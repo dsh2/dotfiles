@@ -489,6 +489,7 @@ Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'bumaociyuan/vim-matchit'
 Plug 'chrisbra/Recover.vim'
+Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
 Plug 'dkprice/vim-easygrep'
 Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
