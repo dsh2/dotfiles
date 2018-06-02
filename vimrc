@@ -96,6 +96,8 @@ Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
+let g:DiffColors = 0 " fixed color
+" let g:DiffColors = 1 " 4 colors in fixed order
 " }}}
 Plug 'Ilink/cscope-quickfix' "{{{
 set cscopepathcomp=2
