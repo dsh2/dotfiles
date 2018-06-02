@@ -51,6 +51,7 @@ nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable
 nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
 nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
 nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>:only<cr>
+nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
 nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gp :Gpush<cr>
