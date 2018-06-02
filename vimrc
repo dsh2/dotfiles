@@ -105,7 +105,6 @@ set cscopepathcomp=2
 set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
-" nnoremap <C-n> :lnext<cr>
 function! QfLlNext()
     windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
 endfunction
@@ -379,8 +378,6 @@ map gD :GoDocBrowser<cr>
 "}}}
 Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
 autocmd FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
-hi Folded cterm=NONE
-" hi Folded ctermbg=bg ctermfg=fg cterm=NONE
 "}}}
 Plug 'idanarye/vim-merginal' "{{{
 " Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "
@@ -502,7 +499,6 @@ Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
 Plug 'dsh2/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'ervandew/matchem'
-Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'lzap/vim-selinux', {'for': 'te'}
 Plug 'maksimr/vim-yate', {'for': 'yate'}
@@ -523,12 +519,8 @@ Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 call plug#end()
 " }}}
 " Global options {{{
-" colorscheme seoul256
-map <leader>n :colorscheme Tomorrow-Night<cr>
-colorscheme Tomorrow-Night
-" colorscheme solarized
-
 " set verbose=1
+" TODO: Use fnamemodify() or fnameescape()
 " let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
 let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
 set autoindent
@@ -547,7 +539,7 @@ set encoding=utf8
 set exrc
 set foldlevelstart=99
 " set foldopen=hor,mark,percent,quickfix,search,tag,undo
-set foldopen=hor,quickfix,tag
+set foldopen=hor,search,quickfix,tag
 set gdefault
 set grepprg=grep\ -nH\ $*
 set hidden
@@ -620,7 +612,7 @@ nmap <leader>DS :vertical diffsplit<CR>
 nnoremap <leader>cd :execute ":lcd " . substitute(expand("%:p:h"), ' ', '\\ ', 'g')<cr>:pwd<cr>"<cr>
 nnoremap U <c-r>
 nmap <c-q> :cq<cr>
-
+nmap <leader>P :pwd<cr>
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
@@ -628,6 +620,19 @@ nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 " }}}
 " Special operations {{{
+" Setup colorschema{{{
+" au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
+" TODO: 
+" -output name of schema
+" -make schema persist over session
+nmap <F6> :NextColorScheme<CR>
+map <leader>n :colorscheme Tomorrow-Night<cr>
+map <leader>c :colorscheme 
+colorscheme seoul256
+" colorscheme Tomorrow-Night
+" colorscheme solarized
+hi Folded cterm=NONE
+"}}}
 " Open log files at the bottom of the file{{{
 autocmd BufReadPost *.log normal G
 autocmd BufReadPost *.log :set filetype=messages
