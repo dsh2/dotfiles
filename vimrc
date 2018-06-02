@@ -433,6 +433,12 @@ let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_text_changed = "never"
 " }}}
+Plug 'machakann/vim-highlightedyank'"{{{
+let g:highlightedyank_highlight_duration = 333
+if !exists('##TextYankPost')
+  map y <Plug>(highlightedyank)
+endif
+"}}}
 " Plug YouCompleteMe {{{
 " function! BuildYCM(info)
 "   if a:info.status == 'installed' || a:info.force
