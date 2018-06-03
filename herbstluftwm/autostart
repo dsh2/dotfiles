@@ -11,16 +11,17 @@ hc unrule -F
 # External autostart {{{
 $hc_bin/alt-tab.sh&
 # shutter &
-# parcellite &
-# dunst &
+parcellite &
+dunst &
 # xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep &
 xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
-xset -b -c r rate 200 140
+xset -b -c r rate 200 140 dpms 0 0 3600 s off 
 # }}}
 # Aliases {{{
 SUPER=Mod4
 ALT=Mod1
 CTRL=Control
+TERMINAL=${TERMINAL:-xfce4-terminal} 
 # }}}
 # Setup basic tags {{{
 tag_names=(log mail coms root)
@@ -45,8 +46,12 @@ hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 # }}}
 # Miscellaneous keybindings {{{
 # TODO: make frame disappear after last window was closed
-hc keybind $SUPER-Shift-q close
-hc keybind $SUPER-Shift-r reload
+hc keybind $SUPER-q close
+# hc keybind $SUPER-Shift-q close_and_remove
+# hc keybind $SUPER-Shift-q close_or_remove
+hc keybind $SUPER-r remove
+# hc keybind $SUPER-Shift-r reload
+hc keybind $SUPER-Return spawn $TERMINAL
 # }}}
 # Keybindings for moving clients {{{
 hc keybind $SUPER-$CTRL-h shift left
@@ -55,10 +60,13 @@ hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
 # }}}
 # Keybindings for splitting frames {{{
-# create an empty frame at the specified direction
-hc keybind $SUPER-7 chain I split right 0.5 I focus right I spawn ${TERMINAL:-xfce4-terminal} 
-hc keybind $SUPER-8 chain I split bottom 0.5 I focus bottom I spawn ${TERMINAL:-xfce4-terminal} 
 hc keybind $SUPER-6 split explode
+hc keybind $SUPER-7 chain I split right 0.5 I focus right 
+# hc keybind $SUPER-7 chain I split right 0.5 I focus right I spawn $TERMINAL
+hc keybind $SUPER-8 chain I split bottom 0.5
+# TODO: 'focus bottom' does not work. Fix it.
+# hc keybind $SUPER-8 chain I split bottom 0.8 I focus bottom
+# hc keybind $SUPER-8 chain I split bottom 0.5 I focus bottom I spawn $TERMINAL
 # }}}
 # Keybindings for resizing frames {{{
 resizestep=0.05
@@ -80,13 +88,12 @@ hc keybind $SUPER+9 and AND or OR compare tags.focus.name = coms OR chain FALSE 
 hc keybind $SUPER+0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
 # }}}
 # Keybindings to change layout {{{
-hc keybind $SUPER-r remove
 hc keybind $SUPER-s floating toggle
+hc keybind $SUPER-p pseudotile toggle
 hc keybind $SUPER-space spawn sh -c $hc_bin/windowmenu.sh
 hc keybind $SUPER-z chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh
-hc keybind $SUPER-f chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh X
+hc keybind $SUPER-f chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh
 hc keybind $SUPER-Shift-f fullscreen toggle
-hc keybind $SUPER-p pseudotile toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
