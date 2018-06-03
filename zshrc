@@ -47,7 +47,7 @@ PS1+='%f%# '						# Add user status
 # RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 # Trace prompt {{{
-PS4=PS4:%N:%I:
+PS4=PS4:%N:%I(%i):
 # }}}
 # }}}
 
