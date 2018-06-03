@@ -46,7 +46,6 @@ PS1+='%f%# '						# Add user status
 # RPS1+=%(1j.%{$fg_no_bold[red]%}%j.0) # Add number of jobs - if any
 # RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
-
 # Trace prompt {{{
 PS4=PS4:%N:%I:
 # }}}
