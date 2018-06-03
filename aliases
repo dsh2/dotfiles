@@ -290,6 +290,7 @@ alias ip='ip -c'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 alias d2u=dos2unix
 alias bd=bindkey
+alias bdl='bindkey -L'
 alias kc='source ~/.keychain/*-sh(.om[1])'
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
@@ -425,6 +426,7 @@ alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SD2T="|sed -re 's/ - /\t/'"
+alias -g TS="| ts -m '[%F %T]'"
 alias -g DN="> /dev/null"
 alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
