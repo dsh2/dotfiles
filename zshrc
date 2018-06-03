@@ -271,7 +271,7 @@ function start_tmux_logging()
 { 
     tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
     # TODO: Add colors to output
-    export ZSH_DEBUG=1
+    # export ZSH_DEBUG=1
     print -P $LINE_SEPARATOR
     if [[ -v $ZSH_DEBUG ]]; then
 	# print -l params = \"$@\"
@@ -319,7 +319,6 @@ function zsh_terminal_title()
     # set -x
     # (( $ZSH_TERMINAL_TITLE_WORKER )) && kill $ZSH_TERMINAL_TITLE_WORKER
     export ZSH_TERMINAL_TITLE="${*:-NO TITLE}"
-    # setopt nomonitor 
     # ( sleep 0.3 ; set_terminal_title $ZSH_TERMINAL_TITLE ) 2>&1 >/dev/null &
     set_terminal_title $ZSH_TERMINAL_TITLE
     # ZSH_TERMINAL_TITLE_WORKER=$$
@@ -327,18 +326,14 @@ function zsh_terminal_title()
 
 function zsh_terminal_title_prompt() 
 { 
-    # TODO: 
-    # -add more sensible stuff here
-    # set -x
-    zsh_terminal_title "[zsh-ps1] $(pwd) [$USER@${HOST}]"
+    # TODO: add more sensible stuff here
+    zsh_terminal_title "[zsh-ps] $(pwd) [$USER@${HOST}]"
 }
 
 function zsh_terminal_title_running() 
 { 
-    # TODO: 
-    # -add more sensible stuff here
-    # set -x
-    zsh_terminal_title "[zsh-run] $3 $(pwd)"
+    # TODO: add more sensible stuff here
+    zsh_terminal_title "[zsh-run] $3 - $(pwd) [$USER@${HOST}]"
 }
 
 autoload -U add-zsh-hook
@@ -408,7 +403,6 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
-bindkey -M menuselect '^l^l' forward-char
 bindkey -M menuselect '^h' backward-char
 bindkey -M menuselect '^f' forward-word
 bindkey -M menuselect '^b' backward-word
@@ -553,7 +547,8 @@ print_variables() {
 	    done
 	    print \)
 	else
-	    print -- \ = ${(P)var}
+		print -- \ = ${(P)var} | tr \\n\\t ' ' | tr -s ' '; print
+	    # print -- \ = "${(P)var}" 
 	fi
     done 
 }
