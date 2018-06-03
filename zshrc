@@ -479,6 +479,7 @@ set push
 setopt cdablevars
 stty -ixon
 
+# TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
 REPORTTIME=3
 TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
@@ -521,6 +522,8 @@ function space_prepend {
 }
 bindkey_func '^ ' space_prepend
 
+# TODO
+# -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
 env_vars() {
     LBUFFER="$LBUFFER$(print_variables |
 	fzf \
@@ -598,7 +601,7 @@ watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
-# External ressource files {{{
+# Source external ressource files {{{
 source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
