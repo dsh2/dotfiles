@@ -48,7 +48,7 @@ PS1+='%f%# '						# Add user status
 # }}}
 
 # Trace prompt {{{
-PS4=PS4:%N:%i:
+PS4=PS4:%N:%I:
 # }}}
 # }}}
 
@@ -118,7 +118,7 @@ bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
 function repeat_immediately {
-    [[ $#BUFFER -eq 0 ]] || return
+    [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
     # TODO: && think about something useful
     zle up-history
     zle accept-line
@@ -126,8 +126,11 @@ function repeat_immediately {
 bindkey_func '^j' repeat_immediately
 
 function focus_backgroud {
+    (( $#jobstates )) || { zle -M "No background jobs."; return }
+    [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
+    # TODO: Think about something useful in this case
     [[ $#BUFFER -eq 0 ]] && fg
-    # TODO: || think about something useful
+    # TODO: Second time c-z does not work. fg in zle seems to hang / have closed input?
 }
 bindkey_func '^z' focus_backgroud
 
@@ -349,6 +352,7 @@ add-zsh-hook preexec zsh_terminal_title_running
 
 if whence tmux > /dev/null \
     && tmux has-session >& /dev/null \
+    && [ -n $TMUX ] \
     && mkdir -p ~/.tmux-log ;
 then
     add-zsh-hook preexec start_tmux_logging
@@ -431,7 +435,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic fzf pv
+compdef _gnu_generic fzf pstree pv tty lnav
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -504,6 +508,7 @@ ealiases=($(alias | sed \
     -e /^l$/d \
     -e /^ls$/d \
     -e /^pst$/d \
+    -e /^v$/d \
     # -e /^vl$/d \
 ))
 
