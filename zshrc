@@ -163,11 +163,9 @@ function copy_last_output {
 bindkey_func '^x^o' copy_last_output
 
 function page_last_output {
-	# TODO: Make this work without tmux. Read man zshzle how to exec within widget
-	# TODO(zsh): Somehow use (%)-flag instead of %!
-	# TODO: add all cleanup to tmux logging to stop_tmux_logging
-	tmux split -bp 80 \
-	    vim $tmux_log_file '+set buftype=nofile' +AnsiEsc 
+	# TODO: Make this work without new tmux pane. 
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	tmux split vim $tmux_log_file '+set buftype=nofile'
 	tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
@@ -175,21 +173,17 @@ bindkey_func '^x^x' page_last_output
 # TODO:
 # -add mapping to jump to first line of output
 # -prefilter for IP, numbers, paths, etc., cf. above.
+# -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
 function filter_last_output {
-    [ -z $tmux_log_file ] && return
+    [[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
     RBUFFER=$(
 	(cat $tmux_log_file ; print -P $LINE_SEPARATOR ) | 
 	    # Print bogus LINE_SEPARATOR to prevent screen line skip
 	    fzf --tac --multi --no-sort \
 		--preview 'echo {} | pygmentize -l zsh' \
-		--preview-window 'up:45%:wrap:hidden'
-	    # TODO: Add preview to fzf to show various transformations of 
-	    # current line, i.e. filter IP, numbers, strings, etc
-	    # and add shortcuts to select them as return value
-    )
-    # zle redisplay
+		--preview-window 'up:45%:wrap:hidden' \
+    | tr '\t\n' '  ' | tr -s ' ')
 }
-# bindkey_func '^l^l' filter_last_output
 bindkey_func '^o' filter_last_output
 
 function diff_last_two_outputs {
