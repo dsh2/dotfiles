@@ -307,17 +307,44 @@ function stop_tmux_logging()
 }
 
 function set_terminal_title() 
+{
+    # TODO: 
+    # -check esc sequences instead of wmctrl
+    # -make this more portable
+    # -check for ssh_tty
+    [ -n "$DISPLAY" ] && wmctrl -r :ACTIVE: -N "$*"
+}
+
+function zsh_terminal_title() 
+{
+    # set -x
+    # (( $ZSH_TERMINAL_TITLE_WORKER )) && kill $ZSH_TERMINAL_TITLE_WORKER
+    export ZSH_TERMINAL_TITLE="${*:-NO TITLE}"
+    # setopt nomonitor 
+    # ( sleep 0.3 ; set_terminal_title $ZSH_TERMINAL_TITLE ) 2>&1 >/dev/null &
+    set_terminal_title $ZSH_TERMINAL_TITLE
+    # ZSH_TERMINAL_TITLE_WORKER=$$
+}
+
+function zsh_terminal_title_prompt() 
 { 
     # TODO: 
     # -add more sensible stuff here
-    # -check esc sequences instead of wmctrl
-    # -move seq to term_title alias
-    wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
-    return 0
+    # set -x
+    zsh_terminal_title "[zsh-ps1] $(pwd) [$USER@${HOST}]"
+}
+
+function zsh_terminal_title_running() 
+{ 
+    # TODO: 
+    # -add more sensible stuff here
+    # set -x
+    zsh_terminal_title "[zsh-run] $3 $(pwd)"
 }
 
 autoload -U add-zsh-hook
-add-zsh-hook precmd set_terminal_title
+add-zsh-hook precmd zsh_terminal_title_prompt
+add-zsh-hook preexec zsh_terminal_title_running
 
 if whence tmux > /dev/null \
     && tmux has-session >& /dev/null \

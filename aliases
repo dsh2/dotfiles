@@ -122,7 +122,7 @@ alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
 alias fr='fc -R'
-alias term_title='wmctrl -r :ACTIVE: -N'
+alias tt=set_terminal_title
 
 alias ln='ln -rsv'
 alias lnn=lnav
