@@ -57,7 +57,6 @@ type gdircolors > /dev/null && DIR_COLORS=gdircolors
 if [ -n $DIR_COLORS ]; then
     eval $($DIR_COLORS ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
     # eval $($DIR_COLORS ~/.dotfiles/colors/dircolors-solarized/dircolors.ansi-light)
-    export LS_COLORS
 fi
 # }}}
 
@@ -91,6 +90,7 @@ zshaddhistory() {
     # echo zshaddhistory: line NOT skipped
     print -sr -- ${1%%$'\n'}
     # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    # TODO: log local history for read-only directories somewhere else
     fc -p .zsh_local_history
 }
 # }}}
@@ -105,9 +105,9 @@ zle_highlight=(
     paste:underline
 )
 
-# TODO: Use throughout file
 function bindkey_func {
     zle -N $2
+    # bindkey -M command $1 $2
     bindkey $1 $2
 }
 
@@ -117,6 +117,8 @@ bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 
 function repeat_immediately {
+    [[ $#BUFFER -eq 0 ]] || return
+    # TODO: && think about something useful
     zle up-history
     zle accept-line
 }
@@ -124,7 +126,7 @@ bindkey_func '^j' repeat_immediately
 
 function focus_backgroud {
     [[ $#BUFFER -eq 0 ]] && fg
-    # TODO: || think about something other useful
+    # TODO: || think about something useful
 }
 bindkey_func '^z' focus_backgroud
 
@@ -135,30 +137,75 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
+function kill-line-xclip {
+    zle kill-line
+    echo $CUTBUFFER | xclip -selection clipboard -in
+}
+bindkey_func '^k' kill-line-xclip
+
+# Copy last command to xclipboard
+function copy_last_command {
+	zle up-history
+	zle kill-whole-line
+	echo $CUTBUFFER | xclip -selection clipboard -in
+}
+bindkey_func '^x^k' copy_last_command
+
+# Copy last command's output to xclipboard
+function copy_last_output {
+    [ -z $tmux_log_file ] && return
+    echo LOG: $tmux_log_file 
+    cat $tmux_log_file | xclip -selection clipboard -in
+}
+bindkey_func '^x^o' copy_last_output
+
+function page_last_output {
+	# TODO: Make this work without tmux. Read man zshzle how to exec within widget
+	# TODO(zsh): Somehow use (%)-flag instead of %!
+	# TODO: add all cleanup to tmux logging to stop_tmux_logging
+	tmux split -bp 80 \
+	    vim $tmux_log_file '+set buftype=nofile' +AnsiEsc 
+	tmux resize-pane -Z
+}
+bindkey_func '^x^x' page_last_output
+
+# TODO:
+# -add mapping to jump to first line of output
+# -prefilter for IP, numbers, paths, etc., cf. above.
+function filter_last_output {
+    [ -z $tmux_log_file ] && return
+    RBUFFER=$(
+	(cat $tmux_log_file ; print -P $LINE_SEPARATOR ) | 
+	    # Print bogus LINE_SEPARATOR to prevent screen line skip
+	    fzf --tac --multi --no-sort \
+		--preview 'echo {} | pygmentize -l zsh' \
+		--preview-window 'up:45%:wrap:hidden'
+	    # TODO: Add preview to fzf to show various transformations of 
+	    # current line, i.e. filter IP, numbers, strings, etc
+	    # and add shortcuts to select them as return value
+    )
+    # zle redisplay
+}
+# bindkey_func '^l^l' filter_last_output
+bindkey_func '^o' filter_last_output
+
+function diff_last_two_outputs {
+    tmux new-window vimdiff \
+	~/.tmux-log/$(($(print -P '%!')-2)) \
+	~/.tmux-log/$(($(print -P '%!')-1)) \
+	"+ map q Q"
+}
+bindkey_func '^x^m' diff_last_two_outputs
+
 function run_sudo {
     [[ -z $BUFFER ]] && zle up-history
     zle beginning-of-line
     zle -U 'sudo '
 }
-zle -N run_sudo
-bindkey '^X^S' run_sudo
-
-function xo_command {
-	zle up-history
-	zle -U ' | xc'
-}
-zle -N xo_command
-bindkey '^X^O' xo_command
-
-function xp_command {
-	zle up-history
-	zle beginning-of-line
-	zle -U 'xp '
-}
-zle -N xp_command
-bindkey '^X^P' xp_command
+bindkey_func '^x^s' run_sudo
 
 # TODO: Factor out as general inline zle substituion function
+# TODO: Re-write using ${aliases}
 function select_aliases {
     OLD_BUFFER_LEN=$#BUFFER
     MARK=CURSOR
@@ -167,66 +214,27 @@ function select_aliases {
     REGION_ACTIVE=1
     zle redisplay
 }
-bindkey_func '^X^A' select_aliases
-
-function page_last_output {
-	# less ~/.tmux-log/$(($(print -P '%!')-1))
-	# TODO: Make this work without tmux. Read man zshzle!
-	# TODO(zsh): Somehow use (%)-flag 
-	tmux split -bp 80 vim ~/.tmux-log/$(($(print -P '%!')-1)) '+set buftype=nofile' +AnsiEsc '+set ff=unix' 
-	# tmux resize-pane -Z
-}
-zle -N page_last_output
-bindkey '^X^X' page_last_output
-
-function filter_last_output {
-    RBUFFER=$(
-	(cat ~/.tmux-log/$(($(print -P '%!')-1)) | 
-	    sed -e 's,$,,' -e '$ d' ;
-	    print -P $LINE_SEPARATOR )|
-	    fzf --tac --multi --no-sort
-	    # TODO: Add preview to show various transformations of 
-	    # current line, i.e. filter IP, numbers, strings, etc
-	    # and add shortcuts to select them as return value
-    )
-    zle redisplay
-}
-zle -N filter_last_output
-bindkey '^X^F' filter_last_output
-bindkey '^X^K' filter_last_output
-bindkey '^K^K' filter_last_output
-# TODO: add mapping to jump to first line of output
-
-function diff_last_two_outputs {
-    tmux new-window vimdiff \
-	~/.tmux-log/$(($(print -P '%!')-1)) \
-	~/.tmux-log/$(($(print -P '%!')-2)) \
-	"+ map q Q"
-}
-zle -N diff_last_two_outputs
-bindkey '^X^M' diff_last_two_outputs
+bindkey_func '^x^a' select_aliases
 
 # TODO: Instead split vim with new script containing current line and RUN-split
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey "^X^E" edit-command-line
+# autoload -z edit-command-line
+# bindkey_func "^x^e" edit-command-line
 
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
 if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
-run-help-tmux() {
-    for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
-	if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
-	    tmux split -vbp 80 $SHELL -ic "vimman $command"
-	    break
-	fi
-    done
-    zle redisplay
-}
-zle -N run-help-tmux
-bindkey '^[H' run-help-tmux
+    run-help-tmux() {
+	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
+	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
+		tmux split -vbp 80 $SHELL -ic "vimman $command"
+		break
+	    fi
+	done
+	zle redisplay
+    }
+    bindkey_func '^[H' run-help-tmux
 fi
 
 # complete words from tmux pane(s)
@@ -262,16 +270,21 @@ bindkey -s rq "r2 -Nqc '' -"
 
 function start_tmux_logging() 
 { 
+    tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
     # TODO: Add colors to output
+    export ZSH_DEBUG=1
     print -P $LINE_SEPARATOR
     if [[ -v $ZSH_DEBUG ]]; then
-	print literal:  $1
-	# print compact command = \"$2\"
-	print full: $3
+	# print -l params = \"$@\"
+	print literal = \"$1\"
+	# print compact: \"$2\"
+	print full: \"$3\"
+	print time: $(n)
+	print event id: ${$(echo $3 | sha1sum)[1]}
+	print tmux_log_file: $tmux_log_file
 	print -P $LINE_SEPARATOR
     fi
-    # TODO: Do not log for
-    # -vim, htop, mutt, atop, powertop, lnav
+    # TODO: Do not log for INTERACTIVE_COMMANDS
     # TODO: Add logging (probably best in directories) for
     # -exit code
     # -directory (in case .zsh_local_history is not possible)
@@ -279,24 +292,19 @@ function start_tmux_logging()
     # -literal and full command
     # -report times
     # -name of tmux session name
-    whence tmux > /dev/null && 
-	tmux has-session >& /dev/null && 
-	mkdir -p ~/.tmux-log && 
-	tmux pipe-pane 'cat > ~/.tmux-log/'$(print -P '%!')
+    # -create log_file_name from cmdline contents and timestamp as history event
+    #  number does not seem to be stable enough
+    tmux pipe-pane "cat > $tmux_log_file"
 }
 
 function stop_tmux_logging() 
 { 
-    whence tmux > /dev/null && 
-	tmux has-session >& /dev/null && 
-	tmux pipe-pane 
+    [ -z $tmux_log_file ] && return
+    tmux pipe-pane 
+    # HACK: Convert tmux line endings
+    # TODO: Check tmux src
+    sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
-
-autoload -U add-zsh-hook
-add-zsh-hook preexec start_tmux_logging
-add-zsh-hook precmd stop_tmux_logging
-
-add-zsh-hook precmd set_terminal_title
 
 function set_terminal_title() 
 { 
@@ -308,6 +316,17 @@ function set_terminal_title()
 	wmctrl -r :ACTIVE: -N "$(pwd) [$USER@${HOST}]"
     return 0
 }
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd set_terminal_title
+
+if whence tmux > /dev/null \
+    && tmux has-session >& /dev/null \
+    && mkdir -p ~/.tmux-log ;
+then
+    add-zsh-hook preexec start_tmux_logging
+    add-zsh-hook precmd stop_tmux_logging
+fi 
 
 function showbuffers()
 {
@@ -323,8 +342,7 @@ function showbuffers()
     buffers+="Killring:$nl$nl$kr"
     zle -M "$buffers"
 }
-zle -N showbuffers showbuffers
-bindkey "^[o" showbuffers
+bindkey_func "^[o" showbuffers
 
 # Change cursor when switching to vicmd
 zle-keymap-select() { 
@@ -342,56 +360,87 @@ zle -N zle-keymap-select
 
 # Completion {{{
 fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
+fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
-fpath+=~/.dotfiles/zsh/zsh-completions/src
 fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
 # TODO: add repo to .dotfiles
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
 fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
 fpath+=~/src/RE/radare2/doc/zsh
 
-autoload -U compinit && compinit
 zmodload zsh/complist
+autoload -U compinit && compinit
+autoload -U zed
 
 # TODO: check fpath vs. source
 source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
 source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
-bindkey -M menuselect '^[[z' reverse-menu-complete
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
 bindkey -M menuselect '^l' forward-char
+bindkey -M menuselect '^l^l' forward-char
 bindkey -M menuselect '^h' backward-char
+bindkey -M menuselect '^f' forward-word
+bindkey -M menuselect '^b' backward-word
+bindkey -M menuselect '^ ' accept-and-hold
+bindkey -M menuselect '^o' accept-and-infer-next-history
+# TODO: Add infer-next-history-or-accept
+# bindkey -M menuselect '^m' accept-and-infer-next-history
+bindkey -M menuselect '^n' vi-forward-blank-word
+# TODO: 
+# -patch zsh to support custom widgets
+# -patch zsh to support vi-backward-blank-word-first natively
+# vi-backward-blank-word-first() {
+#     zle vi-backward-blank-word
+#     zle vi-backward-blank-word
+#     zle vi-forward-blank-word
+# }
+# zle -N vi-backward-blank-word-first
+bindkey -M menuselect '^p' vi-backward-blank-word
+bindkey -M menuselect '/' vi-insert
 
+# TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
+compdef _gnu_generic fzf pv
 # TODO: Add comments what we suppose to achive with all the zstyles
+# TODO: Figure out why compdef ls does not show options, but only files
+# TODO: Add 'something' which completes the current value when assigning a value
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
-zstyle ':completion:*' list-dirs-first false
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+# zstyle ':completion:*' completer _complete 
+zstyle ':completion:*:approximate:::' max-errors 6 numeric
+zstyle ':completion:*:matches' group yes
+zstyle ':completion:*' group-name '' # Show each type of match in its own group
+zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' list-separator "--"
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' menu select
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' select-prompt '%Slines=%l matches=%m (%p)%s'
 zstyle ':completion:*' verbose true
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # Use same colors as GNU ls in lists
+# TODO: Think about ma, hi, du markers
 zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
 zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
 zstyle ':completion:*:commands' list-colors '=*=1;31'
-zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
-zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
-zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:parameter' list-colors '=*=1;31' # TODO: Make this work
 zstyle ':completion:*:options' list-colors '=^(-- *)=34'
-zstyle ':completion:*:warnings' format $'\e[01;31m -- No matches for: %d%b --\e[0m'
+# zstyle ':completion:*:options' list-colors '=(#b)(*)(--)(*)=34=7=1'
+zstyle ':completion:*:options' auto-description 'Specify %d'
+# zstyle ':completion:*:options' description yes
+# zstyle ':completion:*:options' complete-options yes
+zstyle ':completion:*' format '[%UCompleting %d%u]'
+# zstyle ':completion:*' show-completer
+# zstyle ':completion:*' show-ambiguity
+# zstyle ':completion:*' single-ignored menu
+zstyle ':completion:*' strip-comments
+zstyle ':completion:*:messages' format $'\e[01;35m -- Message: %d --\e[0m'
+zstyle ':completion:*:warnings' format $'\e[01;31m -- No matches for: %d%b \e[0m--'
+zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
-setopt nomenu_complete
-setopt auto_list
-setopt auto_menu
-setopt list_ambiguous
+setopt menu_complete
 # }}}
 
 # Shell options {{{
@@ -447,16 +496,38 @@ function space_prepend {
 bindkey_func '^ ' space_prepend
 
 env_vars() {
-    LBUFFER="$LBUFFER echo $( typeset | fzf | cut -d= -f1 | sed -e 's,^,$,' )"
+    LBUFFER="$LBUFFER$(print_variables |
+	fzf \
+	    --tac --multi \
+	    --preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
+	    --preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
 }
 bindkey_func '^x^e' env_vars
 # }}}
 
-print_variables() { 
-    for v in $*; do 
-	print $v\($#v\) = ${(P)v};
+print_variables() {
+    zparseopts -D -A opts h
+    show_hidden=$+opts[-h]
+    vars=(${*:-${(ko)parameters}})
+    for var in $vars; do
+	type=${(tP)var}
+	print -n -- $var \($type, ${(P)#var}\)
+	if [[ $type = *hideval* && $show_hidden = 0 ]]; then
+	    print  \ = VALUE HIDDEN
+	    continue
+	fi
+	if [[ $type = *assoc* ]]; then
+	    print -n : \(
+	    for k v in ${(kvP)var}; do
+		print -n -- $k: $v,\ 
+	    done
+	    print \)
+	else
+	    print -- \ = ${(P)var}
+	fi
     done 
 }
+compdef _parameter print_variables
 
 pathprepend() {
     local path_element=$1
@@ -511,6 +582,7 @@ type keychain > /dev/null && eval $(keychain --eval --timeout 360 --quiet)
 # TODO: Think about a way how to select umask for sudo
 # umask 027
 
+# TODO: Implement this
 function in_array() {
     prl $1 $2
     prl ${1[(i)$2]} 

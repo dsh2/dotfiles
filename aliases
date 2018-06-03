@@ -130,6 +130,7 @@ alias r=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
+alias zs=zstyle
 alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
@@ -149,13 +150,14 @@ alias wh='whence -sv'
 alias whh=whence 
 alias prr=print
 alias prl='print -rl -- '
-alias j=jobs
+alias j='jobs -l'
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
+alias pvv=print_variables
 
 # Vim aliases
 alias v='vim -X'
@@ -220,6 +222,7 @@ RUN() {
 	    return
 	fi
 	clear -x
+	sleep 0.1
 	run $*
 	# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
 	sleep 0.1
@@ -228,6 +231,8 @@ RUN() {
 
 # Miscellaneous
 alias o=exo-open
+alias ax=autorandr
+alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
 alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
@@ -360,6 +365,7 @@ alias ncnc='nmcli con'
 alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
+alias kk='kill -STOP '
 alias pf=pidof
 compdef _ps pf
 compdef _ps pidof
@@ -413,7 +419,7 @@ alias d2='dnf-2'
 alias sx='screen -X'
 alias sxt='sx title'
 alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
-
+alias slp=sleep
 alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
@@ -422,6 +428,7 @@ alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g DN="> /dev/null"
 alias -g DN2="2> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
+alias -g SE="2>&1"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
 alias -g WL=' | wc -l'
 alias -g SUU='| sort | uniq'

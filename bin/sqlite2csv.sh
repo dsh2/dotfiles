@@ -14,13 +14,11 @@ then
 	exit 1
 fi
 
-db=$1
-
-t=($(sqlite3 $db ".tables"))
+t=($(sqlite3 "$1" ".tables"))
 
 for i in "${t[@]}"
 do
-	sqlite3 $db<<- EXIT_HERE
+	sqlite3 "$1" <<- EXIT_HERE
 	.mode csv
 	.headers on
 	.output $i.csv
