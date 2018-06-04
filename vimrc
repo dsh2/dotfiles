@@ -488,6 +488,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 " }}}
 " Plug rest... {{{
 Plug 'tpope/vim-surround'
+Plug 'google/vim-searchindex'
 Plug 'tpope/vim-repeat'
 Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
