@@ -141,8 +141,12 @@ function backward_kill_default_word() {
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
 function kill-line-xclip {
-    zle kill-line
-    echo $CUTBUFFER | xclip -selection clipboard -in
+    if [ -z $RBUFFER ]; then
+	filter_last_output 
+    else
+	zle kill-line
+	echo $CUTBUFFER | xclip -selection clipboard -in
+    fi
 }
 bindkey_func '^k' kill-line-xclip
 
