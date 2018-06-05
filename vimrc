@@ -393,6 +393,9 @@ augroup vimrc
     nnoremap <buffer> <silent> <cr> 0f/lgf
 augroup END
 "}}}
+Plug 'atimholt/spiffy_foldtext' "{{{
+let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
+"}}}
 Plug 'ihacklog/HiCursorWords' "{{{
 let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
