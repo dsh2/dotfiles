@@ -95,7 +95,7 @@ let g:neomru#update_interval=60
 "}}}
 Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-Plug 'rickhowe/diffchar.vim'
+" Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
 let g:DiffColors = 0 " fixed color
 " let g:DiffColors = 1 " 4 colors in fixed order
@@ -144,7 +144,7 @@ let g:taboo_renamed_tab_format ="[%N|%l%m(%W)] "
 let g:taboo_unnamed_tab_label = '%a'
 nmap <leader>tR :TabooReset<cr>
 nmap <leader>tr :TabooRename 
-nmap <leader>to :TabooOpen 
+nmap <leader>tn :TabooOpen 
 nmap <leader>, gT
 nmap <leader>. gt
 map <c-1> gT
@@ -323,7 +323,8 @@ highlight MarkologyHLo ctermfg=Cyan ctermbg=black
 " map <leader>a :Ack! \\b<cword\\b><CR>
 " }}}
 Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
-map <leader>a :Ag! \\b<cword\\b><CR>
+" map <leader>a :Ag! \\b<cword\\b><CR>
+map <leader>a :Ag! <cword><CR>
 "}}}
 Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
@@ -338,7 +339,7 @@ let g:airline_theme='qwq'
 " }}}
 Plug 'tpope/vim-dispatch' "{{{
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
-map <leader>m :update<cr>:Make<cr>
+map <leader>m :update<cr>:Make<cr>:checktime<cr>
 " }}}
 Plug 'sickill/vim-pasta' "{{{
 let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
@@ -367,12 +368,14 @@ Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 let g:autoformat_verbosemode=0
 map <leader>A :Autoformat<cr>
 "}}}
+Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
 autocmd FileType sshconfig setlocal commentstring=#\ %s
 autocmd FileType sshdconfig setlocal commentstring=#\ %s
 autocmd FileType shell setlocal commentstring=#\ %s
 autocmd FileType shell setlocal commentstring=#\ %s
 autocmd FileType i3config setlocal commentstring=#\ %s
+autocmd FileType jq setlocal commentstring=#\ %s
 "}}}
 Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
@@ -490,8 +493,9 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
-Plug 'tpope/vim-surround'
+Plug 'alvan/vim-closetag'
 Plug 'google/vim-searchindex'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
@@ -618,6 +622,8 @@ nnoremap <leader>cd :execute ":lcd " . substitute(expand("%:p:h"), ' ', '\\ ', '
 nnoremap U <c-r>
 nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
+nmap zx za 
+nmap <leader>BD :bdelete!<cr>
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
@@ -662,6 +668,7 @@ endfunction
 " TODO:
 " -prepend timestamp to session name
 " -save session periodically
+" -check vim-obsession
 autocmd VimLeave * mksession! ~/.vim/lastsession
 "}}}
 " Configure help system {{{
@@ -772,6 +779,8 @@ function! EnableAutoWrite()
 endfunction
 
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+
+set esckeys
 
 " Mark long columns
 " match ErrorMsg '\%80v\+'
