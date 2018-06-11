@@ -178,6 +178,7 @@ bindkey_func '^x^x' page_last_output
 # -add mapping to jump to first line of output
 # -prefilter for IP, numbers, paths, etc., cf. above.
 # -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
+# -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
     [[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
     RBUFFER=$(
@@ -207,6 +208,7 @@ bindkey_func '^x^s' run_sudo
 
 # TODO: Factor out as general inline zle substituion function
 # TODO: Re-write using ${aliases}
+# TODO: Add initial query to fzf with left word
 function select_aliases {
     OLD_BUFFER_LEN=$#BUFFER
     MARK=CURSOR
@@ -281,7 +283,9 @@ function start_tmux_logging()
 	# print -l params = \"$@\"
 	print literal = \"$1\"
 	# print compact: \"$2\"
-	print full: \"$3\"
+	# print full: \"$3\"
+	# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
+	print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
 	print time: $(n)
 	print event id: ${$(echo $3 | sha1sum)[1]}
 	print tmux_log_file: $tmux_log_file
@@ -337,7 +341,8 @@ function zsh_terminal_title_prompt()
 function zsh_terminal_title_running() 
 { 
     # TODO: add more sensible stuff here
-    zsh_terminal_title "[zsh-run] $3 - $(pwd) [$USER@${HOST}]"
+
+    zsh_terminal_title "[zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
 }
 
 autoload -U add-zsh-hook
@@ -385,7 +390,6 @@ zle -N zle-keymap-select
 
 # Completion {{{
 fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
-fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
@@ -428,7 +432,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic fzf pstree pv tty lnav
+compdef _gnu_generic fzf pstree pv tty lnav tee
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
