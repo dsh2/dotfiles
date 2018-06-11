@@ -13,7 +13,8 @@ $hc_bin/alt-tab.sh&
 # shutter &
 parcellite &
 dunst &
-# xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep &
+xautolock -time 20 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep &
+# -notify -notifier 'notify-send Locking soon...' &
 xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
 xset -b -c r rate 200 140 dpms 0 0 3600 s off 
 # }}}
@@ -22,6 +23,7 @@ SUPER=Mod4
 ALT=Mod1
 CTRL=Control
 TERMINAL=${TERMINAL:-xfce4-terminal} 
+BROWSER=${BROWSER:-sensible-browser} 
 # }}}
 # Setup basic tags {{{
 tag_names=(log mail coms root)
@@ -52,12 +54,18 @@ hc keybind $SUPER-q close
 hc keybind $SUPER-r remove
 # hc keybind $SUPER-Shift-r reload
 hc keybind $SUPER-Return spawn $TERMINAL
+hc keybind $CTRL-Return spawn $BROWSER
+hc keybind $SUPER-a spawn xautolock -locknow
 # }}}
 # Keybindings for moving clients {{{
+
 hc keybind $SUPER-$CTRL-h shift left
 hc keybind $SUPER-$CTRL-j shift down
 hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
+hc keybind $SUPER-Shift-1 chain I move_index -1 I use_index -1
+hc keybind $SUPER-Shift-2 chain I move_index +1 I use_index +1
+
 # }}}
 # Keybindings for splitting frames {{{
 hc keybind $SUPER-6 split explode
