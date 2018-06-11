@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-hc() { "${herbstclient_command[@]:-herbstclient}" "$@" ;}
+hc() { "${herbstclient_command[@]:-herbstclient}" "$@" ; }
 monitor=${1:-0}
 geometry=( $(herbstclient monitor_rect "$monitor") )
 if [ -z "$geometry" ] ;then
@@ -65,7 +65,7 @@ hc pad $monitor $panel_height
     while true ; do
         # "date" output is checked once a second, but an event is only
         # generated if the output changed compared to the previous run.
-        date +$'date\t^fg(#efefef)W%g %a %Y-%m-^fg(#efefef)%d ^fg(#efefef)%H:%M^fg(#909090)'
+        date +$'date\t^fg(#efefef)W%U %a %Y-%m-^fg(#efefef)%d ^fg(#efefef)%H:%M^fg(#909090)'
         sleep 1 || break
     done > >(uniq_linebuffered) &
     childpid=$!
@@ -85,36 +85,40 @@ hc pad $monitor $panel_height
         bordercolor="#26221C"
         separator="^bg()^fg($selbg)|"
         # draw tags
-        for i in "${tags[@]}" ; do
-            case ${i:0:1} in
-                '#')
-                    echo -n "^bg($selbg)^fg($selfg)"
-                    ;;
-                '+')
-                    echo -n "^bg(#9CA668)^fg(#141414)"
-                    ;;
-                ':')
-                    echo -n "^bg()^fg(#ffffff)"
-                    ;;
-                '!')
-                    echo -n "^bg(#FF0675)^fg(#141414)"
-                    ;;
-                *)
-                    echo -n "^bg()^fg(#ababab)"
-                    ;;
-            esac
-            if [ ! -z "$dzen2_svn" ] ; then
-                # clickable tags if using SVN dzen
-                echo -n "^ca(1,\"${herbstclient_command[@]:-herbstclient}\" "
-                echo -n "focus_monitor \"$monitor\" && "
-                echo -n "\"${herbstclient_command[@]:-herbstclient}\" "
-                echo -n "use \"${i:1}\") ${i:1} ^ca()"
-            else
-                # non-clickable tags if using older dzen
-                echo -n " ${i:1} "
-            fi
-        done
-        echo -n "$separator"
+		for tag in "${tags[@]}" ; do
+			tag_status=${tag:0:1}
+			tag_name=${tag:1}
+			case $tag_status in
+				'#')
+					echo -n "^bg($selbg)^fg($selfg)"
+					;;
+				'+')
+					echo -n "^bg(#9CA668)^fg(#141414)"
+					;;
+				':')
+					echo -n "^bg()^fg(#ffffff)"
+					;;
+				'!')
+					echo -n "^bg(#FF0675)^fg(#141414)"
+					;;
+				*)
+					echo -n "^bg()^fg(#ababab)"
+					;;
+			esac
+			# clickable tags if using SVN dzen
+			echo -n "^ca(1,\"${herbstclient_command[@]:-herbstclient}\" "
+			echo -n "focus_monitor \"$monitor\" && "
+			echo -n "\"${herbstclient_command[@]:-herbstclient}\" "
+			echo -n "use \"${tag_name}\") "
+			# echo -n $(herbstclient attr tags.by-name.$tag_name.index) : 
+			echo -n "$tag_name"
+			echo -n " ("
+			echo -n $(herbstclient attr tags.by-name.$tag_name.client_count)
+			[ $tag_status == '#' ] &&  herbstclient attr tags.focus.my_unmaximized_layout >/dev/null 2>&1 && echo -n "Z"
+			echo -n ")"
+			echo -n "^ca()"
+			echo -n " $separator "
+		done
         echo -n "^bg()^fg() ${windowtitle//^/^^}"
         # small adjustments
         right="$separator^bg() $date $separator"
@@ -179,6 +183,7 @@ hc pad $monitor $panel_height
     # After the data is gathered and processed, the output of the previous block
     # gets piped to dzen2.
 
-} 2> /dev/null | dzen2 -w $panel_width -x $x -y $y -fn "$font" -h $panel_height \
-    -e 'button3=;button4=exec:herbstclient use_index -1;button5=exec:herbstclient use_index +1' \
-    -ta l -bg "$bgcolor" -fg '#efefef'
+} 2> /dev/null | dzen2 \
+	-w $panel_width -x $x -y $y -fn "$font" -h $panel_height \
+	-e 'button3=;' \
+	-ta l -bg "$bgcolor" -fg '#efefef'
