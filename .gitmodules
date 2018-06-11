@@ -20,7 +20,7 @@
 
 [submodule "fzf"]
     path = fzf
-    url = git@github.com:dsh2/fzf
+    url = https://github.com/dsh2/fzf
 
 [submodule "fzf_browser"]
     path = fzf_browser
@@ -44,15 +44,15 @@
 
 [submodule "src/gitk"]
     path = src/gitk
-    url = git@github.com:dsh2/gitk
+    url = https://github.com/dsh2/gitk
 
 [submodule "src/ranger"]
     path = src/ranger
-    url = git@github.com:dsh2/ranger
+    url = https://github.com/dsh2/ranger
 
 [submodule "z"]
     path = z
-    url = git@github.com:dsh2/z
+    url = https://github.com/dsh2/z
 
 [submodule "zsh-completions/zsh-pandoc-completion"]
     path = zsh-completions/zsh-pandoc-completion
@@ -60,11 +60,12 @@
 
 [submodule "zsh/zsh-socat-completion"]
     path = zsh/zsh-socat-completion
-    url = git@github.com:dsh2/zsh-socat-completion
+    url = https://github.com/dsh2/zsh-socat-completion
 
 [submodule "zsh/zsh-syntax-highlighting"]
     path = zsh/zsh-syntax-highlighting
     url = https://github.com/zsh-users/zsh-syntax-highlighting
+
 [submodule "zsh/zsh-pandoc-completion"]
 	path = zsh/zsh-pandoc-completion
 	url = https://github.com/srijanshetty/zsh-pandoc-completion
