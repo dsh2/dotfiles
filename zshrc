@@ -154,7 +154,7 @@ bindkey_func '^k' kill-line-xclip
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	echo $CUTBUFFER | xclip -selection clipboard -in
+	type xclipp >/dev/null && cecho $CUTBUFFER | xclip -selection clipboard -in
 }
 bindkey_func '^x^k' copy_last_command
 
@@ -162,7 +162,7 @@ bindkey_func '^x^k' copy_last_command
 function copy_last_output {
     [ -z $tmux_log_file ] && return
     echo LOG: $tmux_log_file 
-    cat $tmux_log_file | xclip -selection clipboard -in
+    type xclipp >/dev/null && cat $tmux_log_file | xclip -selection clipboard -in
 }
 bindkey_func '^x^o' copy_last_output
 
@@ -319,7 +319,11 @@ function set_terminal_title()
     # -check esc sequences instead of wmctrl
     # -make this more portable
     # -check for ssh_tty
-    [ -n "$DISPLAY" ] && wmctrl -r :ACTIVE: -N "$*"
+	if [ -n $DISPLAY ]; then
+		if type wmctrl > /dev/null; then
+			wmctrl -r :ACTIVE: -N "$*"
+		fi
+	fi
 }
 
 function zsh_terminal_title() 
