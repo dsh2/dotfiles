@@ -140,13 +140,21 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
+if type xclip >/dev/null; then
+	XC="xclip -selection clipboard -in"
+elif type xsel >/dev/null; then
+	XC="xsel --clipboard --input"
+else
+	XC="cat > /dev/null"
+fi
+
 function kill-line-xclip {
-    if [ -z $RBUFFER ]; then
-	filter_last_output 
-    else
-	zle kill-line
-	echo $CUTBUFFER | xclip -selection clipboard -in
-    fi
+	if [ -z $RBUFFER ]; then
+		filter_last_output 
+	else
+		zle kill-line
+		echo $CUTBUFFER | $=XC
+	fi
 }
 bindkey_func '^k' kill-line-xclip
 
@@ -154,15 +162,15 @@ bindkey_func '^k' kill-line-xclip
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	type xclipp >/dev/null && cecho $CUTBUFFER | xclip -selection clipboard -in
+	echo $CUTBUFFER | $=XC
 }
 bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
-    [ -z $tmux_log_file ] && return
-    echo LOG: $tmux_log_file 
-    type xclipp >/dev/null && cat $tmux_log_file | xclip -selection clipboard -in
+	[ -z $tmux_log_file ] && return
+	echo LOG: $tmux_log_file
+	cat $tmux_log_file | $=XC
 }
 bindkey_func '^x^o' copy_last_output
 
@@ -180,14 +188,14 @@ bindkey_func '^x^x' page_last_output
 # -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
-    [[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-    RBUFFER=$(
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	RBUFFER=$(
 	(cat $tmux_log_file ; print -P $LINE_SEPARATOR ) | 
-	    # Print bogus LINE_SEPARATOR to prevent screen line skip
-	    fzf --tac --multi --no-sort \
+		# Print bogus LINE_SEPARATOR to prevent screen line skip
+	fzf --tac --multi --no-sort \
 		--preview 'echo {} | pygmentize -l zsh' \
 		--preview-window 'up:45%:wrap:hidden' \
-    | tr '\t\n' '  ' | tr -s ' ')
+		| tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
