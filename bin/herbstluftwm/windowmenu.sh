@@ -7,10 +7,10 @@ action_list() {
     # "$a" "Close" herbstclient close
     # "$a" "Toggle fullscreen" herbstclient fullscreen toggle
     # "$a" "Toggle pseudotile" herbstclient pseudotile toggle
-    herbstclient attr clients.focus | tail --lines=+6 | 
-	while IFS=\= read prop val; do 
-	    "$a" "$prop $val" sh -c "echo $val | parcellite -c"
-	done
+	herbstclient attr clients.focus | tail --lines=+6 | 
+		while IFS=\= read prop val; do 
+			"$a" "$prop $val" sh -c "echo $val | xclip -selection clipboard -in"
+		done
 	# TODO: 
 	# -open TERM vim $(xprop)
 	# -check xclip instead of parcellite
@@ -20,6 +20,14 @@ action_list() {
 	    "$a" "Move to '$tag' and focus" herbstclient chain I move "$tag" I use "$tag"
 	fi
     done
+}
+
+exec_entry() {
+	if [ "$1" = "$result" ] ; then
+		shift
+		"$@"
+		exit 0
+	fi
 }
 
 print_menu() {
@@ -52,13 +60,5 @@ rofiflags=(
 )
 result=$(action_list print_menu | rofi -i -dmenu "${rofiflags[@]}")
 [ $? -ne 0 ] && exit 0
-
-exec_entry() {
-    if [ "$1" = "$result" ] ; then
-        shift
-        "$@"
-        exit 0
-    fi
-}
 
 action_list exec_entry
