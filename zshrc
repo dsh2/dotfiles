@@ -91,7 +91,12 @@ zshaddhistory() {
     print -sr -- ${1%%$'\n'}
     # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
     # TODO: log local history for read-only directories somewhere else
-    fc -p .zsh_local_history
+    if [ -w $PWD ]; then
+	fc -p .zsh_local_history
+    else
+	dir=~/.zsh_local_history_dir/${(q)PWD}
+	mkdir -p $dir && fc -p $dir/history
+    fi
 }
 # }}}
 
