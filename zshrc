@@ -145,7 +145,7 @@ if type xclip >/dev/null; then
 elif type xsel >/dev/null; then
 	XC="xsel --clipboard --input"
 else
-	XC="cat > /dev/null"
+	XC="true"
 fi
 
 function kill-line-xclip {
