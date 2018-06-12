@@ -36,10 +36,20 @@ cdp() {
 compdef _pids cdp
 
 cd() { 
-    if ! builtin cd $* 2> /dev/null; then 
-        builtin cd $(dirname "$*"); 
-    fi; 
+	if ! builtin cd $* 2>/dev/null; then
+		if [ -e $* ]; then
+			dir=$(dirname $*)
+			if [ $dir = "." ]; then
+				print WARNING: no directory change
+			else 
+				builtin cd $dir
+			fi
+		else
+			echo Cannot change to \"$*\"
+		fi
+	fi
 }
+
 alias cdd='cd ~/.dotfiles'
 cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else echo Abort.; fi }
 alias cv=cb
