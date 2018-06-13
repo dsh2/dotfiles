@@ -114,7 +114,11 @@ hc pad $monitor $panel_height
 			echo -n "$tag_name"
 			echo -n " ("
 			echo -n $(herbstclient attr tags.by-name.$tag_name.client_count)
-			[ $tag_status == '#' ] &&  herbstclient attr tags.focus.my_unmaximized_layout >/dev/null 2>&1 && echo -n "Z"
+			if [ $tag_status == '#' ]; then
+			    echo -n "^bg(#FF0675)^fg(#141414)"
+			    herbstclient attr tags.focus.my_unmaximized_layout >/dev/null 2>&1 && echo -n "Z"
+			    echo -n "^bg($selbg)^fg($selfg)"
+			fi
 			echo -n ")"
 			echo -n "^ca()"
 			echo -n " $separator "

@@ -13,8 +13,9 @@ $hc_bin/alt-tab.sh&
 # shutter &
 parcellite &
 dunst &
-xautolock -time 20 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep &
+xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker 'i3lock-wrapper.sh -b' -detectsleep &
 # -notify -notifier 'notify-send Locking soon...' &
+# TODO: Build .xmodmap
 xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
 xset -b -c r rate 200 140 dpms 0 0 3600 s off 
 # }}}
@@ -43,7 +44,7 @@ done
 hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}' 
 hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
-# hc keybind $ALT+$CTRL+Shift+s spawn python ~/.dotfiles/bin/rofimoji.py
+hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
 # hc keybind $ALT+$CTRL+Shift+s spawn /bin/sh
 # }}}
 # Miscellaneous keybindings {{{
@@ -84,16 +85,20 @@ hc keybind $SUPER-Shift-k resize up +$resizestep
 hc keybind $SUPER-Shift-l resize right +$resizestep
 # }}}
 # Keybindings to cycle through tags {{{
-hc keybind $SUPER-1 use_index -1 --skip-visible
-hc keybind $SUPER-comma use_index -1 --skip-visible
-# hc keybind $SUPER-1 use_index -1 
-hc keybind $SUPER-2 use_index +1 --skip-visible
-hc keybind $SUPER-period use_index +1 --skip-visible
-# hc keybind $SUPER-2 use_index +1 
+# hc keybind $SUPER-1 use_index -1 --skip-visible
+# hc keybind $SUPER-comma use_index -1 --skip-visible
+hc keybind $SUPER-1 use_index -1 
+hc keybind $SUPER-comma use_index -1 
+# hc keybind $SUPER-2 use_index +1 --skip-visible
+# hc keybind $SUPER-period use_index +1 --skip-visible
+hc keybind $SUPER-2 use_index +1 
+hc keybind $SUPER-period use_index +1 
 hc keybind $SUPER-3 use_previous
 # TODO: Think about how FO could help here...
-hc keybind $SUPER+9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
-hc keybind $SUPER+0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
+hc keybind $SUPER-9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
+hc keybind $SUPER-0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
+hc keybind $SUPER-Shift-0 spawn ~/.dotfiles/bin/herbstluftwm/clear_empty_tags.sh
+
 # }}}
 # Keybindings to change layout {{{
 hc keybind $SUPER-s floating toggle
@@ -110,10 +115,9 @@ hc keybind $SUPER-e \
 		, cycle_layout +1 vertical horizontal
 # }}}
 # Keybindings to change focus {{{
-hc keybind $SUPER-BackSpace   cycle_monitor
-# hc keybind $SUPER-Tab         cycle_all +1
-# hc keybind $SUPER-Shift-Tab   cycle_all -1
-hc keybind $SUPER-c cycle
+hc keybind $SUPER-BackSpace cycle_monitor
+hc keybind $SUPER-c cycle_all +1
+hc keybind $SUPER-Shift-c cycle_all -1
 hc keybind $SUPER-i jumpto urgent
 hc keybind $ALT+Shift+1 spawn sh -c "$hc_bin/jumpto.sh chrome"
 hc keybind $ALT+Shift+2 spawn sh -c "$hc_bin/jumpto.sh thunderbird"
@@ -186,7 +190,8 @@ hc rule instance=crx_nckgahadagoaajjgafhacjanaoiihapd tag=coms focus=true
 hc rule title="Telegram Web - Google Chrome" tag=coms
 
 # Tag: mail
-hc rule class=Thunderbird tag=mail
+hc rule class=Thunderbird tag=mail focus=false
+
 # }}}
 # Setup panels {{{
 panel=~/.config/herbstluftwm/panel.sh

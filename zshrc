@@ -627,7 +627,8 @@ source ~/.environment
 source ~/.fzf.zsh
 source ~/.fzfrc
 
-type keychain > /dev/null && eval $(keychain --eval --timeout 360 --quiet)
+# type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
+type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 # umask 027
