@@ -334,7 +334,7 @@ function set_terminal_title()
     # -check for ssh_tty
 	if [ -n $DISPLAY ]; then
 		if type wmctrl > /dev/null; then
-			wmctrl -r :ACTIVE: -N "$*"
+			wmctrl -r :ACTIVE: -N "$*" &>/dev/null
 		fi
 	fi
 }
