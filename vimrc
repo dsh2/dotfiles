@@ -782,8 +782,47 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 
 set esckeys
 
-" Mark long columns
-" match ErrorMsg '\%80v\+'
+function! ProcessTreePid()
+	return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
+endfunction
+function! ProcessTree()
+	silent let @/="\\<" . ProcessTreePid() . "\\>"
+	execute "e ps-" . strftime('%F-%T') 
+	silent read !ps -e --forest -o pid,ppid,stat,flag,user,etime,start:12,tty=TTY,cputime,rss:12,thcount,args
+
+	set buftype=nofile
+	set filetype=sh
+	set nonumber norelativenumber nowrap 
+	" set diff
+	silent! norm ggdd0"ad$ddn
+	silent! AirlineToggle
+	" TODO: merge the next two lines
+	let g:trailer=substitute(@a, " ", "_", "g")
+	set statusline=%!g:trailer
+	nnoremap r :call ProcessTree()<cr>
+	nnoremap s :execute("!kill -STOP ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
+	nnoremap c :execute("!kill -CONT ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
+	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
+endfunction
+command! -nargs=0 ProcessTree call ProcessTree()
+
+let s:StatusbarHidden = 0
+function! StatusbarToggle()
+    if s:StatusbarHidden  == 0
+        let s:StatusbarHidden = 1
+        set noshowmode
+        set noruler
+        set laststatus=0
+        set noshowcmd
+    else
+        let s:StatusbarHidden = 0
+        set showmode
+        set ruler
+        set laststatus=2
+        set showcmd
+    endif
+endfunction
+command! -nargs=0 StatusbarToggle call StatusbarToggle()
 
 " Prevent vim from moving cursor after leaving insert mode
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
