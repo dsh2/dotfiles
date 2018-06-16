@@ -802,6 +802,8 @@ function! ProcessTree()
 	nnoremap r :call ProcessTree()<cr>
 	nnoremap s :execute("!kill -STOP ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap c :execute("!kill -CONT ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
+	nnoremap K :execute("!kill ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
+	nnoremap 9 :execute("!kill -KILL ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
 endfunction
 command! -nargs=0 ProcessTree call ProcessTree()

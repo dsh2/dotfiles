@@ -247,7 +247,9 @@ p() {
 }
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
-alias pst='pstree -paglU | fzf --tac --no-sort --query="!chrome " '
+# alias pst='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
+alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
+
 alias pt='pstree -s'
 alias p_s='port search --line'
 alias tm=tmux
