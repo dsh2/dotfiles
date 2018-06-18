@@ -538,7 +538,7 @@ set backspace=indent,eol,start
 set backupdir=~/.vim/backup/
 set cmdheight=1
 set cmdwinheight=10
-set complete+=k
+set complete+=kt
 set concealcursor=n
 set conceallevel=0
 set diffopt=
@@ -603,8 +603,8 @@ map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
 map <leader><c-L> :redraw!<cr>
-nnoremap <C-W>m <C-W>\| <C-W>_
-nnoremap <C-W>M <C-W>=
+nnoremap <C-W><c-m> <C-W>\| <C-W>_
+nnoremap <C-W>m <C-W>=
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
