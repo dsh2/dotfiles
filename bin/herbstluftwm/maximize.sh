@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 set -e
 # A simple script for window maximization and window switching.
 # Running this the first time script will:
@@ -16,10 +16,10 @@ set -e
 # If you call this script with "grid", then you obtain a window switcher,
 # similar to that of Mac OS X.
 mode=${1:-max} # just some valid layout algorithm name
-touch /tmp/AAA
 
 # FIXME: for some unknown reason, remove_attr always fails
 #        fix that in the hlwm core and remove the "try" afterwards
+(( $(herbstclient attr tags.focus.client_count) < 2 )) && exit 0
 layout=$(herbstclient dump)
 cmd=(
 # remmember which client is focused
