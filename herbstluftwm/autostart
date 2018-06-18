@@ -56,17 +56,16 @@ hc keybind $SUPER-r remove
 # hc keybind $SUPER-Shift-r reload
 hc keybind $SUPER-Return spawn $TERMINAL
 hc keybind $CTRL-Return spawn $BROWSER
-hc keybind $SUPER-a spawn xautolock -locknow
+hc keybind $SUPER-a spawn $hc_bin/i3lock-wrapper.sh
+hc keybind $SUPER-l chain X fullscreen false X focus right
 # }}}
 # Keybindings for moving clients {{{
-
 hc keybind $SUPER-$CTRL-h shift left
 hc keybind $SUPER-$CTRL-j shift down
 hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
 hc keybind $SUPER-Shift-1 chain I move_index -1 I use_index -1
 hc keybind $SUPER-Shift-2 chain I move_index +1 I use_index +1
-
 # }}}
 # Keybindings for splitting frames {{{
 hc keybind $SUPER-6 split explode
@@ -85,27 +84,28 @@ hc keybind $SUPER-Shift-k resize up +$resizestep
 hc keybind $SUPER-Shift-l resize right +$resizestep
 # }}}
 # Keybindings to cycle through tags {{{
-# hc keybind $SUPER-1 use_index -1 --skip-visible
-# hc keybind $SUPER-comma use_index -1 --skip-visible
-hc keybind $SUPER-1 use_index -1 
-hc keybind $SUPER-comma use_index -1 
-# hc keybind $SUPER-2 use_index +1 --skip-visible
-# hc keybind $SUPER-period use_index +1 --skip-visible
-hc keybind $SUPER-2 use_index +1 
-hc keybind $SUPER-period use_index +1 
+hc keybind $SUPER-1 use_index -1 --skip-visible
+hc keybind $SUPER-comma use_index -1 --skip-visible
+# hc keybind $SUPER-1 use_index -1 
+# hc keybind $SUPER-comma use_index -1 
+hc keybind $SUPER-2 use_index +1 --skip-visible
+hc keybind $SUPER-period use_index +1 --skip-visible
+# hc keybind $SUPER-2 use_index +1 
+# hc keybind $SUPER-period use_index +1 
 hc keybind $SUPER-3 use_previous
 # TODO: Think about how FO could help here...
 hc keybind $SUPER-9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
 hc keybind $SUPER-0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
-hc keybind $SUPER-Shift-0 spawn ~/.dotfiles/bin/herbstluftwm/clear_empty_tags.sh
-
+# hc keybind $SUPER-Shift-0 spawn $HOME/.dotfiles/bin/herbstluftwm/clear_empty_tags.sh
+hc keybind $SUPER-Shift-0 spawn $hc_bin/clear_empty_tags.sh
+# hc keybind $SUPER-Shift-0 spawn xeyes
 # }}}
 # Keybindings to change layout {{{
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-p pseudotile toggle
-hc keybind $SUPER-space spawn sh -c $hc_bin/windowmenu.sh
-hc keybind $SUPER-z chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh
-hc keybind $SUPER-f chain X fullscreen false X spawn sh -c $hc_bin/maximize.sh
+hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
+hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
+hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-Shift-f fullscreen toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
@@ -115,7 +115,8 @@ hc keybind $SUPER-e \
 		, cycle_layout +1 vertical horizontal
 # }}}
 # Keybindings to change focus {{{
-hc keybind $SUPER-BackSpace cycle_monitor
+hc keybind $SUPER-BackSpace cycle_monitor +1
+hc keybind $SUPER-Shift-BackSpace cycle_monitor -1
 hc keybind $SUPER-c cycle_all +1
 hc keybind $SUPER-Shift-c cycle_all -1
 hc keybind $SUPER-i jumpto urgent
