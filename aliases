@@ -36,10 +36,20 @@ cdp() {
 compdef _pids cdp
 
 cd() { 
-    if ! builtin cd $* 2> /dev/null; then 
-        builtin cd $(dirname "$*"); 
-    fi; 
+	if ! builtin cd $* 2>/dev/null; then
+		if [ -e $* ]; then
+			dir=$(dirname $*)
+			if [ $dir = "." ]; then
+				print WARNING: no directory change
+			else 
+				builtin cd $dir
+			fi
+		else
+			echo Cannot change to \"$*\"
+		fi
+	fi
 }
+
 alias cdd='cd ~/.dotfiles'
 cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else echo Abort.; fi }
 alias cv=cb
@@ -97,7 +107,7 @@ alias gk='gitk --all&'
 alias gkk='v +GV'
 alias gss='v . +Gstatus +only'
 alias gcp='git cherry-pick'
-alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --recursive'
+alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr

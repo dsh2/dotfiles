@@ -91,7 +91,12 @@ zshaddhistory() {
     print -sr -- ${1%%$'\n'}
     # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
     # TODO: log local history for read-only directories somewhere else
-    fc -p .zsh_local_history
+    if [ -w $PWD ]; then
+	fc -p .zsh_local_history
+    else
+	dir=~/.zsh_local_history_dir/${(q)PWD}
+	mkdir -p $dir && fc -p $dir/history
+    fi
 }
 # }}}
 
@@ -145,7 +150,7 @@ if type xclip >/dev/null; then
 elif type xsel >/dev/null; then
 	XC="xsel --clipboard --input"
 else
-	XC="cat > /dev/null"
+	XC="true"
 fi
 
 function kill-line-xclip {
@@ -329,7 +334,7 @@ function set_terminal_title()
     # -check for ssh_tty
 	if [ -n $DISPLAY ]; then
 		if type wmctrl > /dev/null; then
-			wmctrl -r :ACTIVE: -N "$*"
+			wmctrl -r :ACTIVE: -N "$*" &>/dev/null
 		fi
 	fi
 }
