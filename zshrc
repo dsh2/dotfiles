@@ -24,7 +24,7 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
-PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
+PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}j=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(3L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add excessive shell levels
 # PS1+='(%!) '						# Add number of next shell event
 PSVAR+=$SSH_TTY
