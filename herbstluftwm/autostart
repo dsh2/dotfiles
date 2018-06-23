@@ -61,6 +61,8 @@ hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
 hc keybind $SUPER-Shift-1 chain I move_index -1 I use_index -1
 hc keybind $SUPER-Shift-2 chain I move_index +1 I use_index +1
+hc keybind $SUPER-bracketleft chain I lock I shift_to_monitor -1 I cycle_monitor -1 I unlock
+hc keybind $SUPER-bracketright chain I lock I shift_to_monitor +1 I cycle_monitor +1 I unlock
 # }}}
 # Keybindings for splitting frames {{{
 hc keybind $SUPER-6 split explode
