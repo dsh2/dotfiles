@@ -134,6 +134,9 @@ alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
 alias fr='fc -R'
 alias tt=set_terminal_title
+alias nmn='targets=(); excludes=(); for if in $(command ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then targets+=$(ifdata -pN $if)/24; excludes+=$(ifdata -pa $if); fi; done ; print_variables targets excludes; nmap -PS2222 -p- -oA ~/.nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}'
+alias nmap='nmap -oA ~/.nmap/log-$(nn)'
+alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 
 alias ln='ln -rsv'
 alias lnn=lnav
