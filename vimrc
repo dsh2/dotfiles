@@ -133,6 +133,7 @@ Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-lastpat'
+Plug 'coderifous/textobj-word-column.vim'
 Plug 'vim-scripts/argtextobj.vim'
 Plug 'vim-utils/vim-space'
 " }}}
@@ -624,6 +625,13 @@ nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za 
 nmap <leader>BD :bdelete!<cr>
+" TODO
+" -Add convert to hex/bin/etc.
+" -Parse as data-uri
+" -Encode/decode as base64, uu, etc.
+" -ROT13
+" -Disassem ARM/Intel
+map <leader>d :echo strftime('%F  %T', expand("<cword>"))<cr>
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
@@ -788,23 +796,24 @@ endfunction
 function! ProcessTree()
 	silent let @/="\\<" . ProcessTreePid() . "\\>"
 	execute "e ps-" . strftime('%F-%T') 
+	" TODO: 
+	" -add wchan, etc
 	silent read !ps -e --forest -o pid,ppid,stat,flag,user,etime,start:12,tty=TTY,cputime,rss:12,thcount,args
-
-	set buftype=nofile
-	set filetype=sh
-	set nonumber norelativenumber nowrap 
-	" set diff
 	silent! norm ggdd0"ad$ddn
-	silent! AirlineToggle
-	" TODO: merge the next two lines
-	let g:trailer=substitute(@a, " ", "_", "g")
-	set statusline=%!g:trailer
+	silent! bdelete! HEADER
+	1new HEADER
+	set statusline=\  nocursorline
+	set buftype=nofile nonumber norelativenumber nowrap " nomodifiable
+	" TODO: This is probaly not very much vim-style. Fix it.
+	exe "normal \<c-w>\<c-w>"
+	set buftype=nofile filetype=sh nonumber norelativenumber nowrap " nomodifiable
 	nnoremap r :call ProcessTree()<cr>
 	nnoremap s :execute("!kill -STOP ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap c :execute("!kill -CONT ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap K :execute("!kill ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap 9 :execute("!kill -KILL ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
+	nnoremap t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
 endfunction
 command! -nargs=0 ProcessTree call ProcessTree()
 
