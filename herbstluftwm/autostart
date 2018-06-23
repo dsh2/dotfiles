@@ -1,6 +1,5 @@
 #!env bash
 # vim: foldmethod=marker 
-set -x
 hc() { herbstclient "$@"; }
 # Reset configuration {{{
 hc_bin=$HOME/.dotfiles/bin/herbstluftwm
@@ -43,7 +42,6 @@ hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
 hc keybind F12 spawn pactl set-sink-mute 0 toggle
 # }}}
 # Miscellaneous keybindings {{{
-# TODO: make frame disappear after last window was closed
 hc keybind $SUPER-q close
 hc keybind $ALT-F4 close
 # hc keybind $SUPER-Shift-q close_and_remove
@@ -53,6 +51,7 @@ hc keybind $SUPER-r remove
 hc keybind $SUPER-Return spawn $TERMINAL
 hc keybind $CTRL-Return spawn $BROWSER
 hc keybind $SUPER-a spawn $hc_bin/i3lock-wrapper.sh
+hc keybind $SUPER-Shift-a spawn xset dpms 0 0 5
 hc keybind $SUPER-l chain X fullscreen false X focus right
 # }}}
 # Keybindings for moving clients {{{
