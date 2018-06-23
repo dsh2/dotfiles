@@ -45,6 +45,7 @@ hc keybind F12 spawn pactl set-sink-mute 0 toggle
 # Miscellaneous keybindings {{{
 # TODO: make frame disappear after last window was closed
 hc keybind $SUPER-q close
+hc keybind $ALT-F4 close
 # hc keybind $SUPER-Shift-q close_and_remove
 # hc keybind $SUPER-Shift-q close_or_remove
 hc keybind $SUPER-r remove
