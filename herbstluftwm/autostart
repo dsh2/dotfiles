@@ -40,7 +40,7 @@ hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}'
 hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
-# hc keybind $ALT+$CTRL+Shift+s spawn /bin/sh
+hc keybind F12 spawn pactl set-sink-mute 0 toggle
 # }}}
 # Miscellaneous keybindings {{{
 # TODO: make frame disappear after last window was closed
