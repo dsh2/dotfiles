@@ -410,6 +410,11 @@ alias sll='. ~/.keychain/dsf-debian-sh; sl'
 alias Rl='ranger ~/Downloads'
 alias dcl='dynamic-colors cycle'
 alias hc=herbstclient
+curl-tesseract() { 
+	curl --silent --output - "$@" |
+		tesseract -l eng -l deu - -
+}
+alias cts=curl-tesseract
 
 src_index() {
     find . \
