@@ -261,10 +261,8 @@ p() {
 }
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
-# alias pst='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
-
-alias pt='pstree -s'
+alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 alias p_s='port search --line'
 alias tm=tmux
 alias tma='tmux attach'
