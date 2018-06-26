@@ -501,6 +501,7 @@ stty -ixon
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
 REPORTTIME=3
 TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
+[ -z "$TMUX" ] && TMOUT=600
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
