@@ -179,11 +179,13 @@ function copy_last_output {
 }
 bindkey_func '^x^o' copy_last_output
 
+
 function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	tmux split vim $tmux_log_file '+set buftype=nofile'
-	tmux resize-pane -Z
+	# tmux split vim $tmux_log_file '+set buftype=nofile' '+AnsiEsc'
+	tmux split vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
+	# tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
 
