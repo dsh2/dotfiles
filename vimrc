@@ -1,4 +1,4 @@
-" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3
+" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3 tw=0
 let mapleader = "\<Space>""
 " Plugins {{{
 " vim-plug {{{
@@ -21,7 +21,13 @@ nmap <c-r> :FzfHistory:<cr>
 nmap <c-e> :FzfHistory/<cr>
 let g:fzf_tags_command = 'ctags -R'
 command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
-command! -bang -nargs=* Ag
+" TODO: Make BLines/Lines support preview as well. 
+" command! -bang -nargs=* FzfLines
+" 		\ call fzf#vim#lines(<q-args>,
+" 		\                 <bang>0 ? fzf#vim#with_preview('up:60%')
+" 		\                         : fzf#vim#with_preview('right:50%'),
+" 		\                 <bang>0)
+command! -bang -nargs=* FzfAg
 	    \ call fzf#vim#ag(<q-args>,
 	    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
 	    \                         : fzf#vim#with_preview('right:50%'),
@@ -37,8 +43,28 @@ map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>lC :FzfBCommits<cr>
 map <leader>ll :FzfBLines<cr>
 map <leader>la :FzfAg<cr>
-map <leader>b :FzfBuffers<cr>
+map <leader>ll :FzfBLines<cr> "{{{
+map <leader>lL :FzfLines<cr>
+function! GetSelected()
+    " save reg
+    let reg = '"'
+    let reg_save = getreg(reg)
+    let reg_type = getregtype(reg)
+    " yank visually selected text
+    silent exe 'norm! gv"'.reg.'y'
+    let value = getreg(reg)
+    " restore reg
+    call setreg(reg, reg_save, reg_type)
+    return value
+endfunction
+vnoremap <leader>ll :<c-u>execute("FzfBLines ") . GetSelected()<cr> 
+vnoremap <leader>lL :<c-u>execute("FzfLines ") . GetSelected()<cr> 
+vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr> 
+"}}}
+" map <leader>b :FzfBuffers<cr>
+map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
+map <leader>lC :FzfBCommits<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lL :FzfLines<cr>
 map <leader>lt :FzfFiletypes<cr>
