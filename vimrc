@@ -651,6 +651,12 @@ colorscheme seoul256
 " colorscheme Tomorrow-Night
 " colorscheme solarized
 hi Folded cterm=NONE
+nnoremap zm zM
+nnoremap zM zm
+" TODO: Add "default" foldexprs for
+" -ascii trees (uftrace,etc.)
+" -space indention
+" -dash/line separators
 "}}}
 " Open log files at the bottom of the file{{{
 autocmd BufReadPost *.log normal G
@@ -788,6 +794,8 @@ endfunction
 
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
+" Prevent delay after quitting input mode
+" TODO: This seems to be unreliable
 set esckeys
 
 function! ProcessTreePid()
@@ -836,6 +844,7 @@ endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
 
 " Prevent vim from moving cursor after leaving insert mode
+" TODO: try to understand why vim does this
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}
