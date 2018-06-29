@@ -77,12 +77,12 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 alias f=find
-loc() { locate "$*" | grep --color "$*"; }
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
+loc() { locate "$*" | grep --color "$*"; }
 locl() { loc "$PWD/$*" ; }
 
 # git
@@ -122,16 +122,20 @@ alias glssh='git remote set-url origin $(git remote get-url --push origin | sed 
 alias gci='git init && git add . && git commit -m "Initial commit"'
 
 # ls
-alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
+alias ls="$LS_COMMAND --human-readable --almost-all --escape --classify --color=always --time-style='+%F %T'"
 alias l='ls -l'
 alias l1='ls -1'
+alias lsd='l -d'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
-alias lts='l -rS'
-alias ltsh='l -rS -h'
+alias lt='l --sort=time'
+alias lta='l --sort=time --time=atime'
+alias ltc='l --sort=time --time=ctime'
+alias lts='l --sort=size --reverse'
+alias lS=lts
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
-alias lsd='l -d'
+
 alias fr='fc -R'
 alias tt=set_terminal_title
 alias nmn='targets=(); excludes=(); for if in $(command ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then targets+=$(ifdata -pN $if)/24; excludes+=$(ifdata -pa $if); fi; done ; print_variables targets excludes; nmap -PS2222 -p- -oA ~/.nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}'
