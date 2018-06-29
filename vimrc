@@ -360,6 +360,10 @@ highlight MarkologyHLo ctermfg=Cyan ctermbg=black
 Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
 " map <leader>a :Ag! \\b<cword\\b><CR>
 map <leader>a :Ag! <cword><CR>
+" }}}
+Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
+nnoremap <c-w>m :MaximizerToggle<cr>
+nnoremap <c-w><c-m> :MaximizerToggle<cr>
 "}}}
 Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
