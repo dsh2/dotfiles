@@ -223,9 +223,17 @@ let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'l*'
 let g:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
-" map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline = 0<cr>
+" TODO: If readonly set nofile?
+map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
 autocmd BufRead,BufNewFile *.csv set filetype=csv
+" TODO: Add toggle reverse order support
+autocmd FileType csv map <buffer> <leader>cs :Sort<cr>
+autocmd FileType csv map <buffer> <leader>c/ :CSVSearchInColumn 
+autocmd FileType csv map <buffer> <leader>ca :Analyze<cr>
+" TODO: Add maps for
+" -Toggle aligns (left, right, etc.)
+" -Number types (hex, etc.)
 " }}}
 " Plug 'hsanson/vim-android' "{{{
 " let g:android_sdk_path = $ANDROID_SDK_ROOT
