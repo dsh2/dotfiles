@@ -494,7 +494,9 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
-Plug 'alvan/vim-closetag'
+Plug 'tommcdo/vim-exchange'
+Plug 'szw/vim-dict'
+Plug 'szw/vim-g'
 Plug 'google/vim-searchindex'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
