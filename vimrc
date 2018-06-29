@@ -637,6 +637,21 @@ nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
+" TODO: check if g-prefix makes sense
+let g:path=""
+function! YankPath()
+	if g:path==expand("%:p")
+		let g:path=expand("%:t")
+	elseif g:path==expand("%:t")
+		let g:path=expand("%:.")
+	else
+		let g:path=expand("%:p")
+	endif
+	call system("tmux set-buffer " . g:path)
+	call system("xsel -bi <<< " . g:path)
+	echo "Yanked path \"" . g:path . "\""
+endfunction
+map yp :call YankPath()<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
