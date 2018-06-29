@@ -603,9 +603,7 @@ nmap Q :qall<cr>
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
-map <leader><c-L> :redraw!<cr>
-nnoremap <C-W><c-m> <C-W>\| <C-W>_
-nnoremap <C-W>m <C-W>=
+map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
