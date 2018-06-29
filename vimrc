@@ -382,7 +382,8 @@ let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 Plug 'vim-scripts/AnsiEsc.vim', {'on': 'AnsiEsc'} "{{{
 map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
-map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
+" map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
+map <leader>Q vae:!strip-ansi<cr>:!reset<cr>:redraw!<cr>
 "}}}
 Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 nmap gw :InteractiveWindow<CR>
@@ -432,6 +433,7 @@ augroup vimrc
 augroup END
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
+" TODO: Add more preview text, squece as much content as possible?
 let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 "}}}
 Plug 'ihacklog/HiCursorWords' "{{{
