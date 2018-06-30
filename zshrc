@@ -182,8 +182,9 @@ bindkey_func '^x^o' copy_last_output
 function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	tmux split vim $tmux_log_file '+set buftype=nofile'
-	tmux resize-pane -Z
+	# tmux split vim $tmux_log_file '+set buftype=nofile' '+AnsiEsc'
+	tmux split vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
+	# tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
 
@@ -449,7 +450,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic fzf pstree pv tty lnav tee
+compdef _gnu_generic fzf pstree pv tty lnav tee lspci
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -501,6 +502,7 @@ stty -ixon
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
 REPORTTIME=3
 TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
+[ -z "$TMUX" ] && TMOUT=200
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

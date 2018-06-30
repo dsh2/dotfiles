@@ -1,4 +1,4 @@
-" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3
+" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3 tw=0
 let mapleader = "\<Space>""
 " Plugins {{{
 " vim-plug {{{
@@ -21,7 +21,13 @@ nmap <c-r> :FzfHistory:<cr>
 nmap <c-e> :FzfHistory/<cr>
 let g:fzf_tags_command = 'ctags -R'
 command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
-command! -bang -nargs=* Ag
+" TODO: Make BLines/Lines support preview as well. 
+" command! -bang -nargs=* FzfLines
+" 		\ call fzf#vim#lines(<q-args>,
+" 		\                 <bang>0 ? fzf#vim#with_preview('up:60%')
+" 		\                         : fzf#vim#with_preview('right:50%'),
+" 		\                 <bang>0)
+command! -bang -nargs=* FzfAg
 	    \ call fzf#vim#ag(<q-args>,
 	    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
 	    \                         : fzf#vim#with_preview('right:50%'),
@@ -37,8 +43,28 @@ map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>lC :FzfBCommits<cr>
 map <leader>ll :FzfBLines<cr>
 map <leader>la :FzfAg<cr>
-map <leader>b :FzfBuffers<cr>
+map <leader>ll :FzfBLines<cr> "{{{
+map <leader>lL :FzfLines<cr>
+function! GetSelected()
+    " save reg
+    let reg = '"'
+    let reg_save = getreg(reg)
+    let reg_type = getregtype(reg)
+    " yank visually selected text
+    silent exe 'norm! gv"'.reg.'y'
+    let value = getreg(reg)
+    " restore reg
+    call setreg(reg, reg_save, reg_type)
+    return value
+endfunction
+vnoremap <leader>ll :<c-u>execute("FzfBLines ") . GetSelected()<cr> 
+vnoremap <leader>lL :<c-u>execute("FzfLines ") . GetSelected()<cr> 
+vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr> 
+"}}}
+" map <leader>b :FzfBuffers<cr>
+map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
+map <leader>lC :FzfBCommits<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lL :FzfLines<cr>
 map <leader>lt :FzfFiletypes<cr>
@@ -133,6 +159,7 @@ Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-lastpat'
+Plug 'coderifous/textobj-word-column.vim'
 Plug 'vim-scripts/argtextobj.vim'
 Plug 'vim-utils/vim-space'
 " }}}
@@ -196,9 +223,17 @@ let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'l*'
 let g:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
-" map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-map <leader>C :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline = 0<cr>
+" TODO: If readonly set nofile?
+map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
 autocmd BufRead,BufNewFile *.csv set filetype=csv
+" TODO: Add toggle reverse order support
+autocmd FileType csv map <buffer> <leader>cs :Sort<cr>
+autocmd FileType csv map <buffer> <leader>c/ :CSVSearchInColumn 
+autocmd FileType csv map <buffer> <leader>ca :Analyze<cr>
+" TODO: Add maps for
+" -Toggle aligns (left, right, etc.)
+" -Number types (hex, etc.)
 " }}}
 " Plug 'hsanson/vim-android' "{{{
 " let g:android_sdk_path = $ANDROID_SDK_ROOT
@@ -300,6 +335,7 @@ let g:tagbar_type_go = {
 autocmd VimEnter * nested :call tagbar#autoopen(1)
 map <leader>tt :TagbarToggle<cr>
 autocmd FileType tagbar map <buffer> ; p
+autocmd FileType tagbar map <buffer> A x
 autocmd FileType tagbar map <buffer> l za
 autocmd FileType tagbar map <buffer> h za
 " }}}
@@ -325,6 +361,10 @@ highlight MarkologyHLo ctermfg=Cyan ctermbg=black
 Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
 " map <leader>a :Ag! \\b<cword\\b><CR>
 map <leader>a :Ag! <cword><CR>
+" }}}
+Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
+nnoremap <c-w>m :MaximizerToggle<cr>
+nnoremap <c-w><c-m> :MaximizerToggle<cr>
 "}}}
 Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
@@ -347,7 +387,8 @@ let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 Plug 'vim-scripts/AnsiEsc.vim', {'on': 'AnsiEsc'} "{{{
 map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
-map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
+" map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
+map <leader>Q vae:!strip-ansi<cr>:!reset<cr>:redraw!<cr>
 "}}}
 Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 nmap gw :InteractiveWindow<CR>
@@ -397,6 +438,7 @@ augroup vimrc
 augroup END
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
+" TODO: Add more preview text, squece as much content as possible?
 let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 "}}}
 Plug 'ihacklog/HiCursorWords' "{{{
@@ -493,7 +535,9 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
-Plug 'alvan/vim-closetag'
+Plug 'tommcdo/vim-exchange'
+Plug 'szw/vim-dict'
+Plug 'szw/vim-g'
 Plug 'google/vim-searchindex'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -602,9 +646,7 @@ nmap Q :qall<cr>
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
-map <leader><c-L> :redraw!<cr>
-nnoremap <C-W><c-m> <C-W>\| <C-W>_
-nnoremap <C-W>m <C-W>=
+map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
@@ -624,11 +666,33 @@ nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za 
 nmap <leader>BD :bdelete!<cr>
+" TODO
+" -Add convert to hex/bin/etc.
+" -Parse as data-uri
+" -Encode/decode as base64, uu, etc.
+" -ROT13
+" -Disassem ARM/Intel
+map <leader>d :echo strftime('%F  %T', expand("<cword>"))<cr>
 " Split navigations
 nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
+" TODO: check if g-prefix makes sense
+let g:path=""
+function! YankPath()
+	if g:path==expand("%:p")
+		let g:path=expand("%:t")
+	elseif g:path==expand("%:t")
+		let g:path=expand("%:.")
+	else
+		let g:path=expand("%:p")
+	endif
+	call system("tmux set-buffer " . g:path)
+	call system("xsel -bi <<< " . g:path)
+	echo "Yanked path \"" . g:path . "\""
+endfunction
+map yp :call YankPath()<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
@@ -643,6 +707,12 @@ colorscheme seoul256
 " colorscheme Tomorrow-Night
 " colorscheme solarized
 hi Folded cterm=NONE
+nnoremap zm zM
+nnoremap zM zm
+" TODO: Add "default" foldexprs for
+" -ascii trees (uftrace,etc.)
+" -space indention
+" -dash/line separators
 "}}}
 " Open log files at the bottom of the file{{{
 autocmd BufReadPost *.log normal G
@@ -780,6 +850,8 @@ endfunction
 
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
+" Prevent delay after quitting input mode
+" TODO: This seems to be unreliable
 set esckeys
 
 function! ProcessTreePid()
@@ -788,23 +860,24 @@ endfunction
 function! ProcessTree()
 	silent let @/="\\<" . ProcessTreePid() . "\\>"
 	execute "e ps-" . strftime('%F-%T') 
+	" TODO: 
+	" -add wchan, etc
 	silent read !ps -e --forest -o pid,ppid,stat,flag,user,etime,start:12,tty=TTY,cputime,rss:12,thcount,args
-
-	set buftype=nofile
-	set filetype=sh
-	set nonumber norelativenumber nowrap 
-	" set diff
 	silent! norm ggdd0"ad$ddn
-	silent! AirlineToggle
-	" TODO: merge the next two lines
-	let g:trailer=substitute(@a, " ", "_", "g")
-	set statusline=%!g:trailer
+	silent! bdelete! HEADER
+	1new HEADER
+	set statusline=\  nocursorline
+	set buftype=nofile nonumber norelativenumber nowrap " nomodifiable
+	" TODO: This is probaly not very much vim-style. Fix it.
+	exe "normal \<c-w>\<c-w>"
+	set buftype=nofile filetype=sh nonumber norelativenumber nowrap " nomodifiable
 	nnoremap r :call ProcessTree()<cr>
 	nnoremap s :execute("!kill -STOP ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap c :execute("!kill -CONT ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap K :execute("!kill ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap 9 :execute("!kill -KILL ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
+	nnoremap t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
 endfunction
 command! -nargs=0 ProcessTree call ProcessTree()
 
@@ -827,6 +900,7 @@ endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
 
 " Prevent vim from moving cursor after leaving insert mode
+" TODO: try to understand why vim does this
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}

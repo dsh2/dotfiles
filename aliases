@@ -134,7 +134,10 @@ alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
 alias fr='fc -R'
 alias tt=set_terminal_title
-
+alias nmn='targets=(); excludes=(); for if in $(command ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then targets+=$(ifdata -pN $if)/24; excludes+=$(ifdata -pa $if); fi; done ; print_variables targets excludes; nmap -PS2222 -p- -oA ~/.nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}'
+alias nmap='nmap -oA ~/.nmap/log-$(nn)'
+alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
+alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
 alias lnn=lnav
 alias r=ranger
@@ -167,14 +170,15 @@ alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
-alias lanip='for if in $(\ls -1 /sys/class/net); do [ $if = "lo" ] || echo $if:\\t$(ifdata -pa $if); done'
+alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
 
 # Vim aliases
 alias v='vim -X'
 # alias v=vim
 gv() { gvim "$*"; raiseX; }
-alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
+# alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
+alias vl='v ~/.tmux-log/*(.om[1])'
 alias vll='v *(.om[1])'
 alias cl='cat ~/.tmux-log/*(.om[1])'
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
@@ -257,15 +261,14 @@ p() {
 }
 pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
-# alias pst='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
-
-alias pt='pstree -s'
+alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
-alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
@@ -407,6 +410,11 @@ alias sll='. ~/.keychain/dsf-debian-sh; sl'
 alias Rl='ranger ~/Downloads'
 alias dcl='dynamic-colors cycle'
 alias hc=herbstclient
+curl-tesseract() { 
+	curl --silent --output - "$@" |
+		tesseract -l eng -l deu - -
+}
+alias cts=curl-tesseract
 
 src_index() {
     find . \

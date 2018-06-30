@@ -1,6 +1,5 @@
 #!env bash
 # vim: foldmethod=marker 
-set -x
 hc() { herbstclient "$@"; }
 # Reset configuration {{{
 hc_bin=$HOME/.dotfiles/bin/herbstluftwm
@@ -27,17 +26,12 @@ TERMINAL=${TERMINAL:-xfce4-terminal}
 BROWSER=${BROWSER:-sensible-browser} 
 # }}}
 # Setup basic tags {{{
-tag_names=(log mail coms root)
-tag_keys=( {1..9} 0 )
-
-hc rename default "${tag_names[0]}" || true
-for i in ${!tag_names[@]} ; do
-	hc add "${tag_names[$i]}"
-	key="${tag_keys[$i]}"
-	if ! [ -z "$key" ] ; then
-		hc keybind "$SUPER-$key" use_index "$i"
-		hc keybind "$SUPER-Shift-$key" move_index "$i"
-	fi
+tag_names=(log root coms mail )
+for tag_index in {0..9}; do
+	hc keybind "$SUPER-$ALT-$tag_index" use_index "$tag_index"
+	hc keybind "$SUPER-$ALT-Shift-$tag_index" move_index "$tag_index"
+	tag_name="${tag_names[$tag_index]}"
+	[ -n "$tag_name" ] && hc add "$tag_name"
 done
 # }}}
 # Keybindings for rofi {{{
@@ -45,11 +39,14 @@ hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}'
 hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
-# hc keybind $ALT+$CTRL+Shift+s spawn /bin/sh
+hc keybind F9 spawn $hc_bin/dlf.sh
+hc keybind F10 spawn pactl set-sink-volume 0 -10%
+hc keybind F11 spawn pactl set-sink-volume 0 +10%
+hc keybind F12 spawn pactl set-sink-mute 0 toggle
 # }}}
 # Miscellaneous keybindings {{{
-# TODO: make frame disappear after last window was closed
 hc keybind $SUPER-q close
+hc keybind $ALT-F4 close
 # hc keybind $SUPER-Shift-q close_and_remove
 # hc keybind $SUPER-Shift-q close_or_remove
 hc keybind $SUPER-r remove
@@ -57,6 +54,7 @@ hc keybind $SUPER-r remove
 hc keybind $SUPER-Return spawn $TERMINAL
 hc keybind $CTRL-Return spawn $BROWSER
 hc keybind $SUPER-a spawn $hc_bin/i3lock-wrapper.sh
+hc keybind $SUPER-Shift-a spawn xset dpms 0 0 5
 hc keybind $SUPER-l chain X fullscreen false X focus right
 # }}}
 # Keybindings for moving clients {{{
@@ -66,6 +64,8 @@ hc keybind $SUPER-$CTRL-k shift up
 hc keybind $SUPER-$CTRL-l shift right
 hc keybind $SUPER-Shift-1 chain I move_index -1 I use_index -1
 hc keybind $SUPER-Shift-2 chain I move_index +1 I use_index +1
+hc keybind $SUPER-bracketleft chain I lock I shift_to_monitor -1 I cycle_monitor -1 I unlock
+hc keybind $SUPER-bracketright chain I lock I shift_to_monitor +1 I cycle_monitor +1 I unlock
 # }}}
 # Keybindings for splitting frames {{{
 hc keybind $SUPER-6 split explode
@@ -196,11 +196,12 @@ hc rule class=Thunderbird tag=mail focus=false
 # }}}
 # Setup panels {{{
 panel=~/.config/herbstluftwm/panel.sh
-[ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
-for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
-    # start it on each monitor
-    "$panel" $monitor &
-done
+if [ -x "$panel" ]; then
+	for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
+		# start it on each monitor
+		"$panel" $monitor &
+	done
+fi
 # }}}
 hc unlock
 hc detect_monitors
