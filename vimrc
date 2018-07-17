@@ -34,9 +34,13 @@ command! -bang -nargs=* FzfAg
 	    \                 <bang>0)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 let g:fzf_layout = { 'down': '~70:%' }
-imap <c-x><c-h> <plug>(fzf-complete-path)
-inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
-
+inoremap <expr> <c-x><c-t> fzf#complete('tmuxwords.rb --all-but-current --scroll 500 --min 5')
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
 map <leader>T :FzfTags<cr>
 map <leader>M :FzfMarks<cr>
 map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
@@ -45,6 +49,7 @@ map <leader>ll :FzfBLines<cr>
 map <leader>la :FzfAg<cr>
 map <leader>ll :FzfBLines<cr> "{{{
 map <leader>lL :FzfLines<cr>
+nnoremap <silent> <Leader>` :FzfMarks<CR>
 function! GetSelected()
     " save reg
     let reg = '"'
