@@ -741,6 +741,18 @@ nnoremap zM zm
 " -ascii trees (uftrace,etc.)
 " -space indention
 " -dash/line separators
+" foldexpr for path-like lists
+function! FoldExprAsciiTree(lnum)
+	return len(split(getline(a:lnum), "/"))
+endfunction
+function! FoldExprPath(lnum)
+	return len(split(getline(a:lnum), "/"))
+endfunction
+" foldexpr for single space indention
+function! FoldExprSpace(lnum)
+	return matchend(getline(a:lnum), "\\S")
+endfunction
+set foldexpr=FoldExprSpace(v:lnum)
 "}}}
 " Open log files at the bottom of the file{{{
 autocmd vimrc BufReadPost *.log normal G
