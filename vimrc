@@ -183,6 +183,21 @@ Plug 'hari-rangarajan/CCTree' "{{{
 let g:CCTreeDisplayMode=1
 let g:CCTreeHilightCallTree=1
 " TODO: 
+" let g:CCTreeCscopeDb = ".cscope/out"
+let g:CCTreeCscopeDb = "cscope.out"
+let g:CCTreeDisplayMode = 1
+let g:CCTreeHilightCallTree=1
+let g:CCTreeMinVisibleDepth = 3
+let g:CCTreeOrientation = "topleft"
+let g:CCTreeRecursiveDepth = 3
+let g:CCTreeUseUTF8Symbols = 1
+let g:CCTreeWindowWidth = -1
+let g:CCTreeDbFileMaxSize = 40000000
+let g:CCTreeKeyHilightTree = '<C-h>'        " Static highlighting
+let g:CCTreeKeyDepthPlus = '='
+let g:CCTreeKeyDepthMinus = '-'
+" -re-use tree control code for uftrace, etc
+" map ; to preview
 " -add command to load db to cscope load event
 " -use async-run or similar for that
 " }}}
