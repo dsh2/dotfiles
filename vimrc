@@ -3,10 +3,13 @@ let mapleader = "\<Space>""
 " Plugins {{{
 " vim-plug {{{
 set nocompatible
+augroup vimrc
+  autocmd!
+augroup END
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    autocmd vimrc VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin('~/.vim/plugged')
 " }}}
@@ -90,22 +93,48 @@ nmap <leader>gw :Gwrite<cr>
 nmap <leader>gg :Git 
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
-autocmd FileType gitcommit map <buffer> ; odvlzi
-" autocmd FileType gitcommit map <buffer> ; :only<cr>dv
-" autocmd FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
+autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
+" autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
+" autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
-autocmd BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
-autocmd BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
+autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
+autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 " }}}
 Plug 'junegunn/gv.vim' "{{{
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
 vmap Gv :GV!<cr>
 vmap GV :GV?<cr>
-autocmd FileType GV map <buffer> ; o
-autocmd FileType GV map <buffer> l ;
-autocmd FileType GV map <buffer>  O
+autocmd vimrc FileType GV map <buffer> ; o
+autocmd vimrc FileType GV map <buffer> l ;
+autocmd vimrc FileType GV map <buffer>  O
 " }}}
+Plug 'inkarkat/vim-CompleteHelper' "{{{
+Plug 'inkarkat/vim-ingo-library'
+Plug 'vim-scripts/PrevInsertComplete'
+Plug 'vim-scripts/MotionComplete'
+Plug 'vim-scripts/BracketComplete'
+Plug 'vim-scripts/MultiWordComplete'
+Plug 'inkarkat/vim-WORDComplete'
+Plug 'https://github.com/vim-scripts/AlphaComplete'
+Plug 'https://github.com/inkarkat/vim-PatternComplete'
+"}}}
+Plug 'inkarkat/vim-session'"{{{
+let g:session_autoload = 'yes'
+let g:session_default_to_last = 'yes'
+let g:session_autosave = 'yes'
+let g:session_autosave_to = 'yes'
+let g:session_autosave_periodic = 'yes'
+let g:session_autosave_periodic = 'yes'
+let g:session_persist_globals = ['&makeprg', '&makeef']
+" -save session periodically
+" -check vim-obsession
+autocmd vimrc VimLeave * mksession! ~/.vim/lastsession
+"}}}
+" TODO: Use fnamemodify() or fnameescape()
+" let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
+let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
+"}}}
 Plug 'airblade/vim-gitgutter', {'on': 'GitGutterToggle'} "{{{
 let g:gitgutter_highlight_lines = 0
 let g:gitgutter_override_sign_column_highlight = 1
@@ -119,6 +148,7 @@ let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
 Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
 nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
 nnoremap <silent> <F3> :Unite buffer<cr>
+autocmd vimrc FileType unite map <buffer> <F3> q
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
@@ -146,8 +176,8 @@ endfunction
 nnoremap <C-n> :call QfLlNext()<cr>
 nnoremap <C-p> :call QfLlPrevious()<cr>
 " FIXME: does not work :(
-autocmd FileType qf set norelativenumber
-autocmd FileType qf wincmd J
+autocmd vimrc FileType qf set norelativenumber
+autocmd vimrc FileType qf wincmd J
 "}}}
 Plug 'hari-rangarajan/CCTree' "{{{
 let g:CCTreeDisplayMode=1
@@ -222,8 +252,8 @@ Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
 " hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
 " hi link CSVColumnOdd MoreMsg
 " hi link CSVColumnEven Question
-" autocmd Filetype csv hi CSVColumnEven ctermbg=4
-" autocmd Filetype csv hi CSVColumnOdd  ctermbg=5
+" autocmd vimrc Filetype csv hi CSVColumnEven ctermbg=4
+" autocmd vimrc Filetype csv hi CSVColumnOdd  ctermbg=5
 let g:csv_no_column_highlight = 0
 let b:csv_arrange_align = 'l*'
 let g:csv_arrange_align = 'l*'
@@ -231,11 +261,11 @@ let g:csv_autocmd_arrange = 1
 " TODO: If readonly set nofile?
 map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
-autocmd BufRead,BufNewFile *.csv set filetype=csv
+autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
 " TODO: Add toggle reverse order support
-autocmd FileType csv map <buffer> <leader>cs :Sort<cr>
-autocmd FileType csv map <buffer> <leader>c/ :CSVSearchInColumn 
-autocmd FileType csv map <buffer> <leader>ca :Analyze<cr>
+autocmd vimrc FileType csv map <buffer> <leader>cs :Sort<cr>
+autocmd vimrc FileType csv map <buffer> <leader>c/ :CSVSearchInColumn 
+autocmd vimrc FileType csv map <buffer> <leader>ca :Analyze<cr>
 " TODO: Add maps for
 " -Toggle aligns (left, right, etc.)
 " -Number types (hex, etc.)
@@ -246,7 +276,7 @@ autocmd FileType csv map <buffer> <leader>ca :Analyze<cr>
 " " }}}
 Plug 'kelwin/vim-smali', {'for': 'smali'} "{{{
 "Plug 'alderz/smali-vim'
-autocmd BufRead *.smali set filetype=smali
+autocmd vimrc BufRead *.smali set filetype=smali
 " }}}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 Plug 'xolox/vim-misc'
@@ -257,7 +287,7 @@ Plug 'vim-scripts/indentpython.vim', {'for': 'python'} "{{{
 " let g:jedi#use_splits_not_buffers = "right"
 " }}}
 Plug 'elzr/vim-json', {'for': 'json'}  "{{{
-" autocmd FileType json set conceallevel=0
+" autocmd vimrc FileType json set conceallevel=0
 let g:vim_json_syntax_concealcursor = 0
 " }}}
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeFind' } "{{{
@@ -265,11 +295,11 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
 let NERDTreeShowHidden=1
 let NERDTreeWinSize=46
-autocmd FileType nerdtree map <buffer> l oj^
-"autocmd FileType nerdtree map <buffer> O mo
-autocmd FileType nerdtree map <buffer> h x^
-autocmd FileType nerdtree map <buffer> ; go
-autocmd FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
+autocmd vimrc FileType nerdtree map <buffer> l oj^
+"autocmd vimrc FileType nerdtree map <buffer> O mo
+autocmd vimrc FileType nerdtree map <buffer> h x^
+autocmd vimrc FileType nerdtree map <buffer> ; go
+autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
 " }}}
 Plug 'tyru/open-browser.vim' "{{{
@@ -337,12 +367,12 @@ let g:tagbar_type_go = {
 	    \ 'ctagsbin'  : 'gotags',
 	    \ 'ctagsargs' : '-sort -silent'
 	    \ }
-autocmd VimEnter * nested :call tagbar#autoopen(1)
+autocmd vimrc VimEnter * nested :call tagbar#autoopen(1)
 map <leader>tt :TagbarToggle<cr>
-autocmd FileType tagbar map <buffer> ; p
-autocmd FileType tagbar map <buffer> A x
-autocmd FileType tagbar map <buffer> l za
-autocmd FileType tagbar map <buffer> h za
+autocmd vimrc FileType tagbar map <buffer> ; p
+autocmd vimrc FileType tagbar map <buffer> A x
+autocmd vimrc FileType tagbar map <buffer> l za
+autocmd vimrc FileType tagbar map <buffer> h za
 " }}}
 Plug 'jeetsukumaran/vim-markology' "{{{
 let g:markology_enable = 0
@@ -416,18 +446,13 @@ map <leader>A :Autoformat<cr>
 "}}}
 Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
-autocmd FileType sshconfig setlocal commentstring=#\ %s
-autocmd FileType sshdconfig setlocal commentstring=#\ %s
-autocmd FileType shell setlocal commentstring=#\ %s
-autocmd FileType shell setlocal commentstring=#\ %s
-autocmd FileType i3config setlocal commentstring=#\ %s
-autocmd FileType jq setlocal commentstring=#\ %s
+autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq setlocal commentstring=#\ %s
 "}}}
 Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
 "}}}
 Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
-autocmd FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
+autocmd vimrc FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 "}}}
 Plug 'idanarye/vim-merginal' "{{{
 " Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "
@@ -437,10 +462,8 @@ map <leader>y :MerginalToggle<cr>
 "}}}
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
-augroup vimrc
-    autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-    nnoremap <buffer> <silent> <cr> 0f/lgf
-augroup END
+autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
+" nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
@@ -513,7 +536,7 @@ endif
 " }}}
 " Plug tmux {{{
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-autocmd BufRead tmux.conf set filetype=tmux
+autocmd vimrc BufRead tmux.conf set filetype=tmux
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
@@ -720,8 +743,8 @@ nnoremap zM zm
 " -dash/line separators
 "}}}
 " Open log files at the bottom of the file{{{
-autocmd BufReadPost *.log normal G
-autocmd BufReadPost *.log :set filetype=messages
+autocmd vimrc BufReadPost *.log normal G
+autocmd vimrc BufReadPost *.log :set filetype=messages
 "}}}
 " Restore last position in file upon opening a file{{{
 autocmd BufReadPost * call RestorePosition()
@@ -749,25 +772,25 @@ autocmd VimLeave * mksession! ~/.vim/lastsession
 " Configure help system {{{
 runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
-autocmd FileType man set sidescrolloff=0
-autocmd FileType man wincmd L
+autocmd vimrc FileType man set sidescrolloff=0
+autocmd vimrc FileType man wincmd L
 let g:ft_man_open_mode = 'vert'
 let g:ft_man_folding_enable = 1
 
-autocmd FileType vim nmap <buffer> K :exe "help " . expand("<cword>")<CR>
-autocmd FileType help nmap <buffer> q <c-w>c
-autocmd FileType help set nonumber
-autocmd FileType help set sidescrolloff=0
-autocmd FileType help wincmd L
-" autocmd FileType help wincmd L | vert resize 80
+autocmd vimrc FileType vim nmap <buffer> K :exe "help " . expand("<cword>")<CR>
+autocmd vimrc FileType help nmap <buffer> q <c-w>c
+autocmd vimrc FileType help set nonumber
+autocmd vimrc FileType help set sidescrolloff=0
+autocmd vimrc FileType help wincmd L
+" autocmd vimrc FileType help wincmd L | vert resize 80
 " }}}
 " Setup cursorcolumn {{{
 " Add a cursorline(/cursorcolumn) to the active window
-" autocmd BufWinLeave * set nocursorline |
+" autocmd vimrc BufWinLeave * set nocursorline |
 " 	    \ highlight CursorLineNr ctermbg=grey
 
-autocmd BufRead,BufNewFile *.strace set filetype=strace
-autocmd BufWinEnter * set cursorline |
+autocmd vimrc BufRead,BufNewFile *.strace set filetype=strace
+autocmd vimrc BufWinEnter * set cursorline |
 	    \ highlight CursorLineNr ctermfg=white |
 	    \ highlight CursorLineNr ctermbg=red |
 	    \ highlight CursorLine cterm=underline
@@ -847,8 +870,8 @@ nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 " }}}
 " Miscellaneous {{{
-autocmd BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
-autocmd FileType netrw nmap <buffer> q <c-w>c
+autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
+autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
 endfunction
