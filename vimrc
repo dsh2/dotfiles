@@ -819,7 +819,7 @@ function! RemoveTrailingSpaces()
 endfunction
 "}}}
 " Function: page output of vim commands {{{
-command! -nargs=1 Redir call <SID>Redir(<f-args>)
+command! -nargs=1 -complete=command Redir call <SID>Redir(<f-args>)
 function! s:Redir(cmd) abort
     let l:oldz = @z
     redir @z
