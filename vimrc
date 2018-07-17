@@ -1,5 +1,5 @@
 " vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3 tw=0
-let mapleader = "\<Space>""
+let mapleader = "\<Space>"
 " Plugins {{{
 " vim-plug {{{
 set nocompatible
@@ -47,10 +47,8 @@ omap <leader><tab> <plug>(fzf-maps-o)
 map <leader>T :FzfTags<cr>
 map <leader>M :FzfMarks<cr>
 map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
-map <leader>lC :FzfBCommits<cr>
-map <leader>ll :FzfBLines<cr>
 map <leader>la :FzfAg<cr>
-map <leader>ll :FzfBLines<cr> "{{{
+map <leader>ll :FzfBLines<cr> 
 map <leader>lL :FzfLines<cr>
 nnoremap <silent> <Leader>` :FzfMarks<CR>
 function! GetSelected()
@@ -74,7 +72,6 @@ map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
 map <leader>lC :FzfBCommits<cr>
 map <leader>lf :FzfFiles<cr>
-map <leader>lL :FzfLines<cr>
 map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
 " }}}
@@ -180,8 +177,6 @@ autocmd vimrc FileType qf set norelativenumber
 autocmd vimrc FileType qf wincmd J
 "}}}
 Plug 'hari-rangarajan/CCTree' "{{{
-let g:CCTreeDisplayMode=1
-let g:CCTreeHilightCallTree=1
 " TODO: 
 " let g:CCTreeCscopeDb = ".cscope/out"
 let g:CCTreeCscopeDb = "cscope.out"
@@ -300,6 +295,7 @@ Plug 'vim-scripts/indentpython.vim', {'for': 'python'} "{{{
 " Plug 'nvie/vim-flake8'
 " Plug 'davidhalter/jedi-vim'
 " let g:jedi#use_splits_not_buffers = "right"
+" Plug 'xolox/vim-pyref'
 " }}}
 Plug 'elzr/vim-json', {'for': 'json'}  "{{{
 " autocmd vimrc FileType json set conceallevel=0
@@ -581,6 +577,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
 Plug 'szw/vim-g'
+map <leader>G :Google<cr>
 Plug 'google/vim-searchindex'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -615,10 +612,6 @@ Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 call plug#end()
 " }}}
 " Global options {{{
-" set verbose=1
-" TODO: Use fnamemodify() or fnameescape()
-" let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
-let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
 set autoindent
 set autowrite
 set backspace=indent,eol,start
@@ -754,7 +747,6 @@ nnoremap zm zM
 nnoremap zM zm
 " TODO: Add "default" foldexprs for
 " -ascii trees (uftrace,etc.)
-" -space indention
 " -dash/line separators
 " foldexpr for path-like lists
 function! FoldExprAsciiTree(lnum)
@@ -788,13 +780,6 @@ function! RestorePosition()
 	let b:_goto_pos = 1
     endif
 endfunction
-"}}}
-" Setup session handling{{{
-" TODO:
-" -prepend timestamp to session name
-" -save session periodically
-" -check vim-obsession
-autocmd VimLeave * mksession! ~/.vim/lastsession
 "}}}
 " Configure help system {{{
 runtime! ftplugin/man.vim
