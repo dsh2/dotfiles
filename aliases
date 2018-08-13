@@ -169,9 +169,11 @@ alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
+alias vf=vimdiff
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
+envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 
 # Vim aliases
 alias v='vim -X'
