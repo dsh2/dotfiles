@@ -25,8 +25,12 @@
 	ctags = !.git/hooks/ctags
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	g = grep --break --heading --line-number
+    rl = reflog --pretty=reflog
+[pretty]
+    reflog = %C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs (%s)
 [gc]
 	reflogexpire = 900
+	auto = 0
 [rerere]
 	enabled = true
 	autoupdate = true
