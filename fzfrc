@@ -4,8 +4,8 @@
 # -Add some means to add an ordering to the selection of --multi
 # -Add some means to match content in a particular column
 
+	# --bind 'change:top'
 export FZF_DEFAULT_OPTS="
-	--bind 'change:top'
 	--bind 'alt-a:select-all'
 	--bind 'alt-b:deselect-all'
 	--bind 'alt-d:page-down'
