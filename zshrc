@@ -502,7 +502,33 @@ stty -ixon
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
 REPORTTIME=3
 TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
-[ -z "$TMUX" ] && TMOUT=200
+
+# TODO: Think about if this is a really a safe setup
+# TODO: Check if distros provide appropriate means to archive a safe setup
+TMOUT=200
+[ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
+if [ -n "$TMUX" ]; then
+	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
+	if [ -n "$TMUX_LOCK_COMMAND" ]; then
+		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
+			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
+				tmux set-option -g lock-after-time $TMOUT
+			else
+				echo Clearing tmux lock-after-time because all tmux clients run under protected X servers.
+				tmux set-option -g lock-after-time 0
+			fi
+			echo Clearing TMOUT because zsh runs under a protected tmux server.
+			TMOUT=
+		else
+			echo WARNING: tmux lock-command not found.
+		fi
+	fi
+else
+	if [ -n "$X_AUTOLOCK" ]; then
+		echo Clearing TMOUT because zsh runs under a protected X server.
+		TMOUT=
+	fi
+fi
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
