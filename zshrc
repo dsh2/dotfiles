@@ -25,7 +25,7 @@ PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
-PS1+='%F{240}%(3L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add excessive shell levels
+PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 # PS1+='(%!) '						# Add number of next shell event
 PSVAR+=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
@@ -596,7 +596,7 @@ print_variables() {
 	if [[ $type = *assoc* ]]; then
 	    print -n : \(
 	    for k v in ${(kvP)var}; do
-		print -n -- $k: $v,\ 
+			print -n -- $k: $v,\ 
 	    done
 	    print \)
 	else
