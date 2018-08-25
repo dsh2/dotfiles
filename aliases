@@ -95,7 +95,7 @@ alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='git status -sb --show-stash'
+alias gst='git status -sb --show-stash -- '
 alias gstt='gst .'
 gcr() { set -x; git clone --recursive --jobs=8 --verbose $1 && cd ${1:t} && ranger .}
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
@@ -170,6 +170,7 @@ alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
 alias vf=vimdiff
+alias vd=vimdiff
 alias wanip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
@@ -300,6 +301,7 @@ alias xc='xclip -selection clipboard -in'
 alias xcc='tmux show-buffer | xc'
 xp() { echo "$*" | xc; }
 alias M=make
+alias makev='make SHELL="PS4=__[MAKE]__\  \$\$SHELL -x"'
 alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
@@ -483,6 +485,6 @@ alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 # TODO: make C a zle binding
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
-faketty () { script -qfc "$(printf "%q " "$@")"; }
+faketty() { script -qfc "$(printf "%q " "$@")"; }
 
 # vim: se ft=sh:
