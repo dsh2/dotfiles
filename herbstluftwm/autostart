@@ -42,9 +42,9 @@ hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
 hc keybind F9 spawn $hc_bin/dlf.sh
-hc keybind F10 spawn pactl set-sink-volume 0 -10%
-hc keybind F11 spawn pactl set-sink-volume 0 +10%
-hc keybind F12 spawn pactl set-sink-mute 0 toggle
+hc keybind F10 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
+hc keybind F11 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
+hc keybind F12 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
 # }}}
 # Miscellaneous keybindings {{{
 hc keybind $SUPER-q close
