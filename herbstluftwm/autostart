@@ -107,6 +107,7 @@ hc keybind $SUPER-Shift-0 spawn $hc_bin/clear_empty_tags.sh
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-p pseudotile toggle
 hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
+hc keybind $SUPER-$ALT-space spawn $hc_bin/handle_tag.sh
 hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-Shift-f fullscreen toggle
