@@ -1,42 +1,209 @@
-"\e[A": history-search-backward
-"\e[B": history-search-forward
-"\C-o": "\C-p\C-a\M-f "
-"\M-s": "\C-p\C-asudo \C-e"
-"\M-e": "\C-p\C-e | grep -i \"\"\C-b"
-"\M-l": "\C-p\C-e | less\C-m"
-"\M-x": " \C-b"
-"\M-r": "find . -exec grep -nH \"\" {} \\;\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
-"\M-h": "cd -l\ncd -n "
-"\C-t": "\C-ahh \C-j"
+# 	Controls what happens when Readline wants to ring the terminal
+# 	bell. If set to ‘none’, Readline never rings the bell. If set to
+# 	‘visible’, Readline uses a visible bell if one is available. If
+# 	set to ‘audible’ (the default), Readline attempts to ring the
+# 	terminal’s bell.
+set bell-style none
 
-set bell-style audible
-set colored-stats on
+# 	If set to ‘on’, Readline attempts to bind the control characters
+# 	treated specially by the kernel’s terminal driver to their
+# 	Readline equivalents.
+set bind-tty-special-chars on
+
+# 	The string to insert at the beginning of the line when the
+# 	insert-comment command is executed. The default value is "#".
+set comment-begin '#'
+
+# 	The number of screen columns used to display possible matches
+# 	when performing completion. The value is ignored if it is less
+# 	than 0 or greater than the terminal screen width. A value of 0
+# 	will cause matches to be displayed one per line. The default
+# 	value is -1.
+set completion-display-width -1
+
+# 	If set to ‘on’, Readline performs filename matching and
+# 	completion in a case-insensitive fashion. The default value is
+# 	‘off’.
 set completion-ignore-case on
-set completion-prefix-display-length 1
-set completion-query-items 1000
-set convert-meta off
+
+# 	If set to ‘on’, and completion-ignore-case is enabled, Readline
+# 	treats hyphens (‘-’) and underscores (‘_’) as equivalent when
+# 	performing case-insensitive filename matching and completion.
+set completion-map-case on
+
+# 	The length in characters of the common prefix of a list of
+# 	possible completions that is displayed without modification.
+# 	When set to a value greater than zero, common prefixes longer
+# 	than this value are replaced with an ellipsis when displaying
+# 	possible completions.
+set completion-prefix-display-length 3
+
+# 	The number of possible completions that determines when the user
+# 	is asked whether the list of possibilities should be displayed.
+# 	If the number of possible completions is greater than this
+# 	value, Readline will ask the user whether or not he wishes to
+# 	view them; otherwise, they are simply listed. This variable must
+# 	be set to an integer value greater than or equal to 0. A
+# 	negative value means Readline should never ask. The default
+# 	limit is 100.
+set completion-query-items 10000
+
+# 	If set to ‘on’, Readline will convert characters with the eighth
+# 	bit set to an ASCII key sequence by stripping the eighth bit and
+# 	prefixing an ESC character, converting them to a meta-prefixed
+# 	key sequence. The default value is ‘on’.
+set convert-meta true
+
+# 	If set to ‘On’, Readline will inhibit word completion.
+# 	Completion characters will be inserted into the line as if they
+# 	had been mapped to self-insert. The default is ‘off’.
+set disable-completion off
+
+# 	The editing-mode variable controls which default set of key
+# 	bindings is used. By default, Readline starts up in Emacs
+# 	editing mode, where the keystrokes are most similar to Emacs.
+# 	This variable can be set to either ‘emacs’ or ‘vi’.
 set editing-mode emacs
-set expand-tilde off
+# set editing-mode vi
+
+# 	When set to ‘on’, on operating systems that indicate they
+# 	support it, readline echoes a character corresponding to a
+# 	signal generated from the keyboard. The default is ‘on’.
+set echo-control-characters on
+
+# 	When set to ‘on’, Readline will try to enable the application
+# 	keypad when it is called. Some systems need this to enable the
+# 	arrow keys. The default is ‘off’.
+set enable-keypad off
+
+# 	When set to ‘on’, Readline will try to enable any meta modifier
+# 	key the terminal claims to support when it is called. On many
+# 	terminals, the meta key is used to send eight-bit characters.
+# 	The default is ‘on’.
+set enable-meta-key on
+
+# 	If set to ‘on’, tilde expansion is performed when Readline
+# 	attempts word completion. The default is ‘off’.
+set expand-tilde on
+
+# 	If set to ‘on’, the history code attempts to place the point
+# 	(the current cursor position) at the same location on each
+# 	history line retrieved with previous-history or next-history.
+# 	The default is ‘off’.
 set history-preserve-point on
-set horizontal-scroll-mode off
-set input-meta on
+
+# 	Set the maximum number of history entries saved in the history
+# 	list. If set to zero, the number of entries in the history list
+# 	is not limited.
+set history-size 0
+
+# 	This variable can be set to either ‘on’ or ‘off’. Setting it to
+# 	‘on’ means that the text of the lines being edited will scroll
+# 	horizontally on a single screen line when they are longer than
+# 	the width of the screen, instead of wrapping onto a new screen
+# 	line. By default, this variable is set to ‘off’.
+set horizontal-scroll-mode  off
+
+# 	If set to ‘on’, Readline will enable eight-bit input (it will
+# 	not clear the eighth bit in the characters it reads), regardless
+# 	of what the terminal claims it can support. The default value is
+# 	‘off’. The name meta-flag is a synonym for this variable.
+set input-meta off
+
+# 	The string of characters that should terminate an incremental
+# 	search without subsequently executing the character as a command
+# 	(see Searching). If this variable has not been given a value,
+# 	the characters ESC and C-J will terminate an incremental search.
+# set isearch-terminators VALUE
+
+# 	Sets Readline’s idea of the current keymap for key binding
+# 	commands. Acceptable keymap names are emacs, emacs-standard,
+# 	emacs-meta, emacs-ctlx, vi, vi-move, vi-command, and vi-insert.
+# 	vi is equivalent to vi-command; emacs is equivalent to
+# 	emacs-standard. The default value is emacs. The value of the
+# 	editing-mode variable also affects the default keymap.
+set keymap emacs
+
+# 	If set to ‘on’, completed directory names have a slash appended.
+# 	The default is ‘on’.
 set mark-directories on
+
+# 	This variable, when set to ‘on’, causes Readline to display an
+# 	asterisk (‘*’) at the start of history lines which have been
+# 	modified. This variable is ‘off’ by default.
 set mark-modified-lines on
+
+# 	If set to ‘on’, completed names which are symbolic links to
+# 	directories have a slash appended (subject to the value of
+# 	mark-directories). The default is ‘off’.
 set mark-symlinked-directories on
-set match-hidden-files on
+
+# 	This variable, when set to ‘on’, causes Readline to match files
+# 	whose names begin with a ‘.’ (hidden files) when performing
+# 	filename completion. If set to ‘off’, the leading ‘.’ must be
+# 	supplied by the user in the filename to be completed. This
+# 	variable is ‘on’ by default.
+set match-hidden-files off
+
+# 	If set to ‘on’, menu completion displays the common prefix of
+# 	the list of possible completions (which may be empty) before
+# 	cycling through the list. The default is ‘off’.
 set menu-complete-display-prefix on
-set meta-flag on
-set output-meta on
+
+# 	If set to ‘on’, Readline will display characters with the eighth
+# 	bit set directly rather than as a meta-prefixed escape sequence.
+# 	The default is ‘off’.
+# set output-meta VALUE
+
+# 	If set to ‘on’, Readline uses an internal more-like pager to
+# 	display a screenful of possible completions at a time. This
+# 	variable is ‘on’ by default.
 set page-completions off
-set print-completions-horizontally off
-set prefer-visible-bell on
+
+# 	If set to ‘on’, Readline will display completions with matches
+# 	sorted horizontally in alphabetical order, rather than down the
+# 	screen. The default is ‘off’.
+set print-completions-horizontally on
+
+# 	If set to ‘on’, Readline will undo all changes to history lines
+# 	before returning when accept-line is executed. By default,
+# 	history lines may be modified and retain individual undo lists
+# 	across calls to readline. The default is ‘off’.
+set revert-all-at-newline off
+
+# 	This alters the default behavior of the completion functions. If
+# 	set to ‘on’, words which have more than one possible completion
+# 	cause the matches to be listed immediately instead of ringing
+# 	the bell. The default value is ‘off’.
 set show-all-if-ambiguous on
+
+# 	This alters the default behavior of the completion functions in
+# 	a fashion similar to show-all-if-ambiguous. If set to ‘on’,
+# 	words which have more than one possible completion without any
+# 	possible partial completion (the possible completions don’t
+# 	share a common prefix) cause the matches to be listed
+# 	immediately instead of ringing the bell. The default value is
+# 	‘off’.
 set show-all-if-unmodified on
-set show-mode-in-prompt off
+
+# 	If set to ‘on’, this alters the default completion behavior when
+# 	inserting a single match into the line. It’s only active when
+# 	performing completion in the middle of a word. If enabled,
+# 	readline does not insert characters from the completion that
+# 	match characters after point in the word being completed, so
+# 	portions of the word following the cursor are not duplicated.
+# 	For instance, if this is enabled, attempting completion when the
+# 	cursor is after the ‘e’ in ‘Makefile’ will result in ‘Makefile’
+# 	rather than ‘Makefilefile’, assuming there is a single possible
+# 	completion. The default value is ‘off’.
+set skip-completed-text on
+
+# 	If set to ‘on’, a character denoting a file’s type is appended
+# 	to the filename when listing possible completions. The default
+# 	is ‘off’.
 set visible-stats on
 
-$if Python
-	"\M-i": "    "
-	"\M-u": "\d\d\d\d"
+$if gdb
+	'\c-n': "stepi\n"
+    '\c-o': "step\n"
 $endif
-
