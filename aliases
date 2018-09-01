@@ -266,6 +266,7 @@ pp() { ps Axjww|grep -i "$*"|grep -v grep; }
 ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
 alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
 alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
+alias psp='pstree -laps'
 alias p_s='port search --line'
 alias tm=tmux
 alias tma='tmux attach'
@@ -486,5 +487,8 @@ alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
+
+alias gdb='gdb -q'
+alias c=cat
 
 # vim: se ft=sh:
