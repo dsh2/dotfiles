@@ -118,7 +118,7 @@ alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
 alias gsm='git submodule' 
 alias gl='git lg | less'
-alias glssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
+alias ghssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
 alias gci='git init && git add . && git commit -m "Initial commit"'
 
 # ls
