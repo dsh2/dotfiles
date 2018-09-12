@@ -900,7 +900,7 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 
 " Prevent delay after quitting input mode
 " TODO: This seems to be unreliable
-set esckeys
+set noesckeys
 
 " TODO:
 " -Make tree generation recurring in the background with a regular interval
