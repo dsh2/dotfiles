@@ -413,7 +413,7 @@ alias mvO=mvOFF
 mvON() { for f in *-OFF; do mv -v -- $f ${f%-OFF}; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
 alias sll='. ~/.keychain/dsf-debian-sh; sl'
-alias Rl='ranger ~/Downloads'
+alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias hc=herbstclient
 curl-tesseract() { 
@@ -440,10 +440,9 @@ src_index() {
 }
 
 D() { set -x; $*; set +x }
-alias Dl='ls -l ~/Downloads/*(.om[1])'
-alias Dlp='px ~/Downloads/*(.om[1])'
+alias Dl='l ~/INCOMING/*(.om[1])'
+alias Dlp='px ~/INCOMING/*(.om[1])'
 alias Dll='Dlp && r *(/om[1])'
-# TODO: rename Downloads to INCOMING
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
