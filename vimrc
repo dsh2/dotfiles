@@ -98,6 +98,7 @@ autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
 autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
 autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
 " }}}
+Plug 'gregsexton/gitv'
 Plug 'junegunn/gv.vim' "{{{
 nmap <leader>gv :GV<cr>
 nmap <leader>gV :GV!<cr>
