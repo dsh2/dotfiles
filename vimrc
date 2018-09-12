@@ -904,38 +904,141 @@ set esckeys
 
 " TODO:
 " -Make tree generation recurring in the background with a regular interval
-" -Add maps 
+" -Add maps
 " --to switch from user-generated pstrees and regular generated pstrees
 " --Dispatch strace, gdb, r2, etc.
 " -Mark timestamps which coincide with user generated updates
 " -Diff pstrees
+" -Highlight groups for
+"  --Unusual flags
+"  --interactive programms without tty
+"  --load/mem-pressure
+"  --uncommon pending syscalls
 function! ProcessTreePid()
-	return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
+    return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
 endfunction
-function! ProcessTree()
-	silent let @/="\\<" . ProcessTreePid() . "\\>"
-	execute "e ps-" . strftime('%F-%T') 
-	" TODO: 
-	" -add wchan, etc
-	silent read !ps -e --forest -o pid,ppid,stat,flag,user,etime,start:12,tty=TTY,cputime,rss:12,thcount,args
-	silent! norm ggdd0"ad$ddn
-	silent! bdelete! HEADER
-	1new HEADER
-	set statusline=\  nocursorline
-	set buftype=nofile nonumber norelativenumber nowrap " nomodifiable
-	" TODO: This is probaly not very much vim-style. Fix it.
-	exe "normal \<c-w>\<c-w>"
-	set buftype=nofile filetype=sh nonumber norelativenumber nowrap " nomodifiable
-	nnoremap r :call ProcessTree()<cr>
-	nnoremap s :execute("!kill -STOP ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
-	nnoremap c :execute("!kill -CONT ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
-	nnoremap K :execute("!kill ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
-	nnoremap 9 :execute("!kill -KILL ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
-	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
-	" TODO: Does not work.... :(
-	nnoremap t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
+
+let g:pst_fields = [
+	    \ { 'name': 'pid',       'width':  6, },
+	    \ { 'name': 'ppid',      'width':  6, },
+	    \ { 'name': 'stat',      'width':  6, },
+	    \ { 'name': 'flag',      'width':  2, },
+	    \ { 'name': 'user',      'width':  8, },
+	    \ { 'name': 'tty',       'width':  8, 'title': 'TTY' },
+	    \ { 'name': 'args', },
+	    \]
+" \ { 'name': 'cgname',      'width':  165, 'detail': 3 },
+" \ { 'name': 'lstart',    'width': 40, },
+
+" \ { 'name': 'sz',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'drs',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'luid',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'lwp',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'lxc',   'width': 12, 'title': "" },
+" \ { 'name': 'nice',   'width': 12, 'title': "" },
+" \ { 'name': 'sess',   'width': 12, 'title': "" },
+" \ { 'name': 'seat',   'width': 12, 'title': "" },
+" \ { 'name': 'maj_flt',   'width': 12, 'title': "" },
+" \ { 'name': 'maj_flt',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'min_flt',   'width': 12, 'title': "" },
+" 	    \ { 'name': 'cputime',   'width': 12, 'title': "" },
+" \ { 'name': 'cputime',   'width': 12, 'title': "CPU-TIME" },
+" \ { 'name': 'bsdtime',   'width': 12, 'title': "ACC-TIME" },
+" \ { 'name': '\%cpu',   'width': 12, },
+" \ { 'name': '\%mem',   'width': 12, },
+" \ { 'name': 'class',   'width': 12, 'title': "CLASS" },
+
+function! Fields_to_psparm()
+    let ret = ""
+    for field in g:pst_fields 
+	let ret .= " -o " . field.name
+	if has_key(field, "width") && field.width > 0 | let ret .= ":". field.width | endif
+	if has_key(field, "title") && len(field.title) > 0 | let ret .= "=". field.title | endif
+    endfor
+    return ret
 endfunction
-command! -nargs=0 ProcessTree call ProcessTree()
+
+function! Field_to_colnum(field_name)
+    let col=1
+    for field in g:pst_fields
+	if has_key(field, "width") && field.width > 0 | let col += 1 + field.width | endif
+	if field.name == a:field_name
+	    break
+	endif
+    endfor
+    return col
+endfunction
+
+function! Field_to_colregex(field_name, regex)
+    let col=1
+    for field in g:pst_fields
+	if field.name == a:field_name
+	    return "\\%>" . col . "c" . a:regex . "\\%<" . (1 + col + field.width) . "c"
+	endif
+	let col += field.width
+    endfor
+endfunction
+
+function! PsEnableCsvVim()
+    let col=1
+    let fixed_width_string = "1"
+    for field in g:pst_fields
+	if has_key(field, "width") | let col += 1 + field.width | endif
+	let fixed_width_string .= "," . col
+    endfor
+    set filetype=csv
+    let b:csv_fixed_width = fixed_width_string
+    CSVInit
+endfunction
+
+function! PsSendSignal(pid, signal)
+    let line_num = line(".")
+    silent! execute "!kill -" . a:signal . " " . a:pid
+    ProcessTree()
+    execute "norm " . line_num . "G"
+endfunction
+
+function! PsFoldExpression(lnum)
+    let arg_index = Field_to_colnum("arg")
+    if arg_index <= 0 | return 1 | endif
+    let match_index = match(getline(a:lnum), '\%>' . arg_index . 'c[|_\ ]*\zs\f*')
+    if match_index <= arg_index | return 1 | endif
+    return 1 + (match_index - arg_index) / 3
+endfunction
+
+function! ProcessTree(...)
+    if a:0 == 1 | let pid=a:1 | else | let pid=ProcessTreePid() | endif
+    let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
+    " Create new buffer for current pstree
+    execute "e ps-" . strftime('%F-%T')
+    execute "read !ps -e --forest " . Fields_to_psparm()
+    set buftype=nofile filetype=sh cursorline nonumber norelativenumber nowrap
+    silent! ALEDisable
+    " Cut header from ps output
+    silent! norm ggdd0"ad$ddn
+    " Move header into separate window
+    silent! bdelete! HEADER | 1new HEADER | wincmd k | norm "aP0
+    set buftype=nofile nonumber norelativenumber nowrap
+    wincmd j
+    set foldmethod=expr
+    set foldexpr=PsFoldExpression(v:lnum)
+    set foldlevel=1
+    " call PsEnableCsvVim()
+    " Add buffer-local mappings
+    nnoremap <buffer> r :call ProcessTree()<cr>
+    nnoremap <buffer> s :call PsSendSignal(ProcessTreePid(), "STOP")<cr>
+    nnoremap <buffer> c :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
+    nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
+    nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
+    nnoremap <buffer> i 
+	\:let pid=ProcessTreePid()
+	\\|execute("tabnew /proc/" . pid . "/status")
+	\\|NERDTreeFind
+	\\|execute("TabooRename ".g:pid)<cr>
+    " TODO: Does not work.... :(
+    nnoremap <buffer> t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
+endfunction
+command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 
 let s:StatusbarHidden = 0
 function! StatusbarToggle()
