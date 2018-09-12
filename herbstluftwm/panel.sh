@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 hc() { "${herbstclient_command[@]:-herbstclient}" "$@" ; }
 monitor=${1:-0}
 geometry=( $(herbstclient monitor_rect "$monitor") )
@@ -148,13 +147,14 @@ hc pad $monitor $panel_height
         # wait for next event
         IFS=$'\t' read -ra cmd || break
         # find out event origin
+		# notify-send event: $cmd
         case "${cmd[0]}" in
             tag*)
-                #echo "resetting tags" >&2
+                echo "resetting tags" >&2
                 IFS=$'\t' read -ra tags <<< "$(hc tag_status $monitor)"
                 ;;
             date)
-                #echo "resetting date" >&2
+                echo "resetting date" >&2
                 date="${cmd[@]:1}"
                 ;;
             quit_panel)
@@ -168,7 +168,6 @@ hc pad $monitor $panel_height
                 if [ "${cmd[1]}" = "current" ] && [ "$currentmonidx" -ne "$monitor" ] ; then
                     continue
                 fi
-                echo "^togglehide()"
                 if $visible ; then
                     visible=false
                     hc pad $monitor 0
@@ -183,8 +182,6 @@ hc pad $monitor $panel_height
             focus_changed|window_title_changed)
                 windowtitle="${cmd[@]:2}"
                 ;;
-            #player)
-            #    ;;
         esac
     done
 
@@ -192,7 +189,9 @@ hc pad $monitor $panel_height
     # After the data is gathered and processed, the output of the previous block
     # gets piped to dzen2.
 
-} 2> /dev/null | dzen2 \
+} 2> /dev/null | ( 
+		# notify-send "$(echo update | ts)" ; 
+		dzen2 \
 	-w $panel_width -x $x -y $y -fn "$font" -h $panel_height \
 	-e 'button3=;' \
-	-ta l -bg "$bgcolor" -fg '#efefef'
+	-ta l -bg "$bgcolor" -fg '#efefef')
