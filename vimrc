@@ -1,10 +1,10 @@
-" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3 tw=0
+" vim: foldmethod=marker path=~/.vim/plugged isf-=/ foldcolumn=3 tw=0 ts=8
 let mapleader = "\<Space>"
 " Plugins {{{
 " vim-plug {{{
 set nocompatible
 augroup vimrc
-  autocmd!
+    autocmd!
 augroup END
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -24,12 +24,12 @@ nmap <c-r> :FzfHistory:<cr>
 nmap <c-e> :FzfHistory/<cr>
 let g:fzf_tags_command = 'ctags -R'
 command! Colors call fzf#vim#colors({'right': '15%', 'options': '--reverse --height=100%'})
-" TODO: Make BLines/Lines support preview as well. 
+" TODO: Make BLines/Lines support preview as well.
 " command! -bang -nargs=* FzfLines
-" 		\ call fzf#vim#lines(<q-args>,
-" 		\                 <bang>0 ? fzf#vim#with_preview('up:60%')
-" 		\                         : fzf#vim#with_preview('right:50%'),
-" 		\                 <bang>0)
+"		\ call fzf#vim#lines(<q-args>,
+"		\                 <bang>0 ? fzf#vim#with_preview('up:60%')
+"		\                         : fzf#vim#with_preview('right:50%'),
+"		\                 <bang>0)
 command! -bang -nargs=* FzfAg
 	    \ call fzf#vim#ag(<q-args>,
 	    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
@@ -48,9 +48,9 @@ map <leader>T :FzfTags<cr>
 map <leader>M :FzfMarks<cr>
 map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>la :FzfAg<cr>
-map <leader>ll :FzfBLines<cr> 
+map <leader>ll :FzfBLines<cr>
 map <leader>lL :FzfLines<cr>
-" TODO: Add FzfJumps
+"
 nnoremap <silent> <Leader>` :FzfMarks<CR>
 function! GetSelected()
     " save reg
@@ -64,10 +64,9 @@ function! GetSelected()
     call setreg(reg, reg_save, reg_type)
     return value
 endfunction
-vnoremap <leader>ll :<c-u>execute("FzfBLines ") . GetSelected()<cr> 
-vnoremap <leader>lL :<c-u>execute("FzfLines ") . GetSelected()<cr> 
-vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr> 
-"}}}
+vnoremap <leader>ll :<c-u>execute("FzfBLines ") . GetSelected()<cr>
+vnoremap <leader>lL :<c-u>execute("FzfLines ") . GetSelected()<cr>
+vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr>
 " map <leader>b :FzfBuffers<cr>
 map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
@@ -88,7 +87,7 @@ nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 nmap <leader>gb :Gblame<cr>
 nmap <leader>gp :Gpush<cr>
 nmap <leader>gw :Gwrite<cr>
-nmap <leader>gg :Git 
+nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
 autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
@@ -129,7 +128,6 @@ let g:session_persist_globals = ['&makeprg', '&makeef']
 " -save session periodically
 " -check vim-obsession
 autocmd vimrc VimLeave * mksession! ~/.vim/lastsession
-"}}}
 " TODO: Use fnamemodify() or fnameescape()
 " let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
 let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
@@ -148,7 +146,6 @@ let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
 " let g:goldenview__enable_default_mapping = 0
 " let g:goldenview__ignore_urule = { 'filetype': ['man'] }
 " nmap <silent> <c-w>= <Plug>GoldenViewResize
-" }}}
 " autocmd BufEnter * call s:ResizeSplit()
 " command ResizeSplit call s:ResizeSplit()
 "}}}
@@ -187,7 +184,7 @@ autocmd vimrc FileType qf set norelativenumber
 autocmd vimrc FileType qf wincmd J
 "}}}
 Plug 'hari-rangarajan/CCTree' "{{{
-" TODO: 
+" TODO:
 " let g:CCTreeCscopeDb = ".cscope/out"
 let g:CCTreeCscopeDb = "cscope.out"
 let g:CCTreeDisplayMode = 1
@@ -225,8 +222,8 @@ let g:taboo_renamed_tab_format ="[%N|%l%m(%W)] "
 " TODO: Make this work
 let g:taboo_unnamed_tab_label = '%a'
 nmap <leader>tR :TabooReset<cr>
-nmap <leader>tr :TabooRename 
-nmap <leader>tn :TabooOpen 
+nmap <leader>tr :TabooRename
+nmap <leader>tn :TabooOpen
 nmap <leader>, gT
 nmap <leader>. gt
 map <c-1> gT
@@ -240,9 +237,9 @@ Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
 map <leader>f :Ranger<cr>
 "}}}
 Plug 'milkypostman/vim-togglelist' "{{{
-nmap <silent> <leader><c-j> :colder<CR>
-nmap <silent> <leader><c-k> :cnewer<CR>
-nmap <silent> <leader>O :copen<CR>
+nmap <silent!> <leader><c-j> :colder<CR>
+nmap <silent!> <leader><c-k> :cnewer<CR>
+nmap <silent!> <leader>O :copen<CR>
 " }}}
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 let g:undotree_WindowLayout = 2
@@ -252,13 +249,14 @@ let g:undotree_DiffCommand = "diff -U 5"
 let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
+autocmd vimrc FileType undotree map <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#folding#level = 9
 " let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
-let g:pandoc#formatting#mode = 'h' " soft wraps 
-" let g:pandoc#formatting#mode = 's' " soft wraps 
+let g:pandoc#formatting#mode = 'h' " soft wraps
+" let g:pandoc#formatting#mode = 's' " soft wraps
 " let g:pandoc#formatting#mode = 'a' " autoformatting
 " let g:pandoc#formatting#mode = 'A' " smart autoformatting (watch out for source code)
 let g:pandoc#formatting#textwidth=79
@@ -284,7 +282,7 @@ map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:le
 autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
 " TODO: Add toggle reverse order support
 autocmd vimrc FileType csv map <buffer> <leader>cs :Sort<cr>
-autocmd vimrc FileType csv map <buffer> <leader>c/ :CSVSearchInColumn 
+autocmd vimrc FileType csv map <buffer> <leader>c/ :CSVSearchInColumn
 autocmd vimrc FileType csv map <buffer> <leader>ca :Analyze<cr>
 " TODO: Add maps for
 " -Toggle aligns (left, right, etc.)
@@ -465,7 +463,7 @@ map <leader>A :Autoformat<cr>
 "}}}
 Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
-autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq setlocal commentstring=#\ %s
+autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq,resolv setlocal commentstring=#\ %s
 "}}}
 Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
@@ -529,7 +527,7 @@ let g:ale_lint_on_text_changed = "never"
 Plug 'machakann/vim-highlightedyank'"{{{
 let g:highlightedyank_highlight_duration = 333
 if !exists('##TextYankPost')
-  map y <Plug>(highlightedyank)
+    map y <Plug>(highlightedyank)
 endif
 "}}}
 " Plug YouCompleteMe {{{
@@ -618,6 +616,7 @@ Plug 'vim-scripts/info.vim', {'on': 'Info'}
 Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
 Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
+Plug 'frioux/vim-regedit'
 " }}}
 call plug#end()
 " }}}
@@ -710,7 +709,7 @@ nnoremap <leader>cd :execute ":lcd " . substitute(expand("%:p:h"), ' ', '\\ ', '
 nnoremap U <c-r>
 nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
-nmap zx za 
+nmap zx za
 nmap <leader>BD :bdelete!<cr>
 " TODO
 " -Add convert to hex/bin/etc.
@@ -727,28 +726,28 @@ nnoremap <C-h> <C-w><C-h>
 " TODO: check if g-prefix makes sense
 let g:path=""
 function! YankPath()
-	if g:path==expand("%:p")
-		let g:path=expand("%:t")
-	elseif g:path==expand("%:t")
-		let g:path=expand("%:.")
-	else
-		let g:path=expand("%:p")
-	endif
-	call system("tmux set-buffer " . g:path)
-	call system("xsel -bi <<< " . g:path)
-	echo "Yanked path \"" . g:path . "\""
+    if g:path==expand("%:p")
+	let g:path=expand("%:t")
+    elseif g:path==expand("%:t")
+	let g:path=expand("%:.")
+    else
+	let g:path=expand("%:p")
+    endif
+    call system("tmux set-buffer " . g:path)
+    call system("xsel -bi <<< " . g:path)
+    echo "Yanked path \"" . g:path . "\""
 endfunction
 map yp :call YankPath()<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
 " au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
-" TODO: 
+" TODO:
 " -output name of schema
 " -make schema persist over session
 nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
-map <leader>c :colorscheme 
+map <leader>c :colorscheme
 colorscheme seoul256 | let g:airline_theme='qwq'
 " colorscheme spring-night | let g:airline_theme='night_owl'
 " colorscheme solarized | let g:airline_theme='solarized_flood'
@@ -760,14 +759,14 @@ nnoremap zM zm
 " -dash/line separators
 " foldexpr for path-like lists
 function! FoldExprAsciiTree(lnum)
-	return len(split(getline(a:lnum), "/"))
+    return len(split(getline(a:lnum), "/"))
 endfunction
 function! FoldExprPath(lnum)
-	return len(split(getline(a:lnum), "/"))
+    return len(split(getline(a:lnum), "/"))
 endfunction
 " foldexpr for single space indention
 function! FoldExprSpace(lnum)
-	return matchend(getline(a:lnum), "\\S")
+    return matchend(getline(a:lnum), "\\S")
 endfunction
 set foldexpr=FoldExprSpace(v:lnum)
 "}}}
@@ -809,7 +808,7 @@ autocmd vimrc FileType help wincmd L
 " Setup cursorcolumn {{{
 " Add a cursorline(/cursorcolumn) to the active window
 " autocmd vimrc BufWinLeave * set nocursorline |
-" 	    \ highlight CursorLineNr ctermbg=grey
+"	    \ highlight CursorLineNr ctermbg=grey
 
 autocmd vimrc BufRead,BufNewFile *.strace set filetype=strace
 autocmd vimrc BufWinEnter * set cursorline |
@@ -1044,17 +1043,17 @@ command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 let s:StatusbarHidden = 0
 function! StatusbarToggle()
     if s:StatusbarHidden  == 0
-        let s:StatusbarHidden = 1
-        set noshowmode
-        set noruler
-        set laststatus=0
-        set noshowcmd
+	let s:StatusbarHidden = 1
+	set noshowmode
+	set noruler
+	set laststatus=0
+	set noshowcmd
     else
-        let s:StatusbarHidden = 0
-        set showmode
-        set ruler
-        set laststatus=2
-        set showcmd
+	let s:StatusbarHidden = 0
+	set showmode
+	set ruler
+	set laststatus=2
+	set showcmd
     endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
