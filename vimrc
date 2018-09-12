@@ -1019,10 +1019,12 @@ function! ProcessTree(...)
     " Move header into separate window
     silent! bdelete! HEADER | 1new HEADER | wincmd k | norm "aP0
     set buftype=nofile nonumber norelativenumber nowrap
+    set foldcolumn=5
     wincmd j
     set foldmethod=expr
     set foldexpr=PsFoldExpression(v:lnum)
-    set foldlevel=1
+    set foldcolumn=5
+    set foldenable foldlevel=1
     " call PsEnableCsvVim()
     " Add buffer-local mappings
     nnoremap <buffer> r :call ProcessTree()<cr>
@@ -1032,7 +1034,9 @@ function! ProcessTree(...)
     nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
     nnoremap <buffer> i 
 	\:let pid=ProcessTreePid()
-	\\|execute("tabnew /proc/" . pid . "/status")
+	\\|execute("tabnew /proc/" . pid . "/stack")
+	\\|execute("split \| e /proc/" . pid . "/status")
+	\\|execute("NERDTreeFind /proc/" . pid . "/fd/0")
 	\\|NERDTreeFind
 	\\|execute("TabooRename ".g:pid)<cr>
     " TODO: Does not work.... :(
