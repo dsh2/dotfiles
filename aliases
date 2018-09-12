@@ -356,7 +356,7 @@ clocdf() {
 	    grep --color=always -e "$*" {}
     ")
 }
-
+alias df='df -h'
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
 alias func=function
@@ -421,6 +421,8 @@ curl-tesseract() {
 		tesseract -l eng -l deu - -
 }
 alias cts=curl-tesseract
+alias gdb='gdb -q'
+alias c=cat
 
 src_index() {
     find . \
@@ -489,7 +491,7 @@ jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 
-alias gdb='gdb -q'
-alias c=cat
+alias rf='rfkill block all'
+alias rfw='rfkill unblock wifi'
 
 # vim: se ft=sh:
