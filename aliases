@@ -257,15 +257,16 @@ alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([
 alias le=$PAGER
 # TODO
 # -use zsh prepend
+alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
+alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 p() { 
     pattern=$*
     pattern=${pattern:gfs,  , ,:gs, ,.\*,}
     grep --color=always -e "$pattern" =( ps aux )
 }
-pp() { ps Axjww|grep -i "$*"|grep -v grep; }
-ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
-alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
-alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
+pp() {
+	pst "+/$*" "+FzfLines $*"
+}
 alias psp='pstree -laps'
 alias p_s='port search --line'
 alias tm=tmux
