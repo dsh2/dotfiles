@@ -919,33 +919,33 @@ function! ProcessTreePid()
 endfunction
 
 let g:pst_fields = [
-	    \ { 'name': 'pid',       'width':  6, },
-	    \ { 'name': 'ppid',      'width':  6, },
-	    \ { 'name': 'stat',      'width':  6, },
-	    \ { 'name': 'flag',      'width':  2, },
-	    \ { 'name': 'user',      'width':  8, },
-	    \ { 'name': 'tty',       'width':  8, 'title': 'TTY' },
-	    \ { 'name': 'args', },
-	    \]
+	\ { 'name': 'pid',       'width':  6, },
+	\ { 'name': 'ppid',      'width':  6, },
+	\ { 'name': 'stat',      'width':  6, },
+	\ { 'name': 'flag',      'width':  2, },
+	\ { 'name': 'user',      'width':  8, },
+	\ { 'name': 'tty',       'width':  8, 'title': 'TTY' },
+	\ { 'name': 'wchan',     'width': 15, 'title': 'SYSCALL' },
+	\ { 'name': '\%cpu',     'width':  8, },
+	\ { 'name': '\%mem',     'width':  8, },
+	\ { 'name': 'args', },
+    \]
 " \ { 'name': 'cgname',      'width':  165, 'detail': 3 },
 " \ { 'name': 'lstart',    'width': 40, },
-
 " \ { 'name': 'sz',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'drs',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'luid',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'lwp',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'lxc',   'width': 12, 'title': "" },
+" \ { 'name': 'drs',   'width': 12, 'title': "" },
+" \ { 'name': 'luid',   'width': 12, 'title': "" },
+" \ { 'name': 'lwp',   'width': 12, 'title': "" },
+" \ { 'name': 'lxc',   'width': 12, 'title': "" },
 " \ { 'name': 'nice',   'width': 12, 'title': "" },
 " \ { 'name': 'sess',   'width': 12, 'title': "" },
 " \ { 'name': 'seat',   'width': 12, 'title': "" },
 " \ { 'name': 'maj_flt',   'width': 12, 'title': "" },
 " \ { 'name': 'maj_flt',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'min_flt',   'width': 12, 'title': "" },
-" 	    \ { 'name': 'cputime',   'width': 12, 'title': "" },
+" \ { 'name': 'min_flt',   'width': 12, 'title': "" },
+" \ { 'name': 'cputime',   'width': 12, 'title': "" },
 " \ { 'name': 'cputime',   'width': 12, 'title': "CPU-TIME" },
 " \ { 'name': 'bsdtime',   'width': 12, 'title': "ACC-TIME" },
-" \ { 'name': '\%cpu',   'width': 12, },
-" \ { 'name': '\%mem',   'width': 12, },
 " \ { 'name': 'class',   'width': 12, 'title': "CLASS" },
 
 function! Fields_to_psparm()
@@ -1036,8 +1036,8 @@ function! ProcessTree(...)
 	\:let pid=ProcessTreePid()
 	\\|execute("tabnew /proc/" . pid . "/stack")
 	\\|execute("split \| e /proc/" . pid . "/status")
+	\\|execute("NERDTreeFind")
 	\\|execute("NERDTreeFind /proc/" . pid . "/fd/0")
-	\\|NERDTreeFind
 	\\|execute("TabooRename ".g:pid)<cr>
     " TODO: Does not work.... :(
     nnoremap <buffer> t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
