@@ -1013,10 +1013,11 @@ endfunction
 
 function! ProcessTree(...)
     if a:0 == 1 | let pid=a:1 | else | let pid=ProcessTreePid() | endif
-    let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
+    let line_num = line(".")
+    " let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
     " Create new buffer for current pstree
     execute "e ps-" . strftime('%F-%T')
-    execute "read !ps -e --forest " . Fields_to_psparm()
+    silent! execute "read !ps -e --forest " . Fields_to_psparm()
     set buftype=nofile filetype=sh cursorline nonumber norelativenumber nowrap
     silent! ALEDisable
     " Cut header from ps output
@@ -1029,7 +1030,9 @@ function! ProcessTree(...)
     set foldmethod=expr
     set foldexpr=PsFoldExpression(v:lnum)
     set foldcolumn=5
-    set foldenable foldlevel=1
+    " set foldenable foldlevel=1
+    execute "norm " . line_num . "G"
+    norm zv
     " call PsEnableCsvVim()
     " Add buffer-local mappings
     nnoremap <buffer> r :call ProcessTree()<cr>
