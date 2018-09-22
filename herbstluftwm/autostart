@@ -9,16 +9,16 @@ hc unrule -F
 # }}}
 # External autostart {{{
 # TODO: Make indeed external
-$hc_bin/alt-tab.sh&
-# shutter &
+$hc_bin/alt-tab.sh &
+shutter &
 parcellite &
 dunst &
 xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker 'i3lock-wrapper.sh -b' -detectsleep &
 # -notify -notifier 'notify-send Locking soon...' &
 # TODO: Build .xmodmap
-xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
 xset -b -c r rate 200 140 dpms 0 0 3600 s off 
 setxkbmap -layout us,de -option grp:alt_caps_toggle
+xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
 # }}}
 # Aliases {{{
 SUPER=Mod4
@@ -99,17 +99,17 @@ hc keybind $SUPER-3 use_previous
 # TODO: Think about how FO could help here...
 hc keybind $SUPER-9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
 hc keybind $SUPER-0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
-# hc keybind $SUPER-Shift-0 spawn $HOME/.dotfiles/bin/herbstluftwm/clear_empty_tags.sh
 hc keybind $SUPER-Shift-0 spawn $hc_bin/clear_empty_tags.sh
-# hc keybind $SUPER-Shift-0 spawn xeyes
 # }}}
 # Keybindings to change layout {{{
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-p pseudotile toggle
 hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
 hc keybind $SUPER-$ALT-space spawn $hc_bin/handle_tag.sh
+hc keybind $SUPER-$ALT-$CTRL-space chain X add TMP X move TMP X use TMP X spawn $hc_bin/handle_tag.sh
 hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
+hc keybind $SUPER-Shift-z fullscreen toggle
 hc keybind $SUPER-Shift-f fullscreen toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
