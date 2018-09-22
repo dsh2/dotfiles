@@ -912,6 +912,8 @@ set noesckeys
 " -Add maps
 " --to switch from user-generated pstrees and regular generated pstrees
 " --Dispatch strace, gdb, r2, etc.
+" --To reload procps-files by 'r'
+" --Copy PID
 " -Mark timestamps which coincide with user generated updates
 " -Diff pstrees
 " -Highlight groups for
@@ -919,6 +921,9 @@ set noesckeys
 "  --interactive programms without tty
 "  --load/mem-pressure
 "  --uncommon pending syscalls
+"  --own tty
+" Map for terminal info/search
+" R: reload with search on PID
 function! ProcessTreePid()
     return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
 endfunction
