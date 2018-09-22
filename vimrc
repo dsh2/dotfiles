@@ -725,6 +725,12 @@ nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 " TODO: check if g-prefix makes sense
 let g:path=""
+function! YankUp(string)
+    let @"=a:string
+    call system("tmux set-buffer " . a:string)
+    call system("xsel -bi <<< " . a:string)
+endfunction
+
 function! YankPath()
     if g:path==expand("%:p")
 	let g:path=expand("%:t")
@@ -733,8 +739,7 @@ function! YankPath()
     else
 	let g:path=expand("%:p")
     endif
-    call system("tmux set-buffer " . g:path)
-    call system("xsel -bi <<< " . g:path)
+    call YankUp(g:path)
     echo "Yanked path \"" . g:path . "\""
 endfunction
 map yp :call YankPath()<cr>
@@ -1028,6 +1033,7 @@ function! ProcessTree(...)
     " call PsEnableCsvVim()
     " Add buffer-local mappings
     nnoremap <buffer> r :call ProcessTree()<cr>
+    nnoremap <buffer> yp :call YankUp(ProcessTreePid())<cr>
     nnoremap <buffer> s :call PsSendSignal(ProcessTreePid(), "STOP")<cr>
     nnoremap <buffer> c :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
     nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
