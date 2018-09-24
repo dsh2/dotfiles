@@ -45,6 +45,4 @@
     ~/.tidy.conf: tidy.conf
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: zshrc
-
-- shell:
-    - [vim +PlugClean! +PlugUpgrade +PlugInstall +PlugUpdate +qall, Configuring vim]
+    ~/.zlogout: zlogout

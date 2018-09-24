@@ -24,8 +24,8 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
-PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}j=%j%F{240}].)'	# Add number of jobs - if any
-PS1+='%F{240}%(3L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add excessive shell levels
+PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
+PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 # PS1+='(%!) '						# Add number of next shell event
 PSVAR+=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
@@ -502,7 +502,33 @@ stty -ixon
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
 REPORTTIME=3
 TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
-[ -z "$TMUX" ] && TMOUT=200
+
+# TODO: Think about if this is a really a safe setup
+# TODO: Check if distros provide appropriate means to archive a safe setup
+TMOUT=200
+[ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
+if [ -n "$TMUX" ]; then
+	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
+	if [ -n "$TMUX_LOCK_COMMAND" ]; then
+		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
+			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
+				tmux set-option -g lock-after-time $TMOUT
+			else
+				echo Clearing tmux lock-after-time because all tmux clients run under protected X servers.
+				tmux set-option -g lock-after-time 0
+			fi
+			echo Clearing TMOUT because zsh runs under a protected tmux server.
+			TMOUT=
+		else
+			echo WARNING: tmux lock-command not found.
+		fi
+	fi
+else
+	if [ -n "$X_AUTOLOCK" ]; then
+		echo Clearing TMOUT because zsh runs under a protected X server.
+		TMOUT=
+	fi
+fi
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -570,7 +596,7 @@ print_variables() {
 	if [[ $type = *assoc* ]]; then
 	    print -n : \(
 	    for k v in ${(kvP)var}; do
-		print -n -- $k: $v,\ 
+			print -n -- $k: $v,\ 
 	    done
 	    print \)
 	else

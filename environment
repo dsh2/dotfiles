@@ -34,8 +34,11 @@ pathprepend $NDK
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
 # export PAGER=fzf
 export PAGER=less
+export LESSBINFMT='*d[0x%02x]'
+export LESSUTFBINFMT='*d[0x%04x]'
 export LESS=cRMiWSJ
 lesskey - <<EOF
+#command
 #line-edit
 ^P up
 ^N down
@@ -66,6 +69,7 @@ export SUDO_EDITOR=$VISUAL
 
 # Miscellaneous
 export BC_ENV_ARGS="-q $HOME/.bcrc"
+# TODO: Add parameters --ignore-autocomplete-off-autofill 
 export BROWSER=/usr/bin/google-chrome-stable
 export DYNAMIC_COLORS_ROOT=$HOME/.dotfiles/colors/dynamic-colors/
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'

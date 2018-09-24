@@ -50,6 +50,7 @@ map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>la :FzfAg<cr>
 map <leader>ll :FzfBLines<cr> 
 map <leader>lL :FzfLines<cr>
+" TODO: Add FzfJumps
 nnoremap <silent> <Leader>` :FzfMarks<CR>
 function! GetSelected()
     " save reg
@@ -142,6 +143,14 @@ map <leader>gG :GitGutterToggle<cr>
 Plug 'junegunn/vim-github-dashboard', {'on': 'GHActivity'} "{{{
 let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
 " }}}
+" Plug 'zhaocai/GoldenView.Vim' "{{{
+" let g:goldenview__enable_default_mapping = 0
+" let g:goldenview__ignore_urule = { 'filetype': ['man'] }
+" nmap <silent> <c-w>= <Plug>GoldenViewResize
+" }}}
+" autocmd BufEnter * call s:ResizeSplit()
+" command ResizeSplit call s:ResizeSplit()
+"}}}
 Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
 nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
 nnoremap <silent> <F3> :Unite buffer<cr>
@@ -184,7 +193,7 @@ let g:CCTreeDisplayMode = 1
 let g:CCTreeHilightCallTree=1
 let g:CCTreeMinVisibleDepth = 3
 let g:CCTreeOrientation = "topleft"
-let g:CCTreeRecursiveDepth = 3
+let g:CCTreeRecursiveDepth = 1
 let g:CCTreeUseUTF8Symbols = 1
 let g:CCTreeWindowWidth = -1
 let g:CCTreeDbFileMaxSize = 40000000
@@ -420,8 +429,6 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline_detect_modified=1
 let g:airline_detect_spelllang=1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-" let g:airline_theme='raven'
-let g:airline_theme='qwq'
 " }}}
 Plug 'tpope/vim-dispatch' "{{{
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
@@ -474,7 +481,7 @@ map <leader>y :MerginalToggle<cr>
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-" nnoremap <buffer> <silent> <cr> 0f/lgf
+nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
@@ -574,6 +581,8 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
 Plug 'szw/vim-g'
@@ -739,9 +748,9 @@ map yp :call YankPath()<cr>
 nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
 map <leader>c :colorscheme 
-colorscheme seoul256
-" colorscheme Tomorrow-Night
-" colorscheme solarized
+colorscheme seoul256 | let g:airline_theme='qwq'
+" colorscheme spring-night | let g:airline_theme='night_owl'
+" colorscheme solarized | let g:airline_theme='solarized_flood'
 hi Folded cterm=NONE
 nnoremap zm zM
 nnoremap zM zm
@@ -811,8 +820,8 @@ set cursorcolumn
 " }}}
 " Setup listchars {{{
 set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
-" FIXME: the following setting gives very slow rendering
-" set listchars=tab:‣\ ,trail:□,extends:↦,precedes:↤,nbsp:∙
+" TODO: the following setting gives very slow rendering
+set listchars=tab:‣\ ,trail:□,extends:↦,precedes:↤,nbsp:∙
 set nolist
 highlight SpecialKey ctermfg=DarkRed ctermbg=NONE
 highlight NonText ctermfg=DarkGreen ctermbg=NONE
@@ -887,13 +896,19 @@ autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
 endfunction
-
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 
 " Prevent delay after quitting input mode
 " TODO: This seems to be unreliable
 set esckeys
 
+" TODO:
+" -Make tree generation recurring in the background with a regular interval
+" -Add maps 
+" --to switch from user-generated pstrees and regular generated pstrees
+" --Dispatch strace, gdb, r2, etc.
+" -Mark timestamps which coincide with user generated updates
+" -Diff pstrees
 function! ProcessTreePid()
 	return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
 endfunction
@@ -917,6 +932,7 @@ function! ProcessTree()
 	nnoremap K :execute("!kill ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap 9 :execute("!kill -KILL ") . ProcessTreePid()<cr>:call ProcessTree()<cr>
 	nnoremap <cr> :execute("NERDTree /proc/") . ProcessTreePid()<cr>
+	" TODO: Does not work.... :(
 	nnoremap t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
 endfunction
 command! -nargs=0 ProcessTree call ProcessTree()

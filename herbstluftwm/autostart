@@ -42,9 +42,9 @@ hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
 hc keybind F9 spawn $hc_bin/dlf.sh
-hc keybind F10 spawn pactl set-sink-volume 0 -10%
-hc keybind F11 spawn pactl set-sink-volume 0 +10%
-hc keybind F12 spawn pactl set-sink-mute 0 toggle
+hc keybind F10 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
+hc keybind F11 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
+hc keybind F12 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
 # }}}
 # Miscellaneous keybindings {{{
 hc keybind $SUPER-q close
@@ -107,6 +107,7 @@ hc keybind $SUPER-Shift-0 spawn $hc_bin/clear_empty_tags.sh
 hc keybind $SUPER-s floating toggle
 hc keybind $SUPER-p pseudotile toggle
 hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
+hc keybind $SUPER-$ALT-space spawn $hc_bin/handle_tag.sh
 hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-Shift-f fullscreen toggle
