@@ -118,7 +118,7 @@ alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
 alias gsm='git submodule' 
 alias gl='git lg | less'
-alias glssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
+alias ghssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
 alias gci='git init && git add . && git commit -m "Initial commit"'
 
 # ls
@@ -185,7 +185,7 @@ alias vl='v ~/.tmux-log/*(.om[1])'
 alias vll='v *(.om[1])'
 alias cl='cat ~/.tmux-log/*(.om[1])'
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+/example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 compdef _man vimman
@@ -257,15 +257,17 @@ alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([
 alias le=$PAGER
 # TODO
 # -use zsh prepend
+alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
+alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
 p() { 
     pattern=$*
     pattern=${pattern:gfs,  , ,:gs, ,.\*,}
     grep --color=always -e "$pattern" =( ps aux )
 }
-pp() { ps Axjww|grep -i "$*"|grep -v grep; }
-ppp() { ps Axjwwe|grep -i "$*"|grep -v grep; }
-alias pst='vim -c "nmap q :q!<cr>" +ProcessTree' 
-alias pstt='vim -c "nmap q :q!<cr>" +ProcessTree +FzfLines'
+pp() {
+	pst "+/$*" "+FzfLines $*"
+}
+alias psp='pstree -laps'
 alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
@@ -354,7 +356,7 @@ clocdf() {
 	    grep --color=always -e "$*" {}
     ")
 }
-
+alias df='df -h'
 alias zloc='fc -p .zsh_local_history'
 alias fcp='fc -P'
 alias func=function
@@ -411,7 +413,7 @@ alias mvO=mvOFF
 mvON() { for f in *-OFF; do mv -v -- $f ${f%-OFF}; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
 alias sll='. ~/.keychain/dsf-debian-sh; sl'
-alias Rl='ranger ~/Downloads'
+alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias hc=herbstclient
 curl-tesseract() { 
@@ -419,6 +421,8 @@ curl-tesseract() {
 		tesseract -l eng -l deu - -
 }
 alias cts=curl-tesseract
+alias gdb='gdb -q'
+alias c=cat
 
 src_index() {
     find . \
@@ -436,10 +440,9 @@ src_index() {
 }
 
 D() { set -x; $*; set +x }
-alias Dl='ls -l ~/Downloads/*(.om[1])'
-alias Dlp='px ~/Downloads/*(.om[1])'
+alias Dl='l ~/INCOMING/*(.om[1])'
+alias Dlp='px ~/INCOMING/*(.om[1])'
 alias Dll='Dlp && r *(/om[1])'
-# TODO: rename Downloads to INCOMING
 alias s3='/usr/local/bin/sqlite3'
 alias file='file -z'
 alias d2='dnf-2'
@@ -482,9 +485,13 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
+alias RR=reset
 # TODO: make C a zle binding
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
+
+alias rf='rfkill block all'
+alias rfw='rfkill unblock wifi'
 
 # vim: se ft=sh:

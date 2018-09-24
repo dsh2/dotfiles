@@ -204,6 +204,7 @@ set skip-completed-text on
 set visible-stats on
 
 $if gdb
-	'\c-n': "stepi\n"
-    '\c-o': "step\n"
+    '\c-u': "finish\n"
+    '\c-n': "next\n"
+    '\c-s': "step\n"
 $endif
