@@ -1,6 +1,7 @@
 #!env bash
 # vim: foldmethod=marker 
-hc() { herbstclient "$@"; }
+hc() { echo HC: "$*"; herbstclient "$@"; }
+# hc() { echo HC: "$*"; /home/dsf/src/WM/herbstluftwm/tmp-2018-07-03_17:17:39-BUILD/bin/herbstclient "$@"; }
 # Reset configuration {{{
 hc_bin=$HOME/.dotfiles/bin/herbstluftwm
 hc emit_hook reload
@@ -107,6 +108,10 @@ hc keybind $SUPER-p pseudotile toggle
 hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
 hc keybind $SUPER-$ALT-space spawn $hc_bin/handle_tag.sh
 hc keybind $SUPER-$ALT-$CTRL-space chain X add TMP X move TMP X use TMP X spawn $hc_bin/handle_tag.sh
+hc keybind $SUPER-$ALT-$CTRL-j spawn lux -s 10%
+hc keybind $SUPER-$ALT-$CTRL-k spawn lux -a 10%
+hc keybind $SUPER-$ALT-$CTRL-Shift-j spawn lux -S 1%
+hc keybind $SUPER-$ALT-$CTRL-Shift-k spawn lux -S 100%
 hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
 hc keybind $SUPER-Shift-z fullscreen toggle
