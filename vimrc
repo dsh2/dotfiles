@@ -906,6 +906,9 @@ nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
 nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 " }}}
 " Miscellaneous {{{
+match ErrorMsg /error/
+2match WarningMsg /warning/
+
 autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 function! EnableAutoWrite()
