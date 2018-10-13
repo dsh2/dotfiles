@@ -256,6 +256,7 @@ autocmd vimrc FileType undotree map <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
+autocmd vimrc FileType markdown set wrap
 let g:pandoc#folding#level = 9
 " let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
 let g:pandoc#formatting#mode = 'h' " soft wraps
