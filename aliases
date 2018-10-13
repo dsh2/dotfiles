@@ -123,7 +123,7 @@ alias gci='git init && git add . && git commit -m "Initial commit"'
 
 # ls
 alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
-alias l='ls -l'
+alias l='ls -lh'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
@@ -177,6 +177,7 @@ alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 alias vb=VBoxManage
+alias vbox=VBoxManage
 alias doc=docker
 
 # Vim aliases
@@ -465,6 +466,7 @@ alias -g SUU='| sort | uniq'
 # TODO: This is not elegant.
 alias -g SQ=' | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//"; echo '
 alias -g LV=' |& lnav'
+alias -g JS=' | vim -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 ut2nt() { date -d@$1 '+%F %T'}
 
 alias ws=wireshark
