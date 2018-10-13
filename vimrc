@@ -324,6 +324,9 @@ autocmd vimrc FileType nerdtree map <buffer> ; go
 autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
 " }}}
+Plug 'https://github.com/tpope/vim-bundler'
+Plug 'https://github.com/tpope/vim-rails'
+Plug 'https://github.com/tpope/vim-sleuth'
 Plug 'tyru/open-browser.vim' "{{{
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
