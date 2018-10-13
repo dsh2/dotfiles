@@ -85,17 +85,9 @@ fs() {
 
 ftpane() {
   # TODO: check if already running
-  panes=$(tmux list-panes -aF '[#{session_name}]\t#{window_index}|#{=15:window_name}\t#{pane_index}|#{=-15:pane_current_command}\t#{pane_tty} (#{pane_width} x #{pane_height})\t#{pane_current_path}')
-  current_pane=$(tmux display-message -p '#I:#P')
-  current_window=$(tmux display-message -p '#I')
-
-  target=$(echo "$panes" | grep -v "$current_pane" | fzf +m --header=\[Session\]$'\t'\ \|Window$'\t'\ \|Pane$'\t'TTY$'\t\t'CWD --tabstop=16 --layout=reverse ) || return
-
-  target_session=$(echo $target | awk 'BEGIN{FS=":|-"} {print$1}')
-  target_window=$(echo $target | awk 'BEGIN{FS=":|-"} {print$2}')
-  target_pane=$(echo $target | awk 'BEGIN{FS=":|-"} {print$3}' | cut -c 1)
-
-  tmux switch-client -t $target_session:$target_window.$target_pane
+  panes=$(tmux list-panes -aF '[#{session_name}]\t#{window_index}|#{=15:window_name}\t#{pane_index}|#{=-15:pane_current_command}\t#{pane_tty} (#{pane_width} x #{pane_height})\t#{pane_id}\t#{pane_pid}\t#{pane_current_path}')
+  target=$(echo "$panes" | fzf +m --header=\[Session\]$'\t'\ \|Window$'\t'\ \|Command$'\t'TTY$'\t\t'P_ID$'\t'P_PID$'\t'CWD --tabstop=14 --layout=reverse ) || return
+  tmux switch-client -t $(echo $target | cut -f 5)
 }
 
 # gch - browse chrome history
