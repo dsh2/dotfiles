@@ -1,5 +1,4 @@
 # vim: set foldmethod=marker foldlevel=0:
-
 # Prompts {{{
 setopt prompt_subst
 setopt prompt_cr
@@ -174,7 +173,6 @@ bindkey_func '^x^k' copy_last_command
 # Copy last command's output to xclipboard
 function copy_last_output {
 	[ -z $tmux_log_file ] && return
-	echo LOG: $tmux_log_file
 	cat $tmux_log_file | $=XC
 }
 bindkey_func '^x^o' copy_last_output
@@ -534,6 +532,9 @@ if [ -n "$TMUX" ]; then
 else
 	if [ -n "$X_AUTOLOCK" ]; then
 		echo Clearing TMOUT because zsh runs under a protected X server.
+		TMOUT=
+	elif [ -n "$SSH_TTY" ]; then
+		echo Clearing TMOUT because zsh runs in a secure shell \(ssh\).
 		TMOUT=
 	fi
 fi
