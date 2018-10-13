@@ -179,6 +179,14 @@ function copy_last_output {
 }
 bindkey_func '^x^o' copy_last_output
 
+function page_tmux_pane {
+	# zle -M "page_tmux_pane"
+	local temp_file=$(mktemp)
+	tmux capture-pane -epJS - > $temp_file
+	tmux split vim $temp_file
+}
+bindkey_func '^x^r' page_tmux_pane
+
 function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
