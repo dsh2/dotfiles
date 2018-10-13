@@ -825,10 +825,12 @@ set cursorline
 set cursorcolumn
 " }}}
 " Setup listchars {{{
-set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
-" TODO: the following setting gives very slow rendering
+" set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
+" TODO: the following setting gives very slow rendering on macOS
 set listchars=tab:‣\ ,trail:□,extends:↦,precedes:↤,nbsp:∙
-set nolist
+" set listchars=tab:→\ ,trail:·,eol:¬,extends:…,precedes:…
+" let &showbreak = '↳'
+" set list
 highlight SpecialKey ctermfg=DarkRed ctermbg=NONE
 highlight NonText ctermfg=DarkGreen ctermbg=NONE
 " }}}
@@ -914,7 +916,6 @@ set noesckeys
 " --to switch from user-generated pstrees and regular generated pstrees
 " --Dispatch strace, gdb, r2, etc.
 " --To reload procps-files by 'r'
-" --Copy PID
 " -Mark timestamps which coincide with user generated updates
 " -Diff pstrees
 " -Highlight groups for
@@ -928,6 +929,7 @@ set noesckeys
 function! ProcessTreePid()
     return substitute(getline('.'), '^\s*\(\d*\)\s.*$','\1','g')
 endfunction
+let g:pst_fold_columns = 12 " TODO: set this dynamically for current process tree?
 
 let g:pst_fields = [
 	\ { 'name': 'pid',       'width':  6, },
@@ -936,13 +938,13 @@ let g:pst_fields = [
 	\ { 'name': 'flag',      'width':  2, },
 	\ { 'name': 'user',      'width':  8, },
 	\ { 'name': 'tty',       'width':  8, 'title': 'TTY' },
+	\ { 'name': 'lstart',    'width': 40, },
 	\ { 'name': 'wchan',     'width': 15, 'title': 'SYSCALL' },
 	\ { 'name': '\%cpu',     'width':  8, },
 	\ { 'name': '\%mem',     'width':  8, },
 	\ { 'name': 'args', },
     \]
 " \ { 'name': 'cgname',      'width':  165, 'detail': 3 },
-" \ { 'name': 'lstart',    'width': 40, },
 " \ { 'name': 'sz',   'width': 12, 'title': "" },
 " \ { 'name': 'drs',   'width': 12, 'title': "" },
 " \ { 'name': 'luid',   'width': 12, 'title': "" },
@@ -1019,7 +1021,8 @@ endfunction
 
 function! ProcessTree(...)
     if a:0 == 1 | let pid=a:1 | else | let pid=ProcessTreePid() | endif
-    let line_num = line(".")
+    let l:current_line_num = line(".")
+    let l:current_fold_level = &foldlevel
     " let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
     " Create new buffer for current pstree
     execute "e ps-" . strftime('%F-%T')
@@ -1031,14 +1034,15 @@ function! ProcessTree(...)
     " Move header into separate window
     silent! bdelete! HEADER | 1new HEADER | wincmd k | norm "aP0
     set buftype=nofile nonumber norelativenumber nowrap
-    set foldcolumn=5
+    let &foldcolumn=g:pst_fold_columns
     wincmd j
-    set foldmethod=expr
+    let &foldcolumn=g:pst_fold_columns
     set foldexpr=PsFoldExpression(v:lnum)
-    set foldcolumn=5
-    " set foldenable foldlevel=1
-    execute "norm " . line_num . "G"
-    norm zv
+    set foldmethod=expr
+    let &foldlevel=l:current_fold_level 
+    set foldenable
+    execute "norm " . l:current_line_num . "G"
+    " norm zv
     " call PsEnableCsvVim()
     " Add buffer-local mappings
     nnoremap <buffer> r :call ProcessTree()<cr>
