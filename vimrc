@@ -107,6 +107,9 @@ autocmd vimrc FileType GV map <buffer> ; o
 autocmd vimrc FileType GV map <buffer> l ;
 autocmd vimrc FileType GV map <buffer>  O
 " }}}
+Plug 'AndrewRadev/splitjoin.vim'"{{{
+let g:splitjoin_quiet=0
+"}}}
 Plug 'inkarkat/vim-CompleteHelper' "{{{
 Plug 'inkarkat/vim-ingo-library'
 Plug 'vim-scripts/PrevInsertComplete'
