@@ -97,7 +97,28 @@ alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
 alias gst='git status -sb --show-stash -- '
 alias gstt='gst .'
-gcr() { set -x; git clone --recursive --jobs=8 --verbose $1 && cd ${1:t} && ranger .}
+gcr() {
+    set -x
+    git clone --recursive --jobs=8 --verbose $1 &&
+	cd ${1:t} &&
+	ranger .
+}
+# ghssh() {
+#     local dsh2_https_base='https://github.com/dsh2'
+#     local dsh2_ssh_base='ssh://git@github.com:'
+#     foreach remote in $(git remote); do
+# 	remote_url=$(git remote get-url $remote)
+# 	echo -n $remote_url: 
+# 	if [[ $remote_url =~ $dsh2_https_base ]]; then
+# 	    echo \ switch to ssh: ${remote_url:s.$dsh_https_base..}
+# 	elif [[ $remote_url =~ $dsh2_ssh_base ]]; then
+# 	    echo \ to htt
+# 	else
+# 	    echo \ no
+# 	fi
+#     done
+# }
+
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
@@ -116,9 +137,8 @@ alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias gri='git rebase -i HEAD~10'
-alias gsm='git submodule' 
+alias gsm='git submodule'
 alias gl='git lg | less'
-alias ghssh='git remote set-url origin $(git remote get-url --push origin | sed -e "s,.*/\([^/]*\)/\(.*\),git@github.com:\1/\2.git,")'
 alias gci='git init && git add . && git commit -m "Initial commit"'
 
 # ls
@@ -150,9 +170,9 @@ alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
-mcd() { 
+mcd() {
     DIR=$*
-    if [[ -z $DIR ]]; then 
+    if [[ -z $DIR ]]; then
 	echo usage: mcd NEWDIR
 	return
     fi
@@ -161,7 +181,7 @@ mcd() {
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
-alias whh=whence 
+alias whh=whence
 alias prr=print
 alias prl='print -rl -- '
 alias j='jobs -l'
@@ -198,7 +218,7 @@ run() {
     print Running \"$*\"...
     print Start: $(n)
     print -P $LINE_SEPARATOR
-    $* 
+    $*
     err=$?
     print -P $LINE_SEPARATOR
     print Stop: $(n)
@@ -209,10 +229,11 @@ run() {
 
 RUN() {
     # TODO
-    # -Run through watch to show diffs in output
-    # -Measure runtime 
+    # -Add option to run through watch to show diffs in output
+    # -Measure runtime
     # -Log output in tmux-log or similar
     # -Option to clear -x or not
+    # -Press any key for manual run
 
     if ! zparseopts -D \
 	D=DEBUG -debug=DEBUG \
@@ -338,20 +359,20 @@ GG() {
 	done 
 }
 
-cloc() { 
-    locate --existing -0 .zsh_local_history | 
+cloc() {
+    locate --existing -0 .zsh_local_history |
 	xargs -0 grep --color=always --line-number -e "$*" |
 	sort -k 2
 }
 
-clocd() { 
-    locate --existing -0 .zsh_local_history | 
+clocd() {
+    locate --existing -0 .zsh_local_history |
 	xargs -0 grep --files-with-matches -e "$*" |
 	sort -u
-}
+    }
 
-clocdf() { 
-    cd $(clocd $* | 
+clocdf() {
+    cd $(clocd $* |
 	fzf --preview "
 	    grep --color=always -e "$*" {}
     ")
