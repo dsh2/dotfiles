@@ -630,6 +630,7 @@ set cmdwinheight=10
 set complete+=kt
 set concealcursor=n
 set conceallevel=0
+set clipboard=unnamedplus
 set diffopt=
 " set diffopt=filler,context:4
 set dir=~/.vim/swo
