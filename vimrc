@@ -120,14 +120,14 @@ Plug 'inkarkat/vim-WORDComplete'
 Plug 'https://github.com/vim-scripts/AlphaComplete'
 Plug 'https://github.com/inkarkat/vim-PatternComplete'
 "}}}
-Plug 'inkarkat/vim-session'"{{{
-let g:session_autoload = 'yes'
-let g:session_default_to_last = 'yes'
-let g:session_autosave = 'yes'
-let g:session_autosave_to = 'yes'
-let g:session_autosave_periodic = 'yes'
-let g:session_autosave_periodic = 'yes'
-let g:session_persist_globals = ['&makeprg', '&makeef']
+" Plug 'inkarkat/vim-session'"{{{
+" let g:session_autoload = 'yes'
+" let g:session_default_to_last = 'yes'
+" let g:session_autosave = 'yes'
+" let g:session_autosave_to = 'yes'
+" let g:session_autosave_periodic = 'yes'
+" let g:session_autosave_periodic = 'yes'
+" let g:session_persist_globals = ['&makeprg', '&makeef']
 " -save session periodically
 " -check vim-obsession
 autocmd vimrc VimLeave * mksession! ~/.vim/lastsession
