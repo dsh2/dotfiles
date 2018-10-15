@@ -304,7 +304,15 @@ Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 Plug 'xolox/vim-misc'
 " }}}
 Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
-let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#completions_command = "<C-space>"
+let g:jedi#goto_command = "<c-]>"
+let g:jedi#auto_close_doc = 0
+let g:jedi#show_call_signatures = 2
+let g:jedi#show_call_signatures_delay = 0
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = ""
+let g:jedi#squelch_py_warning = 1
+" let g:jedi#force_py_version = 3.4
 " Plug 'nvie/vim-flake8'
 " Plug 'xolox/vim-pyref'
 " }}}
