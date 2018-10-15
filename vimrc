@@ -314,9 +314,22 @@ let g:vim_json_syntax_concealcursor = 0
 " }}}
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeFind' } "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
-let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
-let NERDTreeShowHidden=1
-let NERDTreeWinSize=46
+let g:NERDTreeShowIgnoredStatus = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "M",
+    \ "Staged"    : "+",
+    \ "Untracked" : "N",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "<",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : ">",
+    \ "Clean"     : "C",
+    \ "Ignored"   : 'I',
+    \ "Unknown"   : "?"
+    \ }
+let NERDTreeIgnore = ['\~$[[file]]', '\.pyc$[[file]]']
+let NERDTreeShowHidden = 1
+let NERDTreeWinSize = 46
 autocmd vimrc FileType nerdtree map <buffer> l oj^
 "autocmd vimrc FileType nerdtree map <buffer> O mo
 autocmd vimrc FileType nerdtree map <buffer> h x^
