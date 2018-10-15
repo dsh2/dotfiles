@@ -303,10 +303,9 @@ autocmd vimrc BufRead *.smali set filetype=smali
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 Plug 'xolox/vim-misc'
 " }}}
-Plug 'vim-scripts/indentpython.vim', {'for': 'python'} "{{{
+Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
+let g:jedi#use_splits_not_buffers = "right"
 " Plug 'nvie/vim-flake8'
-" Plug 'davidhalter/jedi-vim'
-" let g:jedi#use_splits_not_buffers = "right"
 " Plug 'xolox/vim-pyref'
 " }}}
 Plug 'elzr/vim-json', {'for': 'json'}  "{{{
