@@ -94,8 +94,8 @@ autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
 " autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
-autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
-autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
+autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setfiletype gitcommit | set spell | silent! nunmap ;
+autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setlocal spell
 " }}}
 Plug 'gregsexton/gitv'
 Plug 'junegunn/gv.vim' "{{{
@@ -345,9 +345,11 @@ autocmd vimrc FileType nerdtree map <buffer> ; go
 autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
 " }}}
-Plug 'https://github.com/tpope/vim-bundler'
-Plug 'https://github.com/tpope/vim-rails'
-Plug 'https://github.com/tpope/vim-sleuth'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-endwise'
+autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-sleuth'
 Plug 'tyru/open-browser.vim' "{{{
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
@@ -383,6 +385,7 @@ let g:tagbar_compact = 1
 let g:tagbar_indent = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_autofocus = 0
+let g:tagbar_hide_nonpublic = 0
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
 
