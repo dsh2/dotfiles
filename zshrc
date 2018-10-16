@@ -429,6 +429,7 @@ autoload -U zed
 # TODO: check fpath vs. source
 source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
+source /usr/share/zsh/vendor-completions/_awscli
 source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
