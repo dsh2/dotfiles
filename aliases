@@ -396,7 +396,7 @@ alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
 dpl() { apt-cache show $* && dpkg -L $*}
-compdef _command_names dpl
+compdef _deb_packages dpl
 dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 compdef _command_names dpL
 alias dps='dpkg -S'
