@@ -153,11 +153,13 @@ else
 fi
 
 function kill-line-xclip {
-	if [ -z $RBUFFER ]; then
+	if [[ -z $RBUFFER ]]; then
 		filter_last_output 
 	else
 		zle kill-line
-		echo $CUTBUFFER | $=XC
+		if [[ -n $DISPLAY ]]; then
+		  echo $CUTBUFFER | $=XC 2> /dev/null
+		fi
 	fi
 }
 bindkey_func '^k' kill-line-xclip
@@ -321,6 +323,7 @@ function start_tmux_logging()
     # -name of tmux session name
     # -create log_file_name from cmdline contents and timestamp as history event
     #  number does not seem to be stable enough
+    # TODO: save hostname to merge log among different hosts
     tmux pipe-pane "cat > $tmux_log_file"
 }
 
