@@ -509,6 +509,7 @@ alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shar
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
+alias H=hostname
 # TODO: make C a zle binding
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
