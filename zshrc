@@ -183,7 +183,7 @@ function page_tmux_pane {
 	# zle -M "page_tmux_pane"
 	local temp_file=$(mktemp)
 	tmux capture-pane -epJS - > $temp_file
-	tmux split vim $temp_file
+	tmux split -vbp 60 vim $temp_file
 }
 bindkey_func '^x^r' page_tmux_pane
 
@@ -191,7 +191,7 @@ function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	# tmux split vim $tmux_log_file '+set buftype=nofile' '+AnsiEsc'
-	tmux split vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
+	tmux split  -vbp 60 vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
 	# tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
