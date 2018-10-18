@@ -9,6 +9,7 @@ pathprepend /usr/lib/ccache
 # pathprepend /opt/local/share/man MANPATH
 pathprepend $HOME/bin
 pathprepend $HOME/.dotfiles/bin
+pathprepend $HOME/.dotfiles/fzf/bin
 pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
 
 # Android
@@ -74,6 +75,7 @@ export BROWSER=/usr/bin/google-chrome-stable
 export DYNAMIC_COLORS_ROOT=$HOME/.dotfiles/colors/dynamic-colors/
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export GOPATH=$HOME/src/GO
+pathprepend $GOPATH/bin
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy.conf
 export INTERACTIVE_COMMANDS=(atop htop lnav mutt powertop r2 ranger vim)
