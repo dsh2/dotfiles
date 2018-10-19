@@ -416,7 +416,7 @@ zle -N zle-keymap-select
 # }}}
 
 # Completion {{{
-fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
+fpath+=~/.dotfiles/zsh/zsh-completions/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
@@ -517,7 +517,10 @@ TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped 
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
 [ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
-if [ -n "$TMUX" ]; then
+if [ -n "$SSH_TTY" ]; then
+	echo Clearing TMOUT because zsh runs in a secure shell \(ssh\).
+	TMOUT=
+elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
 	if [ -n "$TMUX_LOCK_COMMAND" ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
@@ -533,14 +536,9 @@ if [ -n "$TMUX" ]; then
 			echo WARNING: tmux lock-command not found.
 		fi
 	fi
-else
-	if [ -n "$X_AUTOLOCK" ]; then
-		echo Clearing TMOUT because zsh runs under a protected X server.
-		TMOUT=
-	elif [ -n "$SSH_TTY" ]; then
-		echo Clearing TMOUT because zsh runs in a secure shell \(ssh\).
-		TMOUT=
-	fi
+elif [ -n "$X_AUTOLOCK" ]; then
+	echo Clearing TMOUT because zsh runs under a protected X server.
+	TMOUT=
 fi
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
@@ -653,6 +651,7 @@ bash_source() {
   setopt kshglob noshglob braceexpand
   source "$@"
 }
+bash_source ~/lib/azure-cli/az.completion
 
 have() {
   unset have
