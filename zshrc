@@ -301,7 +301,7 @@ function start_tmux_logging()
     # TODO: Add colors to output
     # export ZSH_DEBUG=1
     print -P $LINE_SEPARATOR
-    if [[ -v $ZSH_DEBUG ]]; then
+    if [[ -n $ZSH_DEBUG ]]; then
 	# print -l params = \"$@\"
 	print literal = \"$1\"
 	# print compact: \"$2\"
