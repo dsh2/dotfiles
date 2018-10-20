@@ -1,4 +1,6 @@
-clear 
-echo zsh exited. \(\$*=\"$*\", TMOUT=\"$TMOUT\"\)
-# TODO: think about if this is a bad idea....
-sleep 1m
+[[ -z $SSH_TTY ]] && clear
+if [[ -n $TMUX ]]; then
+	echo zsh timed out. \(TMOUT=\"$TMOUT\", \$\*=\"$*\"\)
+	# TODO: think about if sleeping is a bad idea....
+	sleep 1m
+fi
