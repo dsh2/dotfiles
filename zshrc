@@ -174,7 +174,7 @@ bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
-	[ -z $tmux_log_file ] && return
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC
 }
 bindkey_func '^x^o' copy_last_output
@@ -328,7 +328,7 @@ function start_tmux_logging()
 }
 
 function stop_tmux_logging() 
-{ 
+{
     [ -z $tmux_log_file ] && return
     tmux pipe-pane 
     # HACK: Convert tmux line endings
@@ -378,7 +378,7 @@ add-zsh-hook preexec zsh_terminal_title_running
 
 if whence tmux > /dev/null \
     && tmux has-session >& /dev/null \
-    && [ -n $TMUX ] \
+    && [[ -n $TMUX ]] \
     && mkdir -p ~/.tmux-log ;
 then
     add-zsh-hook preexec start_tmux_logging
