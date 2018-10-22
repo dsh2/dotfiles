@@ -666,6 +666,8 @@ set diffopt=
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
+let g:xml_syntax_folding=1
+set foldmethod=syntax
 set foldlevelstart=99
 " set foldopen=hor,mark,percent,quickfix,search,tag,undo
 set foldopen=hor,search,quickfix,tag
@@ -715,7 +717,6 @@ set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
 
-syntax enable
 " }}}
 " Mappings {{{
 nmap Q :qall<cr>
@@ -773,7 +774,7 @@ function! YankPath()
     call YankUp(g:path)
     echo "Yanked path \"" . g:path . "\""
 endfunction
-map yp :call YankPath()<cr>
+map Yp :call YankPath()<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
@@ -827,7 +828,7 @@ function! RestorePosition()
 endfunction
 "}}}
 " Configure help system {{{
-runtime! ftplugin/man.vim
+" runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
@@ -942,7 +943,7 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 " Prevent delay after quitting input mode
 " TODO: This seems to be unreliable
 set noesckeys
-
+" vim-pstree {{{
 " TODO:
 " -Make tree generation recurring in the background with a regular interval
 " -Add maps
@@ -1113,7 +1114,7 @@ function! StatusbarToggle()
     endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
-
+" }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
