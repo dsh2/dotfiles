@@ -88,7 +88,7 @@ zshaddhistory() {
     # fi
     # echo zshaddhistory: line NOT skipped
     print -sr -- ${1%%$'\n'}
-    # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    # TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
     # TODO: log local history for read-only directories somewhere else
     if [ -w $PWD ]; then
 	fc -p .zsh_local_history
@@ -477,6 +477,7 @@ zstyle ':completion:*' menu select=1
 zstyle ':completion:*' select-prompt '%Slines=%l matches=%m (%p)%s'
 zstyle ':completion:*' verbose true
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # Use same colors as GNU ls in lists
+zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
 # TODO: Think about ma, hi, du markers
 zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
 zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
