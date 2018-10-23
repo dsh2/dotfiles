@@ -610,7 +610,10 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'vim-scripts/LargeFile'
 Plug 'leafgarland/typescript-vim'
+let g:LargeFile = 50
+set synmaxcol = 2048
 Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
@@ -808,7 +811,9 @@ endfunction
 set foldexpr=FoldExprSpace(v:lnum)
 "}}}
 " Open log files at the bottom of the file{{{
+" TODO: autocmd.txt is not so clear about the the interpretation of slashes in face of multiple comma-separated {pat}s
 autocmd vimrc BufReadPost *.log normal G
+autocmd vimrc BufReadPost */log/* normal G
 autocmd vimrc BufReadPost *.log :set filetype=messages
 "}}}
 " Restore last position in file upon opening a file{{{
