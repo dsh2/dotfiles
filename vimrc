@@ -338,6 +338,7 @@ let g:NERDTreeIndicatorMapCustom = {
 let NERDTreeIgnore = ['\~$[[file]]', '\.pyc$[[file]]']
 let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 46
+let NERDTreeMinimalUI = 1
 autocmd vimrc FileType nerdtree map <buffer> l oj^
 "autocmd vimrc FileType nerdtree map <buffer> O mo
 autocmd vimrc FileType nerdtree map <buffer> h x^
@@ -613,7 +614,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 Plug 'vim-scripts/LargeFile'
 Plug 'leafgarland/typescript-vim'
 let g:LargeFile = 50
-set synmaxcol = 2048
+set synmaxcol=2048
 Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
