@@ -522,7 +522,7 @@ let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
 let g:HiCursorWords_debugEchoHiName = 0
 " }}}
-Plug 'flatcap/vim-keyword', {'on': 'KeywordToggle'} "{{{
+Plug 'flatcap/vim-keyword' "{{{
 " TODO: Make this work
 map <leader>k <plug>KeywordToggle
 map <leader>K :call keyword#KeywordClear()<cr>
@@ -611,7 +611,15 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'Shougo/echodoc.vim'
 Plug 'vim-scripts/LargeFile'
+if has('nvim')
+  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/defx.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 Plug 'leafgarland/typescript-vim'
 let g:LargeFile = 50
 set synmaxcol=2048
@@ -733,7 +741,8 @@ nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
-nmap gF :tabedit <cfile><cr>
+nnoremap gf gF
+nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
 vmap DP :diffput<cr>
 vmap DG :diffget<cr>
