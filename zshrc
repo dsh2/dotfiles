@@ -488,7 +488,6 @@ zstyle ':completion:*' menu select=1
 zstyle ':completion:*' select-prompt '%Slines=%l matches=%m (%p)%s'
 zstyle ':completion:*' verbose true
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}" # Use same colors as GNU ls in lists
-zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
 # TODO: Think about ma, hi, du markers
 zstyle ':completion:*:aliases' list-colors '=*=2;38;5;128'
 zstyle ':completion:*:builtins' list-colors '=*=1;38;5;142'
@@ -528,9 +527,10 @@ TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped 
 # TODO: Think about if this is a really a safe setup
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
+ZSH_LOCK_STATUS=""
 [ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [ -n "$SSH_TTY" ]; then
-	echo Clearing TMOUT because zsh runs in a secure shell \(ssh\).
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
 elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
@@ -539,19 +539,20 @@ elif [ -n "$TMUX" ]; then
 			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
 			else
-				echo Clearing tmux lock-after-time because all tmux clients run under protected X servers.
+				ZSH_LOCK_STATUS+="Clearing tmux lock-after-time because all tmux clients run under protected X servers.\n"
 				tmux set-option -g lock-after-time 0
 			fi
-			echo Clearing TMOUT because zsh runs under a protected tmux server.
+			ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected tmux server.\n"
 			TMOUT=
 		else
 			echo WARNING: tmux lock-command not found.
 		fi
 	fi
 elif [ -n "$X_AUTOLOCK" ]; then
-	echo Clearing TMOUT because zsh runs under a protected X server.
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
+# print -n $ZSH_LOCK_STATUS
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -696,3 +697,4 @@ function in_array() {
 }
 
 # }}}
+zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
