@@ -84,10 +84,16 @@ fs() {
 }
 
 ftpane() {
-  # TODO: check if already running
-  panes=$(tmux list-panes -aF '[#{session_name}]\t#{window_index}|#{=15:window_name}\t#{pane_index}|#{=-15:pane_current_command}\t#{pane_tty} (#{pane_width} x #{pane_height})\t#{pane_id}\t#{pane_pid}\t#{pane_current_path}')
-  target=$(echo "$panes" | fzf +m --header=\[Session\]$'\t'\ \|Window$'\t'\ \|Command$'\t'TTY$'\t\t'P_ID$'\t'P_PID$'\t'CWD --tabstop=14 --layout=reverse ) || return
-  tmux switch-client -t $(echo $target | cut -f 5)
+  # TODO:
+  # -check if already running
+  # -focus self
+  # -what about colors
+  panes=$( \
+    tmux list-panes -aF '#{window_activity_flag} #{window_bell_flag} #{window_silence_flag} #{window_stack_index} #{wrap_flag} #{window_flags}\t#{window_activity}\t[#{session_name}]\t#{window_index}|#{=13:window_name}\t#{s,/dev/,,:pane_tty}\t#{pane_id}\t#{pane_pid}\t#{pane_index}|#{=13:pane_current_command}\t#{pane_current_path}:#{pane_title}' |
+    grep -v $$ # TODO: add \t-regex
+    )
+  target=$(echo "$panes" | fzf +m --header=A\ B\ S\ I\ W\ F\ $'\t'\[ACTIVITY\]$'\t'\[SESSION\]$'\t'\ \|WINDOW$'\t'TTY$'\t'P_ID$'\t'P_PID$'\t'\ \|PANE$'\t'CWD:TITLE --tabstop=14 --layout=reverse ) || return
+  tmux switch-client -t $(echo $target | cut -f 6)
 }
 
 # gch - browse chrome history
