@@ -128,6 +128,17 @@ function repeat_immediately {
 }
 bindkey_func '^j' repeat_immediately
 
+function repeat_immediately_second_previous {
+  if [[ $#BUFFER -eq 0 ]]; then
+    zle up-history
+    zle up-history
+    zle accept-line
+  else
+    zle backward-char
+  fi
+}
+bindkey_func '^b' repeat_immediately_second_previous
+
 function focus_backgroud {
     (( $#jobstates )) || { zle -M "No background jobs."; return }
     [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
