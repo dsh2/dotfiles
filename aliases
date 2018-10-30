@@ -519,4 +519,52 @@ faketty() { script -qfc "$(printf "%q " "$@")"; }
 alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
 
+typeset -A tmux_dirs=(right R left L above U top U up U below D down D)
+
+tmux_neighbor() {
+	if tmux select-pane -${tmux_dirs[$1]}; then
+		shift
+		tmux display-message -p "$*"
+		tmux select-pane -l
+	fi
+}
+
+tmux_neighbor_pane() {
+	tmux_neighbor $1 '#{pane_id}'
+}
+
+tmux_neighbor_tty() {
+	tmux_neighbor $1 '#{pane_tty}'
+}
+
+tmux_neighbor_pid() {
+	tmux_neighbor $1 '#{pane_pid}'
+}
+
+print_tty() {
+	tty=$1
+	shift
+	print -- $* >> $tty
+}
+
+tmux_print_tty_right() { print_tty $(tmux_neighbor_tty right) $* }
+tmux_print_tty_left() { print_tty $(tmux_neighbor_tty left) $* }
+tmux_print_tty_above() { print_tty $(tmux_neighbor_tty above) $* }
+tmux_print_tty_below() { print_tty $(tmux_neighbor_tty below) $* }
+
+alias Pr=tmux_print_tty_right
+alias Pl=tmux_print_tty_left
+alias Pa=tmux_print_tty_above
+alias Pb=tmux_print_tty_below
+
+tmux_send_keys_right() { tmux send-keys -t $(tmux_neighbor_pane right) $* }
+tmux_send_keys_left() { tmux send-keys -t $(tmux_neighbor_pane left) $* }
+tmux_send_keys_above() { tmux send-keys -t $(tmux_neighbor_pane above) $* }
+tmux_send_keys_below() { tmux send-keys -t $(tmux_neighbor_pane below) $* }
+
+alias Kr=tmux_send_keys_right
+alias Kl=tmux_send_keys_left
+alias Ka=tmux_send_keys_above
+alias Kb=tmux_send_keys_below
+
 # vim: se ft=sh:
