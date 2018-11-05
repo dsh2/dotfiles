@@ -77,13 +77,17 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 alias f=find
-loc() { locate "$*" | grep --color "$*"; }
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-locl() { loc "$PWD/$*" ; }
+alias lc='locate --existing --regex --basename'
+loc() { locate "$*" | grep --color "$*"; }
+locl() { locate "$*" | sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
+locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
+alias lloc=locl
+alias cq=copyq
 
 # git
 alias g=git
@@ -132,7 +136,7 @@ alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
-alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=15 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
@@ -426,7 +430,7 @@ alias uu=uniq
 alias lv=lnav
 alias e=echo 
 alias tf='grc tail -f /var/log/messages &'
-alias tff='(cd /var/log; sudo lnav -r messages auth.log fail2ban.log)'
+alias tff='(cd /var/log; sudo lnav -r syslog auth.log fail2ban.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
@@ -508,10 +512,10 @@ alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
+# TODO: make C a zle binding
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
 alias H=hostname
-# TODO: make C a zle binding
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
