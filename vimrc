@@ -540,9 +540,15 @@ Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
 let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 "}}}
-Plug 'ihacklog/HiCursorWords' "{{{
+Plug 'dsh2/HiCursorWords' "{{{
 let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
+" let g:HiCursorWords_style='term=reverse cterm=reverse gui=reverse'
+" let g:HiCursorWords_linkStyle='ErrorMsg'
+" let g:HiCursorWords_linkStyle='IncSearch'
+let g:HiCursorWords_linkStyle='MatchParen'
+" let g:HiCursorWords_linkStyle='VisualNOS'
+" let g:HiCursorWords_debugEchoHiName = 1
 let g:HiCursorWords_debugEchoHiName = 0
 " }}}
 Plug 'flatcap/vim-keyword' "{{{
