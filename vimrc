@@ -163,10 +163,14 @@ let g:neomru#update_interval=60
 "}}}
 Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-" Plug 'rickhowe/diffchar.vim'
+Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
 let g:DiffColors = 0 " fixed color
 " let g:DiffColors = 1 " 4 colors in fixed order
+Plug 'rickhowe/spotdiff.vim'
+noremap <leader>ldt :Diffthis<CR>
+noremap <leader>ldr :Diffoff!<CR>
+noremap <leader>ldo :Diffoff!<CR>
 " }}}
 Plug 'Ilink/cscope-quickfix' "{{{
 set cscopepathcomp=2
