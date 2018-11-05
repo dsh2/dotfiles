@@ -214,13 +214,32 @@ let g:CCTreeKeyDepthMinus = '-'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-fold'
+let g:textobj_function_no_default_key_mappings = 1
+xmap aF <Plug>(textobj-function-a)
+vmap aF <Plug>(textobj-function-a)
+xmap iF <Plug>(textobj-function-i)
+vmap iF <Plug>(textobj-function-i)
 Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-lastpat'
 Plug 'coderifous/textobj-word-column.vim'
 Plug 'vim-scripts/argtextobj.vim'
+Plug 'thinca/vim-textobj-between'
+Plug 'adriaanzon/vim-textobj-matchit'
+xmap a%  <Plug>(textobj-matchit-a)
+omap a%  <Plug>(textobj-matchit-a)
+xmap i%  <Plug>(textobj-matchit-i)
+omap i%  <Plug>(textobj-matchit-i)
+Plug 'beloglazov/vim-textobj-quotes'
+xmap q iq
+omap q iq
+" Plug 'rhysd/vim-textobj-continuous-line'
+Plug 'kana/vim-textobj-datetime'
 Plug 'vim-utils/vim-space'
+" Plug 'rsrchboy/vim-textobj-heredocs'
+Plug 'Julian/vim-textobj-variable-segment'
+Plug 'whatyouhide/vim-textobj-xmlattr'
 " }}}
 Plug 'gcmt/taboo.vim' "{{{
 let g:taboo_tab_format = "[%N|%f(%W)%m] "
