@@ -916,7 +916,7 @@ hi SpellBad ctermbg=none ctermfg=red cterm=undercurl
 nmap zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
-au BufRead *.md if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+au BufRead *.md set filetype=markdown | if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
 " }}}
 " Function: removes trailing spaces {{{
 command! RemoveTrailingSpaces call RemoveTrailingSpaces()
@@ -1105,14 +1105,17 @@ function! ProcessTree(...)
     let l:current_fold_level = &foldlevel
     " let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
     " Create new buffer for current pstree
-    execute "e ps-" . strftime('%F-%T')
+    execute "e ps-" . strftime('%F_%T')
     silent! execute "read !ps -e --forest " . Fields_to_psparm()
     set buftype=nofile filetype=sh cursorline nonumber norelativenumber nowrap
     silent! ALEDisable
     " Cut header from ps output
     silent! norm ggdd0"ad$ddn
+	" Delete old header - if any
+	wincmd k
+	if bufname("") == "HEADER" | bdelete! | endif
     " Move header into separate window
-    silent! bdelete! HEADER | 1new HEADER | wincmd k | norm "aP0
+	1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
     set buftype=nofile nonumber norelativenumber nowrap
     let &foldcolumn=g:pst_fold_columns
     wincmd j
@@ -1160,6 +1163,15 @@ function! StatusbarToggle()
     endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
+function! KeepView(cmd)
+    let w = winsaveview()
+	exec a:cmd
+    call winrestview(w)
+endfunction
+map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
+map <leader>0s :call KeepView('silent! %s/\s\+\S/\r/')<cr>
+" TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
+map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
