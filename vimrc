@@ -619,6 +619,7 @@ Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
 "}}}
 " Plug colorschemes {{{
+Plug 'morhetz/gruvbox'
 Plug 'rhysd/vim-color-spring-night'
 Plug 'Lokaltog/vim-distinguished'
 Plug 'altercation/vim-colors-solarized'
@@ -828,6 +829,7 @@ nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
 map <leader>c :colorscheme
 colorscheme seoul256 | let g:airline_theme='qwq'
+" colorscheme gruvbox| let g:airline_theme='pencil'
 " colorscheme spring-night | let g:airline_theme='night_owl'
 " colorscheme solarized | let g:airline_theme='solarized_flood'
 hi Folded cterm=NONE
