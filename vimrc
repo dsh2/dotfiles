@@ -534,7 +534,7 @@ map <leader>y :MerginalToggle<cr>
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-nnoremap <buffer> <silent> <cr> 0f/lgf
+autocmd vimrc BufReadPost vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
@@ -728,6 +728,7 @@ set nobackup
 set relativenumber
 set nospell
 set nowrap
+set linebreak
 set nowrapscan
 set number
 set previewheight=14
