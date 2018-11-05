@@ -12,7 +12,7 @@ hc unrule -F
 # TODO: Make indeed external
 $hc_bin/alt-tab.sh &
 shutter &
-parcellite &
+# parcellite &
 dunst &
 xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker 'i3lock-wrapper.sh -b' -detectsleep &
 # -notify -notifier 'notify-send Locking soon...' &
@@ -42,10 +42,10 @@ hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}'
 hc keybind $SUPER+Tab spawn rofi -theme theme -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -theme theme -fullscreen -show combi
 hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
-hc keybind F9 spawn $hc_bin/dlf.sh
-hc keybind F10 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
-hc keybind F11 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
-hc keybind F12 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
+hc keybind F5 spawn $hc_bin/dlf.sh
+hc keybind F6 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
+hc keybind F7 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
+hc keybind F8 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
 # }}}
 # Miscellaneous keybindings {{{
 hc keybind $SUPER-q close
@@ -119,9 +119,9 @@ hc keybind $SUPER-Shift-f fullscreen toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
-hc keybind $SUPER-e \
-	or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal grid \
-		, cycle_layout +1 vertical horizontal
+hc keybind $SUPER-e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max , cycle_layout +1 
+hc keybind $SUPER-Shift-e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout -1 vertical horizontal max , cycle_layout -1 
+# hc keybind $SUPER-e cycle_layout
 # }}}
 # Keybindings to change focus {{{
 hc keybind $SUPER-BackSpace cycle_monitor +1
