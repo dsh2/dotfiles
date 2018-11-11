@@ -571,4 +571,6 @@ alias Kl=tmux_send_keys_left
 alias Ka=tmux_send_keys_above
 alias Kb=tmux_send_keys_below
 
+alias uf='uftrace --no-pager'
+alias ufr='uftrace --no-pager record -A . -R . '
 # vim: se ft=sh:
