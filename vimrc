@@ -193,6 +193,7 @@ autocmd vimrc FileType qf wincmd J
 Plug 'hari-rangarajan/CCTree' "{{{
 " TODO:
 " let g:CCTreeCscopeDb = ".cscope/out"
+" autocmd vimrc BufNewFile,BufReadPost CCTree-View nnoremap q :echo q
 let g:CCTreeCscopeDb = "cscope.out"
 let g:CCTreeDisplayMode = 1
 let g:CCTreeHilightCallTree=1
@@ -263,9 +264,8 @@ Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
 map <leader>f :Ranger<cr>
 "}}}
 Plug 'milkypostman/vim-togglelist' "{{{
-nmap <silent!> <leader><c-j> :colder<CR>
-nmap <silent!> <leader><c-k> :cnewer<CR>
-nmap <silent!> <leader>O :copen<CR>
+nmap <leader><c-j> :colder<CR>
+nmap <leader><c-k> :cnewer<CR>
 " }}}
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 let g:undotree_WindowLayout = 2
@@ -371,7 +371,6 @@ nnoremap <F2> :NERDTreeFind<cr>
 " }}}
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
-autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-sleuth'
 Plug 'tyru/open-browser.vim' "{{{
@@ -512,8 +511,9 @@ let g:peekaboo_delay = 0
 let g:peekaboo_compact = 0
 "}}}
 Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
-let g:autoformat_verbosemode=0
-map <leader>A :Autoformat<cr>
+let g:autoformat_verbosemode=1
+" TODO: try to understand why resetting syn is necessary
+map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
 "}}}
 Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
@@ -576,12 +576,12 @@ let g:keyword_highlight = 'ctermbg=darkred'
 " }}}
 Plug 'w0rp/ale' "{{{
 let g:airline#extensions#ale#enabled = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
 let g:ale_keep_list_window_open = 1
 let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = "never"
 " }}}
 Plug 'machakann/vim-highlightedyank'"{{{
@@ -759,6 +759,8 @@ set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
+autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
+autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 
 " }}}
 " Mappings {{{
@@ -770,6 +772,7 @@ map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
+map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
 nnoremap gf gF
