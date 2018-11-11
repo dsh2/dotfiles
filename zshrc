@@ -662,9 +662,11 @@ bash_source() {
   alias _complete=_bash_comp
   emulate -L sh
   setopt kshglob noshglob braceexpand
+  [[ ! -r $@ ]] && return
   source "$@"
 }
 bash_source ~/lib/azure-cli/az.completion
+bash_source ~/.dotfiles/zsh/uftrace-completion.sh
 
 have() {
   unset have
