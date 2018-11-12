@@ -1,5 +1,25 @@
 # vim: set foldmethod=marker foldlevel=0:
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+
+zsh_source() {
+  # TODO: check if writeable for others than us
+  [[ ! -r $@ ]] && return
+  source $@
+}
+
+bash_source() {
+  alias shopt=':'
+  alias _expand=_bash_expand
+  alias _complete=_bash_comp
+  emulate -L sh
+  setopt kshglob noshglob braceexpand
+  # TODO: check if writeable for others than us
+  [[ ! -r $@ ]] && return
+  source "$@"
+}
+bash_source ~/lib/azure-cli/az.completion
+bash_source ~/.dotfiles/zsh/uftrace-completion.sh
+
 setopt prompt_subst
 setopt prompt_cr
 setopt prompt_sp
@@ -443,10 +463,10 @@ autoload -U compinit && compinit
 autoload -U zed
 
 # TODO: check fpath vs. source
-source ~/.dotfiles/src/t/etc/t-completion.zsh
+zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
-source /usr/share/zsh/vendor-completions/_awscli
-source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
+zsh_source /usr/share/zsh/vendor-completions/_awscli
+zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
@@ -557,7 +577,7 @@ fi
 # print -n $ZSH_LOCK_STATUS
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
-source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+zsh_source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
 ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
 ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
@@ -568,7 +588,7 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 
 # Setup aliases {{{
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
-source ~/.aliases
+zsh_source ~/.aliases
 typeset -a ealiases
 ealiases=($(alias | sed \
     -e s/=.\*// \
@@ -642,18 +662,6 @@ pathprepend() {
     path=($path_element $path)
 }
 
-bash_source() {
-  alias shopt=':'
-  alias _expand=_bash_expand
-  alias _complete=_bash_comp
-  emulate -L sh
-  setopt kshglob noshglob braceexpand
-  [[ ! -r $@ ]] && return
-  source "$@"
-}
-bash_source ~/lib/azure-cli/az.completion
-bash_source ~/.dotfiles/zsh/uftrace-completion.sh
-
 have() {
   unset have
   (( ${+commands[$1]} )) && have=yes
@@ -665,9 +673,9 @@ logcheck=30
 
 
 # Source external ressource files {{{
-source ~/.environment
-source ~/.fzf.zsh
-source ~/.fzfrc
+zsh_source ~/.environment
+zsh_source ~/.fzf.zsh
+zsh_source ~/.fzfrc
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
