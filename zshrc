@@ -330,34 +330,34 @@ bindkey -s rq "r2 -Nqc '' -"
 
 function start_tmux_logging() 
 { 
-    tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-    # TODO: Add colors to output
-    # export ZSH_DEBUG=1
-    print -P $LINE_SEPARATOR
-    if [[ -n $ZSH_DEBUG ]]; then
-	# print -l params = \"$@\"
-	print literal = \"$1\"
-	# print compact: \"$2\"
-	# print full: \"$3\"
-	# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
-	print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
-	print time: $(n)
-	print event id: ${$(echo $3 | sha1sum)[1]}
-	print tmux_log_file: $tmux_log_file
+	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
+		# TODO: Add colors to output
+	# export ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
-    fi
-    # TODO: Do not log for INTERACTIVE_COMMANDS
-    # TODO: Add logging (probably best in directories) for
-    # -exit code
-    # -directory (in case .zsh_local_history is not possible)
-    # -environment
-    # -literal and full command
-    # -report times
-    # -name of tmux session name
-    # -create log_file_name from cmdline contents and timestamp as history event
-    #  number does not seem to be stable enough
-    # TODO: save hostname to merge log among different hosts
-    tmux pipe-pane "cat > $tmux_log_file"
+	if [[ -n $ZSH_DEBUG ]]; then
+		# print -l params = \"$@\"
+		print literal = \"$1\"
+		# print compact: \"$2\"
+		# print full: \"$3\"
+		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
+		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
+		print time: $(n)
+		print event id: ${$(echo $3 | sha1sum)[1]}
+		print tmux_log_file: $tmux_log_file
+		print -P $LINE_SEPARATOR
+	fi
+	# TODO: Do not log for INTERACTIVE_COMMANDS
+	# TODO: Add logging (probably best in directories) for
+	# -exit code
+	# -directory (in case .zsh_local_history is not possible)
+	# -environment
+	# -literal and full command
+	# -report times
+	# -name of tmux session name
+	# -create log_file_name from cmdline contents and timestamp as history event
+	#  number does not seem to be stable enough
+	# TODO: save hostname to merge log among different hosts
+	tmux pipe-pane "cat > $tmux_log_file"
 }
 
 function stop_tmux_logging() 
