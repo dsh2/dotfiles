@@ -558,7 +558,7 @@ elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
 	if [ -n "$TMUX_LOCK_COMMAND" ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
-			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
+			if [[ $(uname -a) != *Microsoft* ]] && tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
 			else
 				ZSH_LOCK_STATUS+="Clearing tmux lock-after-time because all tmux clients run under protected X servers.\n"
