@@ -601,12 +601,12 @@ ealiases=($(alias | sed \
 ))
 
 expand_ealias() {
-    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
-	# print MATCH: $MATCH $MBEGIN $MEND
-	zle _expand_alias
-	# zle expand-word
-    fi
-    zle magic-space
+	if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
+		# print MATCH: $MATCH $MBEGIN $MEND
+		zle _expand_alias
+		# zle expand-word
+	fi
+	zle magic-space
 }
 bindkey_func ' ' expand_ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
