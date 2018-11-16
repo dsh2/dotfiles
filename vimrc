@@ -181,10 +181,10 @@ set cscoperelative
 function! QfLlNext()
     windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
 endfunction
+nnoremap <C-n> :call QfLlNext()<cr>
 function! QfLlPrevious()
     windo if &l:buftype == "quickfix" | silent! cprevious | if &l:buftype == "location" | silent! lprevious | endif | endif
 endfunction
-nnoremap <C-n> :call QfLlNext()<cr>
 nnoremap <C-p> :call QfLlPrevious()<cr>
 " FIXME: does not work :(
 autocmd vimrc FileType qf set norelativenumber
@@ -369,10 +369,6 @@ autocmd vimrc FileType nerdtree map <buffer> ; go
 autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
 " }}}
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-sleuth'
 Plug 'tyru/open-browser.vim' "{{{
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
@@ -400,7 +396,8 @@ let g:pdf_convert_on_read = 1
 " map <leader>t :TlistToggle<cr>
 " }}}
 Plug 'majutsushi/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
-let g:tagbar_autoclose = 0
+Plug 'hushicai/tagbar-javascript.vim'
+let g:tagbar_autoclose = 1
 " TODO: Add support for percent instead of number of characters
 let g:tagbar_width = 40
 let g:tagbar_zoomwidth = 0
@@ -515,7 +512,6 @@ let g:autoformat_verbosemode=1
 " TODO: try to understand why resetting syn is necessary
 map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
 "}}}
-Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
 autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq,resolv setlocal commentstring=#\ %s
 "}}}
@@ -559,21 +555,9 @@ let g:keyword_group = 'keyword_group'
 " let g:keyword_highlight = 'ctermbg=darkred cterm=underline'
 let g:keyword_highlight = 'ctermbg=darkred'
 "}}}
-" Plug 'scrooloose/syntastic' "{{{
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_lua_checkers = ["luac", "luacheck"]
-" let g:syntastic_lua_luacheck_args = "--no-unused-args"
-" let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
-" let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
-" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-" let g:go_list_type = "quickfix"
-" }}}
+Plug 'vim-scripts/LargeFile'"{{{
+let g:LargeFile = 50
+set synmaxcol=2048"}}}
 Plug 'w0rp/ale' "{{{
 let g:airline#extensions#ale#enabled = 1
 let g:ale_set_loclist = 1
@@ -590,6 +574,21 @@ if !exists('##TextYankPost')
     map y <Plug>(highlightedyank)
 endif
 "}}}
+" Plug 'scrooloose/syntastic' "{{{
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 0
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_lua_checkers = ["luac", "luacheck"]
+" let g:syntastic_lua_luacheck_args = "--no-unused-args"
+" let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter']
+" let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
+" let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+" let g:go_list_type = "quickfix"
+" }}}
 " Plug YouCompleteMe {{{
 " function! BuildYCM(info)
 "   if a:info.status == 'installed' || a:info.force
@@ -611,6 +610,8 @@ endif
 " let g:ycm_collect_identifiers_from_comments_and_strings=1
 " let g:ycm_collect_identifiers_from_tags_files=1
 " }}}
+Plug 'szw/vim-g'"{{{
+map <leader>G :Google<cr>"}}}
 " Plug tmux {{{
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 autocmd vimrc BufRead tmux.conf set filetype=tmux
@@ -641,29 +642,21 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-sleuth'
 Plug 'Shougo/echodoc.vim'
-Plug 'vim-scripts/LargeFile'
-if has('nvim')
-  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/defx.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'leafgarland/typescript-vim'
-let g:LargeFile = 50
-set synmaxcol=2048
 Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
-Plug 'szw/vim-g'
-map <leader>G :Google<cr>
 Plug 'google/vim-searchindex'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
 Plug 'tmhedberg/matchit'
+Plug 'chrisbra/Colorizer'
 Plug 'chrisbra/Recover.vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
