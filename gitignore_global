@@ -1,4 +1,5 @@
 # Dev
+BUILD-*
 core
 gmon.out
 *.out

@@ -95,8 +95,8 @@ autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
 " autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
-autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setf gitcommit | set spell | silent! nunmap ;
-autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setl spell
+autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setfiletype gitcommit | set spell | silent! nunmap ;
+autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setlocal spell
 " }}}
 Plug 'gregsexton/gitv'
 Plug 'junegunn/gv.vim' "{{{
@@ -164,10 +164,14 @@ let g:neomru#update_interval=60
 "}}}
 Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-" Plug 'rickhowe/diffchar.vim'
+Plug 'rickhowe/diffchar.vim'
 let g:DiffUnit = 'Word1'
 let g:DiffColors = 0 " fixed color
 " let g:DiffColors = 1 " 4 colors in fixed order
+Plug 'rickhowe/spotdiff.vim'
+noremap <leader>ldt :Diffthis<CR>
+noremap <leader>ldr :Diffoff!<CR>
+noremap <leader>ldo :Diffoff!<CR>
 " }}}
 Plug 'Ilink/cscope-quickfix' "{{{
 set cscopepathcomp=2
@@ -190,6 +194,7 @@ autocmd vimrc FileType qf wincmd J
 Plug 'hari-rangarajan/CCTree' "{{{
 " TODO:
 " let g:CCTreeCscopeDb = ".cscope/out"
+" autocmd vimrc BufNewFile,BufReadPost CCTree-View nnoremap q :echo q
 let g:CCTreeCscopeDb = "cscope.out"
 let g:CCTreeDisplayMode = 1
 let g:CCTreeHilightCallTree=1
@@ -211,13 +216,32 @@ let g:CCTreeKeyDepthMinus = '-'
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-fold'
+let g:textobj_function_no_default_key_mappings = 1
+xmap aF <Plug>(textobj-function-a)
+vmap aF <Plug>(textobj-function-a)
+xmap iF <Plug>(textobj-function-i)
+vmap iF <Plug>(textobj-function-i)
 Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-lastpat'
 Plug 'coderifous/textobj-word-column.vim'
 Plug 'vim-scripts/argtextobj.vim'
+Plug 'thinca/vim-textobj-between'
+Plug 'adriaanzon/vim-textobj-matchit'
+xmap a%  <Plug>(textobj-matchit-a)
+omap a%  <Plug>(textobj-matchit-a)
+xmap i%  <Plug>(textobj-matchit-i)
+omap i%  <Plug>(textobj-matchit-i)
+Plug 'beloglazov/vim-textobj-quotes'
+xmap q iq
+omap q iq
+" Plug 'rhysd/vim-textobj-continuous-line'
+Plug 'kana/vim-textobj-datetime'
 Plug 'vim-utils/vim-space'
+" Plug 'rsrchboy/vim-textobj-heredocs'
+Plug 'Julian/vim-textobj-variable-segment'
+Plug 'whatyouhide/vim-textobj-xmlattr'
 " }}}
 Plug 'gcmt/taboo.vim' "{{{
 let g:taboo_tab_format = "[%N|%f(%W)%m] "
@@ -241,9 +265,8 @@ Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
 map <leader>f :Ranger<cr>
 "}}}
 Plug 'milkypostman/vim-togglelist' "{{{
-nmap <silent!> <leader><c-j> :colder<CR>
-nmap <silent!> <leader><c-k> :cnewer<CR>
-nmap <silent!> <leader>O :copen<CR>
+nmap <leader><c-j> :colder<CR>
+nmap <leader><c-k> :cnewer<CR>
 " }}}
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 let g:undotree_WindowLayout = 2
@@ -304,10 +327,17 @@ autocmd vimrc BufRead *.smali set filetype=smali
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 Plug 'xolox/vim-misc'
 " }}}
-Plug 'vim-scripts/indentpython.vim', {'for': 'python'} "{{{
+Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
+let g:jedi#completions_command = "<C-space>"
+let g:jedi#goto_command = "<c-]>"
+let g:jedi#auto_close_doc = 0
+let g:jedi#show_call_signatures = 2
+let g:jedi#show_call_signatures_delay = 0
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = ""
+let g:jedi#squelch_py_warning = 1
+" let g:jedi#force_py_version = 3.4
 " Plug 'nvie/vim-flake8'
-" Plug 'davidhalter/jedi-vim'
-" let g:jedi#use_splits_not_buffers = "right"
 " Plug 'xolox/vim-pyref'
 " }}}
 Plug 'elzr/vim-json', {'for': 'json'}  "{{{
@@ -316,9 +346,23 @@ let g:vim_json_syntax_concealcursor = 0
 " }}}
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeFind' } "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
-let NERDTreeIgnore=['\~$[[file]]', '\.pyc$[[file]]']
-let NERDTreeShowHidden=1
-let NERDTreeWinSize=46
+let g:NERDTreeShowIgnoredStatus = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "M",
+    \ "Staged"    : "+",
+    \ "Untracked" : "N",
+    \ "Renamed"   : "R",
+    \ "Unmerged"  : "<",
+    \ "Deleted"   : "D",
+    \ "Dirty"     : ">",
+    \ "Clean"     : "C",
+    \ "Ignored"   : 'I',
+    \ "Unknown"   : "?"
+    \ }
+let NERDTreeIgnore = ['\~$[[file]]', '\.pyc$[[file]]']
+let NERDTreeShowHidden = 1
+let NERDTreeWinSize = 46
+let NERDTreeMinimalUI = 1
 autocmd vimrc FileType nerdtree map <buffer> l oj^
 "autocmd vimrc FileType nerdtree map <buffer> O mo
 autocmd vimrc FileType nerdtree map <buffer> h x^
@@ -326,9 +370,10 @@ autocmd vimrc FileType nerdtree map <buffer> ; go
 autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 nnoremap <F2> :NERDTreeFind<cr>
 " }}}
-Plug 'https://github.com/tpope/vim-bundler'
-Plug 'https://github.com/tpope/vim-rails'
-Plug 'https://github.com/tpope/vim-sleuth'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-sleuth'
 Plug 'tyru/open-browser.vim' "{{{
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
@@ -364,6 +409,7 @@ let g:tagbar_compact = 1
 let g:tagbar_indent = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_autofocus = 0
+let g:tagbar_hide_nonpublic = 0
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
 
@@ -466,8 +512,9 @@ let g:peekaboo_delay = 0
 let g:peekaboo_compact = 0
 "}}}
 Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
-let g:autoformat_verbosemode=0
-map <leader>A :Autoformat<cr>
+let g:autoformat_verbosemode=1
+" TODO: try to understand why resetting syn is necessary
+map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
 "}}}
 Plug 'hushicai/tagbar-javascript.vim'
 Plug 'tpope/vim-commentary' "{{{
@@ -488,18 +535,24 @@ map <leader>y :MerginalToggle<cr>
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-nnoremap <buffer> <silent> <cr> 0f/lgf
+autocmd vimrc BufReadPost vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
 let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 "}}}
-Plug 'ihacklog/HiCursorWords' "{{{
+Plug 'dsh2/HiCursorWords' "{{{
 let g:HiCursorWords_delay = 10
 let g:HiCursorWords_hiGroupRegexp = ''
+" let g:HiCursorWords_style='term=reverse cterm=reverse gui=reverse'
+" let g:HiCursorWords_linkStyle='ErrorMsg'
+" let g:HiCursorWords_linkStyle='IncSearch'
+let g:HiCursorWords_linkStyle='MatchParen'
+" let g:HiCursorWords_linkStyle='VisualNOS'
+" let g:HiCursorWords_debugEchoHiName = 1
 let g:HiCursorWords_debugEchoHiName = 0
 " }}}
-Plug 'flatcap/vim-keyword', {'on': 'KeywordToggle'} "{{{
+Plug 'flatcap/vim-keyword' "{{{
 " TODO: Make this work
 map <leader>k <plug>KeywordToggle
 map <leader>K :call keyword#KeywordClear()<cr>
@@ -524,12 +577,12 @@ let g:keyword_highlight = 'ctermbg=darkred'
 " }}}
 Plug 'w0rp/ale' "{{{
 let g:airline#extensions#ale#enabled = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
 let g:ale_keep_list_window_open = 1
 let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = "never"
 " }}}
 Plug 'machakann/vim-highlightedyank'"{{{
@@ -567,6 +620,7 @@ Plug 'wellle/tmux-complete.vim'
 let g:tmuxcomplete#trigger = 'omnifunc'
 "}}}
 " Plug colorschemes {{{
+Plug 'morhetz/gruvbox'
 Plug 'rhysd/vim-color-spring-night'
 Plug 'Lokaltog/vim-distinguished'
 Plug 'altercation/vim-colors-solarized'
@@ -588,7 +642,18 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'Shougo/echodoc.vim'
+Plug 'vim-scripts/LargeFile'
+if has('nvim')
+  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/defx.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 Plug 'leafgarland/typescript-vim'
+let g:LargeFile = 50
+set synmaxcol=2048
 Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
 Plug 'szw/vim-dict'
@@ -599,7 +664,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'Konfekt/vim-CtrlXA'
 Plug 'Valloric/vim-operator-highlight'
-Plug 'bumaociyuan/vim-matchit'
+Plug 'tmhedberg/matchit'
 Plug 'chrisbra/Recover.vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
@@ -644,6 +709,8 @@ set diffopt=
 set dir=~/.vim/swo
 set encoding=utf8
 set exrc
+let g:xml_syntax_folding=1
+set foldmethod=syntax
 set foldlevelstart=99
 " set foldopen=hor,mark,percent,quickfix,search,tag,undo
 set foldopen=hor,search,quickfix,tag
@@ -662,6 +729,7 @@ set nobackup
 set relativenumber
 set nospell
 set nowrap
+set linebreak
 set nowrapscan
 set number
 set previewheight=14
@@ -692,8 +760,9 @@ set updatetime=500
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
+autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
+autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 
-syntax enable
 " }}}
 " Mappings {{{
 nmap Q :qall<cr>
@@ -704,9 +773,11 @@ map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 map <leader>R :source ~/.vimrc<cr>
+map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
-nmap gF :tabedit <cfile><cr>
+nnoremap gf gF
+nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
 vmap DP :diffput<cr>
 vmap DG :diffget<cr>
@@ -751,7 +822,7 @@ function! YankPath()
     call YankUp(g:path)
     echo "Yanked path \"" . g:path . "\""
 endfunction
-map yp :call YankPath()<cr>
+map Yp :call YankPath()<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
@@ -763,6 +834,7 @@ nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
 map <leader>c :colorscheme
 colorscheme seoul256 | let g:airline_theme='qwq'
+" colorscheme gruvbox| let g:airline_theme='pencil'
 " colorscheme spring-night | let g:airline_theme='night_owl'
 " colorscheme solarized | let g:airline_theme='solarized_flood'
 hi Folded cterm=NONE
@@ -785,7 +857,9 @@ endfunction
 set foldexpr=FoldExprSpace(v:lnum)
 "}}}
 " Open log files at the bottom of the file{{{
+" TODO: autocmd.txt is not so clear about the the interpretation of slashes in face of multiple comma-separated {pat}s
 autocmd vimrc BufReadPost *.log normal G
+autocmd vimrc BufReadPost */log/* normal G
 autocmd vimrc BufReadPost *.log :set filetype=messages
 "}}}
 " Restore last position in file upon opening a file{{{
@@ -805,7 +879,7 @@ function! RestorePosition()
 endfunction
 "}}}
 " Configure help system {{{
-runtime! ftplugin/man.vim
+" runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
@@ -847,7 +921,7 @@ hi SpellBad ctermbg=none ctermfg=red cterm=undercurl
 nmap zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
-au BufRead *.md if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+au BufRead *.md set filetype=markdown | if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
 " }}}
 " Function: removes trailing spaces {{{
 command! RemoveTrailingSpaces call RemoveTrailingSpaces()
@@ -920,7 +994,7 @@ command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | d
 " Prevent delay after quitting input mode
 " TODO: This seems to be unreliable
 set noesckeys
-
+" vim-pstree {{{
 " TODO:
 " -Make tree generation recurring in the background with a regular interval
 " -Add maps
@@ -1036,14 +1110,17 @@ function! ProcessTree(...)
     let l:current_fold_level = &foldlevel
     " let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
     " Create new buffer for current pstree
-    execute "e ps-" . strftime('%F-%T')
+    execute "e ps-" . strftime('%F_%T')
     silent! execute "read !ps -e --forest " . Fields_to_psparm()
     set buftype=nofile filetype=sh cursorline nonumber norelativenumber nowrap
     silent! ALEDisable
     " Cut header from ps output
     silent! norm ggdd0"ad$ddn
+	" Delete old header - if any
+	wincmd k
+	if bufname("") == "HEADER" | bdelete! | endif
     " Move header into separate window
-    silent! bdelete! HEADER | 1new HEADER | wincmd k | norm "aP0
+	1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
     set buftype=nofile nonumber norelativenumber nowrap
     let &foldcolumn=g:pst_fold_columns
     wincmd j
@@ -1091,7 +1168,16 @@ function! StatusbarToggle()
     endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
-
+function! KeepView(cmd)
+    let w = winsaveview()
+	exec a:cmd
+    call winrestview(w)
+endfunction
+map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
+map <leader>0s :call KeepView('silent! %s/\s\+\S/\r/')<cr>
+" TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
+map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
+" }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])

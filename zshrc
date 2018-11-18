@@ -1,5 +1,25 @@
 # vim: set foldmethod=marker foldlevel=0:
-# Prompts {{{
+[[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+
+zsh_source() {
+  # TODO: check if writeable for others than us
+  [[ ! -r $@ ]] && return
+  source $@
+}
+
+bash_source() {
+  alias shopt=':'
+  alias _expand=_bash_expand
+  alias _complete=_bash_comp
+  emulate -L sh
+  setopt kshglob noshglob braceexpand
+  # TODO: check if writeable for others than us
+  [[ ! -r $@ ]] && return
+  source "$@"
+}
+bash_source ~/lib/azure-cli/az.completion
+bash_source ~/.dotfiles/zsh/uftrace-completion.sh
+
 setopt prompt_subst
 setopt prompt_cr
 setopt prompt_sp
@@ -46,7 +66,9 @@ PS1+='%f%# '						# Add user status
 # RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 # Trace prompt {{{
-PS4=PS4:%N:%I(%i):
+# PS4="___PS4:%N:%I(%i): %F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f"
+# PS4="%F{255}[%x:%F{136}%N%F{255}:%F{240}%I%F{255}(240%i%F{255})%F{240}]%F{240}  "$'\t'
+PS4="%F{255}[%F{136}%N%F{255}:%F{240}%I%F{255}(%i%F{255})%F{240}]%F{255}"$'\t'
 # }}}
 # }}}
 
@@ -88,7 +110,7 @@ zshaddhistory() {
     # fi
     # echo zshaddhistory: line NOT skipped
     print -sr -- ${1%%$'\n'}
-    # TODO: Add white or blacklist which path to put zsh_local_history in (e.g. ~/src/*)
+    # TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
     # TODO: log local history for read-only directories somewhere else
     if [ -w $PWD ]; then
 	fc -p .zsh_local_history
@@ -128,6 +150,17 @@ function repeat_immediately {
 }
 bindkey_func '^j' repeat_immediately
 
+function repeat_immediately_second_previous {
+  if [[ $#BUFFER -eq 0 ]]; then
+    zle up-history
+    zle up-history
+    zle accept-line
+  else
+    zle backward-char
+  fi
+}
+bindkey_func '^b' repeat_immediately_second_previous
+
 function focus_backgroud {
     (( $#jobstates )) || { zle -M "No background jobs."; return }
     [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
@@ -153,11 +186,13 @@ else
 fi
 
 function kill-line-xclip {
-	if [ -z $RBUFFER ]; then
+	if [[ -z $RBUFFER ]]; then
 		filter_last_output 
 	else
 		zle kill-line
-		echo $CUTBUFFER | $=XC
+		if [[ -n $DISPLAY ]]; then
+		  echo $CUTBUFFER | $=XC 2> /dev/null
+		fi
 	fi
 }
 bindkey_func '^k' kill-line-xclip
@@ -172,7 +207,7 @@ bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
-	[ -z $tmux_log_file ] && return
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC
 }
 bindkey_func '^x^o' copy_last_output
@@ -181,7 +216,7 @@ function page_tmux_pane {
 	# zle -M "page_tmux_pane"
 	local temp_file=$(mktemp)
 	tmux capture-pane -epJS - > $temp_file
-	tmux split vim $temp_file
+	tmux split -vbp 60 vim $temp_file
 }
 bindkey_func '^x^r' page_tmux_pane
 
@@ -189,7 +224,7 @@ function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	# tmux split vim $tmux_log_file '+set buftype=nofile' '+AnsiEsc'
-	tmux split vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
+	tmux split  -vbp 60 vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
 	# tmux resize-pane -Z
 }
 bindkey_func '^x^x' page_last_output
@@ -299,7 +334,7 @@ function start_tmux_logging()
     # TODO: Add colors to output
     # export ZSH_DEBUG=1
     print -P $LINE_SEPARATOR
-    if [[ -v $ZSH_DEBUG ]]; then
+    if [[ -n $ZSH_DEBUG ]]; then
 	# print -l params = \"$@\"
 	print literal = \"$1\"
 	# print compact: \"$2\"
@@ -321,11 +356,12 @@ function start_tmux_logging()
     # -name of tmux session name
     # -create log_file_name from cmdline contents and timestamp as history event
     #  number does not seem to be stable enough
+    # TODO: save hostname to merge log among different hosts
     tmux pipe-pane "cat > $tmux_log_file"
 }
 
 function stop_tmux_logging() 
-{ 
+{
     [ -z $tmux_log_file ] && return
     tmux pipe-pane 
     # HACK: Convert tmux line endings
@@ -375,7 +411,7 @@ add-zsh-hook preexec zsh_terminal_title_running
 
 if whence tmux > /dev/null \
     && tmux has-session >& /dev/null \
-    && [ -n $TMUX ] \
+    && [[ -n $TMUX ]] \
     && mkdir -p ~/.tmux-log ;
 then
     add-zsh-hook preexec start_tmux_logging
@@ -413,7 +449,7 @@ zle -N zle-keymap-select
 # }}}
 
 # Completion {{{
-fpath+=~/.dotfiles/zsh/zsh-completions-org/src/
+fpath+=~/.dotfiles/zsh/zsh-completions/src/
 fpath+=~/.dotfiles/zsh/zsh-hub-completion/
 fpath+=~/.dotfiles/zsh/zsh-socat-completion/
 fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
@@ -427,9 +463,10 @@ autoload -U compinit && compinit
 autoload -U zed
 
 # TODO: check fpath vs. source
-source ~/.dotfiles/src/t/etc/t-completion.zsh
+zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
-source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
+zsh_source /usr/share/zsh/vendor-completions/_awscli
+zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
@@ -512,35 +549,35 @@ TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped 
 # TODO: Think about if this is a really a safe setup
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
+ZSH_LOCK_STATUS=""
 [ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
-if [ -n "$TMUX" ]; then
+if [ -n "$SSH_TTY" ]; then
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
+	TMOUT=
+elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
 	if [ -n "$TMUX_LOCK_COMMAND" ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
 			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
 			else
-				echo Clearing tmux lock-after-time because all tmux clients run under protected X servers.
+				ZSH_LOCK_STATUS+="Clearing tmux lock-after-time because all tmux clients run under protected X servers.\n"
 				tmux set-option -g lock-after-time 0
 			fi
-			echo Clearing TMOUT because zsh runs under a protected tmux server.
+			ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected tmux server.\n"
 			TMOUT=
 		else
 			echo WARNING: tmux lock-command not found.
 		fi
 	fi
-else
-	if [ -n "$X_AUTOLOCK" ]; then
-		echo Clearing TMOUT because zsh runs under a protected X server.
-		TMOUT=
-	elif [ -n "$SSH_TTY" ]; then
-		echo Clearing TMOUT because zsh runs in a secure shell \(ssh\).
-		TMOUT=
-	fi
+elif [ -n "$X_AUTOLOCK" ]; then
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
+	TMOUT=
 fi
+# print -n $ZSH_LOCK_STATUS
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
-source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+zsh_source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
 ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
 ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
@@ -551,7 +588,7 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 
 # Setup aliases {{{
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
-source ~/.aliases
+zsh_source ~/.aliases
 typeset -a ealiases
 ealiases=($(alias | sed \
     -e s/=.\*// \
@@ -618,36 +655,11 @@ compdef _parameter print_variables
 
 pathprepend() {
     local path_element=$1
-    [ -z $path_element ] && return
-    local path_env_name=${2:-path}
-    # print_variables path_env_name path_element
-    # echo -n typeset:
-    # typeset $path_env_name
-    if [[ -n ${(P)path_env_name} ]]; then
-	# print NOT empty
-	integer path_element_index=${${(P)path_env_name}[(i)$1]}
-	if (($path_element_index <= ${#${(P)path_env_name}})) then
-	    eval "${path_env_name}[$path_element_index]=()"
-	fi
-	eval "${path_env_name}=($path_element ${(P)path_env_name})"
-    else
-	# print EMPTY
-	eval "${path_env_name}=($path_element)"
-    fi
-    # echo -n typeset:
-    # typeset $path_env_name
-    # echo path: ${(P)path_env_name}
-    # HACK: rework this whole thing!
-    eval "${path_env_name}=($path_element ${(P)path_env_name})"
-}
-
-bash_source() {
-  alias shopt=':'
-  alias _expand=_bash_expand
-  alias _complete=_bash_comp
-  emulate -L sh
-  setopt kshglob noshglob braceexpand
-  source "$@"
+    [[ -z $path_element || ! -d $path_element ]] && return
+    [[ -n $2 ]] && { print ERROR: only 'path' is supported; return }
+    # local path_env_name=${2:-path}
+    # path=($path_element $path)
+    path=($path_element $path)
 }
 
 have() {
@@ -659,10 +671,11 @@ watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
+
 # Source external ressource files {{{
-source ~/.environment
-source ~/.fzf.zsh
-source ~/.fzfrc
+zsh_source ~/.environment
+zsh_source ~/.fzf.zsh
+zsh_source ~/.fzfrc
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
@@ -681,3 +694,4 @@ function in_array() {
 }
 
 # }}}
+zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'

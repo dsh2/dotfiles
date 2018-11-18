@@ -16,7 +16,7 @@ if [ "$1" = "-b" ] && nmcli con show --active | grep -q dsn5; then
 fi
 
 trap revert HUP INT TERM
-pactl set-sink-mute 0 1
+pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
 # rfkill block all
 xset +dpms dpms 10 10 10
 # In single screen setups chose innocuous screen after unlock

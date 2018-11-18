@@ -77,13 +77,17 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 
 # find
 alias f=find
-loc() { locate "$*" | grep --color "$*"; }
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-locl() { loc "$PWD/$*" ; }
+alias lc='locate --existing --regex --basename'
+loc() { locate "$*" | grep --color "$*"; }
+locl() { locate "$*" | sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
+locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
+alias lloc=locl
+alias cq=copyq
 
 # git
 alias g=git
@@ -132,7 +136,7 @@ alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
-alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=15 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
@@ -165,7 +169,8 @@ alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zs=zstyle
-alias zz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
+alias zz='echo exec $SHELL; exec $SHELL'
+alias zzz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
@@ -199,6 +204,7 @@ alias va=vagrant
 alias vb=VBoxManage
 alias vbox=VBoxManage
 alias doc=docker
+alias al='aws ec2'
 
 # Vim aliases
 alias v='vim -X'
@@ -395,7 +401,7 @@ alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
 dpl() { apt-cache show $* && dpkg -L $*}
-compdef _command_names dpl
+compdef _deb_packages dpl
 dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 compdef _command_names dpL
 alias dps='dpkg -S'
@@ -424,14 +430,14 @@ alias uu=uniq
 alias lv=lnav
 alias e=echo 
 alias tf='grc tail -f /var/log/messages &'
-alias tff='(cd /var/log; sudo lnav -r messages auth.log fail2ban.log)'
+alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
 mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 alias mvO=mvOFF
-mvON() { for f in *-OFF; do mv -v -- $f ${f%-OFF}; done; }
+mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
 alias sll='. ~/.keychain/dsf-debian-sh; sl'
 alias Rl='ranger ~/INCOMING'
@@ -506,9 +512,10 @@ alias xpf=xpidof
 alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
+# TODO: make C a zle binding
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
-# TODO: make C a zle binding
+alias H=hostname
 jobs_wait() { while [ $( jobs | wc -l) -gt $1 ]; do sleep 1; done; }
 cdo() { for d in *(/); do ( $SHELL -ci "cd $d; $*" | sed -e 's,^,'$d':\t,' ) done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
@@ -516,4 +523,54 @@ faketty() { script -qfc "$(printf "%q " "$@")"; }
 alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
 
+typeset -A tmux_dirs=(right R left L above U top U up U below D down D)
+
+tmux_neighbor() {
+	if tmux select-pane -${tmux_dirs[$1]}; then
+		shift
+		tmux display-message -p "$*"
+		tmux select-pane -l
+	fi
+}
+
+tmux_neighbor_pane() {
+	tmux_neighbor $1 '#{pane_id}'
+}
+
+tmux_neighbor_tty() {
+	tmux_neighbor $1 '#{pane_tty}'
+}
+
+tmux_neighbor_pid() {
+	tmux_neighbor $1 '#{pane_pid}'
+}
+
+print_tty() {
+	tty=$1
+	shift
+	print -- $* >> $tty
+}
+
+tmux_print_tty_right() { print_tty $(tmux_neighbor_tty right) $* }
+tmux_print_tty_left() { print_tty $(tmux_neighbor_tty left) $* }
+tmux_print_tty_above() { print_tty $(tmux_neighbor_tty above) $* }
+tmux_print_tty_below() { print_tty $(tmux_neighbor_tty below) $* }
+
+alias Pr=tmux_print_tty_right
+alias Pl=tmux_print_tty_left
+alias Pa=tmux_print_tty_above
+alias Pb=tmux_print_tty_below
+
+tmux_send_keys_right() { tmux send-keys -t $(tmux_neighbor_pane right) $* }
+tmux_send_keys_left() { tmux send-keys -t $(tmux_neighbor_pane left) $* }
+tmux_send_keys_above() { tmux send-keys -t $(tmux_neighbor_pane above) $* }
+tmux_send_keys_below() { tmux send-keys -t $(tmux_neighbor_pane below) $* }
+
+alias Kr=tmux_send_keys_right
+alias Kl=tmux_send_keys_left
+alias Ka=tmux_send_keys_above
+alias Kb=tmux_send_keys_below
+
+alias uf='uftrace --no-pager'
+alias ufr='uftrace --no-pager record -A . -R . '
 # vim: se ft=sh:
