@@ -5,7 +5,7 @@ ForwardX11Timeout 1s
 IdentitiesOnly yes
 IdentityFile ~/.ssh/hosts/%h/%r.key
 ControlMaster auto
-ControlPath ~/.ssh/hosts/%h/control_master-%p-%r
+ControlPath ~/.ssh/hosts/%n/control_master-%p-%r
 ControlPersist 4h
 PermitLocalCommand false
 # TODO: try to figure out if calling sshfs LocalCommand constitutes some kind of race condition or other bad idea
