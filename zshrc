@@ -3,6 +3,7 @@
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
+SHELL=$(readlink $SHELL)
 if [[ $RUNNING_SHELL != $SHELL ]]; then
     echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = $RUNNING_SHELL, SHELL = $SHELL)"
     SHELL=$RUNNING_SHELL
@@ -24,8 +25,8 @@ bash_source() {
   [[ ! -r $@ ]] && return
   source "$@"
 }
-bash_source ~/lib/azure-cli/az.completion
-bash_source ~/.dotfiles/zsh/uftrace-completion.sh
+# bash_source ~/lib/azure-cli/az.completion
+# bash_source ~/.dotfiles/zsh/uftrace-completion.sh
 
 setopt prompt_subst
 setopt prompt_cr
