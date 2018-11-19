@@ -3,7 +3,8 @@
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
-SHELL=$(readlink $SHELL)
+# TODO: think about run-away loops
+while [ -L $SHELL ]; do SHELL=$(readlink $SHELL); done
 if [[ $RUNNING_SHELL != $SHELL ]]; then
     echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = $RUNNING_SHELL, SHELL = $SHELL)"
     SHELL=$RUNNING_SHELL
