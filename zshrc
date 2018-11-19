@@ -1,6 +1,12 @@
 # vim: set foldmethod=marker foldlevel=0:
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
 
+RUNNING_SHELL=$(readlink /proc/$$/exe)
+if [[ $RUNNING_SHELL != $SHELL ]]; then
+    echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = $RUNNING_SHELL, SHELL = $SHELL)"
+    SHELL=$RUNNING_SHELL
+fi
+
 zsh_source() {
   # TODO: check if writeable for others than us
   [[ ! -r $@ ]] && return
