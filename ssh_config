@@ -9,7 +9,7 @@ ControlPath ~/.ssh/hosts/%h/control_master-%p-%r
 ControlPersist 4h
 PermitLocalCommand false
 # TODO: try to figure out if calling sshfs LocalCommand constitutes some kind of race condition or other bad idea
-# LocalCommand logger -ist ssh -- Set up connection from %u@%l to %r@%h ; sshfs -p %p %d:/ %d/mnt/%n-root ; sshfs -o LogLevel=DEBUG -p %p %d: %d/mnt/%n
+# LocalCommand logger -ist ssh -- Automounting sshfs from %u@%l to %r@%h ; sshfs -p %p %d:/ %d/mnt/%n-root ; sshfs -o LogLevel=DEBUG -p %p %d: %d/mnt/%n
 
 # EscapeChar ^^
 Include ~/.ssh/config.local
