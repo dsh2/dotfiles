@@ -11,6 +11,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd vimrc VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+autocmd vimrc FileType vim-plug map <buffer> ; o
 call plug#begin('~/.vim/plugged')
 " }}}
 Plug 'junegunn/fzf' "{{{
