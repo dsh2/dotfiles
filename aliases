@@ -99,7 +99,11 @@ alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='git status -sb --show-stash -- '
+alias gst='git status -sb -- '
+# gst() {
+# 	local git_min_version="2.10.0"
+
+# }
 alias gstt='gst .'
 gcr() {
     set -x
