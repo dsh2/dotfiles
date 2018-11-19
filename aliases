@@ -99,7 +99,11 @@ alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='git status -sb --show-stash -- '
+alias gst='git status -sb -- '
+# gst() {
+# 	local git_min_version="2.10.0"
+
+# }
 alias gstt='gst .'
 gcr() {
     set -x
@@ -384,7 +388,15 @@ clocdf() {
     ")
 }
 alias df='df -h'
-alias zloc='fc -p .zsh_local_history'
+zloc() {
+    local hist_file
+    if [[ -r .zsh_local_history ]]; then
+	hist_file=.zsh_local_history
+    else
+	hist_file=~/.zsh_local_history_dir${(q)PWD}/history
+    fi
+    fc -p $hist_file
+}
 alias fcp='fc -P'
 alias func=function
 alias fuc=function

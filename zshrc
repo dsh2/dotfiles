@@ -1,5 +1,12 @@
-# vim: set foldmethod=marker foldlevel=0:
+# vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
+
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+
+RUNNING_SHELL=$(readlink /proc/$$/exe)
+if [[ $RUNNING_SHELL != $SHELL ]]; then
+    echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = $RUNNING_SHELL, SHELL = $SHELL)"
+    SHELL=$RUNNING_SHELL
+fi
 
 zsh_source() {
   # TODO: check if writeable for others than us
@@ -99,25 +106,27 @@ setopt no_bang_hist
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 
-# TODO: Tidy this mess up: do not log empty lines
-# HISTORY_IGNORE="(^[[:space:]]+.*$)"
 zshaddhistory() {
-    # echo zshaddhistory: checking line \"${1%%$'\n'}\"...
-    # if [[ "$1" =~ $HISTORY_IGNORE ]]; then
-    # echo zshaddhistory: found match \"$MATCH\"
-    # echo zshaddhistory: line skipped
-    # return 1
-    # fi
-    # echo zshaddhistory: line NOT skipped
-    print -sr -- ${1%%$'\n'}
-    # TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-    # TODO: log local history for read-only directories somewhere else
-    if [ -w $PWD ]; then
-	fc -p .zsh_local_history
-    else
-	dir=~/.zsh_local_history_dir/${(q)PWD}
-	mkdir -p $dir && fc -p $dir/history
-    fi
+	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
+	# TODO: try to understand why the following regexp matches 
+	# when the empty string ended in c-m, but NOT c-c! BUG?
+	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
+		# echo zshaddhistory: line skipped
+		return 1
+	fi
+	# echo zshaddhistory: line NOT skipped
+	print -sr -- ${1%%$'\n'}
+	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
+	# TODO: log local history for read-only directories somewhere else
+	if [[ -w $PWD ]]; then
+		if [[ $PWD != $HOME ]]; then
+			fc -p .zsh_local_history
+		fi
+	else
+		dir=~/.zsh_local_history_dir${(q)PWD}
+		echo zshaddhistory: Working directory NOT writeable: fc -p $dir/history
+		mkdir -p $dir && fc -p $dir/history
+	fi
 }
 # }}}
 
@@ -177,12 +186,18 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
-if type xclip >/dev/null; then
-	XC="xclip -selection clipboard -in"
-elif type xsel >/dev/null; then
-	XC="xsel --clipboard --input"
-else
-	XC="true"
+if [[ -n $DISPLAY ]]; then
+	if type xclip >/dev/null; then
+		XC="xclip -selection clipboard -in"
+	elif type xsel >/dev/null; then
+		XC="xsel --clipboard --input"
+	fi
+else 
+	if type clip.exe > /dev/null; then
+		XC="clip.exe"
+	else
+		XC="true"
+	fi
 fi
 
 function kill-line-xclip {
@@ -190,9 +205,7 @@ function kill-line-xclip {
 		filter_last_output 
 	else
 		zle kill-line
-		if [[ -n $DISPLAY ]]; then
-		  echo $CUTBUFFER | $=XC 2> /dev/null
-		fi
+		echo $CUTBUFFER | $=XC 2> /dev/null
 	fi
 }
 bindkey_func '^k' kill-line-xclip
@@ -330,34 +343,34 @@ bindkey -s rq "r2 -Nqc '' -"
 
 function start_tmux_logging() 
 { 
-    tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-    # TODO: Add colors to output
-    # export ZSH_DEBUG=1
-    print -P $LINE_SEPARATOR
-    if [[ -n $ZSH_DEBUG ]]; then
-	# print -l params = \"$@\"
-	print literal = \"$1\"
-	# print compact: \"$2\"
-	# print full: \"$3\"
-	# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
-	print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
-	print time: $(n)
-	print event id: ${$(echo $3 | sha1sum)[1]}
-	print tmux_log_file: $tmux_log_file
+	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
+		# TODO: Add colors to output
+	# export ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
-    fi
-    # TODO: Do not log for INTERACTIVE_COMMANDS
-    # TODO: Add logging (probably best in directories) for
-    # -exit code
-    # -directory (in case .zsh_local_history is not possible)
-    # -environment
-    # -literal and full command
-    # -report times
-    # -name of tmux session name
-    # -create log_file_name from cmdline contents and timestamp as history event
-    #  number does not seem to be stable enough
-    # TODO: save hostname to merge log among different hosts
-    tmux pipe-pane "cat > $tmux_log_file"
+	if [[ -n $ZSH_DEBUG ]]; then
+		# print -l params = \"$@\"
+		print literal = \"$1\"
+		# print compact: \"$2\"
+		# print full: \"$3\"
+		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
+		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
+		print time: $(n)
+		print event id: ${$(echo $3 | sha1sum)[1]}
+		print tmux_log_file: $tmux_log_file
+		print -P $LINE_SEPARATOR
+	fi
+	# TODO: Do not log for INTERACTIVE_COMMANDS
+	# TODO: Add logging (probably best in directories) for
+	# -exit code
+	# -directory (in case .zsh_local_history is not possible)
+	# -environment
+	# -literal and full command
+	# -report times
+	# -name of tmux session name
+	# -create log_file_name from cmdline contents and timestamp as history event
+	#  number does not seem to be stable enough
+	# TODO: save hostname to merge log among different hosts
+	tmux pipe-pane "cat > $tmux_log_file"
 }
 
 function stop_tmux_logging() 
@@ -558,7 +571,7 @@ elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
 	if [ -n "$TMUX_LOCK_COMMAND" ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
-			if tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
+			if [[ $(uname -a) != *Microsoft* ]] && tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
 			else
 				ZSH_LOCK_STATUS+="Clearing tmux lock-after-time because all tmux clients run under protected X servers.\n"
@@ -601,12 +614,12 @@ ealiases=($(alias | sed \
 ))
 
 expand_ealias() {
-    if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
-	# print MATCH: $MATCH $MBEGIN $MEND
-	zle _expand_alias
-	# zle expand-word
-    fi
-    zle magic-space
+	if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
+		# print MATCH: $MATCH $MBEGIN $MEND
+		zle _expand_alias
+		# zle expand-word
+	fi
+	zle magic-space
 }
 bindkey_func ' ' expand_ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
@@ -619,11 +632,12 @@ bindkey_func '^ ' space_prepend
 # TODO
 # -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
 env_vars() {
-    LBUFFER="$LBUFFER$(print_variables |
+	REPORTTIME=-1
+	LBUFFER="$LBUFFER$(print_variables |
 	fzf \
-	    --tac --multi \
-	    --preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
-	    --preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
+		--tac --multi \
+		--preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
+		--preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
 }
 bindkey_func '^x^e' env_vars
 # }}}
