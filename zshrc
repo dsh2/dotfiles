@@ -185,12 +185,18 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
-if type xclip >/dev/null; then
-	XC="xclip -selection clipboard -in"
-elif type xsel >/dev/null; then
-	XC="xsel --clipboard --input"
-else
-	XC="true"
+if [[ -n $DISPLAY ]]; then
+	if type xclip >/dev/null; then
+		XC="xclip -selection clipboard -in"
+	elif type xsel >/dev/null; then
+		XC="xsel --clipboard --input"
+	fi
+else 
+	if type clip.exe > /dev/null; then
+		XC="clip.exe"
+	else
+		XC="true"
+	fi
 fi
 
 function kill-line-xclip {
@@ -198,9 +204,7 @@ function kill-line-xclip {
 		filter_last_output 
 	else
 		zle kill-line
-		if [[ -n $DISPLAY ]]; then
-		  echo $CUTBUFFER | $=XC 2> /dev/null
-		fi
+		echo $CUTBUFFER | $=XC 2> /dev/null
 	fi
 }
 bindkey_func '^k' kill-line-xclip
