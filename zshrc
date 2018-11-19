@@ -1,4 +1,5 @@
-# vim: set foldmethod=marker foldlevel=0:
+# vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
+
 [[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
@@ -631,11 +632,12 @@ bindkey_func '^ ' space_prepend
 # TODO
 # -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
 env_vars() {
-    LBUFFER="$LBUFFER$(print_variables |
+	REPORTTIME=-1
+	LBUFFER="$LBUFFER$(print_variables |
 	fzf \
-	    --tac --multi \
-	    --preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
-	    --preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
+		--tac --multi \
+		--preview 'typeset -p {1}; echo {} | pygmentize -l zsh' \
+		--preview-window up:45%:wrap | cut -d\  -f1 | tr $'\n' ' ')"
 }
 bindkey_func '^x^e' env_vars
 # }}}
