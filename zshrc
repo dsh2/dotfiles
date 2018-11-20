@@ -188,6 +188,7 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
+XC=${XC:-true}
 if [[ -n $DISPLAY ]]; then
 	if type xclip >/dev/null; then
 		XC="xclip -selection clipboard -in"
@@ -197,12 +198,12 @@ if [[ -n $DISPLAY ]]; then
 else 
 	if type clip.exe > /dev/null; then
 		XC="clip.exe"
-	else
-		XC="true"
+	elif [[ -n $TMUX ]]; then
+		XC="tmux load-buffer -"
 	fi
 fi
 
-function kill-line-xclip {
+function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
 		filter_last_output 
 	else
@@ -210,7 +211,7 @@ function kill-line-xclip {
 		echo $CUTBUFFER | $=XC 2> /dev/null
 	fi
 }
-bindkey_func '^k' kill-line-xclip
+bindkey_func '^k' kill-line-copy
 
 # Copy last command to xclipboard
 function copy_last_command {
