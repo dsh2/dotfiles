@@ -239,9 +239,13 @@ bindkey_func '^x^r' page_tmux_pane
 function page_last_output {
 	# TODO: Make this work without new tmux pane. 
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	# tmux split vim $tmux_log_file '+set buftype=nofile' '+AnsiEsc'
-	tmux split  -vbp 60 vim $tmux_log_file '+set buftype=nofile' '+%!strip-ansi'
-	# tmux resize-pane -Z
+	# TODO: This crashes tmux much too often. Fix tmux.
+	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
+	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
+	tmux split -vbp 60 vim $tmux_log_file \
+		-c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited select-layout "'$(tmux display-message -pF '#{window_layout}')\" \
+		-c 'set buftype=nofile' \
+		-c '%!strip-ansi'
 }
 bindkey_func '^x^x' page_last_output
 
