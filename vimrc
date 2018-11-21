@@ -805,15 +805,15 @@ function! YankUp(string)
 endfunction
 
 function! YankPath()
-    if g:path==expand("%:p")
-	let g:path=expand("%:t")
-    elseif g:path==expand("%:t")
-	let g:path=expand("%:.")
-    else
-	let g:path=expand("%:p")
-    endif
-    call YankUp(g:path)
-    echo "Yanked path \"" . g:path . "\""
+	if g:path==expand("%:p")
+		let g:path=expand("%:t")
+	elseif g:path==expand("%:t")
+		let g:path=expand("%:.")
+	else
+		let g:path=expand("%:p")
+	endif
+	silent! YankUp(g:path)
+	echo "Yanked path \"" . g:path . "\""
 endfunction
 map Yp :call YankPath()<cr>
 " }}}

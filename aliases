@@ -94,6 +94,7 @@ alias g=git
 alias gap='git add -pv && git commit -v'
 alias gc='git commit -v'
 alias gcv=gc
+alias gcn='git clean -n'
 alias gca='git commit -va'
 alias gcop='git checkout --patch'
 alias gdf='git diff'
