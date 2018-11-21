@@ -164,6 +164,7 @@ bindkey_func '^j' repeat_immediately
 function repeat_immediately_second_previous {
   if [[ $#BUFFER -eq 0 ]]; then
     zle up-history
+    # TODO: check if this is really a different item. If not, continue. 
     zle up-history
     zle accept-line
   else
