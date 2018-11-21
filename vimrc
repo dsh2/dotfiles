@@ -490,8 +490,20 @@ let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 Plug 'vim-scripts/AnsiEsc.vim', {'on': 'AnsiEsc'} "{{{
 map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
-" map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
-map <leader>Q vae:!strip-ansi<cr>:!reset<cr>:redraw!<cr>
+if executable("strip-ansi")
+	function! StripAnsi()
+		normal vae:!strip-ansi
+		echo "StripAnsi: called strip-ansi-cli"
+	endfunction
+else
+	function! StripAnsi()
+		let @/='\v%x1b[(\d{0,3})(;\d{1,3}){0,5}(m|K)'
+		silent! execute "%s:::"
+		echo "StripAnsi: search-and-replace"
+	endfunction
+endif
+command! StripAnsi call StripAnsi()
+map <leader>Q :StripAnsi<cr>
 "}}}
 Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 nmap gw :InteractiveWindow<CR>
@@ -769,6 +781,7 @@ map <leader>R :source ~/.vimrc<cr>
 map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
+" TODO: Filter ansi escape sequences from filename when file not found
 nnoremap gf gF
 nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
