@@ -490,8 +490,20 @@ let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 Plug 'vim-scripts/AnsiEsc.vim', {'on': 'AnsiEsc'} "{{{
 map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
-" map <leader>Q :%s/\%x1b\[\([0-9]\{1,2\}\(;[0-9]\{1,2\}\)\{0,1\}\)\{0,1\}[m\|K]//<cr>
-map <leader>Q vae:!strip-ansi<cr>:!reset<cr>:redraw!<cr>
+if executable("strip-ansi")
+	function! StripAnsi()
+		normal vae:!strip-ansi
+		echo "StripAnsi: called strip-ansi-cli"
+	endfunction
+else
+	function! StripAnsi()
+		let @/='\v%x1b[(\d{0,3})(;\d{1,3}){0,5}(m|K)'
+		silent! execute "%s:::"
+		echo "StripAnsi: search-and-replace"
+	endfunction
+endif
+command! StripAnsi call StripAnsi()
+map <leader>Q :StripAnsi<cr>
 "}}}
 Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 nmap gw :InteractiveWindow<CR>
@@ -769,6 +781,7 @@ map <leader>R :source ~/.vimrc<cr>
 map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
+" TODO: Filter ansi escape sequences from filename when file not found
 nnoremap gf gF
 nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
@@ -796,14 +809,27 @@ nnoremap <C-j> <C-w><C-j>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
+
+function! YankUp(string)
+	" TODO: Strip trailing newline?
+	let @"=a:string
+	if $TMUX != "" && executable("tmux") | call system("echo " . a:string . " | tmux load-buffer -") | endif
+	if $DISPLAY != ""
+		if executable("xclip")
+			call system("echo " . a:string . " | xclip -selection clipboard -in")
+		elseif executable("xsel")
+			" TODO: test this case
+			call system("echo " . a:string . " | xsel -bi")
+		endif
+	endif
+	if executable("clip.exe") | call system("echo " . a:string . " | clip.exe") | endif
+endfunction
+" TODO: check if there is somethinkg like "register pending" mode
+command! YankUp :call YankUp(@")|echo "YankUp: " . @"
+nmap YY :YankUp<cr>
+
 " TODO: check if g-prefix makes sense
 let g:path=""
-function! YankUp(string)
-    let @"=a:string
-    call system("tmux set-buffer " . a:string)
-    call system("xsel -bi <<< " . a:string)
-endfunction
-
 function! YankPath()
 	if g:path==expand("%:p")
 		let g:path=expand("%:t")
@@ -812,7 +838,7 @@ function! YankPath()
 	else
 		let g:path=expand("%:p")
 	endif
-	silent! YankUp(g:path)
+	silent! call YankUp(g:path)
 	echo "Yanked path \"" . g:path . "\""
 endfunction
 map Yp :call YankPath()<cr>
@@ -1041,7 +1067,7 @@ let g:pst_fields = [
 
 function! Fields_to_psparm()
     let ret = ""
-    for field in g:pst_fields 
+    for field in g:pst_fields
 	let ret .= " -o " . field.name
 	if has_key(field, "width") && field.width > 0 | let ret .= ":". field.width | endif
 	if has_key(field, "title") && len(field.title) > 0 | let ret .= "=". field.title | endif
@@ -1120,7 +1146,7 @@ function! ProcessTree(...)
     let &foldcolumn=g:pst_fold_columns
     set foldexpr=PsFoldExpression(v:lnum)
     set foldmethod=expr
-    let &foldlevel=l:current_fold_level 
+    let &foldlevel=l:current_fold_level
     set foldenable
     execute "norm " . l:current_line_num . "G"
     " norm zv
@@ -1132,7 +1158,7 @@ function! ProcessTree(...)
     nnoremap <buffer> c :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
     nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
     nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
-    nnoremap <buffer> i 
+    nnoremap <buffer> i
 	\:let pid=ProcessTreePid()
 	\\|execute("tabnew /proc/" . pid . "/stack")
 	\\|execute("split \| e /proc/" . pid . "/status")
