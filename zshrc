@@ -109,20 +109,22 @@ setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 
 zshaddhistory() {
-	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
+	echo zshaddhistory: checking line \"${1%%$'\n'}\"
 	# TODO: try to understand why the following regexp matches 
 	# when the empty string ended in c-m, but NOT c-c! BUG?
 	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
-		# echo zshaddhistory: line skipped
+		echo zshaddhistory: line skipped
 		return 1
 	fi
-	# echo zshaddhistory: line NOT skipped
+	echo zshaddhistory: line NOT skipped
 	print -sr -- ${1%%$'\n'}
 	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-	# TODO: log local history for read-only directories somewhere else
 	if [[ -w $PWD ]]; then
 		if [[ $PWD != $HOME ]]; then
+			print "zshaddhistory: adding to local history in PWD = $PWD"
 			fc -p .zsh_local_history
+		else
+			print "zshaddhistory: no local history for HOME = $HOME"
 		fi
 	else
 		dir=~/.zsh_local_history_dir${(q)PWD}
