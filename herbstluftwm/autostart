@@ -13,6 +13,7 @@ hc unrule -F
 $hc_bin/alt-tab.sh &
 shutter &
 # parcellite &
+copyq &
 dunst &
 xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker 'i3lock-wrapper.sh -b' -detectsleep &
 # -notify -notifier 'notify-send Locking soon...' &
