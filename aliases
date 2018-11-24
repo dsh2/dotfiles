@@ -82,9 +82,9 @@ alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-alias lc='locate --existing --regex --basename'
-loc() { locate "$*" | grep --color "$*"; }
-locl() { locate "$*" | sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
+alias lc='locate --ignore-case --existing --regex --basename'
+loc() { lc "$*" | grep --ignore-case --color "$*"; }
+locl() { lc "$*" | sed -ne "s,^$PWD,.,pi" | grep --ignore-case --color "$*" }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
 alias lloc=locl
 alias cq=copyq
@@ -468,7 +468,7 @@ alias cts=curl-tesseract
 alias gdb='gdb -q'
 alias c=cat
 alias x0='export DISPLAY=:0'
-
+alias digr='dig -x'
 src_index() {
     find . \
         -name .repo -prune -o \
