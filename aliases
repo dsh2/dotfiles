@@ -513,7 +513,7 @@ alias -g SQ=' | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//"; echo '
 alias -g LV=' |& lnav'
 alias -g JS=' | vim -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 ut2nt() { date -d@$1 '+%F %T'}
-
+alias rs=rsync
 alias ws=wireshark
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
