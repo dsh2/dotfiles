@@ -133,7 +133,7 @@ alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
 alias gcom='git checkout master'
-alias gk='gitk --all&'
+alias gk='x0; gitk --all&'
 alias gkk='v +GV'
 alias gss='GIT_MODIFIED_FILES=$(git ls-files --modified) && [ -n $GIT_MODIFIED_FILES ] && vim $=GIT_MODIFIED_FILES +Gstatus +only'
 alias gcp='git cherry-pick'
@@ -456,7 +456,7 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 alias mvO=mvOFF
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add $key; done'
-alias sll='. ~/.keychain/dsf-debian-sh; sl'
+alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias hc=herbstclient
@@ -467,7 +467,8 @@ curl-tesseract() {
 alias cts=curl-tesseract
 alias gdb='gdb -q'
 alias c=cat
-alias x0='export DISPLAY=:0'
+alias x0='[[ -z $DISPLAY ]] && export DISPLAY=:0'
+alias x00='export DISPLAY=:0'
 alias digr='dig -x'
 src_index() {
     find . \
