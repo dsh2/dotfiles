@@ -1158,8 +1158,7 @@ function! ProcessTree(...)
     nnoremap <buffer> c :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
     nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
     nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
-    nnoremap <buffer> i
-	\:let pid=ProcessTreePid()
+    nnoremap <buffer> i :let pid=ProcessTreePid()
 	\\|execute("tabnew /proc/" . pid . "/stack")
 	\\|execute("split \| e /proc/" . pid . "/status")
 	\\|execute("NERDTreeFind")
