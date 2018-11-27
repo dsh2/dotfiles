@@ -61,7 +61,7 @@ PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
 PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
-PS1+='%(0?..%F{244}| err=%{$fg_no_bold[red]%}%? )'	# Add exit status of last job
+PS1+='%(0?..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}]) '	# Add exit status of last job
 PS1+='%f%# '						# Add user status
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
