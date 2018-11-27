@@ -492,7 +492,7 @@ map <leader>W :AnsiEsc<cr>
 " Remove ansi escape sequence
 if executable("strip-ansi")
 	function! StripAnsi()
-		normal vae:!strip-ansi
+		:silent %!strip-ansi
 		echo "StripAnsi: called strip-ansi-cli"
 	endfunction
 else
