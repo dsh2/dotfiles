@@ -739,7 +739,7 @@ set nowrapscan
 set number
 set previewheight=14
 set ruler
-set scrolloff=999
+au BufEnter,BufNew,OptionSet * if &diff | set scrolloff=0 | else | set scrolloff=999 | fi
 set shellslash
 set shiftwidth=4
 set shortmess=filnxtToOI
