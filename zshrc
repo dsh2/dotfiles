@@ -41,7 +41,8 @@ zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%
 zstyle ':vcs_info:*' formats '%F{136}[%F{166}%b%F{136}]%f '
 zstyle ':vcs_info:*' branchformat '%b%F{1}:%F{3}%r'
 zstyle ':vcs_info:*' disable bzr tla
-precmd() { vcs_info; }
+autoload -U add-zsh-hook
+add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
@@ -55,13 +56,25 @@ PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 # PS1+='(%!) '						# Add number of next shell event
-PSVAR+=$SSH_TTY
+psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
 PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
 PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
-PS1+='%(0?..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}]) '	# Add exit status of last job
+add-zsh-hook precmd () { 
+  # psvar[2]=$(( $zsh_preexec ? "" : "break" ))
+  if (($zsh_preexec)); then 
+    psvar[2]=
+    zsh_preexec=0
+  else
+    psvar[2]=break
+  fi
+}
+add-zsh-hook preexec  () { zsh_preexec=1 }
+PSVAR+=$ZLE_LINE_ABORTED
+PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
+# PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 PS1+='%f%# '						# Add user status
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -109,26 +122,26 @@ setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 
 zshaddhistory() {
-	echo zshaddhistory: checking line \"${1%%$'\n'}\"
+	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
 	# TODO: try to understand why the following regexp matches 
 	# when the empty string ended in c-m, but NOT c-c! BUG?
 	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
-		echo zshaddhistory: line skipped
+		# echo zshaddhistory: line skipped
 		return 1
 	fi
-	echo zshaddhistory: line NOT skipped
+	# echo zshaddhistory: line NOT skipped
 	print -sr -- ${1%%$'\n'}
 	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
 	if [[ -w $PWD ]]; then
 		if [[ $PWD != $HOME ]]; then
-			print "zshaddhistory: adding to local history in PWD = $PWD"
+			# print "zshaddhistory: adding to local history in PWD = $PWD"
 			fc -p .zsh_local_history
 		else
-			print "zshaddhistory: no local history for HOME = $HOME"
+			# print "zshaddhistory: no local history for HOME = $HOME"
 		fi
 	else
 		dir=~/.zsh_local_history_dir${(q)PWD}
-		echo zshaddhistory: Working directory NOT writeable: fc -p $dir/history
+		# echo zshaddhistory: Working directory NOT writeable: fc -p $dir/history
 		mkdir -p $dir && fc -p $dir/history
 	fi
 }
@@ -429,7 +442,6 @@ function zsh_terminal_title_running()
     zsh_terminal_title "[zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
 }
 
-autoload -U add-zsh-hook
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
