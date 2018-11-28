@@ -62,7 +62,7 @@ PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
 PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
-add-zsh-hook precmd () { 
+zle_check_send_break() { 
   # psvar[2]=$(( $zsh_preexec ? "" : "break" ))
   if (($zsh_preexec)); then 
     psvar[2]=
@@ -71,7 +71,9 @@ add-zsh-hook precmd () {
     psvar[2]=break
   fi
 }
-add-zsh-hook preexec  () { zsh_preexec=1 }
+add-zsh-hook precmd zle_check_send_break
+zle_prepare_send_break_check() { zsh_preexec=1 }
+add-zsh-hook preexec zle_prepare_send_break_check
 PSVAR+=$ZLE_LINE_ABORTED
 PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
