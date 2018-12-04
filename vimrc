@@ -936,7 +936,7 @@ set cursorcolumn
 " Setup listchars {{{
 " set listchars=tab:\|\ ,trail:+,extends:>,precedes:<,nbsp:.
 " TODO: the following setting gives very slow rendering on macOS
-set listchars=tab:‣\ ,trail:□,extends:↦,precedes:↤,nbsp:∙
+set listchars=tab:‣\ ,trail:_,extends:↦,precedes:↤,nbsp:∙
 " set listchars=tab:→\ ,trail:·,eol:¬,extends:…,precedes:…
 " let &showbreak = '↳'
 " set list
