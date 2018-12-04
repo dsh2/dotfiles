@@ -657,6 +657,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 " }}}
 " Plug rest... {{{
 Plug 'pedrohdz/vim-yaml-folds'
+Plug 'matze/vim-ini-fold'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rails'
@@ -741,7 +742,7 @@ set nowrapscan
 set number
 set previewheight=14
 set ruler
-set scrolloff=999
+au BufEnter,BufNew,OptionSet * if &diff | set scrolloff=0 | else | set scrolloff=999 | fi
 set shellslash
 set shiftwidth=4
 set shortmess=filnxtToOI
