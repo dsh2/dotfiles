@@ -91,11 +91,9 @@ alias cq=copyq
 
 # git
 alias g=git
-alias gap='git add -pv && git commit -v'
-alias gc='git commit -v'
-alias gcv=gc
+alias gcv='git commit --verbose'
 alias gcn='git clean -n'
-alias gca='git commit -va'
+alias gca='git commit --amend --verbose'
 alias gcop='git checkout --patch'
 alias gdf='git diff'
 alias grp='git reset --patch'
@@ -141,17 +139,19 @@ alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
-alias gbb='git checkout $(git for-each-ref --color=always --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
-alias gri='git rebase -i HEAD~10'
+alias grc='git rebase --continue'
+alias grh='git reset HEAD^'
+alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
 alias gsmp='git submodule foreach git pull'
 alias gsmcm='git submodule foreach git checkout master'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gl='git lg | less'
-alias gci='git init && git add . && git commit -m "Initial commit"'
+alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 
 # ls
 alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
@@ -213,7 +213,6 @@ alias va=vagrant
 alias vb=VBoxManage
 alias vbox=VBoxManage
 alias doc=docker
-alias al='aws ec2'
 
 # Vim aliases
 alias v='vim -X'
@@ -289,6 +288,10 @@ RUN() {
 
 # Miscellaneous
 alias o=exo-open
+alias a=aws
+alias al='aws ec2'
+alias ac='aws cloudformation'
+alias aI="for region in \$(aws ec2 describe-regions --query 'Regions[].RegionName' --output text); do aws --region \$region ec2 describe-instances --query 'Reservations[].Instances[].[InstanceId,ImageId,InstanceType,LaunchTime,State.Name]' --output text | sed 's,^,'\$region'\t,'; done"
 alias ax=autorandr
 alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
