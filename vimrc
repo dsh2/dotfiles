@@ -92,6 +92,7 @@ nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
 autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
+autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
 " autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
