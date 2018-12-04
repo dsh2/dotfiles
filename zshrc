@@ -448,8 +448,8 @@ add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
 if whence tmux > /dev/null \
-    && tmux has-session >& /dev/null \
     && [[ -n $TMUX ]] \
+    && tmux has-session >& /dev/null \
     && mkdir -p ~/.tmux-log ;
 then
     add-zsh-hook preexec start_tmux_logging
@@ -581,8 +581,8 @@ setopt cdablevars
 stty -ixon
 
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
-REPORTTIME=3
-TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
+# REPORTTIME=3
+# TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
 # TODO: Think about if this is a really a safe setup
 # TODO: Check if distros provide appropriate means to archive a safe setup
