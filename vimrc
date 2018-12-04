@@ -798,6 +798,13 @@ nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za
 nmap <leader>BD :bdelete!<cr>
+nnoremap gj j
+nnoremap gk k
+" nnoremap g0 0
+nnoremap j gj
+nnoremap k gk
+" nnoremap 0 g0
+
 " TODO
 " -Add convert to hex/bin/etc.
 " -Parse as data-uri
