@@ -655,6 +655,7 @@ Plug 'xolox/vim-colorscheme-switcher'
 " Plug 'AlessandroYorba/Monrovia'
 " }}}
 " Plug rest... {{{
+Plug 'pedrohdz/vim-yaml-folds'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rails'
