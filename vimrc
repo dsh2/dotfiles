@@ -163,17 +163,17 @@ Plug 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
 let g:neomru#update_interval=60
 "}}}
-Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
-let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-Plug 'rickhowe/diffchar.vim'
-let g:DiffUnit = 'Word1'
-let g:DiffColors = 0 " fixed color
-" let g:DiffColors = 1 " 4 colors in fixed order
-Plug 'rickhowe/spotdiff.vim'
-noremap <leader>ldt :Diffthis<CR>
-noremap <leader>ldr :Diffoff!<CR>
-noremap <leader>ldo :Diffoff!<CR>
-" }}}
+" Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
+" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
+" Plug 'rickhowe/diffchar.vim'
+" let g:DiffUnit = 'Word1'
+" let g:DiffColors = 0 " fixed color
+" " let g:DiffColors = 1 " 4 colors in fixed order
+" Plug 'rickhowe/spotdiff.vim'
+" noremap <leader>ldt :Diffthis<CR>
+" noremap <leader>ldr :Diffoff!<CR>
+" noremap <leader>ldo :Diffoff!<CR>
+" " }}}
 Plug 'Ilink/cscope-quickfix' "{{{
 set cscopepathcomp=2
 " set cscopeprg=/opt/local/bin/cscope
@@ -775,6 +775,7 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 " }}}
 " Mappings {{{
 nmap Q :qall<cr>
+nmap <leader>J :set ft=json<cr><leader>S
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
@@ -868,6 +869,7 @@ colorscheme seoul256 | let g:airline_theme='qwq'
 " colorscheme spring-night | let g:airline_theme='night_owl'
 " colorscheme solarized | let g:airline_theme='solarized_flood'
 hi Folded cterm=NONE
+nnoremap zO zczO
 nnoremap zm zM
 nnoremap zM zm
 " TODO: Add "default" foldexprs for
