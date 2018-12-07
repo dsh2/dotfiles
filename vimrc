@@ -864,10 +864,13 @@ map Yp :call YankPath()<cr>
 nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
 map <leader>c :colorscheme
+try
 colorscheme seoul256 | let g:airline_theme='qwq'
 " colorscheme gruvbox| let g:airline_theme='pencil'
 " colorscheme spring-night | let g:airline_theme='night_owl'
 " colorscheme solarized | let g:airline_theme='solarized_flood'
+catch
+endtry
 hi Folded cterm=NONE
 nnoremap zO zczO
 nnoremap zm zM
