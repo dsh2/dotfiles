@@ -52,4 +52,4 @@
     ~/.zlogout: zlogout
 
 - shell:
-  - [vim +PlugClean! +PlugUpgrade +PlugInstall +PlugUpdate +qall, Configuring vim]
+  - [vim -c 'silent! PlugInstall' -c 'silent! PlugUpdate' +qall, Configuring vim]
