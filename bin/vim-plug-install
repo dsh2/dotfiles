@@ -1,0 +1,6 @@
+#!vim -S
+PlugClean!
+PlugUpgrade
+PlugInstall
+PlugUpdate
+qall
