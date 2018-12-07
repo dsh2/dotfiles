@@ -12,7 +12,7 @@ fi
 
 zsh_source() {
   # TODO: check if writeable for others than us
-  [[ ! -r $@ ]] && return
+  [[ ! -r $@ ]] && { echo "zsh_source: "$@" not found. "; return; }
   source $@
 }
 
