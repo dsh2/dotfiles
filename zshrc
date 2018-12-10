@@ -628,15 +628,16 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 zsh_source ~/.aliases
 typeset -a ealiases
-ealiases=($(alias | sed \
+set_ealiases() {ealiases=($(alias | sed \
     -e s/=.\*// \
     -e s/\\./\\\\./g \
     -e /^l$/d \
     -e /^ls$/d \
     -e /^pst$/d \
+    -e /^agii$/d \
     -e /^v$/d \
     # -e /^vl$/d \
-))
+))}; set_ealiases; alias sa=set_ealiases
 
 expand_ealias() {
 	if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
