@@ -92,9 +92,10 @@ nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
 autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
+autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
+" autocmd vimrc FileType gitcommit map <buffer> C cvc
 autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
-" autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
 " Enable spell checking for commit messages
 autocmd vimrc BufNewFile,BufReadPost *.git/COMMIT_EDITMSG setfiletype gitcommit | set spell | silent! nunmap ;
 autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setlocal spell
@@ -802,13 +803,15 @@ nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za
 nmap <leader>BD :bdelete!<cr>
+" TODO: add toggle for this: coG?
 nnoremap gj j
 nnoremap gk k
 " nnoremap g0 0
 nnoremap j gj
 nnoremap k gk
 " nnoremap 0 g0
-
+vmap <silent> <leader>D *:g//d<cr>
+nmap <silent> <leader>D v$*:g//d<cr>
 " TODO
 " -Add convert to hex/bin/etc.
 " -Parse as data-uri
@@ -1025,6 +1028,8 @@ function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
 endfunction
 command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+
+autocmd vimrc SwapExists * let v:swapchoice = "o"
 
 " Prevent delay after quitting input mode
 " TODO: This seems to be unreliable
