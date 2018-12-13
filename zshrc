@@ -226,7 +226,7 @@ function kill-line-copy {
 		filter_last_output 
 	else
 		zle kill-line
-		echo $CUTBUFFER | $=XC 2> /dev/null
+		echo -n $CUTBUFFER | $=XC 2> /dev/null
 	fi
 }
 bindkey_func '^k' kill-line-copy
@@ -235,7 +235,7 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	echo $CUTBUFFER | $=XC
+	echo -n $CUTBUFFER | $=XC
 }
 bindkey_func '^x^k' copy_last_command
 
