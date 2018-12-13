@@ -582,6 +582,7 @@ let g:ale_keep_list_window_open = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = "never"
+let g:ale_open_list = "on_save"
 " }}}
 Plug 'machakann/vim-highlightedyank'"{{{
 let g:highlightedyank_highlight_duration = 333
@@ -980,6 +981,8 @@ endfunction
 command! -nargs=0 Messages call <SID>Redir("messages")
 " }}}"
 " Function: relax search pattern {{{
+" TODO: merge with Andrew Radev
+" TODO: relax numbers to \d+
 command! -nargs=0 RelaxSearchPattern call <SID>RelaxSearchPattern()
 function! s:RelaxSearchPattern() abort
     let @/=substitute(@/, "^\\V", "", "g")
