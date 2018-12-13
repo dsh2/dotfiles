@@ -784,7 +784,8 @@ map <c-.> :bprev<cr>
 map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
 nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
-map <leader>R :source ~/.vimrc<cr>
+" TODO: PWD vs. CWD
+map <silent><leader>R :source ~/.vimrc\| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
 map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
