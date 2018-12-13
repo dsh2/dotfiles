@@ -812,8 +812,8 @@ nnoremap gk k
 nnoremap j gj
 nnoremap k gk
 " nnoremap 0 g0
-vmap <silent> <leader>D *:g//d<cr>
-nmap <silent> <leader>D v$*:g//d<cr>
+vmap <silent> <leader>D g*:%g//d<cr>
+nmap <silent> <leader>D v$g*:%g//d<cr>
 " TODO
 " -Add convert to hex/bin/etc.
 " -Parse as data-uri
