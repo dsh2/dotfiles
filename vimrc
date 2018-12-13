@@ -826,21 +826,16 @@ nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 
 function! YankUp(string)
-	" TODO: Strip trailing newline?
-	let @"=a:string
-	if $TMUX != "" && executable("tmux") | call system("echo " . a:string . " | tmux load-buffer -") | endif
-	if $DISPLAY != ""
-		if executable("xclip")
-			call system("echo " . a:string . " | xclip -selection clipboard -in")
-		elseif executable("xsel")
-			" TODO: test this case
-			call system("echo " . a:string . " | xsel -bi")
+	if executable("clip.exe") | call system("clip.exe", a:string) | endif
+	if !empty($TMUX) && executable("tmux") | call system("tmux load-buffer -", a:string) | endif
+	if !empty($DISPLAY)
+		if executable("xclip") | call system("xclip -selection clipboard -in", a:string)
+		elseif executable("xsel") | call system("xsel -bi", a:string)
 		endif
 	endif
-	if executable("clip.exe") | call system("echo " . a:string . " | clip.exe") | endif
 endfunction
 " TODO: check if there is somethinkg like "register pending" mode
-command! YankUp :call YankUp(@")|echo "YankUp: " . @"
+command! YankUp :call YankUp(@")|echo "YankUp: " . strtrans(@")
 nmap YY :YankUp<cr>
 
 " TODO: check if g-prefix makes sense
