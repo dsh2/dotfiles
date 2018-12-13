@@ -400,7 +400,7 @@ let g:pdf_convert_on_read = 1
 " }}}
 Plug 'majutsushi/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
 Plug 'hushicai/tagbar-javascript.vim'
-let g:tagbar_autoclose = 1
+let g:tagbar_autoclose = 0
 " TODO: Add support for percent instead of number of characters
 let g:tagbar_width = 40
 let g:tagbar_zoomwidth = 0
@@ -411,36 +411,9 @@ let g:tagbar_autofocus = 0
 let g:tagbar_hide_nonpublic = 0
 let g:tagbar_autoshowtag = 1
 let g:tagbar_autopreview = 0
-
-let g:tagbar_type_go = {
-	    \ 'ctagstype' : 'go',
-	    \ 'kinds'     : [
-	    \ 'p:package',
-	    \ 'i:imports:1',
-	    \ 'c:constants',
-	    \ 'v:variables',
-	    \ 't:types',
-	    \ 'n:interfaces',
-	    \ 'w:fields',
-	    \ 'e:embedded',
-	    \ 'm:methods',
-	    \ 'r:constructor',
-	    \ 'f:functions'
-	    \ ],
-	    \ 'sro' : '.',
-	    \ 'kind2scope' : {
-	    \ 't' : 'ctype',
-	    \ 'n' : 'ntype'
-	    \ },
-	    \ 'scope2kind' : {
-	    \ 'ctype' : 't',
-	    \ 'ntype' : 'n'
-	    \ },
-	    \ 'ctagsbin'  : 'gotags',
-	    \ 'ctagsargs' : '-sort -silent'
-	    \ }
-autocmd vimrc VimEnter * nested :call tagbar#autoopen(1)
-map <leader>tt :TagbarToggle<cr>
+map <leader>tt :silent! TagbarToggle<cr>
+autocmd vimrc VimEnter * nested :silent! call tagbar#autoopen(1)
+" autocmd vimrc VimEnter * nested :silent! TagbarToggle
 autocmd vimrc FileType tagbar map <buffer> ; p
 autocmd vimrc FileType tagbar map <buffer> A x
 autocmd vimrc FileType tagbar map <buffer> l za
