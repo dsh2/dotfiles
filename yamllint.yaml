@@ -1,5 +1,4 @@
 ---
-
 rules:
   # braces:
   #   min-spaces-inside: 0
@@ -53,9 +52,8 @@ rules:
   new-lines:
     type: unix
   # octal-values:
-    # forbid-implicit-octal: false
-    # forbid-explicit-octal: false
+  #   forbid-implicit-octal: false
+  #   forbid-explicit-octal: false
   trailing-spaces: enable
   truthy:
     level: warning
-
