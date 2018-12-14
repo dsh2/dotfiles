@@ -346,7 +346,7 @@ Plug 'elzr/vim-json', {'for': 'json'}  "{{{
 " autocmd vimrc FileType json set conceallevel=0
 let g:vim_json_syntax_concealcursor = 0
 " }}}
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeFind' } "{{{
+Plug 'scrooloose/nerdtree' "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
 let g:NERDTreeShowIgnoredStatus = 1
 let g:NERDTreeIndicatorMapCustom = {
