@@ -38,10 +38,10 @@ command! -bang -nargs=* FzfAg
 	    \                 <bang>0)
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 let g:fzf_layout = { 'down': '~70:%' }
-inoremap <expr> <c-x><c-l> fzf#complete('tmuxwords.rb --all-but-current --scroll 500 --min 5')
+inoremap <expr> <c-x><c-l> fzf#complete('tmuxwords.rb --all-but-current --scroll 499 --min 5')
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-L> <plug>(fzf-complete-line)
+" imap <c-x><c-L> <plug>(fzf-complete-line)
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
@@ -181,6 +181,10 @@ set cscopepathcomp=2
 set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
+if filereadable("cscope.out") 
+    cscope add cscope.out
+endif
+set cscopeverbose  
 function! QfLlNext()
     windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
 endfunction
