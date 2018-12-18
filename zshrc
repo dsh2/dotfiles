@@ -90,9 +90,15 @@ PS1+='%f%# '						# Add user status
 # RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 # Trace prompt {{{
-# PS4="___PS4:%N:%I(%i): %F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f"
-# PS4="%F{255}[%x:%F{136}%N%F{255}:%F{240}%I%F{255}(240%i%F{255})%F{240}]%F{240}  "$'\t'
-PS4="%F{255}[%F{136}%N%F{255}:%F{240}%I%F{255}(%i%F{255})%F{240}]%F{255}"$'\t'
+PS4='%F{255}['
+PS4+='%F{136}%N%F{255}:%F{255}%I%F{240}(%F{100}%i%F{240})'
+PS4+='%F{255}] '
+# Add exit status of last job
+PS4+='%(0?..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
+# Make command line start at certain colum
+typeset -i ps4_output_column=40
+PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
+PS4+=' | '
 # }}}
 # }}}
 
