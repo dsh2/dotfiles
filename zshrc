@@ -169,6 +169,7 @@ bindkey -e
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
+bindkey "^x^k" describe-key-briefly
 
 function repeat_immediately {
     [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
