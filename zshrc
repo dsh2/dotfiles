@@ -55,7 +55,6 @@ PS1=$LINE_SEPARATOR					# Add horizontal separator line
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
-# PS1+='(%!) '						# Add number of next shell event
 psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
 PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
@@ -78,6 +77,7 @@ PSVAR+=$ZLE_LINE_ABORTED
 PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 PS1+='%f%# '						# Add user status
+PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
 # }}}
@@ -187,7 +187,7 @@ bindkey -e
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
-bindkey "^x^k" describe-key-briefly
+bindkey "^x;" describe-key-briefly
 
 function repeat_immediately {
     [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
@@ -753,3 +753,4 @@ function in_array() {
 
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
+[[ $(cat $HISTFILE | wc -l) -lt 10 ]] && print "WARNING: size of $HISTFILE is suspicious." 
