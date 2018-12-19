@@ -1,8 +1,8 @@
 msource() { for f in $*; do [ -r "$f" ] && source "$f"; done; }
-msource \ 
-	    $HOME/.aliases \
-	    $HOME/.bashrc.$(uname) \
-	    $HOME/.bashrc.local
+msource \
+    $HOME/.aliases \
+    $HOME/.bashrc.$(uname) \
+    $HOME/.bashrc.local
 
 pathprepend() {
 	if [ -n "$2" ]; then 
@@ -63,7 +63,7 @@ if ! grep -q history <<< $PROMPT_COMMAND; then
 		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 fi
 
-if [ type dircolors > /dev/null 2>&1 ]; then
+if type dircolors > /dev/null 2>&1 ; then
     eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
 fi
 export LS_COLORS
