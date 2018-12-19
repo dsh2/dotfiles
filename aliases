@@ -404,14 +404,14 @@ clocdf() {
     ")
 }
 alias df='df -h'
+# TODO: move to zshrc or similar
+zloc_file() {
+    local -r file=.zsh_local_history 
+    [[ -r $file ]] && { echo -n $file ; return }
+    echo -n ~/.zsh_local_history_dir${(q)PWD}/history
+}
 zloc() {
-    local hist_file
-    if [[ -r .zsh_local_history ]]; then
-	hist_file=.zsh_local_history
-    else
-	hist_file=~/.zsh_local_history_dir${(q)PWD}/history
-    fi
-    fc -p $hist_file
+    fc -p $(zloc_file)
 }
 alias fcp='fc -P'
 alias func=function
@@ -457,7 +457,7 @@ alias sudo='sudo '
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
-alias tf='grc tail -f /var/log/messages &'
+alias tf='command grc tail -f /var/log/messages &'
 alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
