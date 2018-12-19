@@ -198,14 +198,13 @@ function repeat_immediately {
 bindkey_func '^j' repeat_immediately
 
 function repeat_immediately_second_previous {
-  if [[ $#BUFFER -eq 0 ]]; then
-    zle up-history
-    # TODO: check if this is really a different item. If not, continue. 
-    zle up-history
-    zle accept-line
-  else
-    zle backward-char
-  fi
+	(( $#BUFFER )) && { zle backward-char ; return ; }
+	zle up-history
+	local old_buffer=$BUFFER
+	while (( HISTNO > 1 )) && [[ $old_buffer == $BUFFER ]]; do
+		zle up-history || return
+	done
+	zle accept-line
 }
 bindkey_func '^b' repeat_immediately_second_previous
 
