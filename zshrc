@@ -90,9 +90,27 @@ PS1+='%f%# '						# Add user status
 # RPS1+=%{$reset_color%}]				# End of right prompt
 # }}}
 # Trace prompt {{{
-# PS4="___PS4:%N:%I(%i): %F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f"
-# PS4="%F{255}[%x:%F{136}%N%F{255}:%F{240}%I%F{255}(240%i%F{255})%F{240}]%F{240}  "$'\t'
-PS4="%F{255}[%F{136}%N%F{255}:%F{240}%I%F{255}(%i%F{255})%F{240}]%F{255}"$'\t'
+PS4="%f%u"
+# Add event history number
+# PS4+=%!
+# Add timestamp
+# PS4+='(%D{%3.})'
+# PS4+='(%T)'
+PS4+='%D{%H:%M:%S.%.}'
+# Add source and absolute and relative source line
+PS4+='%F{255}['
+PS4+='%F{136}%N%F{255}:%F{255}%I%F{240}(%F{100}%i%F{240})'
+PS4+='%F{255}] '
+# Add parser state
+# PS4+="( %_ ) "
+# Add exit status of last job
+PS4+='%(0?.%f.%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
+# Make command line start at certain colum
+typeset -i ps4_output_column=50
+PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
+# Reset color
+# PS4+='%f'
+PS4+=' | '
 # }}}
 # }}}
 
@@ -169,6 +187,7 @@ bindkey -e
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
+bindkey "^x^k" describe-key-briefly
 
 function repeat_immediately {
     [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
@@ -179,14 +198,13 @@ function repeat_immediately {
 bindkey_func '^j' repeat_immediately
 
 function repeat_immediately_second_previous {
-  if [[ $#BUFFER -eq 0 ]]; then
-    zle up-history
-    # TODO: check if this is really a different item. If not, continue. 
-    zle up-history
-    zle accept-line
-  else
-    zle backward-char
-  fi
+	(( $#BUFFER )) && { zle backward-char ; return ; }
+	zle up-history
+	local old_buffer=$BUFFER
+	while (( HISTNO > 1 )) && [[ $old_buffer == $BUFFER ]]; do
+		zle up-history || return
+	done
+	zle accept-line
 }
 bindkey_func '^b' repeat_immediately_second_previous
 
