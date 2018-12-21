@@ -84,7 +84,7 @@ gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex --basename'
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
-locl() { lc "$*" | sed -ne "s,^$PWD,.,pi" | grep --ignore-case --color "$*" }
+locl() { lc "$*" | sed -ne 's,^$'PWD',.,pi' | grep --ignore-case --color "$*"; }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*" }
 alias lloc=locl
 alias cq=copyq
@@ -110,21 +110,25 @@ gcr() {
 	cd ${1:t} &&
 	ranger .
 }
-# ghssh() {
-#     local dsh2_https_base='https://github.com/dsh2'
-#     local dsh2_ssh_base='ssh://git@github.com:'
-#     foreach remote in $(git remote); do
-# 	remote_url=$(git remote get-url $remote)
-# 	echo -n $remote_url: 
-# 	if [[ $remote_url =~ $dsh2_https_base ]]; then
-# 	    echo \ switch to ssh: ${remote_url:s.$dsh_https_base..}
-# 	elif [[ $remote_url =~ $dsh2_ssh_base ]]; then
-# 	    echo \ to htt
-# 	else
-# 	    echo \ no
-# 	fi
-#     done
-# }
+
+ghssh() {
+    local dsh2_https_base='https://github.com/dsh2'
+    local dsh2_ssh_base='git@github.com:dsh2'
+    for remote in $(git remote); do
+	remote_url=$(git remote get-url --push $remote)
+	if [[ $remote_url =~ $dsh2_https_base ]]; then
+	    remote_url_new=${remote_url/$dsh2_https_base/$dsh2_ssh_base}
+	    echo Switching url \"$remote_url\" to \"$remote_url_new\"
+	    git remote set-url $remote --push $remote_url_new
+	elif [[ $remote_url =~ $dsh2_ssh_base ]]; then
+	    remote_url_new=${remote_url/$dsh2_ssh_base/$dsh2_https_base}
+	    echo Switching url \"$remote_url\" to \"$remote_url_new\"
+	    git remote set-url $remote --push $remote_url_new
+	else
+	    echo Skipping $remote_url
+	fi
+    done
+}
 
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
 alias grv='git remote --verbose'
