@@ -197,6 +197,25 @@ function repeat_immediately {
 }
 bindkey_func '^j' repeat_immediately
 
+function down-line-or-history-no-duplicate {
+	local old_buffer=$BUFFER
+	local -i old_histno=$HISTNO
+	while  [[ $old_buffer == $BUFFER ]]; do
+		zle down-history || return
+		(( HISTNO >= old_histno )) && return
+	done
+}
+bindkey_func '^n' down-line-or-history-no-duplicate
+
+function up-line-or-history-no-duplicate {
+	local old_buffer=$BUFFER
+	while (( HISTNO > 1 )) && [[ $old_buffer == $BUFFER ]]; do
+		zle up-history || return
+	done
+}
+bindkey_func '^p' up-line-or-history-no-duplicate
+
+
 function repeat_immediately_second_previous {
 	(( $#BUFFER )) && { zle backward-char ; return ; }
 	zle up-history
