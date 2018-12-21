@@ -603,12 +603,16 @@ stty -ixon
 # TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
 # TODO: Think about if this is a really a safe setup
+# TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
 ZSH_LOCK_STATUS=""
 [ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [ -n "$SSH_TTY" ]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
+	TMOUT=
+elif [ $USER = ec-user ]; then
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in AWS.\n"
 	TMOUT=
 elif [ -n "$TMUX" ]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
