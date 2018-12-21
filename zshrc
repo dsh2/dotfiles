@@ -643,17 +643,17 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS=""
-[ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
-if [ -n "$SSH_TTY" ]; then
+ZSH_LOCK_STATUS=
+[[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
+if [ -n $SSH_TTY ]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
-elif [ $USER = ec-user ]; then
+elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in AWS.\n"
 	TMOUT=
-elif [ -n "$TMUX" ]; then
+elif [[ -n $TMUX ]]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
-	if [ -n "$TMUX_LOCK_COMMAND" ]; then
+	if [ -n $TMUX_LOCK_COMMAND ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
 			if [[ $(uname -a) != *Microsoft* ]] && tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
@@ -667,7 +667,7 @@ elif [ -n "$TMUX" ]; then
 			echo WARNING: tmux lock-command not found.
 		fi
 	fi
-elif [ -n "$X_AUTOLOCK" ]; then
+elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
