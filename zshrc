@@ -190,10 +190,10 @@ bindkey '^?' undo
 bindkey "^x;" describe-key-briefly
 
 function repeat_immediately {
-    [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
-    # TODO: && think about something useful
-    zle up-history
-    zle accept-line
+	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
+	# TODO: && think about something useful
+	zle up-history
+	zle accept-line
 }
 bindkey_func '^j' repeat_immediately
 
