@@ -197,24 +197,42 @@ function repeat_immediately {
 }
 bindkey_func '^j' repeat_immediately
 
+debug_trace_file=
+[[ $debug_trace_file =~ /dev/(pts|tty)/ ]] &&  clear > $debug_trace_file
+trace() { [[ -n $debug_trace_file ]] && print $$: $@ > $debug_trace_file }
+
+typeset -i zle_old_histno=$HISTNO
 function down-line-or-history-no-duplicate {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
 	local old_buffer=$BUFFER
-	local -i old_histno=$HISTNO
 	while  [[ $old_buffer == $BUFFER ]]; do
-		zle down-history || return
-		(( HISTNO >= old_histno )) && return
+		zle down-history || break
+		(( HISTNO >= zle_old_histno )) && break
 	done
+	local old_cursor=$zle_history_point[$HISTNO]
+	[[ -n $old_cursor ]] && CURSOR=old_cursor
 }
 bindkey_func '^n' down-line-or-history-no-duplicate
 
 function up-line-or-history-no-duplicate {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
 	local old_buffer=$BUFFER
 	while (( HISTNO > 1 )) && [[ $old_buffer == $BUFFER ]]; do
-		zle up-history || return
+		zle up-history || break
 	done
+	local old_cursor=$zle_history_point[$HISTNO]
+	[[ -n $old_cursor ]] && CURSOR=old_cursor
 }
 bindkey_func '^p' up-line-or-history-no-duplicate
 
+typeset -A zle_history_point
+function accept-line-record-point {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
+	zle_history_point[$zle_old_histno]=$CURSOR
+	zle_old_histno=0
+	zle accept-line
+}
+bindkey_func '^m' accept-line-record-point
 
 function repeat_immediately_second_previous {
 	(( $#BUFFER )) && { zle backward-char ; return ; }
