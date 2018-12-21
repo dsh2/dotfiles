@@ -92,8 +92,7 @@ nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
 autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
-autocmd vimrc FileType gitcommit map <buffer> C :Gcommit\ --verbose<cr>
-" autocmd vimrc FileType gitcommit map <buffer> C cvc
+autocmd vimrc FileType gitcommit map <buffer> <leader>C :Gcommit\ --verbose<cr>
 autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
 " Enable spell checking for commit messages
@@ -231,6 +230,7 @@ Plug 'kana/vim-textobj-function'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-lastpat'
+" Plug 'paulhybryant/vim-textobj-path'
 Plug 'coderifous/textobj-word-column.vim'
 Plug 'vim-scripts/argtextobj.vim'
 Plug 'thinca/vim-textobj-between'
@@ -282,7 +282,8 @@ let g:undotree_DiffCommand = "diff -U 5"
 let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
-autocmd vimrc FileType undotree map <buffer> ; <cr>
+autocmd vimrc FileType undotree nomap <buffer> <cr> <tab>
+autocmd vimrc FileType undotree nomap <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
@@ -311,6 +312,7 @@ let b:csv_arrange_align = 'l*'
 let g:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
 " TODO: If readonly set nofile?
+map <leader>CT :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim="\t"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
 autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
@@ -559,7 +561,7 @@ let g:ale_keep_list_window_open = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = "never"
-let g:ale_open_list = "on_save"
+let g:ale_open_list = "never"
 " }}}
 Plug 'machakann/vim-highlightedyank'"{{{
 let g:highlightedyank_highlight_duration = 333
@@ -641,7 +643,7 @@ Plug 'matze/vim-ini-fold'
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rails'
-Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-sleuth'
 Plug 'Shougo/echodoc.vim'
 Plug 'Quramy/tsuquyomi'
 Plug 'tommcdo/vim-exchange'
