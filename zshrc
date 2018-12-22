@@ -192,12 +192,49 @@ bindkey '^?' undo
 bindkey "^x;" describe-key-briefly
 
 function repeat_immediately {
-    [[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
-    # TODO: && think about something useful
-    zle up-history
-    zle accept-line
+	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
+	# TODO: && think about something useful
+	zle up-history
+	zle accept-line
 }
 bindkey_func '^j' repeat_immediately
+
+debug_trace_file=
+[[ $debug_trace_file =~ /dev/(pts|tty)/ ]] &&  clear > $debug_trace_file
+trace() { [[ -n $debug_trace_file ]] && print $$: $@ > $debug_trace_file }
+
+typeset -i zle_old_histno=$HISTNO
+function down-line-or-history-no-duplicate {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
+	local old_buffer=$BUFFER
+	while  [[ $old_buffer == $BUFFER ]]; do
+		zle down-history || break
+		(( HISTNO >= zle_old_histno )) && break
+	done
+	local old_cursor=$zle_history_point[$HISTNO]
+	[[ -n $old_cursor ]] && CURSOR=old_cursor
+}
+bindkey_func '^n' down-line-or-history-no-duplicate
+
+function up-line-or-history-no-duplicate {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
+	local old_buffer=$BUFFER
+	while (( HISTNO > 1 )) && [[ $old_buffer == $BUFFER ]]; do
+		zle up-history || break
+	done
+	local old_cursor=$zle_history_point[$HISTNO]
+	[[ -n $old_cursor ]] && CURSOR=old_cursor
+}
+bindkey_func '^p' up-line-or-history-no-duplicate
+
+typeset -A zle_history_point
+function accept-line-record-point {
+	(( zle_old_histno )) || zle_old_histno=$HISTNO
+	zle_history_point[$zle_old_histno]=$CURSOR
+	zle_old_histno=0
+	zle accept-line
+}
+bindkey_func '^m' accept-line-record-point
 
 function repeat_immediately_second_previous {
 	(( $#BUFFER )) && { zle backward-char ; return ; }
@@ -605,16 +642,20 @@ stty -ixon
 # TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
 # TODO: Think about if this is a really a safe setup
+# TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS=""
-[ -n "$DISPLAY" ] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
-if [ -n "$SSH_TTY" ]; then
+ZSH_LOCK_STATUS=
+[[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
+if [ -n $SSH_TTY ]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
-elif [ -n "$TMUX" ]; then
+elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in AWS.\n"
+	TMOUT=
+elif [[ -n $TMUX ]]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
-	if [ -n "$TMUX_LOCK_COMMAND" ]; then
+	if [ -n $TMUX_LOCK_COMMAND ]; then
 		if whence $TMUX_LOCK_COMMAND[(w)1] > /dev/null; then
 			if [[ $(uname -a) != *Microsoft* ]] && tmux list-clients -F '#{client_tty}' | grep -q '/tty[0-9]'; then
 				tmux set-option -g lock-after-time $TMOUT
@@ -628,7 +669,7 @@ elif [ -n "$TMUX" ]; then
 			echo WARNING: tmux lock-command not found.
 		fi
 	fi
-elif [ -n "$X_AUTOLOCK" ]; then
+elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
