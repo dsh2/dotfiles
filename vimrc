@@ -181,7 +181,7 @@ set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
 if filereadable("cscope.out") 
-    cscope add cscope.out
+    silent! cscope add cscope.out
 endif
 set cscopeverbose  
 function! QfLlNext()
