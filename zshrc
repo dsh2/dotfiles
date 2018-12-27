@@ -784,14 +784,8 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 # TODO: Think about a way how to select umask for sudo
 # umask 027
 
-# TODO: Implement this
 function in_array() {
-    prl $1 $2
-    prl ${1[(i)$2]} 
-    prl ${#2}
-    [[ ${1[(i)$2]} -gt 0 ]]
-    prl ret = $?
-    return $?
+	(( ${${(P)2}[(i)$1]} < ${#${(P)2}} ))
 }
 
 # }}}
