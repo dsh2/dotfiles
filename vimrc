@@ -282,7 +282,7 @@ let g:undotree_DiffCommand = "diff -U 5"
 let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
-autocmd vimrc FileType undotree nomap <buffer> <cr> <tab>
+" autocmd vimrc FileType undotree nomap <buffer> <cr> <tab>
 autocmd vimrc FileType undotree nomap <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
@@ -524,7 +524,7 @@ map <leader>y :MerginalToggle<cr>
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-autocmd vimrc BufReadPost vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
+autocmd vimrc BufReadPost .\\\{0,1\}vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
