@@ -784,12 +784,28 @@ nmap <leader>P :pwd<cr>
 nmap zx za
 nmap <leader>BD :bdelete!<cr>
 " TODO: add toggle for this: coG?
-nnoremap gj j
-nnoremap gk k
-" nnoremap g0 0
-nnoremap j gj
-nnoremap k gk
-" nnoremap 0 g0
+function! ToggleLineBreakMode()
+	if maparg("j", "n") == "gj"
+		unmap j
+		unmap k
+		unmap gj
+		unmap gk
+		" unmap 0
+		" unmap g0
+		echo "NOT breaking lines on movement."
+    else
+		nnoremap gj j
+		nnoremap gk k
+		nnoremap j gj
+		nnoremap k gk
+		" nnoremap g0 0
+		" nnoremap 0 g0
+		echo "Breaking lines on movement."
+    endif
+endfunction
+nmap coG :call ToggleLineBreakMode()<cr>
+
+" Delete all matching lines
 vmap <silent> <leader>D g*:%g//d<cr>
 nmap <silent> <leader>D v$g*:%g//d<cr>
 " TODO
