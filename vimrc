@@ -282,8 +282,7 @@ let g:undotree_DiffCommand = "diff -U 5"
 let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
-" autocmd vimrc FileType undotree nomap <buffer> <cr> <tab>
-" autocmd vimrc FileType undotree nomap <buffer> ; <cr>
+autocmd vimrc FileType undotree nmap <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
