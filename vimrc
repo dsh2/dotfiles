@@ -283,7 +283,7 @@ let g:undotree_DiffpanelHeight = 25
 let g:undotree_TreeNodeShape = "o"
 nnoremap <F4> :UndotreeToggle<cr>
 " autocmd vimrc FileType undotree nomap <buffer> <cr> <tab>
-autocmd vimrc FileType undotree nomap <buffer> ; <cr>
+" autocmd vimrc FileType undotree nomap <buffer> ; <cr>
 " }}}
 Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
 Plug 'vim-pandoc/vim-pandoc-syntax'
@@ -740,9 +740,12 @@ set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 set tabstop=4
+set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
 set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
+set notimeout
+set nottimeout
 set ttimeoutlen=50
 set undodir=~/.vim/undodir/
 set undofile
