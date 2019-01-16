@@ -78,7 +78,7 @@ export GOPATH=$HOME/src/GO
 pathprepend $GOPATH/bin
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy.conf
-export INTERACTIVE_COMMANDS=(atop htop lnav mutt powertop r2 ranger vim)
+export INTERACTIVE_COMMANDS=(atop elinks htop lnav mutt powertop r2 ranger vim w3m)
 export JCOLOR=1
 export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
