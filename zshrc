@@ -29,6 +29,8 @@ bash_source() {
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
 
+in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
+
 setopt prompt_subst
 setopt prompt_cr
 setopt prompt_sp
@@ -772,7 +774,6 @@ watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
-
 # Source external ressource files {{{
 zsh_source ~/.environment
 zsh_source ~/.fzf.zsh
@@ -783,10 +784,6 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 # umask 027
-
-function in_array() {
-	(( ${${(P)2}[(i)$1]} < ${#${(P)2}} ))
-}
 
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
