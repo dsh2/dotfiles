@@ -181,7 +181,7 @@ set cscopetag
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 set cscoperelative
 if filereadable("cscope.out") 
-    cscope add cscope.out
+    silent! cscope add cscope.out
 endif
 set cscopeverbose  
 function! QfLlNext()
@@ -523,7 +523,7 @@ map <leader>y :MerginalToggle<cr>
 Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 map <leader>B :AsyncRun binwalk %<cr>
 autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-autocmd vimrc BufReadPost vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
+autocmd vimrc BufReadPost .\\\{0,1\}vimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 "}}}
 Plug 'atimholt/spiffy_foldtext' "{{{
 " TODO: Add more preview text, squece as much content as possible?
@@ -739,9 +739,12 @@ set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 set tabstop=4
+set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
 set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
+set notimeout
+set nottimeout
 set ttimeoutlen=50
 set undodir=~/.vim/undodir/
 set undofile

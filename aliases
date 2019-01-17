@@ -474,6 +474,7 @@ alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setop
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
+alias dd='dd status=progress'
 alias hc=herbstclient
 curl-tesseract() { 
 	curl --silent --output - "$@" |

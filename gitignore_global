@@ -11,6 +11,7 @@ cmake-build-*
 cscope.files
 cscope.out
 tags
+TAGS
 
 # Mac OS
 *.DS_Store

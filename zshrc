@@ -29,6 +29,8 @@ bash_source() {
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
 
+in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
+
 setopt prompt_subst
 setopt prompt_cr
 setopt prompt_sp
@@ -128,18 +130,20 @@ SAVEHIST=999999
 HISTSIZE=$SAVEHIST
 HISTFILE=~/.zsh_history
 HIST_STAMPS="yyyy-mm-dd"
+
+setopt append_history
 setopt complete_aliases
 setopt extended_history
 setopt hist_find_no_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
-setopt no_inc_append_history_time
-setopt no_inc_append_history
-setopt share_history
 setopt no_bang_hist
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
+setopt no_inc_append_history
+setopt no_inc_append_history_time
+setopt share_history
 
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
@@ -645,7 +649,7 @@ stty -ixon
 TMOUT=200
 ZSH_LOCK_STATUS=
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
-if [ -n $SSH_TTY ]; then
+if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
 elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
@@ -770,7 +774,6 @@ watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
-
 # Source external ressource files {{{
 zsh_source ~/.environment
 zsh_source ~/.fzf.zsh
@@ -781,16 +784,6 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 # umask 027
-
-# TODO: Implement this
-function in_array() {
-    prl $1 $2
-    prl ${1[(i)$2]} 
-    prl ${#2}
-    [[ ${1[(i)$2]} -gt 0 ]]
-    prl ret = $?
-    return $?
-}
 
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
