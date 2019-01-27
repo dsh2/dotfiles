@@ -787,4 +787,5 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
-[[ $(cat $HISTFILE | wc -l) -lt 10 ]] && print "WARNING: size of $HISTFILE is suspicious." 
+zmodload zsh/stat
+[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
