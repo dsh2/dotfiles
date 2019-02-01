@@ -1209,6 +1209,7 @@ function! KeepView(cmd)
     call winrestview(w)
 endfunction
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
+map <leader>0m :call KeepView('silent! %s/\%xd//')<cr>
 map <leader>0s :call KeepView('silent! %s/\s\+\S/\r/')<cr>
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
