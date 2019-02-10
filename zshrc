@@ -138,12 +138,13 @@ setopt hist_find_no_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
+setopt hist_fcntl_lock
 setopt no_bang_hist
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 setopt no_inc_append_history
-setopt no_inc_append_history_time
-setopt share_history
+setopt inc_append_history_time
+setopt no_share_history
 
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
@@ -300,8 +301,8 @@ bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	cat $tmux_log_file | $=XC
+	[[ -z $log_file || ! -s $log_file ]] && { zle -M "No output captured."; return }
+	cat $log_file | $=XC
 }
 bindkey_func '^x^o' copy_last_output
 
@@ -315,12 +316,12 @@ bindkey_func '^x^r' page_tmux_pane
 
 function page_last_output {
 	# TODO: Make this work without new tmux pane. 
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	[[ -z $log_file || ! -s $log_file ]] && { zle -M "No output captured."; return }
 	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 vim $tmux_log_file \
+	tmux split -vbp 60 vim $log_file \
 		-c 'set buftype=nofile' \
 		-c 'AnsiEsc' \
 		+normal\ gg
@@ -333,9 +334,9 @@ bindkey_func '^x^x' page_last_output
 # -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	[[ -z $log_file || ! -s $log_file ]] && { zle -M "No output captured."; return }
 	RBUFFER=$(
-	(cat $tmux_log_file ; print -P $LINE_SEPARATOR ) | 
+	(cat $log_file ; print -P $LINE_SEPARATOR ) | 
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
 		--preview 'echo {} | pygmentize -l zsh' \
@@ -426,46 +427,65 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 
 bindkey -s rq "r2 -Nqc '' -"
 
-function start_tmux_logging() 
-{ 
-	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-		# TODO: Add colors to output
-	# export ZSH_DEBUG=1
+function start_logging() 
+{
 	print -P $LINE_SEPARATOR
-	if [[ -n $ZSH_DEBUG ]]; then
-		# print -l params = \"$@\"
-		print literal = \"$1\"
-		# print compact: \"$2\"
-		# print full: \"$3\"
-		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
-		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
-		print time: $(n)
-		print event id: ${$(echo $3 | sha1sum)[1]}
-		print tmux_log_file: $tmux_log_file
-		print -P $LINE_SEPARATOR
+	echo -n pre-fc:\ ; fc -Ilt '%s' -1
+	print -P $LINE_SEPARATOR
+	tmp_log_dir=$(mktemp -d $ZSH_LOGS/$(date '+%s')-preexec-$$-event-$(print -P %!)-XXX)
+	log_file=$tmp_log_dir/output
+	stats_file=$tmp_log_dir/stats
+	(
+		print "time: $(n)"
+		print "literal: \"$1\""
+		print "compact: \"$2\""
+		print "full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\""
+		print "pwd: $(pwd)"
+		print "tmux-session: $(tmux display-message -p '#{session_name}')"
+		# print "full: \"$3\" "
+	) >> $stats_file
+	# env > $tmp_log_dir/env
+	if in_array ${2[(w)1]} INTERACTIVE_COMMANDS; then
+		print "No output logged. (INTERACTIVE_COMMANDS = \"$INTERACTIVE_COMMANDS\")" >> $log_file
+		return
 	fi
-	# TODO: Do not log for INTERACTIVE_COMMANDS
-	# TODO: Add logging (probably best in directories) for
-	# -exit code
-	# -directory (in case .zsh_local_history is not possible)
-	# -environment
-	# -literal and full command
+	# TODO:
 	# -report times
 	# -name of tmux session name
 	# -create log_file_name from cmdline contents and timestamp as history event
 	#  number does not seem to be stable enough
+	# TODO: add support for other ways of output logging
+	# - GNU screen
+	# - zsh multi-io
+	# - x11 terminals
+	# - frame buffer driver
+	# - ssh debug
+	# - frida redirection
 	# TODO: save hostname to merge log among different hosts
-	tmux pipe-pane "cat > $tmux_log_file"
+	tmux pipe-pane "cat > $log_file"
 }
 
-function stop_tmux_logging() 
+last_event_timestamp() { echo ${$(fc -Ilt '%s' -1)[(w)2]} }
+
+function stop_logging() 
 {
-    [ -z $tmux_log_file ] && return
-    tmux pipe-pane 
+	exit_code=$?
+	print -P $LINE_SEPARATOR
+	echo -n post-fc:\ ; fc -Ilt '%s' -1
+	print -P $LINE_SEPARATOR
+	[[ -z $tmp_log_dir || -z $log_dir ]] && return
+	print "exit code: $exit_code" >> $stats_file
+    tmux pipe-pane
     # HACK: Convert tmux line endings
     # TODO: Check tmux src
-    sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+    sed -i -e 's,$,,' -e '$ d' $log_file
+
+	log_dir=$(mktemp -d $ZSH_LOGS/$(last_event_timestamp)-postexec-$$-event-$(print -P %!)-XXX)
+	mv $tmp_log_dir $log_dir
+	unset log_file stats_file
 }
+
+# functions -T start_logging stop_logging in_array
 
 function set_terminal_title() 
 {
@@ -506,13 +526,14 @@ function zsh_terminal_title_running()
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
+ZSH_LOGS=$HOME/.logs/zsh 
 if whence tmux > /dev/null \
     && [[ -n $TMUX ]] \
     && tmux has-session >& /dev/null \
-    && mkdir -p ~/.tmux-log ;
+	&& mkdir -p $ZSH_LOGS ;
 then
-    add-zsh-hook preexec start_tmux_logging
-    add-zsh-hook precmd stop_tmux_logging
+    add-zsh-hook preexec start_logging
+    add-zsh-hook precmd stop_logging
 fi 
 
 function showbuffers()

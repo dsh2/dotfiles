@@ -1,10 +1,10 @@
 #!env zsh
-TMUX_LOG=~/.tmux-log
-
+die() { print "$@"; exit 1 ; }
 setopt extendedglob
 setopt monitor
 setopt notify 
-usage="${0:t} [-e|--edit] zsh-history-event-number"
+usage="${0:t} [-e|--edit] zsh-log-timestamp"
+set -x
 
 if ! zparseopts -D \
     e=EDIT -edit=EDIT; \
@@ -16,30 +16,18 @@ fi
 if [[ $# < 1 ]]; then
     print $usage
     exit 1
-
 fi
-log_num=$1
-shift
-
-# Parse number of history event
-if [[ ! $log_num = <-> ]]; then
-    # TODO: Try to understand what I am doing here...
-    log_num=${1[(ws:-:)1]}
-    log_parm=${1[(ws:-:)2,-1]}
-fi
-
-log_file=$TMUX_LOG/$log_num
-if [ ! -f $log_file ]; then
-    print OUTPUT: No execution log captured
-    exit 0
-fi
+# We get log_timestamp from command line because deriving timestamp in non-interactive zsh (or even zsh -i) seems to be non-trivial
+set -v
+log_timestamp=$1
+[[ $log_timestamp = "-" ]] && read log_timestamp
+[[ -z $log_timestamp ]] && die "Failed to derive log_timestamp." 
+log_dir=${ZSH_LOGS:-$HOME/.logs/zsh/}/$log_timestamp
+[[ -z $log_dir ]] && die "Failed to derive log_dir." 
+log_file=$log_dir/output
+[[ ! -f $log_file ]] && die "No execution log captured."
 # TODO: check if log_file is compressed 
-
-if [[ -n $EDIT ]]; then
-    # ${=EDITOR} $log_file
-    vim $log_file
-    exit $?
-fi
+[[ -n $EDIT ]] && { ${EDITOR:-vim} $log_file; exit $? }
 
 print SIZE: \
     ${${$(wc $log_file):gfs,  , ,:gs, ,/,}[1,3]} \
