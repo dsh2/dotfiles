@@ -312,6 +312,7 @@ let g:csv_arrange_align = 'l*'
 let g:csv_autocmd_arrange = 1
 " TODO: If readonly set nofile?
 map <leader>CT :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim="\t"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+map <leader>C; :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=";"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
 autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
@@ -825,6 +826,7 @@ nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 
 function! YankUp(string)
+	let @+=a:string
 	if executable("clip.exe") | call system("clip.exe", a:string) | endif
 	if !empty($TMUX) && executable("tmux") | call system("tmux load-buffer -", a:string) | endif
 	if !empty($DISPLAY)
@@ -832,25 +834,22 @@ function! YankUp(string)
 		elseif executable("xsel") | call system("xsel -bi", a:string)
 		endif
 	endif
+	echo "YANK-UP: \"" . strtrans(a:string) . "\""
 endfunction
+
 " TODO: check if there is somethinkg like "register pending" mode
-command! YankUp :call YankUp(@")|echo "YankUp: " . strtrans(@")
+" command! YankUp :call YankUp(@")|echo "YankUp: " . strtrans(@")
+command! YankUp :call YankUp(@")
 nmap YY :YankUp<cr>
 
-" TODO: check if g-prefix makes sense
-let g:path=""
-function! YankPath()
-	if g:path==expand("%:p")
-		let g:path=expand("%:t")
-	elseif g:path==expand("%:t")
-		let g:path=expand("%:.")
-	else
-		let g:path=expand("%:p")
-	endif
-	silent! call YankUp(g:path)
-	echo "Yanked path \"" . g:path . "\""
-endfunction
-map Yp :call YankPath()<cr>
+map Ypa :call YankUp(expand("%:p"))<cr>
+map Ypp :call YankUp(expand("%:p"))<cr>
+map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
+map YP :call YankUp(expand("%:p") . ":" . line("."))<cr>
+map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
+map Ypr :call YankUp(expand("%:."))<cr>
+map Yp. :call YankUp(expand("%:."))<cr>
+" TODO: add current function (c, cpp, py, etc.)
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
@@ -1210,7 +1209,7 @@ function! KeepView(cmd)
 endfunction
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
 map <leader>0m :call KeepView('silent! %s/\%xd//')<cr>
-map <leader>0s :call KeepView('silent! %s/\s\+\S/\r/')<cr>
+map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: understand why \zs does NOT work
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " }}}
