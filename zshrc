@@ -637,6 +637,7 @@ setopt autocd
 setopt autopushd
 set push
 setopt cdablevars
+setopt histsubstpattern
 stty -ixon
 
 # TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
@@ -712,6 +713,8 @@ expand_ealias() {
 }
 bindkey_func ' ' expand_ealias
 bindkey -M isearch ' '  magic-space # normal space during searches
+
+setopt extendedglob # Only enable after definition of expand_ealias
 
 function space_prepend {
     zle -U ' '
