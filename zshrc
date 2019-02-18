@@ -334,10 +334,10 @@ bindkey_func '^x^x' page_last_output
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	RBUFFER=$(
-	(cat $tmux_log_file ; print -P $LINE_SEPARATOR ) | 
+	RBUFFER=$( cat $tmux_log_file  | 
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
+		--margin 0,0,1,0 \
 		--preview 'echo {} | pygmentize -l zsh' \
 		--preview-window 'up:45%:wrap:hidden' \
 		| tr '\t\n' '  ' | tr -s ' ')
