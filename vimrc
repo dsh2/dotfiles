@@ -508,7 +508,7 @@ map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
 "}}}
 Plug 'tpope/vim-commentary' "{{{
 autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq,resolv setlocal commentstring=#\ %s
-nmap gcC yykpgccj
+nmap gcC yygccp
 "}}}
 Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
