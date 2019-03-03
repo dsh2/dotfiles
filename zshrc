@@ -680,7 +680,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
-# print -n $ZSH_LOCK_STATUS
+(( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 zsh_source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
