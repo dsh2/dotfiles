@@ -648,7 +648,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS=
+ZSH_LOCK_STATUS="Setting TMOUT=200"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
