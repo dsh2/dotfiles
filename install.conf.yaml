@@ -45,6 +45,7 @@
     ~/.vim/scripts.vim: vim/scripts.vim
     ~/.vimrc: vimrc
     ~/.ssh/config: ssh_config
+    ~/.ssh/known_hosts_common: ssh_known_hosts_common
     ~/.tidy.conf: tidy.conf
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: 
