@@ -345,10 +345,10 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function diff_last_two_outputs {
-    tmux new-window vimdiff \
-	~/.tmux-log/$(($(print -P '%!')-2)) \
-	~/.tmux-log/$(($(print -P '%!')-1)) \
-	"+ map q Q"
+	local o1=~/.tmux-log/$(($(print -P '%!')-2))
+	local o2=~/.tmux-log/$(($(print -P '%!')-1))
+	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
+	tmux new-window vimdiff $o1 $o2
 }
 bindkey_func '^x^m' diff_last_two_outputs
 
@@ -648,7 +648,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS=
+ZSH_LOCK_STATUS="Setting TMOUT=200"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
