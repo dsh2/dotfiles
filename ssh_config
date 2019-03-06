@@ -1,7 +1,6 @@
 AddKeysToAgent confirm
 ForwardX11Timeout 1s
-# TODO: figure out how to setup ssh to only use the specified identity but
-# accept this identity from the agent
+# TODO: figure out how to setup ssh to only use the specified identity but accept this identity from the agent
 IdentitiesOnly yes
 IdentityFile ~/.ssh/hosts/%h/%r.key
 ControlMaster auto
@@ -15,3 +14,4 @@ PermitLocalCommand false
 Include ~/.ssh/config.local
 HashKnownHosts yes
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
+
