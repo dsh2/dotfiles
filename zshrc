@@ -265,7 +265,7 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 
-XC=${XC:-true}
+XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
 	if type xclip >/dev/null; then
 		XC="xclip -selection clipboard -in"
@@ -294,14 +294,18 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	echo -n $CUTBUFFER | $=XC
+	echo -n $CUTBUFFER | $=XC \
+		&& zle -M "Copied last command line." \
+		|| zle -M "FAILED to copy last command line. (XC=$XC)"
 }
 bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	cat $tmux_log_file | $=XC
+	cat $tmux_log_file | $=XC \
+		&& zle -M "Copied last command's output." \
+		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
 }
 bindkey_func '^x^o' copy_last_output
 
@@ -648,7 +652,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS=
+ZSH_LOCK_STATUS="Setting TMOUT=200"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
@@ -676,7 +680,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
-# print -n $ZSH_LOCK_STATUS
+(( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 zsh_source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

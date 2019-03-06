@@ -3,7 +3,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/ranger ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.config/copyq ~/.config/ranger ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts, Setting up directory for local ssh]
   - [mkdir -p ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
@@ -39,11 +39,13 @@
         force: true
     ~/.minttyrc: minttyrc
     ~/.config/radare2/radare2rc: radare2rc
+    ~/.config/copyq/copyq.conf: copyq
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vim/scripts.vim: vim/scripts.vim
     ~/.vimrc: vimrc
     ~/.ssh/config: ssh_config
+    ~/.ssh/known_hosts_common: ssh_known_hosts_common
     ~/.tidy.conf: tidy.conf
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: 
