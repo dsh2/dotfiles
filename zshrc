@@ -652,7 +652,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS="Setting TMOUT=200"
+ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
@@ -694,7 +694,32 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 
 # Setup aliases {{{
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+
+# source aliases shared with bash
 zsh_source ~/.aliases
+
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+	verbose=true
+	shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+	if ! command -v "$c" &> /dev/null; then
+	  [[ "$verbose" == true ]] && err "$c not found"
+	  return 1
+	fi
+  done
+}
+
+err() {
+  printf '\e[31m%s\e[0m\n' "$*" >&2
+}
+
+die() {
+  (( $# > 0 )) && err "$*"
+}
+
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \
     -e s/=.\*// \
