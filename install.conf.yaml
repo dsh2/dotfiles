@@ -54,4 +54,5 @@
     ~/.zlogout: zlogout
 
 - shell:
+  - [chmod 0600 ssh_config, Restricting file permissions: ssh_config]
   - [bin/vim-plug-install, Configuring vim]
