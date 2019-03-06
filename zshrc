@@ -436,7 +436,7 @@ bindkey -s vll\  'vim *(.om[1])\t'
 function start_tmux_logging() 
 { 
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-		# TODO: Add colors to output
+	# TODO: Add colors to output
 	# export ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
@@ -757,7 +757,7 @@ if has apt; then
 	compdef _command_names PS
 elif has yum; then
 	alias PI='sudo yum -y install '
-	alias PII='yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}"; rehash'
+	alias PII='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	PL() { yum info $* && rpm -lq $*}
 	# compdef _some_rpm_func PL
 	PS() { PL $(rpm -qf $(whh $*)) }
