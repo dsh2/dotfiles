@@ -497,10 +497,6 @@ src_index() {
 }
 
 D() { set -x; $*; set +x }
-alias Dl='l ~/INCOMING/*(.om[1])'
-alias Dlp='px ~/INCOMING/*(.om[1])'
-alias Dll='Dlp && r *(/om[1])'
-# alias s3='/usr/local/bin/sqlite3'
 alias s3=sqlite3
 alias s3b='sqlitebrowser -R'
 alias s3l='sqlitebrowser -R'

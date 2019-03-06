@@ -432,6 +432,7 @@ bindkey -s rq\  "r2 -Nqc '' -"
 bindkey -s cl\  'cat $tmux_log_file\t'
 bindkey -s vl\  'vim $tmux_log_file\t'
 bindkey -s vll\  'vim *(.om[1])\t'
+bindkey -s Dl\  'l ~/INCOMING/*(.om[1])\t'
 
 function start_tmux_logging() 
 { 
