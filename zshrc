@@ -720,11 +720,49 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
-XS() {
-	xset -b -c r rate 200 140 dpms 0 0 3600 s off 
-	setxkbmap -layout us,de -option grp:alt_caps_toggle
-	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
+if has trash; then
+	alias rm='trash -v --'
+	alias rmm='\rm'
+	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
+else
+	tl() { err trash-cli NOT installed. }
+fi
+
+visudo_append() {
+	has -v sudo || { die; return }
+	[[ -v visudo_tmp ]] && { die "Variable visudo_tmp in use."; return }
+	[[ $# = 0 ]] && { die "Usage: ${0:t} line"; return }
+	local line=$@
+	visudo_tmp=$(mktemp tmp.${0:t}.XXXXXXXX ) || { die "mktemp failed."; return }
+	setopt localtraps
+	trap 'sudo \rm -rf $visudo_tmp; unset visudo_tmp' EXIT
+	sudo cp -a /etc/sudoers $visudo_tmp
+	sudo grep -q $line $visudo_tmp && { die "Line \"$line\" already contained in sudoers"; return }
+	print $line | sudo tee --append $visudo_tmp > /dev/null
+	sudo visudo --check --file=$visudo_tmp > /dev/null && sudo mv $visudo_tmp /etc/sudoers
+	chown 0:0 /etc/sudoers
 }
+alias VaT='visudo_append Defaults timestamp_timeout=240'
+
+if has apt; then
+	alias PI='sudo apt-get install --fix-missing -y '
+	alias PII='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
+	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
+	PL() { apt-cache show $* && dpkg -L $*}
+	compdef _deb_packages PL
+	PS() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
+	compdef _command_names PS
+elif has yum; then
+	alias PI='sudo yum -y install '
+	alias PII='yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}"; rehash'
+	PL() { yum info $* && rpm -lq $*}
+	# compdef _some_rpm_func PL
+	PS() { PL $(rpm -qf $(whh $*)) }
+	compdef _command_names PS
+elif has port; then
+	alias PII='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
+fi
+
 
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \
@@ -822,7 +860,6 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 # umask 027
-
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
