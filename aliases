@@ -477,7 +477,6 @@ curl-tesseract() {
 }
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias c=cat
 alias x0='[[ -z $DISPLAY ]] && export DISPLAY=:0'
 alias x00='export DISPLAY=:0'
 alias digr='dig -x'

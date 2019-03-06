@@ -781,7 +781,11 @@ if has lnav; then
 else
 	alias tff='err("lnav not found")'
 fi
-
+c() {
+	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
+	[[ -d $1 ]] && { ls -ald $1; return }
+	cat $1
+}
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \
     -e s/=.\*// \
