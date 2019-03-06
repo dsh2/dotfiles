@@ -720,6 +720,12 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
+XS() {
+	xset -b -c r rate 200 140 dpms 0 0 3600 s off 
+	setxkbmap -layout us,de -option grp:alt_caps_toggle
+	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
+}
+
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \
     -e s/=.\*// \
