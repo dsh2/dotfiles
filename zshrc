@@ -766,6 +766,21 @@ elif has port; then
 	alias PII='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
 fi
 
+has grc && tf_alias='command grc'
+tf_file=/var/log/messages
+[[ -e $tf_file ]] || tf_file=/var/log/syslog
+if [[ -e $tf_file ]]; then
+	[[ -r $tf_file ]] || tf_alias="sudo true && sudo $tf_alias"
+	alias tf="$tf_alias tail -f $tf_file &"
+else
+	alias tf='err("syslog NOT found")'
+fi
+
+if has lnav; then
+	alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
+else
+	alias tff='err("lnav not found")'
+fi
 
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \

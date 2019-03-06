@@ -149,7 +149,7 @@ alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:sh
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
-alias grc='git rebase --continue'
+alias grC='git rebase --continue'
 alias grh='git reset HEAD^'
 alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
@@ -451,8 +451,6 @@ alias sudo='sudo '
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
-alias tf='command grc tail -f /var/log/messages &'
-alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
