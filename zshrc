@@ -428,7 +428,10 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 # zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 # zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
-bindkey -s rq "r2 -Nqc '' -"
+bindkey -s rq\  "r2 -Nqc '' -"
+bindkey -s cl\  'cat $tmux_log_file\t'
+bindkey -s vl\  'vim $tmux_log_file\t'
+bindkey -s vll\  'vim *(.om[1])\t'
 
 function start_tmux_logging() 
 { 
