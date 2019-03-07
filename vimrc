@@ -91,7 +91,7 @@ nmap <leader>gw :Gwrite<cr>
 nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
-autocmd vimrc FileType gitcommit map <buffer> ; odvlzi
+autocmd vimrc FileType fugitive map <buffer> ; odvlzi
 autocmd vimrc FileType gitcommit map <buffer> <leader>C :Gcommit\ --verbose<cr>
 autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
@@ -829,7 +829,7 @@ nnoremap <C-l> <C-w><C-l>
 nnoremap <C-h> <C-w><C-h>
 
 function! YankUp(string)
-	let @+=a:string
+	let @"=a:string
 	if executable("clip.exe") | call system("clip.exe", a:string) | endif
 	if !empty($TMUX) && executable("tmux") | call system("tmux load-buffer -", a:string) | endif
 	if !empty($DISPLAY)

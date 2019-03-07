@@ -428,12 +428,18 @@ zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
 # zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
 # zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
 
-bindkey -s rq "r2 -Nqc '' -"
+bindkey -s rq\  'r2 -Nqc '' -'
+bindkey -s cl\  'cat $tmux_log_file\t'
+bindkey -s vl\  'vim $tmux_log_file\t'
+bindkey -s vll\  'vim *(.om[1])\t'
+bindkey -s Dl\  'l ~/INCOMING/*(.om[1])\t'
+bindkey -s LD\  '*(/om[1])\t'
+bindkey -s LF\  '*(.om[1])\t'
 
 function start_tmux_logging() 
 { 
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-		# TODO: Add colors to output
+	# TODO: Add colors to output
 	# export ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
@@ -652,7 +658,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
-ZSH_LOCK_STATUS="Setting TMOUT=200"
+ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
@@ -694,7 +700,95 @@ ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 
 # Setup aliases {{{
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+
+# source aliases shared with bash
 zsh_source ~/.aliases
+
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+	verbose=true
+	shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+	if ! command -v "$c" &> /dev/null; then
+	  [[ "$verbose" == true ]] && err "$c not found"
+	  return 1
+	fi
+  done
+}
+
+err() {
+  printf '\e[31m%s\e[0m\n' "$*" >&2
+}
+
+die() {
+  (( $# > 0 )) && err "$*"
+}
+
+if has trash; then
+	alias rm='trash -v --'
+	alias rmm='\rm'
+	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
+else
+	tl() { err trash-cli NOT installed. }
+fi
+
+visudo_append() {
+	has -v sudo || { die; return }
+	[[ -v visudo_tmp ]] && { die "Variable visudo_tmp in use."; return }
+	[[ $# = 0 ]] && { die "Usage: ${0:t} line"; return }
+	local line=$@
+	visudo_tmp=$(mktemp tmp.${0:t}.XXXXXXXX ) || { die "mktemp failed."; return }
+	setopt localtraps
+	trap 'sudo \rm -rf $visudo_tmp; unset visudo_tmp' EXIT
+	sudo cp -a /etc/sudoers $visudo_tmp
+	sudo grep -q $line $visudo_tmp && { die "Line \"$line\" already contained in sudoers"; return }
+	print $line | sudo tee --append $visudo_tmp > /dev/null
+	sudo visudo --check --file=$visudo_tmp > /dev/null && sudo mv $visudo_tmp /etc/sudoers
+	chown 0:0 /etc/sudoers
+}
+alias VaT='visudo_append Defaults timestamp_timeout=240'
+
+if has apt; then
+	alias PI='sudo apt-get install --fix-missing -y '
+	alias PII='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
+	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
+	PL() { apt-cache show $* && dpkg -L $*}
+	compdef _deb_packages PL
+	PS() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
+	compdef _command_names PS
+elif has yum; then
+	alias PI='sudo yum -y install '
+	alias PII='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	PL() { yum info $* && rpm -lq $*}
+	# compdef _some_rpm_func PL
+	PS() { PL $(rpm -qf $(whh $*)) }
+	compdef _command_names PS
+elif has port; then
+	alias PII='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
+fi
+
+has grc && tf_alias='command grc'
+tf_file=/var/log/messages
+[[ -e $tf_file ]] || tf_file=/var/log/syslog
+if [[ -e $tf_file ]]; then
+	[[ -r $tf_file ]] || tf_alias="sudo true && sudo $tf_alias"
+	alias tf="$tf_alias tail -f $tf_file &"
+else
+	alias tf='err("syslog NOT found")'
+fi
+
+if has lnav; then
+	alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
+else
+	alias tff='err("lnav not found")'
+fi
+c() {
+	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
+	[[ -d $1 ]] && { ls -ald $1; return }
+	cat $1
+}
 typeset -a ealiases
 set_ealiases() {ealiases=($(alias | sed \
     -e s/=.\*// \
@@ -791,7 +885,6 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 # umask 027
-
 # }}}
 zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
