@@ -149,7 +149,7 @@ alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:sh
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
-alias grc='git rebase --continue'
+alias grC='git rebase --continue'
 alias grh='git reset HEAD^'
 alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
@@ -225,10 +225,6 @@ alias v='vim -X'
 # alias v=vim
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
-alias vl='v ~/.tmux-log/*(.om[1])'
-alias cl='cat $tmux_log_file'
-alias vll='v *(.om[1])'
-alias cl='cat ~/.tmux-log/*(.om[1])'
 viminfo() { vim -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
@@ -328,9 +324,6 @@ alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
-alias rm='trash -v --'
-alias rmm='\rm'
-alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
 alias tag=prompt_tag
 #g() { grep --color -Inri -- "$@" *; }
 gw() { grep --color -Iwri -- "$@" *; }
@@ -340,10 +333,6 @@ alias -g ggs='|& strings | grep -i --color '
 alias -g ggv='|& grep -v '
 alias pg='ping gdns |& lnav -t'
 alias acs='apt-cache search'
-alias agi='sudo apt-get install --fix-missing -y '
-alias agii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
-alias p_ss='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
-alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
@@ -462,8 +451,6 @@ alias sudo='sudo '
 alias uu=uniq
 alias lv=lnav
 alias e=echo 
-alias tf='command grc tail -f /var/log/messages &'
-alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
@@ -477,16 +464,23 @@ alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias dd='dd status=progress'
 alias hc=herbstclient
+
+XS() {
+	xset -b -c r rate 200 140 dpms 0 0 3600 s off 
+	setxkbmap -layout us,de -option grp:alt_caps_toggle
+	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
+}
+
 curl-tesseract() { 
 	curl --silent --output - "$@" |
 		tesseract -l eng -l deu - -
 }
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias c=cat
 alias x0='[[ -z $DISPLAY ]] && export DISPLAY=:0'
 alias x00='export DISPLAY=:0'
 alias digr='dig -x'
+alias y=yum
 src_index() {
     find . \
         -name .repo -prune -o \
@@ -503,10 +497,6 @@ src_index() {
 }
 
 D() { set -x; $*; set +x }
-alias Dl='l ~/INCOMING/*(.om[1])'
-alias Dlp='px ~/INCOMING/*(.om[1])'
-alias Dll='Dlp && r *(/om[1])'
-# alias s3='/usr/local/bin/sqlite3'
 alias s3=sqlite3
 alias s3b='sqlitebrowser -R'
 alias s3l='sqlitebrowser -R'

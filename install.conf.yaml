@@ -55,4 +55,5 @@
 
 - shell:
   - [chmod 0600 ssh_config, Restricting file permissions: ssh_config]
+  - [mkdir -p ~/mnt/localhost-root, Creating moint points]
   - [bin/vim-plug-install, Configuring vim]
