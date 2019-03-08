@@ -849,10 +849,12 @@ nmap YY :YankUp<cr>
 map Ypa :call YankUp(expand("%:p"))<cr>
 map Ypp :call YankUp(expand("%:p"))<cr>
 map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
-map YP :call YankUp(expand("%:p") . ":" . line("."))<cr>
 map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
 map Ypr :call YankUp(expand("%:."))<cr>
+map Ypt :call YankUp(expand("%:t"))<cr>
+map Ypf :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
+map YP :call YankUp(expand("%:p") . ":" . line("."))<cr>
 " TODO: add current function (c, cpp, py, etc.)
 " }}}
 " Special operations {{{
