@@ -10,6 +10,7 @@ pathprepend /usr/lib/ccache
 pathprepend $HOME/bin
 pathprepend $HOME/.dotfiles/bin
 pathprepend $HOME/.dotfiles/fzf/target
+pathprepend $HOME/node_modules/.bin/
 # pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
 
 # Android
