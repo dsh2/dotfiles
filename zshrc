@@ -731,7 +731,7 @@ if has trash; then
 	alias rmm='\rm'
 	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
 else
-	tl() { err trash-cli NOT installed. }
+	tl() {err "trash-cli NOT installed."}
 fi
 
 visudo_append() {
