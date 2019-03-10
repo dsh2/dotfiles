@@ -780,7 +780,7 @@ else
 fi
 
 if has lnav; then
-	alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
+	alias tff='sudo true && (cd /var/log && sudo lnav )'
 else
 	alias tff='err("lnav not found")'
 fi
@@ -879,6 +879,19 @@ logcheck=30
 zsh_source ~/.environment
 zsh_source ~/.fzf.zsh
 zsh_source ~/.fzfrc
+
+nmn() {
+	targets=()
+	excludes=()
+	for if in $(command ls -1 /sys/class/net); do 
+		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then 
+			targets+=$(ifdata -pN $if)/24
+			excludes+=$(ifdata -pa $if)
+		fi
+	done 
+	print_variables targets excludes
+	nmap -PS2222 -p- -oA ~/.nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
+}
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
