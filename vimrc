@@ -404,7 +404,7 @@ let g:pdf_convert_on_read = 1
 " let Tlist_Show_One_File = 1
 " map <leader>t :TlistToggle<cr>
 " }}}
-Plug 'majutsushi/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
+Plug 'dsh2/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
 Plug 'hushicai/tagbar-javascript.vim'
 let g:tagbar_autoclose = 0
 " TODO: Add support for percent instead of number of characters
@@ -850,9 +850,12 @@ map Ypa :call YankUp(expand("%:p"))<cr>
 map Ypp :call YankUp(expand("%:p"))<cr>
 map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
 map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
+map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
 map Ypr :call YankUp(expand("%:."))<cr>
 map Ypt :call YankUp(expand("%:t"))<cr>
-map Ypf :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
 map YP :call YankUp(expand("%:p") . ":" . line("."))<cr>
 " TODO: add current function (c, cpp, py, etc.)
