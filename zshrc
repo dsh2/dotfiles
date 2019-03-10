@@ -780,7 +780,7 @@ else
 fi
 
 if has lnav; then
-	alias tff='(cd /var/log; sudo lnav syslog auth.log fail2ban.log audit/audit.log)'
+	alias tff='sudo true && (cd /var/log && sudo lnav )'
 else
 	alias tff='err("lnav not found")'
 fi
