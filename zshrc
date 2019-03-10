@@ -784,29 +784,18 @@ if has lnav; then
 else
 	alias tff='err("lnav not found")'
 fi
+
 c() {
 	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
 	[[ -d $1 ]] && { ls -ald $1; return }
 	cat $1
 }
-typeset -a ealiases
-set_ealiases() {ealiases=($(alias | sed \
-    -e s/=.\*// \
-    -e s/\\./\\\\./g \
-    -e /^l$/d \
-    -e /^ls$/d \
-    -e /^pst$/d \
-    -e /^agii$/d \
-    -e /^v$/d \
-    # -e /^vl$/d \
-))}; set_ealiases; alias sa=set_ealiases
 
+typeset -a expand_ealias_skip
+expand_ealias_skip=(l ls pst)
 expand_ealias() {
-	if [[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)ealiases})$" ]]; then
-		# print MATCH: $MATCH $MBEGIN $MEND
-		zle _expand_alias
-		# zle expand-word
-	fi
+	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias 
+	# zle expand-word
 	zle magic-space
 }
 bindkey_func ' ' expand_ealias
