@@ -91,7 +91,7 @@ nmap <leader>gw :Gwrite<cr>
 nmap <leader>gg :Git
 nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 " TODO: Find out why this end up in the left window
-autocmd vimrc FileType fugitive map <buffer> ; odvlzi
+autocmd vimrc FileType gitcommit,fugitive map <buffer> ; odvlzi
 autocmd vimrc FileType gitcommit map <buffer> <leader>C :Gcommit\ --verbose<cr>
 autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 " autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
@@ -163,7 +163,7 @@ Plug 'Shougo/neomru.vim'
 let g:neomru#time_format='%F %T '
 let g:neomru#update_interval=60
 "}}}
-" Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
+Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 " let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 " Plug 'rickhowe/diffchar.vim'
 " let g:DiffUnit = 'Word1'
@@ -777,6 +777,7 @@ map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
 " TODO: Filter ansi escape sequences from filename when file not found
+nmap <leaer>gf vgf
 nnoremap gf gF
 nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
