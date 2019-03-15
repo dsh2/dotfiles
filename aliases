@@ -173,6 +173,9 @@ alias lsd='l -d'
 alias fr='fc -R'
 alias tt=set_terminal_title
 
+alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
+alias tcpd='tcpdump --packet-buffered -w - | tee ~/.pcaps/tcpdump-$(nn).pcap | tcpdump -r -'
+alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
 alias nmap='nmap -oA ~/.nmap/log-$(nn)'
 alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
@@ -429,7 +432,7 @@ compdef _command_names dpL
 alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
-alias nn="date '+%F_%T'"
+alias nn="date '+%F__%T'"
 alias tgi=telegram-cli
 alias ncn=nmcli
 alias ncc=nmcli
