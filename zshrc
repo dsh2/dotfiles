@@ -888,6 +888,6 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 # TODO: Think about a way how to select umask for sudo
 # umask 027
 # }}}
-zstyle ':completion:*:processes' command 'ps --forest -o pid,%cpu,tty,cputime,cmd'
+zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
 [[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
