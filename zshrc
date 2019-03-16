@@ -748,7 +748,9 @@ visudo_append() {
 	sudo visudo --check --file=$visudo_tmp > /dev/null && sudo mv $visudo_tmp /etc/sudoers
 	chown 0:0 /etc/sudoers
 }
-alias VaT='visudo_append Defaults timestamp_timeout=240'
+alias VaT='sudo true && visudo_append Defaults timestamp_timeout=240'
+alias VaY='sudo true && visudo_append Defaults !tty_tickets'
+alias VaP='sudo true && visudo_append Defaults use_pty'
 
 if has apt; then
 	alias PI='sudo apt-get install --fix-missing -y '
