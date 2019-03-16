@@ -302,6 +302,7 @@ bindkey_func '^x^k' copy_last_command
 
 # Copy last command's output to xclipboard
 function copy_last_output {
+	check_output $XC || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC \
 		&& zle -M "Copied last command's output." \
@@ -318,8 +319,7 @@ function page_tmux_pane {
 bindkey_func '^x^r' page_tmux_pane
 
 function page_last_output {
-	# TODO: Make this work without new tmux pane. 
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	check_output vp || return
 	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
@@ -331,13 +331,22 @@ function page_last_output {
 }
 bindkey_func '^x^x' page_last_output
 
+function check_output {
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 
+	zle -M "No output captured (tmux_log_file = \"$tmux_log_file\")."
+	zle up-history
+	zle end-of-line
+	zle -U " | $1"
+	return 1
+}
+
 # TODO:
 # -add mapping to jump to first line of output
 # -prefilter for IP, numbers, paths, etc., cf. above.
 # -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	check_output vp || return
 	RBUFFER=$( cat $tmux_log_file  | 
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
