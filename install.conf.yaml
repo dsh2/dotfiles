@@ -47,6 +47,7 @@
     ~/.ssh/config: ssh_config
     ~/.ssh/known_hosts_common: ssh_known_hosts_common
     ~/.ssh/config.local.template: ssh_config_template
+    ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc

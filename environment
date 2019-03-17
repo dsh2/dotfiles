@@ -91,6 +91,6 @@ export USE_CCACHE=1
 export WIRESHARK=/usr/bin/wireshark
 export XENVIRONMENT=$HOME/.Xresources
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
-
+export RIPGREP_CONFIG_PATH=~/.ripgreprc 
 # Source local envars like token, etc.
 [ -e ~/.environment.local ] && source ~/.environment.local 
