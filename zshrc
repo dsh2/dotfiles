@@ -332,7 +332,7 @@ function page_last_output {
 bindkey_func '^x^x' page_last_output
 
 function check_output {
-	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 0
 	zle -M "No output captured (tmux_log_file = \"$tmux_log_file\")."
 	zle up-history
 	zle end-of-line
