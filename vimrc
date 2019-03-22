@@ -72,6 +72,7 @@ vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr>
 map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
 map <leader>lC :FzfBCommits<cr>
+map <leader>F :FzfFiles<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
@@ -729,7 +730,7 @@ set nowrapscan
 set number
 set previewheight=14
 set ruler
-au BufEnter,BufNew,OptionSet * if &diff | set scrolloff=0 | else | set scrolloff=999 | endif
+au BufEnter,BufNew,OptionSet * if &diff | set scrolloff=5 | else | set scrolloff=99 | endif
 set shellslash
 set shiftwidth=4
 set shortmess=filnxtToOI
@@ -814,7 +815,7 @@ function! ToggleLineBreakMode()
     endif
 endfunction
 nmap coG :call ToggleLineBreakMode()<cr>
-
+noremap zz :set scrolloff=99<cr>zz
 " Delete all matching lines
 vmap <silent> <leader>D g*:%g//d<cr>
 nmap <silent> <leader>D v$g*:%g//d<cr>
@@ -849,9 +850,12 @@ command! YankUp :call YankUp(@")
 nmap YY :YankUp<cr>
 
 map Ypa :call YankUp(expand("%:p"))<cr>
+map YP :call YankUp(expand("%:p"))<cr>
 map Ypp :call YankUp(expand("%:p"))<cr>
 map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
+map Ypn :call YankUp(expand("%:t") . ":" . line("."))<cr>
 map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
+map YpN :call YankUp(expand("%:p") . ":" . line("."))<cr>
 map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
 map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
 map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
@@ -859,7 +863,6 @@ map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
 map Ypr :call YankUp(expand("%:."))<cr>
 map Ypt :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
-map YP :call YankUp(expand("%:p") . ":" . line("."))<cr>
 " TODO: add current function (c, cpp, py, etc.)
 " }}}
 " Special operations {{{
@@ -960,7 +963,7 @@ highlight NonText ctermfg=DarkGreen ctermbg=NONE
 " }}}
 " Setup spell checking {{{
 hi SpellBad ctermbg=none ctermfg=red cterm=undercurl
-nmap zz ]seas
+nmap <leader>zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
 au BufRead *.md set filetype=markdown | if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
@@ -1051,10 +1054,11 @@ set noesckeys
 " -Diff pstrees
 " -Highlight groups for
 "  --Unusual flags
-"  --interactive programms without tty
+"  --Interactive programms without tty
 "  --load/mem-pressure
 "  --uncommon pending syscalls
 "  --own tty
+"  --other users than self/system-accounts/root
 " Map for terminal info/search
 " R: reload with search on PID
 function! ProcessTreePid()
