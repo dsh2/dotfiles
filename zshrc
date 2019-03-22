@@ -385,10 +385,26 @@ function select_aliases {
 }
 bindkey_func '^x^a' select_aliases
 
-# TODO: Instead split vim with new script containing current line and RUN-split
-# autoload -z edit-command-line
-# bindkey_func "^x^e" edit-command-line
+zle_die() {
+	local message=${1:-"FAILED"}
+	zle -M $message
+	# TODO: Find some kind of zle_exit
+}
 
+# TODO: Instead split vim with new script containing current line and RUN-split
+function edit_command_line() {
+	local run_file="$HOME/bin/tmp-$(nn).sh"
+	local editor=${${VISUAL:-${EDITOR:-vi}}}
+	[[ -z $BUFFER ]] && zle up-history
+	print -l -- '#!'$SHELL $'' $BUFFER > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
+	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
+	tmux split -vbp 80 $SHELL -ic "$editor $run_file"
+	zle kill-whole-line
+	zle -U "RUN $run_file"
+	zle accept-line
+}
+bindkey_func "^x^s" edit_command_line
+#
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
 if [ -z "$TMUX" ]; then
