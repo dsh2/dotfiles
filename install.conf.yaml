@@ -6,6 +6,8 @@
   - [mkdir -p ~/.config/copyq ~/.config/ranger ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts, Setting up directory for local ssh]
   - [mkdir -p ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
+  - [mkdir -p ~/mnt/localhost-root, Creating mouint points]
+  - [mkdir -p ~/bin, Creating local bin]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
   - [fzf/install --all, Installing fzf]
 
@@ -58,5 +60,4 @@
 
 - shell:
   - [chmod 0600 ssh_config, Restricting file permissions: ssh_config]
-  - [mkdir -p ~/mnt/localhost-root, Creating moint points]
   - [bin/vim-plug-install, Configuring vim]
