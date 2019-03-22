@@ -234,62 +234,54 @@ alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 compdef _man vimman
 
-run() {
-    print Running \"$*\"...
-    print Start: $(n)
-    print -P $LINE_SEPARATOR
-    $*
-    err=$?
-    print -P $LINE_SEPARATOR
-    print Stop: $(n)
-    print err = $err
-    print -P $LINE_SEPARATOR
-    return $err
-}
-
 RUN() {
-    # TODO
-    # -Add option to run through watch to show diffs in output
-    # -Measure runtime
-    # -Log output in tmux-log or similar
-    # -Option to clear -x or not
-    # -Press any key for manual run
-
-    if ! zparseopts -D \
-	D=DEBUG -debug=DEBUG \
-	w+:=WATCH_OBJS -watch+:=WATCH_OBJS \
-	d=DIFF_OUTPUT -diff-output=DIFF_OUTPUT \
-	o:=OUTPUT_DIR -output-dir:=OUTPUT_DIR \
-	t:=MEASSURE_RUNTIME -meassure-runtime:=MEASSURE_RUNTIME \
-	v=VERBOSE -verbose=VERBOSE ;
-    then
-	print ERROR: Failed to parse command line.
-	return
-    fi
-    # [[ -n $DEBUG ]] && set_debug
-    WATCH_OBJS=${WATCH_OBJS:gs:--watch:::gs:-w::} # HELP: This cannot be - by no means - zsh-idiomatics
-    print_variables WATCH_OBJS 
-    prl REST: $* 
-    [ -z $1 ] && { echo Nothing to run.; return; }
-    [ -z $WATCH_OBJS ] && { echo Nothing to watch.; return; }
-    # [ ! -e $WATCH ] && WATCH=$(whence $WATCH) 
-    # echo Watching \"$WATCH\"...
-    # [ ! -x $WATCH ] && { echo Watch from path not executable; return; }
-    [ -z $1 ] && { echo Nothing to run.; return; }
-
-    clear -x
-    run $*
-    while true; do 
-        if ! inotifywait -q -e move_self -e modify $=WATCH_OBJS > /dev/null ; then
-	    echo inotifywait failed!
-	    return
+	# TODO
+	# -Add option to run through watch to show diffs in output
+	# -Measure runtime
+	# -Log output in tmux-log or similar
+	# -Option to clear -x or not
+	# -Press any key for manual run
+	# o:=output_dir -output-dir:=output_dir \
+	# t:=meassure_runtime -meassure-runtime:=meassure_runtime \
+	local -a watch_objs 
+	if [ $# = 0 ] || ! zparseopts -D \
+		w+:=watch_objs -watch+:=watch_objs \
+		1=watch_run_objs \
+		x=clear_screen c=clear_screen -clear=clear_screen \
+		d=diff_output -diff-output=diff_output \
+		s=skip_first_run -skip-first-run=skip_first_run \
+		v=verbose -verbose=verbose \
+	; then
+		print "usage: RUN [--skip-first-run] [--watch_file file] executable [args]"
+		return 1
 	fi
-	clear -x
-	sleep 0.1
-	run $*
-	# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
-	sleep 0.1
-    done
+	watch_objs=(${watch_objs:gs:--watch:::gs:-w::}) # HELP: This cannot be - by no means - zsh-idiomatics
+	[[ $#watch_objs = 0 || -n $watch_run_objs ]] && watch_objs+=$1
+	run_obj=$*
+	[ -z $run_obj ] && { echo Nothing to run.; return; }
+	[ $#watch_objs = 0 ] && { echo Nothing to watch.; return; }
+	# TODO: Resolve target executable
+	# [ ! -e $WATCH ] && WATCH=$(whence $WATCH)
+	while true; do
+		if [[ -z $skip_first_run ]]; then
+			if [[ -n $verbose ]]; then
+				print "Watching: $watch_objs"
+				print "Running: $run_obj"
+			fi
+			[[ -n $clear_screen ]] && clear -x 
+			print -P $LINE_SEPARATOR
+			$=run_obj
+			err=$?
+			print -P $LINE_SEPARATOR
+		fi
+		unset skip_first_run
+		if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
+			echo inotifywait failed!
+			return
+		fi
+		# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
+		sleep 0.1
+	done
 }
 
 # Miscellaneous
