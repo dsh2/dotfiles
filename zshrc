@@ -398,12 +398,16 @@ function edit_command_line() {
 	[[ -z $BUFFER ]] && zle up-history
 	print -l -- '#!'$SHELL $'' $BUFFER > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
 	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
-	tmux split -vbp 80 $SHELL -ic "$editor $run_file"
-	zle kill-whole-line
-	zle -U "RUN $run_file"
-	zle accept-line
+	if [[ -n $TMUX ]]; then
+		tmux split -vbp 80 $SHELL -ic "$editor $run_file"
+		zle kill-whole-line
+		zle -U "RUN $run_file"
+		zle accept-line
+  	else
+
+	fi
 }
-bindkey_func "^x^s" edit_command_line
+bindkey_func "^x^q" edit_command_line
 #
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
