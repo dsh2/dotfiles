@@ -7,6 +7,7 @@ ControlMaster auto
 ControlPath ~/.ssh/master-%n-%p-%r
 ControlPersist 4h
 PermitLocalCommand false
+RemoteForward 22222 localhost:22
 # TODO: try to figure out if calling sshfs LocalCommand constitutes some kind of race condition or other bad idea
 # LocalCommand logger -ist ssh -- Automounting sshfs from %u@%l to %r@%h ; sshfs -p %p %d:/ %d/mnt/%n-root ; sshfs -o LogLevel=DEBUG -p %p %d: %d/mnt/%n
 
@@ -14,4 +15,3 @@ PermitLocalCommand false
 Include ~/.ssh/config.local
 HashKnownHosts yes
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
-

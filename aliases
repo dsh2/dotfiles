@@ -35,13 +35,13 @@ cdp() {
 }
 compdef _pids cdp
 
-cd() { 
+cd() {
 	if ! builtin cd $* 2>/dev/null; then
 		if [ -e $* ]; then
 			dir=$(dirname $*)
 			if [ $dir = "." ]; then
 				print WARNING: no directory change
-			else 
+			else
 				builtin cd $dir
 			fi
 		else
@@ -401,7 +401,7 @@ zloc_file() {
     echo -n ~/.zsh_local_history_dir${(q)PWD}/history
 }
 zloc() {
-    fc -p $(zloc_file)
+	fc -p $(zloc_file)
 }
 alias fcp='fc -P'
 alias func=function
@@ -455,6 +455,9 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 alias mvO=mvOFF
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
+alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
+alias sshl="ssh -p 22222 $USER@localhost"
+alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
