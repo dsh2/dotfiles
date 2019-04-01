@@ -377,15 +377,15 @@ GG() {
 
 cloc() {
     locate --existing -0 .zsh_local_history |
-	xargs -0 grep --color=always --line-number -e "$*" |
-	sort -k 2
+		xargs -0 grep --color=always --line-number -F "$*" |
+		sort -k 2
 }
 
 clocd() {
-    locate --existing -0 .zsh_local_history |
-	xargs -0 grep --files-with-matches -e "$*" |
-	sort -u
-    }
+	locate --existing -0 .zsh_local_history |
+		xargs -0 grep --files-with-matches -F "$*" |
+		sort -u
+}
 
 clocdf() {
     cd $(clocd $* |
