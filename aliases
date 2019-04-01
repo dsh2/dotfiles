@@ -35,13 +35,13 @@ cdp() {
 }
 compdef _pids cdp
 
-cd() { 
+cd() {
 	if ! builtin cd $* 2>/dev/null; then
 		if [ -e $* ]; then
 			dir=$(dirname $*)
 			if [ $dir = "." ]; then
 				print WARNING: no directory change
-			else 
+			else
 				builtin cd $dir
 			fi
 		else
@@ -375,16 +375,16 @@ GG() {
 }
 
 cloc() {
-    locate --existing -0 .zsh_local_history |
-	xargs -0 grep --color=always --line-number -e "$*" |
-	sort -k 2
-}
+	locate --existing -0 .zsh_local_history |
+		xargs -0 grep --color=always --line-number -e "$*" |
+		sort -k 2
+	}
 
 clocd() {
-    locate --existing -0 .zsh_local_history |
-	xargs -0 grep --files-with-matches -e "$*" |
-	sort -u
-    }
+	locate --existing -0 .zsh_local_history |
+		xargs -0 grep --files-with-matches -e "$*" |
+		sort -u
+	}
 
 clocdf() {
     cd $(clocd $* |
@@ -400,7 +400,7 @@ zloc_file() {
     echo -n ~/.zsh_local_history_dir${(q)PWD}/history
 }
 zloc() {
-    fc -p $(zloc_file)
+	fc -p $(zloc_file)
 }
 alias fcp='fc -P'
 alias func=function
