@@ -219,7 +219,7 @@
 
 # Packet list hidden columns
 # List all columns to hide in the packet list.
-#gui.column.hidden: 
+gui.column.hidden: 
 
 # Packet list column format
 # Each pair of strings consists of a column title and its format
@@ -292,7 +292,7 @@ gui.layout_type: 2
 
 # Interface link-layer header types (Ex: en0(1),en1(143),...)
 # A string
-#capture.devices_linktypes: 
+capture.devices_linktypes: ciscodump(147),sshdump(147),udpdump(252)
 
 # Interface descriptions (Ex: eth0(eth0 descr),eth1(eth1 descr),...)
 # A string
@@ -308,15 +308,15 @@ gui.layout_type: 2
 
 # Interface buffer size (Ex: en0(1),en1(143),...)
 # A string
-#capture.devices_buffersize: 
+capture.devices_buffersize: ciscodump(2),sshdump(2),udpdump(2)
 
 # Interface snap length (Ex: en0(65535),en1(1430),...)
 # A string
-#capture.devices_snaplen: 
+capture.devices_snaplen: ciscodump:0(262144),sshdump:0(262144),udpdump:0(262144)
 
 # Interface promiscuous mode (Ex: en0(0),en1(1),...)
 # A string
-#capture.devices_pmode: 
+capture.devices_pmode: ciscodump(1),sshdump(1),udpdump(1)
 
 # Capture in promiscuous mode?
 # TRUE or FALSE (case-insensitive)

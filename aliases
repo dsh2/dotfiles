@@ -2,18 +2,18 @@ UNAME=$(uname)
 
 LS_COMMAND=ls
 if [ "$UNAME" = "Darwin" ]; then
-# TODO: check if gnu core utils is installed
-    alias find=gfind
-    alias locate=glocate
-    LS_COMMAND=gls
-    alias sed=gsed
-    alias tac=gtac
-    # Switch profile of running iTerm2 window
-    it2prof() { printf '\033]50;SetProfile=$@\a'; }
+	# TODO: check if gnu core utils is installed
+	alias find=gfind
+	alias locate=glocate
+	LS_COMMAND=gls
+	alias sed=gsed
+	alias tac=gtac
+	# Switch profile of running iTerm2 window
+	it2prof() { printf '\033]50;SetProfile=$@\a'; }
 fi
 
 if [ "$OSTYPE" = "cygwin" ]; then
-    alias sudo="cygstart --action=runas"
+	alias sudo="cygstart --action=runas"
 fi
 
 # Change directory
@@ -22,17 +22,17 @@ alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
 cdp() {
-    CD_PIDS=(${=$(pidof "$*")})
-    if [ -n "$CD_PIDS[1]" ]; then
-        cd /proc/${CD_PIDS[1]}
-        if [ -n "$CD_PIDS[2]" ]; then
-            echo CD_PIDS = $CD_PIDS
-        fi
-    else
-        echo no process matched \"$*\". Changing to proc root...
-        cd /proc/
-    fi
-}
+	CD_PIDS=(${=$(pidof "$*")})
+	if [ -n "$CD_PIDS[1]" ]; then
+		cd /proc/${CD_PIDS[1]}
+		if [ -n "$CD_PIDS[2]" ]; then
+			echo CD_PIDS = $CD_PIDS
+		fi
+	else
+		echo no process matched \"$*\". Changing to proc root...
+		cd /proc/
+		fi
+	}
 compdef _pids cdp
 
 cd() {
@@ -46,15 +46,15 @@ cd() {
 			fi
 		else
 			echo Cannot change to \"$*\"
-		fi
-	fi
-}
+			fi
+			fi
+		}
 
-alias cdd='cd ~/.dotfiles'
-cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else echo Abort.; fi }
-alias cv=cb
+	alias cdd='cd ~/.dotfiles'
+	cb() { if DIR=$(dirs -lp | uniq | tac | fzf --prompt="recent dirs: "); then echo $DIR; cd $DIR; else echo Abort.; fi }
+	alias cv=cb
 
-source ~/.dotfiles/z/z.sh
+	source ~/.dotfiles/z/z.sh
 
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
@@ -65,11 +65,11 @@ alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
 ash() {
-	    [ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
-	    [ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
-	    type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
-	    echo $ANDROID_SERIAL: $@
-	    adb shell $@
+	[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
+	[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
+	type prompt_tag > /dev/null 2>&1 && prompt_tag "[ANDROID_SERIAL=$ANDROID_SERIAL]"
+	echo $ANDROID_SERIAL: $@
+	adb shell $@
 }
 alias a_=ash
 a_pidof() { echo $(adb shell ps | grep "$@" | cut -c 9-15 ); }
@@ -100,34 +100,34 @@ alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
 alias gst='git status -sb -- '
 # gst() {
-# 	local git_min_version="2.10.0"
+#	local git_min_version="2.10.0"
 
 # }
 alias gstt='gst .'
 gcr() {
-    set -x
-    git clone --recursive --jobs=8 --verbose $1 &&
-	cd ${1:t} &&
-	ranger .
-}
+	set -x
+	git clone --recursive --jobs=8 --verbose $1 &&
+		cd ${1:t} &&
+		ranger .
+	}
 
 ghssh() {
-    local dsh2_https_base='https://github.com/dsh2'
-    local dsh2_ssh_base='git@github.com:dsh2'
-    for remote in $(git remote); do
-	remote_url=$(git remote get-url --push $remote)
-	if [[ $remote_url =~ $dsh2_https_base ]]; then
-	    remote_url_new=${remote_url/$dsh2_https_base/$dsh2_ssh_base}
-	    echo Switching url \"$remote_url\" to \"$remote_url_new\"
-	    git remote set-url $remote --push $remote_url_new
-	elif [[ $remote_url =~ $dsh2_ssh_base ]]; then
-	    remote_url_new=${remote_url/$dsh2_ssh_base/$dsh2_https_base}
-	    echo Switching url \"$remote_url\" to \"$remote_url_new\"
-	    git remote set-url $remote --push $remote_url_new
-	else
-	    echo Skipping $remote_url
-	fi
-    done
+	local dsh2_https_base='https://github.com/dsh2'
+	local dsh2_ssh_base='git@github.com:dsh2'
+	for remote in $(git remote); do
+		remote_url=$(git remote get-url --push $remote)
+		if [[ $remote_url =~ $dsh2_https_base ]]; then
+			remote_url_new=${remote_url/$dsh2_https_base/$dsh2_ssh_base}
+			echo Switching url \"$remote_url\" to \"$remote_url_new\"
+			git remote set-url $remote --push $remote_url_new
+		elif [[ $remote_url =~ $dsh2_ssh_base ]]; then
+			remote_url_new=${remote_url/$dsh2_ssh_base/$dsh2_https_base}
+			echo Switching url \"$remote_url\" to \"$remote_url_new\"
+			git remote set-url $remote --push $remote_url_new
+		else
+			echo Skipping $remote_url
+		fi
+	done
 }
 
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
@@ -193,12 +193,12 @@ alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
 mcd() {
-    DIR=$*
-    if [[ -z $DIR ]]; then
-	echo usage: mcd NEWDIR
-	return
-    fi
-    mkd $DIR && cd $DIR
+	DIR=$*
+	if [[ -z $DIR ]]; then
+		echo usage: mcd NEWDIR
+		return
+	fi
+	mkd $DIR && cd $DIR
 }
 alias mkp=mkd
 alias goo=googler
@@ -243,7 +243,7 @@ RUN() {
 	# -Press any key for manual run
 	# o:=output_dir -output-dir:=output_dir \
 	# t:=meassure_runtime -meassure-runtime:=meassure_runtime \
-	local -a watch_objs 
+	local -a watch_objs
 	if [ $# = 0 ] || ! zparseopts -D \
 		w+:=watch_objs -watch+:=watch_objs \
 		1=watch_run_objs \
@@ -251,9 +251,9 @@ RUN() {
 		d=diff_output -diff-output=diff_output \
 		s=skip_first_run -skip-first-run=skip_first_run \
 		v=verbose -verbose=verbose \
-	; then
-		print "usage: RUN [--skip-first-run] [--watch_file file] executable [args]"
-		return 1
+		; then
+			print "usage: RUN [--skip-first-run] [--watch_file file] executable [args]"
+			return 1
 	fi
 	watch_objs=(${watch_objs:gs:--watch:::gs:-w::}) # HELP: This cannot be - by no means - zsh-idiomatics
 	[[ $#watch_objs = 0 || -n $watch_run_objs ]] && watch_objs+=$1
@@ -268,21 +268,21 @@ RUN() {
 				print "Watching: $watch_objs"
 				print "Running: $run_obj"
 			fi
-			[[ -n $clear_screen ]] && clear -x 
+			[[ -n $clear_screen ]] && clear -x
 			print -P $LINE_SEPARATOR
 			$=run_obj
 			err=$?
 			print -P $LINE_SEPARATOR
-		fi
-		unset skip_first_run
-		if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
-			echo inotifywait failed!
-			return
-		fi
-		# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
-		sleep 0.1
-	done
-}
+			fi
+			unset skip_first_run
+			if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
+				echo inotifywait failed!
+				return
+			fi
+			# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
+			sleep 0.1
+		done
+	}
 
 # Miscellaneous
 alias o=exo-open
@@ -302,7 +302,7 @@ alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
 alias le=$PAGER
 p() {
-    grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time )
+	grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time )
 }
 alias vpst='vim +ProcessTree'
 pp() {
@@ -355,51 +355,51 @@ alias kc='source ~/.keychain/*-sh(.om[1])'
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
 alias G='gdbserver :2000'
-GG() { 
-	(while true; do 
-		print -P $LINE_SEPARATOR
-		print "[$(n)] Launching \"$*\""
-		print -P $LINE_SEPARATOR
-		G $* 
-		print -P $LINE_SEPARATOR
-		print "Restarting gdbserver"
-		sleep 1
-	done) &
-	while true; do 
-		read 
-		print "Killing gdbserver"
-		kill $(pidof gdbserver)
-		kill ${${(v)jobstates##*:*:}%=*} 
-		return 
-		sleep 1
-	done 
+GG() {
+	(while true; do
+	print -P $LINE_SEPARATOR
+	print "[$(n)] Launching \"$*\""
+	print -P $LINE_SEPARATOR
+	G $*
+	print -P $LINE_SEPARATOR
+	print "Restarting gdbserver"
+	sleep 1
+done) &
+while true; do
+	read
+	print "Killing gdbserver"
+	kill $(pidof gdbserver)
+	kill ${${(v)jobstates##*:*:}%=*}
+	return
+	sleep 1
+done
 }
 
 cloc() {
-    locate --existing -0 .zsh_local_history |
+	locate --existing -0 .zsh_local_history |
 		xargs -0 grep --color=always --line-number -F "$*" |
 		sort -k 2
-}
+	}
 
 clocd() {
 	locate --existing -0 .zsh_local_history |
 		xargs -0 grep --files-with-matches -F "$*" |
 		sort -u
-}
+	}
 
 clocdf() {
-    cd $(clocd $* |
-	fzf --preview "
-	    grep --color=always -e "$*" {}
-    ")
-}
-alias df='df -h'
-# TODO: move to zshrc or similar
-zloc_file() {
-    local -r file=.zsh_local_history 
-    [[ -r $file ]] && { echo -n $file ; return }
-    echo -n ~/.zsh_local_history_dir${(q)PWD}/history
-}
+	cd $(clocd $* |
+		fzf --preview "
+			grep --color=always -e "$*" {}
+			")
+		}
+	alias df='df -h'
+	# TODO: move to zshrc or similar
+	zloc_file() {
+		local -r file=.zsh_local_history
+		[[ -r $file ]] && { echo -n $file ; return }
+		echo -n ~/.zsh_local_history_dir${(q)PWD}/history
+	}
 zloc() {
 	fc -p $(zloc_file)
 }
@@ -414,8 +414,8 @@ alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias -g xr='|xxd -r -p'
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-alias sc=systemctl 
-alias scc=sysctl 
+alias sc=systemctl
+alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
 dpl() { apt-cache show $* && dpkg -L $*}
@@ -446,13 +446,27 @@ alias st='strace -a $(($COLUMNS - 12)) -r -f'
 alias sudo='sudo '
 alias uu=uniq
 alias lv=lnav
-alias e=echo 
+alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { file "$*" && readlink -f "$*"; }
+mvO() { 
+	for f in $*; do 
+		if [ -e $f-OFF ]; then 
+			mv -v -- $f-OFF $f
+		elif [ -e $f ]; then 
+			if [ $f != ${f%-OFF} ]; then
+				mv -v -- $f ${f%-OFF}
+			else
+				mv -v -- $f $f-OFF
+			fi
+		else 
+			echo \"$f\" not found.
+		fi
+	done
+}
 mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
-alias mvO=mvOFF
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
@@ -465,14 +479,14 @@ alias dd='dd status=progress'
 alias hc=herbstclient
 
 XS() {
-	xset -b -c r rate 200 140 dpms 0 0 3600 s off 
+	xset -b -c r rate 200 140 dpms 0 0 3600 s off
 	setxkbmap -layout us,de -option grp:alt_caps_toggle
 	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
 }
 
-curl-tesseract() { 
-	curl --silent --output - "$@" |
-		tesseract -l eng -l deu - -
+curl-tesseract() {
+curl --silent --output - "$@" |
+	tesseract -l eng -l deu - -
 }
 alias cts=curl-tesseract
 alias gdb='gdb -q'
@@ -481,19 +495,19 @@ alias x00='export DISPLAY=:0'
 alias digr='dig -x'
 alias y=yum
 src_index() {
-    find . \
-        -name .repo -prune -o \
-        -name .git -prune -o \
-        -name out -prune -o \
-        -name build -prune -o \
-        -type f \( \
-            -name '*.c' -o \
-            -name '*.cc' -o \
-            -name '*.cpp' -o \
-            -name '*.h' -o \
-            -name '*.hpp' \
-        \) > cscope.files ; command cscope -bi cscope.files;
-}
+	find . \
+		-name .repo -prune -o \
+		-name .git -prune -o \
+		-name out -prune -o \
+		-name build -prune -o \
+		-type f \( \
+		-name '*.c' -o \
+		-name '*.cc' -o \
+		-name '*.cpp' -o \
+		-name '*.h' -o \
+		-name '*.hpp' \
+		\) > cscope.files ; command cscope -bi cscope.files;
+	}
 
 D() { set -x; $*; set +x }
 alias s3=sqlite3
