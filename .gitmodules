@@ -9,7 +9,7 @@
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 [submodule "fzf"]
-	path = fzf
+	path = src/fzf
 	url = https://github.com/dsh2/fzf
 [submodule "fzf_browser"]
 	path = fzf_browser
