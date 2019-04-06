@@ -600,7 +600,7 @@ autoload -U zed
 # TODO: check fpath vs. source
 zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
-zsh_source /usr/share/zsh/vendor-completions/_awscli
+zsh_source -q /usr/share/zsh/vendor-completions/_awscli
 zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
@@ -735,6 +735,7 @@ fi
 
 # source aliases shared with bash
 zsh_source ~/.aliases
+alias fcn='prl ${(ko)functions}'
 
 has() {
   local verbose=false
