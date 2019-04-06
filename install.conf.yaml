@@ -30,6 +30,7 @@
     ~/.config/ranger/commands.py: ranger/commands.py
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
+    ~/.clang-format: clang-format
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
