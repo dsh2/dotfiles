@@ -10,10 +10,13 @@ if [[ $RUNNING_SHELL != $SHELL ]]; then
     SHELL=$RUNNING_SHELL
 fi
 
-zsh_source() {
-  # TODO: check if writeable for others than us
-  [[ ! -r $@ ]] && { echo "zsh_source: "$@" not found. "; return; }
-  source $@
+zsh_source() 
+{
+	# TODO: check if writeable for others than us
+	local quiet 
+	[[ $1 = -q ]] && { quiet=1; shift; }
+	[[ ! -r $@ ]] && { (( quiet )) || "zsh_source: "$@" not found. "; return 1; }
+	source $@
 }
 
 bash_source() {
@@ -192,6 +195,7 @@ bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
 bindkey '^?' undo
 bindkey "^x;" describe-key-briefly
+bindkey "^[;" set-mark-command
 
 function repeat_immediately {
 	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
@@ -585,13 +589,7 @@ zle -N zle-keymap-select
 # }}}
 
 # Completion {{{
-fpath+=~/.dotfiles/zsh/zsh-completions/src/
-fpath+=~/.dotfiles/zsh/zsh-hub-completion/
-fpath+=~/.dotfiles/zsh/zsh-socat-completion/
-fpath+=~/.dotfiles/zsh/zsh-pandoc-completion/
-# TODO: add repo to .dotfiles
-fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/pip/
-fpath+=~/.zplug/repos/robbyrussell/oh-my-zsh/plugins/gem/
+zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/src/RE/radare2/doc/zsh
 
 zmodload zsh/complist
@@ -717,14 +715,18 @@ elif [[ -n $X_AUTOLOCK ]]; then
 fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
-zsh_source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
-ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
-ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
-ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
+if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
+	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
+	ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
+	ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
+	ZSH_HIGHLIGHT_STYLES[bracket-level-2]='fg=yellow'
+	ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
+	ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
+	ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
+elif zsh_source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
+	# fast-theme default 
+	FAST_HIGHLIGHT[use_async]=1
+fi
 # }}}
 
 # Setup aliases {{{
@@ -756,7 +758,7 @@ die() {
 }
 
 if has trash; then
-	alias rm='trash -v --'
+	alias rm='trash --'
 	alias rmm='\rm'
 	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
 else

@@ -1,78 +1,61 @@
-[submodule "bin/find_forks"]
-    path = bin/find_forks
-    url = https://github.com/frost-nzcr4/find_forks
-
+# vim: set ft=dosini 
 [submodule "colors/dynamic-colors"]
-    path = colors/dynamic-colors
-    url = https://github.com/sos4nt/dynamic-colors
-
+	path = colors/dynamic-colors
+	url = https://github.com/sos4nt/dynamic-colors
 [submodule "dircolors-solarized"]
-    path = colors/dircolors-solarized
-    url = https://github.com/seebi/dircolors-solarized
-
+	path = colors/dircolors-solarized
+	url = https://github.com/seebi/dircolors-solarized
 [submodule "dotbot"]
-    path = dotbot
-    url = https://github.com/anishathalye/dotbot
-
+	path = dotbot
+	url = https://github.com/anishathalye/dotbot
 [submodule "fzf"]
-    path = fzf
-    url = https://github.com/dsh2/fzf
-
+	path = fzf
+	url = https://github.com/dsh2/fzf
 [submodule "fzf_browser"]
-    path = fzf_browser
-    url = https://github.com/ggVGc/fzf_browser
-
+	path = fzf_browser
+	url = https://github.com/ggVGc/fzf_browser
 [submodule "googler"]
-    path = googler
-    url = https://github.com/jarun/googler/
-
+	path = googler
+	url = https://github.com/jarun/googler/
 [submodule "liquidprompt"]
-    path = liquidprompt
-    url = https://github.com/nojhan/liquidprompt.git
-
+	path = liquidprompt
+	url = https://github.com/nojhan/liquidprompt.git
 [submodule "mintty-colors-solarized"]
-    path = colors/mintty-colors-solarized
-    url = https://github.com/mavnn/mintty-colors-solarized
-
+	path = colors/mintty-colors-solarized
+	url = https://github.com/mavnn/mintty-colors-solarized
 [submodule "src/find_forks"]
-    path = src/find_forks
-    url = https://github.com/frost-nzcr4/find_forks
-
+	path = src/find_forks
+	url = https://github.com/frost-nzcr4/find_forks
 [submodule "src/gitk"]
-    path = src/gitk
-    url = https://github.com/dsh2/gitk
-
+	path = src/gitk
+	url = https://github.com/dsh2/gitk
 [submodule "src/ranger"]
-    path = src/ranger
-    url = https://github.com/dsh2/ranger
-
+	path = src/ranger
+	url = https://github.com/dsh2/ranger
 [submodule "z"]
-    path = z
-    url = https://github.com/dsh2/z
-
-[submodule "zsh-completions/zsh-pandoc-completion"]
-    path = zsh-completions/zsh-pandoc-completion
-    url = https://github.com/anntzer/zsh-pandoc-completion/
-
+	path = z
+	url = https://github.com/dsh2/z
 [submodule "zsh/zsh-socat-completion"]
-    path = zsh/zsh-socat-completion
-    url = https://github.com/dsh2/zsh-socat-completion
-
-[submodule "zsh/zsh-syntax-highlighting"]
-    path = zsh/zsh-syntax-highlighting
-    url = https://github.com/zsh-users/zsh-syntax-highlighting
-
+	path = zsh/zsh-socat-completion
+	url = https://github.com/dsh2/zsh-socat-completion
 [submodule "zsh/zsh-vbox-completion"]
-    path = zsh/zsh-vbox-completion
-    url = https://github.com/alexandregz/VBoxManage-completion
-
+	path = zsh/zsh-vbox-completion
+	url = https://github.com/alexandregz/VBoxManage-completion
 [submodule "zsh/zsh-completions-org"]
-    path = https://github.com/zsh-users/zsh-completions
-    url = https://github.com/srijanshetty/zsh-pandoc-completion
-
+	path = https://github.com/zsh-users/zsh-completions
+	url = https://github.com/srijanshetty/zsh-pandoc-completion
 [submodule "zsh/zsh-pandoc-completion"]
-    path = zsh/zsh-pandoc-completion
-    url = https://github.com/srijanshetty/zsh-pandoc-completion
+	path = zsh/zsh-pandoc-completion
+	url = https://github.com/srijanshetty/zsh-pandoc-completion
 [submodule "zsh/zsh-completions"]
 	path = zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions
+[submodule "zsh-completions/zsh-pandoc-completion"]
+	path = zsh-completions/zsh-pandoc-completion
+	url = https://github.com/anntzer/zsh-pandoc-completion/
+[submodule "zsh/syntax-highlighting"]
+	path = zsh/syntax-highlighting
+	url = https://github.com/zdharma/fast-syntax-highlighting
+[submodule "zsh/completion/zchee"]
+	path = zsh/completion/zchee
+	url = https://github.com/zchee/zsh-completions
