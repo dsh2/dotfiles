@@ -39,7 +39,7 @@
 	path = zsh/zsh-socat-completion
 	url = https://github.com/dsh2/zsh-socat-completion
 [submodule "zsh/zsh-vbox-completion"]
-	path = zsh/zsh-vbox-completion
+	path = zsh/completion/vbox
 	url = https://github.com/alexandregz/VBoxManage-completion
 [submodule "zsh/zsh-completions-org"]
 	path = https://github.com/zsh-users/zsh-completions
