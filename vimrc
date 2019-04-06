@@ -72,7 +72,7 @@ vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr>
 map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
 map <leader>lC :FzfBCommits<cr>
-map <leader>F :FzfFiles<cr>
+map <leader>ff :FzfFiles<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
@@ -269,7 +269,7 @@ nmap <leader>tn :$tabnew<cr>
 nmap <leader>tc :tabclose<cr>
 " }}}
 Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
-map <leader>f :Ranger<cr>
+map <leader>F :Ranger<cr>
 "}}}
 Plug 'milkypostman/vim-togglelist' "{{{
 nmap <leader><c-j> :colder<CR>
@@ -453,7 +453,7 @@ Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
 nnoremap <c-w>m :MaximizerToggle<cr>
 nnoremap <c-w><c-m> :MaximizerToggle<cr>
 "}}}
-Plug 'bling/vim-airline' "{{{
+" Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
