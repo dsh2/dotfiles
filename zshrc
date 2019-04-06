@@ -782,22 +782,22 @@ alias VaY='sudo true && visudo_append Defaults !tty_tickets'
 alias VaP='sudo true && visudo_append Defaults use_pty'
 
 if has apt; then
-	alias PI='sudo apt-get install --fix-missing -y '
-	alias PII='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^Package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
+	alias pi='sudo apt-get install --fix-missing -y '
+	alias pii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
 	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 	PL() { apt-cache show $* && dpkg -L $*}
 	compdef _deb_packages PL
 	PS() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 	compdef _command_names PS
 elif has yum; then
-	alias PI='sudo yum -y install '
-	alias PII='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias pi='sudo yum -y install '
+	alias pii='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	PL() { yum info $* && rpm -lq $*}
 	# compdef _some_rpm_func PL
 	PS() { PL $(rpm -qf $(whh $*)) }
 	compdef _command_names PS
 elif has port; then
-	alias PII='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
+	alias pii='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
 fi
 
 has grc && tf_alias='command grc'
