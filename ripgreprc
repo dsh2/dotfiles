@@ -6,4 +6,4 @@
 --search-zip
 --hidden
 --vimgrep 
---color=always 
+--color=auto 
