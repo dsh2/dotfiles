@@ -72,6 +72,7 @@ vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr>
 map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
 map <leader>lC :FzfBCommits<cr>
+map <leader>CA :FzfCommands<cr>
 map <leader>ff :FzfFiles<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lt :FzfFiletypes<cr>
