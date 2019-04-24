@@ -62,3 +62,6 @@
 [submodule "src/grc"]
 	path = src/grc
 	url = https://github.com/pengwynn/grc
+[submodule "zsh/completion/zsh-users"]
+	path = zsh/completion/zsh-users
+	url = https://github.com/zsh-users/zsh-completions

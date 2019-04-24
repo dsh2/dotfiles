@@ -591,6 +591,7 @@ zle -N zle-keymap-select
 # Completion {{{
 zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
+fpath+=~/.dotfiles/zsh/completion/zsh-users/src
 fpath+=~/src/RE/radare2/doc/zsh
 
 zmodload zsh/complist
@@ -787,7 +788,7 @@ alias VaP='sudo true && visudo_append Defaults use_pty'
 
 if has apt; then
 	alias pi='sudo apt-get install --fix-missing -y '
-	alias pii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^package: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
+	alias pii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^[Pp]ackage: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
 	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 	PL() { apt-cache show $* && dpkg -L $*}
 	compdef _deb_packages PL

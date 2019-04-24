@@ -72,6 +72,7 @@ vnoremap <leader>la :<c-u>execute("FzfAg ") . GetSelected()<cr>
 map <leader>b :FzfHistory<cr>
 map <leader>lc :FzfCommits<cr>
 map <leader>lC :FzfBCommits<cr>
+map <leader>CA :FzfCommands<cr>
 map <leader>ff :FzfFiles<cr>
 map <leader>lf :FzfFiles<cr>
 map <leader>lt :FzfFiletypes<cr>
@@ -1222,6 +1223,7 @@ function! KeepView(cmd)
 	exec a:cmd
     call winrestview(w)
 endfunction
+cabbr BB <buffer>
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
 map <leader>0m :call KeepView('silent! %s/\%xd//')<cr>
 map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: understand why \zs does NOT work
