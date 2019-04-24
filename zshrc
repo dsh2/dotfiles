@@ -591,6 +591,7 @@ zle -N zle-keymap-select
 # Completion {{{
 zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
+fpath+=~/.dotfiles/zsh/completion/zsh-users/src
 fpath+=~/src/RE/radare2/doc/zsh
 
 zmodload zsh/complist
