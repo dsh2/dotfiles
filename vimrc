@@ -1222,6 +1222,7 @@ function! KeepView(cmd)
 	exec a:cmd
     call winrestview(w)
 endfunction
+cabbr BB <buffer>
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
 map <leader>0m :call KeepView('silent! %s/\%xd//')<cr>
 map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: understand why \zs does NOT work
