@@ -78,6 +78,7 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 # find
 alias f=find
 alias fBB='find . \( \( -type d -exec chmod 755 {} \; \) -o \( -type f -exec chmod 644 {} \; \) \) -printf "%Y%m %p\n"'
+alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable && chmod -c a+x $f; done'
 alias fdd='f . -type d'
 alias ff='f . -type f'
 alias ffn='ff -name'
