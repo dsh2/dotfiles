@@ -252,6 +252,7 @@ RUN() {
 		x=clear_screen c=clear_screen -clear=clear_screen \
 		d=diff_output -diff-output=diff_output \
 		s=skip_first_run -skip-first-run=skip_first_run \
+		t=print_time -time=print_time \
 		v=verbose -verbose=verbose \
 		; then
 			print "usage: RUN [--skip-first-run] [--watch_file file] executable [args]"
@@ -266,25 +267,28 @@ RUN() {
 	# [ ! -e $WATCH ] && WATCH=$(whence $WATCH)
 	while true; do
 		if [[ -z $skip_first_run ]]; then
+			[[ -n $clear_screen ]] && clear -x
 			if [[ -n $verbose ]]; then
 				print "Watching: $watch_objs"
 				print "Running: $run_obj"
 			fi
-			[[ -n $clear_screen ]] && clear -x
+			[[ -n $print_time ]] && print "Start: $(n)"
 			print -P $LINE_SEPARATOR
 			$=run_obj
 			err=$?
 			print -P $LINE_SEPARATOR
-			fi
-			unset skip_first_run
-			if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
-				echo inotifywait failed!
-				return
-			fi
-			# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
-			sleep 0.1
-		done
-	}
+			(( err )) && err "err = $err"
+			[[ -n $print_time ]] && print "Stop: $(n)"
+		fi
+		unset skip_first_run
+		if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
+			echo inotifywait failed!
+			return
+		fi
+		# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
+		sleep 0.1
+	done
+}
 
 # Miscellaneous
 alias o=exo-open
