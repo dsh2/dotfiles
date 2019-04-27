@@ -48,6 +48,7 @@
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vim/scripts.vim: vim/scripts.vim
     ~/.vimrc: vimrc
+    ~/.config/nvim/init.vim: vimrc.nvim
     ~/.ssh/config: ssh_config
     ~/.ssh/known_hosts_common: ssh_known_hosts_common
     ~/.ssh/config.local.template: ssh_config_template
