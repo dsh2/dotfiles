@@ -505,9 +505,11 @@ function stop_tmux_logging()
 {
     [ -z $tmux_log_file ] && return
     tmux pipe-pane 
-    # HACK: Convert tmux line endings
-    # TODO: Check tmux src
-    sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+    # HACK: Convert tmux line endings TODO: Check tmux src why
+	#
+	# Wait for log file to appear - stop_tmux_logging may be faster than tmux pipe-pane
+	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
+	sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
 
 function set_terminal_title() 
