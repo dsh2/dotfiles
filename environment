@@ -65,7 +65,7 @@ export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache/
 
 # Editor
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR=$VISUAL
 export SUDO_EDITOR=$VISUAL
 
