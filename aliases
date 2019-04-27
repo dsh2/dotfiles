@@ -295,6 +295,8 @@ alias o=exo-open
 alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
+alias e2='aws ec2'
+alias ae2='aws ec2 describe-instances --query "Reservations[].Instances[].InstanceId" --output text --filter Name=ip-address,Values='
 alias ae2="aws ec2 describe-instances --query 'Reservations[].Instances[].InstanceId' --output text --filter Name=ip-address,Values="
 alias aeA="aws ec2 describe-instances --filter Name=instance-state-name,Values=running --query 'Reservations[].Instances[].InstanceId' --output text"
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
