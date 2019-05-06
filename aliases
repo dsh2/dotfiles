@@ -298,7 +298,7 @@ alias ae='aws ec2'
 alias e2='aws ec2'
 alias ae2='aws ec2 describe-instances --query "Reservations[].Instances[].InstanceId" --output text --filter Name=ip-address,Values='
 alias aeA='aws ec2 describe-instances --filter Name=instance-state-name,Values=running --query "Reservations[].Instances[].InstanceId" --output text'
-alias aI='for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances --query "Reservations[].Instances[].[InstanceId,ImageId,InstanceType,LaunchTime,State.Name]" --output text | sed "s,^,$region\t,"; done'
+alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances  | jq -r ".Reservations[].Instances[] | [.LaunchTime, .InstanceId, .ImageId, .InstanceType, .LaunchTime, .State.Name, [[.Tags[]?] | map(.Key + \"=\" + .Value) | .[] ] ] | flatten | @tsv" | sed "s,^,$region\t,"& done; wait )'
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
 alias aed="aws ec2 describe-instances --instance-ids"
 alias ac='aws cloudformation'
