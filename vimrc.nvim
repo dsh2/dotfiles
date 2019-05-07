@@ -282,8 +282,36 @@ if vim_plug_available
 	Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
 	map <leader>F :Ranger<cr>
 	"}}}
-	Plug 'simnalamburt/vim-mundo'
+	Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
 	nnoremap <F4> :MundoToggle<cr>
+	let g:mundo_preview_bottom=1
+	let g:mundo_verbose_graph=0
+
+	let g:mundo_mappings = {
+		  \ '<CR>': 'preview',
+		  \ 'o': 'preview',
+		  \ 'j': 'move_older',
+		  \ 'k': 'move_newer',
+		  \ '<down>': 'move_older',
+		  \ '<up>': 'move_newer',
+		  \ 'J': 'move_older_write',
+		  \ 'K': 'move_newer_write',
+		  \ 'gg': 'move_top',
+		  \ 'G': 'move_bottom',
+		  \ 'P': 'play_to',
+		  \ 'd': 'diff',
+		  \ 'i': 'toggle_inline',
+		  \ '/': 'search',
+		  \ 'n': 'next_match',
+		  \ 'N': 'previous_match',
+		  \ 'p': 'diff_current_buffer',
+		  \ 'r': 'diff',
+		  \ '?': 'toggle_help',
+		  \ 'q': 'quit',
+		  \ '<2-LeftMouse>': 'mouse_click' }
+
+	autocmd vimrc FileType Mundo nnoremap <buffer> ; <cr>l
+	" }}}
 	" Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 	" let g:undotree_WindowLayout = 2
 	" let g:undotree_SetFocusWhenToggle = 1
@@ -488,7 +516,7 @@ if vim_plug_available
 	Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 	map <leader>B :AsyncRun binwalk %<cr>
 	autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,init.vim nnoremap <buffer> <silent> <cr> 0f/lgf
+	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,init.vim,nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 	"}}}
 	Plug 'atimholt/spiffy_foldtext' "{{{
 	" TODO: Add more preview text, squece as much content as possible?
@@ -674,7 +702,7 @@ set backspace=indent,eol,start
 set cmdheight=2
 set cmdwinheight=10
 set complete+=kt
-set completeopt=menuone,longest,longest,preview
+set completeopt=menuone,preview
 set concealcursor=n
 set conceallevel=0
 set clipboard=unnamedplus
