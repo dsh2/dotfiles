@@ -41,7 +41,6 @@ ulimit -c unlimited
 stty -ixon
 
 complete -d cd rmdir pushd
-source ~/.dotfiles/VBoxManage-completion/VBoxManage-completion.bash
 source ~/.dotfiles/z/z.sh
 [ -f $AOSP_HOME/sdk/bash_completion/adb.bash ] && source $AOSP_HOME/sdk/bash_completion/adb.bash
 
@@ -64,7 +63,7 @@ if ! grep -q history <<< $PROMPT_COMMAND; then
 fi
 
 if type dircolors > /dev/null 2>&1 ; then
-    eval $(dircolors ~/.dotfiles/dircolors-solarized/dircolors.256dark)
+    eval $(dircolors ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
 fi
 export LS_COLORS
 
