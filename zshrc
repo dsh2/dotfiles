@@ -741,9 +741,201 @@ fi
 # Setup aliases {{{
 # [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 
+pathprepend() {
+	local path_element=$1
+	[[ -z $path_element || ! -d $path_element ]] && return
+	[[ -n $2 ]] && { print ERROR: only 'path' is supported; return }
+	# local path_env_name=${2:-path}
+	# path=($path_element $path)
+	path=($path_element $path)
+}
+zsh_source ~/.environment
+
 # source aliases shared with bash
 zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
+compdef _pids cdp
+p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
+jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
+faketty() { script -qfc "$(printf "%q " "$@")"; }
+cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
+alias vpst='vim +ProcessTree'
+pp() { [[ -z $* ]] && vpst || vpst "+/${*:s, ,.\*,}" "+FzfLines $*" }
+ut2nt() { date -d@$1 '+%F %T'}
+D() { set -x; $*; set +x; }
+curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
+dpl() { apt-cache show $* && dpkg -L $*}
+compdef _deb_packages dpl
+dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
+compdef _command_names dpL
+compdef _man vimman
+compdef _ps pf
+compdef _ps pidof
+
+typeset -A tmux_dirs=(right R left L above U top U up U below D down D)
+
+tmux_neighbor() {
+	if tmux select-pane -${tmux_dirs[$1]}; then
+		shift
+		tmux display-message -p "$*"
+		tmux select-pane -l
+	fi
+}
+
+tmux_neighbor_pane() {
+	tmux_neighbor $1 '#{pane_id}'
+}
+
+tmux_neighbor_tty() {
+	tmux_neighbor $1 '#{pane_tty}'
+}
+
+tmux_neighbor_pid() {
+	tmux_neighbor $1 '#{pane_pid}'
+}
+
+print_tty() {
+	tty=$1
+	shift
+	print -- $* >> $tty
+}
+
+tmux_print_tty_right() { print_tty $(tmux_neighbor_tty right) $* }
+tmux_print_tty_left() { print_tty $(tmux_neighbor_tty left) $* }
+tmux_print_tty_above() { print_tty $(tmux_neighbor_tty above) $* }
+tmux_print_tty_below() { print_tty $(tmux_neighbor_tty below) $* }
+
+alias Pr=tmux_print_tty_right
+alias Pl=tmux_print_tty_left
+alias Pa=tmux_print_tty_above
+alias Pb=tmux_print_tty_below
+
+tmux_send_keys_right() { tmux send-keys -t $(tmux_neighbor_pane right) $* }
+tmux_send_keys_left() { tmux send-keys -t $(tmux_neighbor_pane left) $* }
+tmux_send_keys_above() { tmux send-keys -t $(tmux_neighbor_pane above) $* }
+tmux_send_keys_below() { tmux send-keys -t $(tmux_neighbor_pane below) $* }
+
+alias Kr=tmux_send_keys_right
+alias Kl=tmux_send_keys_left
+alias Ka=tmux_send_keys_above
+alias Kb=tmux_send_keys_below
+
+
+cdp() {
+	CD_PIDS=(${=$(pidof "$*")})
+	if [ -n "$CD_PIDS[1]" ]; then
+		cd /proc/${CD_PIDS[1]}
+		if [ -n "$CD_PIDS[2]" ]; then
+			echo CD_PIDS = $CD_PIDS
+		fi
+	else
+		echo no process matched \"$*\". Changing to proc root...
+		cd /proc/
+		fi
+	}
+
+cd() {
+	if ! builtin cd $* 2>/dev/null; then
+		if [ -e $* ]; then
+			dir=$(dirname $*)
+			if [ $dir = "." ]; then
+				print WARNING: no directory change
+			else
+				builtin cd $dir
+			fi
+		else
+			echo Cannot change to \"$*\"
+		fi
+	fi
+}
+
+
+GG() {
+	(
+	while true; do
+		print -P $LINE_SEPARATOR
+		print "[$(n)] Launching \"$*\""
+		print -P $LINE_SEPARATOR
+		G $*
+		print -P $LINE_SEPARATOR
+		print "Restarting gdbserver"
+		sleep 1
+	done
+	) &
+	while true; do
+		read
+		print "Killing gdbserver"
+		kill $(pidof gdbserver)
+		kill ${${(v)jobstates##*:*:}%=*}
+		return
+		sleep 1
+	done
+}
+
+cloc() {
+	locate --existing -0 .zsh_local_history |
+		xargs -0 grep --color=always --line-number -F "$*" |
+		sort -k 2
+	}
+
+clocd() {
+	locate --existing -0 .zsh_local_history |
+		xargs -0 grep --files-with-matches -F "$*" |
+		sort -u
+	}
+
+clocdf() {
+	cd $(clocd $* |
+		fzf --preview "
+			grep --color=always -e "$*" {}
+			")
+		}
+	alias df='df -h'
+	# TODO: move to zshrc or similar
+	zloc_file() {
+		local -r file=.zsh_local_history
+		[[ -r $file ]] && { echo -n $file ; return }
+		echo -n ~/.zsh_local_history_dir${(q)PWD}/history
+	}
+
+zloc() {
+	fc -p $(zloc_file)
+}
+
+
+XS() {
+	xset -b -c r rate 200 140 dpms 0 0 3600 s off
+	setxkbmap -layout us,de -option grp:alt_caps_toggle
+	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
+}
+alias -g xr='|xxd -r -p'
+alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
+alias -g gg='|& grep -i --color -- '
+alias -g ggs='|& strings | grep -i --color '
+alias -g ggv='|& grep -v '
+alias -g X='| xargs'
+alias -g SS2S="|sed -re 's/\s+/ /g'"
+alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
+alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
+alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
+alias -g SD2T="|sed -re 's/ - /\t/'"
+alias -g TS="| ts -m '[%F %T]'"
+alias -g DN="> /dev/null"
+alias -g DN2="2> /dev/null"
+alias -g DNN="> /dev/null 2>&1"
+alias -g SE="2>&1"
+alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
+alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: ' -e 's: $::' " # Delete and squeeze whitespace, i.e. make one-liners
+alias -g DH="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
+alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
+alias -g WL=' | wc -l'
+alias -g WLU='| sort | uniq | wc -l'
+alias -g WLD='| sort | uniq -d | wc -l'
+alias -g UU='| sort | uniq'
+alias -g SN='| sort -n'
+alias -g SUU='| sort | uniq'
+alias -g LV=' |& lnav'
+alias -g JS=' | vim -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 
 has() {
   local verbose=false
@@ -889,15 +1081,6 @@ print_variables() {
 }
 compdef _parameter print_variables
 
-pathprepend() {
-    local path_element=$1
-    [[ -z $path_element || ! -d $path_element ]] && return
-    [[ -n $2 ]] && { print ERROR: only 'path' is supported; return }
-    # local path_env_name=${2:-path}
-    # path=($path_element $path)
-    path=($path_element $path)
-}
-
 have() {
   unset have
   (( ${+commands[$1]} )) && have=yes
@@ -908,7 +1091,6 @@ WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
 # Source external ressource files {{{
-zsh_source ~/.environment
 zsh_source ~/.fzf.zsh
 zsh_source ~/.fzfrc
 
