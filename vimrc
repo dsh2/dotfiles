@@ -768,6 +768,8 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 nmap Q :qall<cr>
 nmap <leader>J :set ft=json<cr><leader>S
 map  
+nnoremap <c-s> :update<cr>
+inoremap <c-s> <c-o>:update<cr><esc>
 map  :bnext<cr>
 map <c-.> :bprev<cr>
 map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>

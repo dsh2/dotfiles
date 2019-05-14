@@ -772,13 +772,13 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 
 cabbr BB <buffer>
 nmap <nowait> <leader>s :update<cr>
-
+nnoremap <c-s> :update<cr>
+inoremap <c-s> <c-o>:update<cr><esc>
 
 " Mappings {{{
 nmap Q :qall<cr>
 nmap <leader>J :set ft=json<cr><leader>S
 map  
-
 map  :bnext<cr>
 map <c-.> :bprev<cr>
 map <leader><c-l> :redraw!<cr>:echo "Redraw!"<cr>
