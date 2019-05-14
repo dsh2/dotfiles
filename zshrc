@@ -436,35 +436,35 @@ else
 fi
 
 # complete words from tmux pane(s)
-# Source: http://blog.plenz.com/2012-01/zsh-complete-words-from-tmux-pane.html
+function tmux_word_valid() { (( $#1 > 3 )) && [[ ! $1 =~ ------ ]] }
 function tmux_pane_words() {
+	[[ -z "$TMUX_PANE" ]] && { zle -M "tmux_pane_words: \$TMUX empty."; return 1; }
 	local expl
-	local -a words
-	local ignore_pattern="AAA"
-	if [[ -z "$TMUX_PANE" ]]; then
-		_message "Not running inside tmux!"
-		return 1
-	fi
-	for pane_id in $(tmux list-panes -F '#{pane_id}'); do
-	    words+=(${(u)=$(tmux capture-pane -J -p -t $pane_id)})
+	local -a compl_curr_pane
+
+	for word in ${(u)=$(tmux capture-pane -J -p)}; do
+		tmux_word_valid $word || continue
+		compl_curr_pane+=$word
 	done
-	# for word in ${(u)=$(tmux capture-pane -J -p -t $pane_id)}; do
-	#     (( $#word < 5 )) && continue
-	#     [[ $word =~ $ignore_pattern ]] && continue
-	#     compadd -Q -- $word
-	# done
-	_wanted values expl 'words from current tmux window' 
+	_wanted tmux_words expl 'words from current tmux pane' compadd -Qa compl_curr_pane 
+
+	local -a compl_other_panes
+	local current_pane_id=$(tmux display-message -pF '#{pane_id}')
+	for pane_id in $(tmux list-panes -F '#{pane_id}'); do
+		[[ $pane_id = $current_pane_id ]] && continue
+		for word in ${(uo)=$(tmux capture-pane -J -p -t $pane_id)}; do
+			tmux_word_valid $word || continue
+			compl_other_panes+=$word
+		done
+	done
+	_wanted tmux_word_orther expl 'words from other tmux panes' compadd -Qa compl_other_panes
 }
 
-zle -C tmux-pane-words-prefix   complete-word _generic
 zle -C tmux-pane-words-anywhere complete-word _generic
 bindkey '^v^v' tmux-pane-words-anywhere
 
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' completer tmux_pane_words
-zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' ignore-line current
-# display the (interactive) menu on first execution of the hotkey
-# zstyle ':completion:tmux-pane-words-(prefix|anywhere):*' menu yes select interactive
-# zstyle ':completion:tmux-pane-words-anywhere:*' matcher-list 'b:=* m:{A-Za-z}={a-zA-Z}'
+zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
+zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s cl\  'cat $tmux_log_file\t'
