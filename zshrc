@@ -318,7 +318,7 @@ function page_tmux_pane {
 	# zle -M "page_tmux_pane"
 	local temp_file=$(mktemp)
 	tmux capture-pane -epJS - > $temp_file
-	tmux split -vbp 60 vim $temp_file
+	tmux split -vbp 60 $EDITOR $temp_file
 }
 bindkey_func '^x^r' page_tmux_pane
 
@@ -328,7 +328,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 vim $tmux_log_file \
+	tmux split -vbp 60 $EDITOR $tmux_log_file \
 		-c 'set buftype=nofile' \
 		-c 'AnsiEsc' \
 		+normal\ gg
@@ -468,8 +468,8 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s cl\  'cat $tmux_log_file\t'
-bindkey -s vl\  'vim $tmux_log_file\t'
-bindkey -s vll\  'vim *(.om[1])\t'
+bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
+bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  'l ~/INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
@@ -759,7 +759,7 @@ p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
-alias vpst='vim +ProcessTree'
+alias vpst="$EDITOR +ProcessTree"
 pp() { [[ -z $* ]] && vpst || vpst "+/${*:s, ,.\*,}" "+FzfLines $*" }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
@@ -934,7 +934,7 @@ alias -g UU='| sort | uniq'
 alias -g SN='| sort -n'
 alias -g SUU='| sort | uniq'
 alias -g LV=' |& lnav'
-alias -g JS=' | vim -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
+alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 
 has() {
   local verbose=false
