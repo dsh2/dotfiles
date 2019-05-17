@@ -516,7 +516,7 @@ if vim_plug_available
 	Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 	map <leader>B :AsyncRun binwalk %<cr>
 	autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,init.vim,nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
+	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 	"}}}
 	Plug 'atimholt/spiffy_foldtext' "{{{
 	" TODO: Add more preview text, squece as much content as possible?
