@@ -890,7 +890,6 @@ clocdf() {
 			grep --color=always -e "$*" {}
 			")
 		}
-	alias df='df -h'
 	# TODO: move to zshrc or similar
 	zloc_file() {
 		local -r file=.zsh_local_history
