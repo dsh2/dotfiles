@@ -57,7 +57,7 @@ locl() { lc "$*" | sed -ne 's,^$'PWD',.,pi' | grep --ignore-case --color "$*"; }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
-alias df='\df -h | sort -k 5,5'
+alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 
 # git
 alias g=git
