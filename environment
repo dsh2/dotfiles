@@ -47,6 +47,7 @@ lesskey - <<EOF
 ^B left
 ^F right
 ^D delete
+^w word-backspace
 \ed word-delete
 \ef word-right
 #
