@@ -9,6 +9,7 @@ e scr.utf8 = true
 e scr.utf8.curvy = true
 e time.fmt = %Y-%m-%d %H:%M:%S %z
 e cfg.newtab =1
+e scr.prompt.popup =1
 eco solarized
 ?e Sourced radare2rc
 $r=. /home/dsf/.config/radare2/radare2rc
