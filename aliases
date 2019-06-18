@@ -442,5 +442,6 @@ alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
+alias se=set 
 
 # vim: se ft=sh:
