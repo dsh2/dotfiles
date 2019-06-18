@@ -457,7 +457,7 @@ function tmux_pane_words() {
 			compl_other_panes+=$word
 		done
 	done
-	_wanted tmux_word_orther expl 'words from other tmux panes' compadd -Qa compl_other_panes
+	_wanted tmux_word_other expl 'words from other tmux panes' compadd -Qa compl_other_panes
 }
 
 zle -C tmux-pane-words-anywhere complete-word _generic
@@ -640,7 +640,7 @@ compdef _gnu_generic autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
-zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate
+zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate tmux_pane_words
 # zstyle ':completion:*' completer _complete 
 zstyle ':completion:*:approximate:::' max-errors 6 numeric
 zstyle ':completion:*:matches' group yes
