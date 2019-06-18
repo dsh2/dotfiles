@@ -193,7 +193,9 @@ function bindkey_func {
 bindkey -e
 bindkey '^[' vi-cmd-mode
 bindkey -M viins '^j' vi-cmd-mode
+bindkey -M vicmd '^[x' execute-named-cmd
 bindkey '^?' undo
+bindkey '^xr' redo
 bindkey "^x;" describe-key-briefly
 bindkey "^[;" set-mark-command
 
@@ -417,6 +419,10 @@ function edit_command_line() {
 	fi
 }
 bindkey_func "^x^q" edit_command_line
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey_func "^x^v" edit-command-line
+
 #
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
