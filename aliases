@@ -145,7 +145,9 @@ alias tt=set_terminal_title
 
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 alias tcpd='PCAP=~/.pcaps/tcpdump-$(nn).pcap; tcpdump --packet-buffered -w - | tee $PCAP | tcpdump -r -'
-alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; print -S "tshark -r \$PCAP"; tshark -F pcapng -W n -w - | tee $PCAP | tshark --color -r -'
+alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark -Fpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
+# alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
+alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
 alias nmap='nmap -oA ~/.nmap/log-$(nn)'
 alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
@@ -192,6 +194,7 @@ alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 alias doc=docker
+alias dock=docker
 
 # Vim aliases
 # alias v=vim
