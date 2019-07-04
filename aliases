@@ -304,7 +304,7 @@ alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias wp='echo -n $(powershell.exe Get-Clipboard)'
 alias xcc='tmux show-buffer | xc'
-alias M=make
+alias M='make -j $(nproc)'
 alias makev='make SHELL="PS4=__[MAKE]__\  \$\$SHELL -x"'
 alias ndd=ndk-build
 alias tss=typeset
