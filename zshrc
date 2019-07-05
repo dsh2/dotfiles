@@ -374,7 +374,8 @@ bindkey_func '^x^m' diff_last_two_outputs
 function run_sudo {
     [[ -z $BUFFER ]] && zle up-history
     zle beginning-of-line
-    zle -U 'sudo '
+	[[ -n $SUDO_TARGET_USER ]] && zle -U -- '-u $SUDO_TARGET_USER '
+	zle -U 'sudo '
 }
 bindkey_func '^x^s' run_sudo
 
