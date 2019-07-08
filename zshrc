@@ -908,13 +908,6 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-
-XS() {
-	xset -b -c r rate 200 140 dpms 0 0 3600 s off
-	setxkbmap -layout us,de -option grp:alt_caps_toggle
-	xmodmap -e 'keycode 94 = asciitilde asciitilde asciitilde asciitilde'
-}
-
 alias -g C="| column -nts $'\t'"
 alias -g Ct="| column -nts $'\t'"
 alias -g C,="| column -nts,"
