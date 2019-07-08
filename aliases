@@ -154,6 +154,7 @@ alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
 alias lnn=lnav
+alias lvv=lnav
 alias r=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
