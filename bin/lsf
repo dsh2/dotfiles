@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+ls -ali | awk '{
+	file_name=$10
+	if (file_name) {
+		cmd="file -bi " file_name;
+		cmd | getline file_type;
+		printf "%s\t%s\n", file_type, $0;
+	}
+}' | column -t
