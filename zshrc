@@ -324,6 +324,15 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+function page_last_output_fullscreen {
+	check_output vp || return
+	tmux new-window $EDITOR $tmux_log_file \
+		-c 'set buftype=nofile' \
+		-c 'AnsiEsc' \
+		+normal\ gg
+}
+bindkey_func '^xx' page_last_output_fullscreen
+
 function page_last_output {
 	check_output vp || return
 	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
