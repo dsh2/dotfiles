@@ -54,6 +54,7 @@
     ~/.ssh/config.local.template: ssh_config_template
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
+    ~/.config/procps/toprc: toprc
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
     ~/.zshrc: 
