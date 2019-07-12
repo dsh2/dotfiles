@@ -931,6 +931,7 @@ alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
+alias -g TT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
