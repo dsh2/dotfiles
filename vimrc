@@ -454,7 +454,7 @@ Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
 nnoremap <c-w>m :MaximizerToggle<cr>
 nnoremap <c-w><c-m> :MaximizerToggle<cr>
 "}}}
-" Plug 'bling/vim-airline' "{{{
+Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
