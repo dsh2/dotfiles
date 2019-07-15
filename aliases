@@ -289,6 +289,8 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
+alias tms='tmux source-file ~/.tmux.conf'
+alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
