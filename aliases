@@ -443,9 +443,11 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
 alias H=hostname
+alias 0="ping $(\ip route show default | head -1 | sed -nE 's:^.* via ([.:0-9]*) .*$:\1:p')"
 alias 1='ping 1.1.1.1'
-alias 2='dig one.one.one.one @1.1.1.1'
-alias 3='dig one.one.one.one @127.0.0.1'
+alias 2='traceroute 1.1.1.1'
+alias 3='dig one.one.one.one @1.1.1.1'
+alias 4='dig one.one.one.one @127.0.0.1'
 
 alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
