@@ -647,6 +647,7 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'mogelbrod/vim-jsonpath'
 Plug 'pedrohdz/vim-yaml-folds'
 Plug 'matze/vim-ini-fold'
+autocmd vimrc BufNewFile,BufReadPost *.nmconnection setfiletype dosini
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rails'
