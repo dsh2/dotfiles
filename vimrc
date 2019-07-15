@@ -667,7 +667,7 @@ Plug 'chrisbra/Recover.vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
 Plug 'dkprice/vim-easygrep'
-Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
+" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
 Plug 'dsh2/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'ervandew/matchem'
@@ -928,7 +928,7 @@ function! RestorePosition()
 endfunction
 "}}}
 " Configure help system {{{
-" runtime! ftplugin/man.vim
+runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
