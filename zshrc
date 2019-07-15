@@ -324,6 +324,15 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+function page_last_output_fullscreen {
+	check_output vp || return
+	tmux new-window $EDITOR $tmux_log_file \
+		-c 'set buftype=nofile' \
+		-c 'AnsiEsc' \
+		+normal\ gg
+}
+bindkey_func '^xx' page_last_output_fullscreen
+
 function page_last_output {
 	check_output vp || return
 	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
@@ -931,6 +940,7 @@ alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
+alias -g TT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
