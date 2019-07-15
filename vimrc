@@ -454,7 +454,7 @@ Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
 nnoremap <c-w>m :MaximizerToggle<cr>
 nnoremap <c-w><c-m> :MaximizerToggle<cr>
 "}}}
-" Plug 'bling/vim-airline' "{{{
+Plug 'bling/vim-airline' "{{{
 Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
@@ -648,6 +648,7 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'mogelbrod/vim-jsonpath'
 Plug 'pedrohdz/vim-yaml-folds'
 Plug 'matze/vim-ini-fold'
+autocmd vimrc BufNewFile,BufReadPost *.nmconnection setfiletype dosini
 Plug 'tpope/vim-bundler'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-rails'
@@ -667,7 +668,7 @@ Plug 'chrisbra/Recover.vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'christoomey/vim-system-copy'
 Plug 'dkprice/vim-easygrep'
-Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
+" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
 Plug 'dsh2/vim-unimpaired'
 Plug 'embear/vim-foldsearch'
 Plug 'ervandew/matchem'
@@ -928,7 +929,7 @@ function! RestorePosition()
 endfunction
 "}}}
 " Configure help system {{{
-" runtime! ftplugin/man.vim
+runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
