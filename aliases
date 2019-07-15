@@ -423,6 +423,7 @@ alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias slp=sleep
 alias rs=rsync
 alias ws=wireshark
+alias wsl='wireshark -r ~/.pcaps/*.pcapng(om[1]) &'
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 # export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias lvs='tmux split -d lnav ssldebug'
