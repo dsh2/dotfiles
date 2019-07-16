@@ -679,6 +679,7 @@ if vim_plug_available
 	Plug 'Shougo/neoinclude.vim'
 	Plug 'fszymanski/deoplete-emoji'
 	Plug 'Shougo/neco-vim'
+	Plug 'ujihisa/neco-look'
 	Plug 'deoplete-plugins/deoplete-jedi'
 	call plug#end()
 	call deoplete#custom#option({
