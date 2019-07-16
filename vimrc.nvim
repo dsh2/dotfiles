@@ -571,6 +571,8 @@ if vim_plug_available
 	let g:tmuxcomplete#trigger = 'omnifunc'
 	"}}}
 	" Plug colorschemes {{{
+	Plug 'machakann/vim-colorscheme-reki'
+	Plug 'machakann/vim-colorscheme-tatami'
 	Plug 'morhetz/gruvbox'
 	Plug 'rhysd/vim-color-spring-night'
 	Plug 'Lokaltog/vim-distinguished'
