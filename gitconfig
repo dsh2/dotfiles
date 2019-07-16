@@ -29,8 +29,9 @@
 [pretty]
     reflog = %C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs (%s)
 [gc]
-	reflogexpire = 900
+	reflogexpire = never
 	auto = 0
+	reflogexpireunreachable = never
 [rerere]
 	enabled = true
 	autoupdate = true

@@ -142,6 +142,7 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
 setopt no_bang_hist
+setopt no_hup
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 setopt no_inc_append_history
@@ -437,6 +438,7 @@ function edit_command_line() {
 		# TODO: Try something new when running out of tmux
 	fi
 }
+bindkey_func "^xq" edit_command_line
 bindkey_func "^x^q" edit_command_line
 autoload -z edit-command-line
 zle -N edit-command-line
@@ -974,6 +976,18 @@ has() {
 	fi
   done
 }
+
+min_version() {
+	local current_version=$1
+	local min_version=$2
+	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
+}
+
+if has nvim && min_version ${$(nvim --version):1:1} 0.3; then
+	export VISUAL=nvim
+else
+	export VISUAL=vim
+fi
 
 err() {
   printf '\e[31m%s\e[0m\n' "$*" >&2
