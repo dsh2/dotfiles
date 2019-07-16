@@ -82,7 +82,7 @@ PSVAR+=$ZLE_LINE_ABORTED
 PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 PS1+='%f%# '						# Add user status
-PS1+='(%!) '						# Add number of next shell event
+# PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
 # }}}
@@ -379,6 +379,15 @@ function diff_last_two_outputs {
 	tmux new-window vimdiff $o1 $o2
 }
 bindkey_func '^x^m' diff_last_two_outputs
+
+function run_prepend {
+	[[ -z $BUFFER ]] && zle up-history
+	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
+	zle beginning-of-line
+	zle -U -- "$ZSH_PREPEND "
+}
+bindkey_func '^xp' run_prepend
+bindkey_func '^x^p' run_prepend
 
 function run_sudo {
     [[ -z $BUFFER ]] && zle up-history
