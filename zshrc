@@ -142,6 +142,7 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_verify
 setopt no_bang_hist
+setopt no_hup
 setopt no_hist_ignore_all_dups
 setopt no_hist_ignore_dups
 setopt no_inc_append_history
