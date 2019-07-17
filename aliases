@@ -290,6 +290,7 @@ alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
+alias tmss='tmux set-option -g status-bg colour$(($RANDOM%255))'
 alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
@@ -316,7 +317,7 @@ alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
-alias ip='ip -c'
+alias ip='ip -c -o -d -s'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
 alias d2u=dos2unix
@@ -347,6 +348,7 @@ alias tgi=telegram-cli
 alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
+alias nd='nmcli dev'
 alias ncnc='nmcli con'
 alias hx='hexdump -C'
 alias vv=voltron
