@@ -928,7 +928,7 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-alias -g C="| column -nts $'\t'"
+alias -g C="| column -t"
 alias -g Ct="| column -nts $'\t'"
 alias -g C,="| column -nts,"
 alias -g Cc="| column -nts,"
