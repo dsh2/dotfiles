@@ -318,6 +318,7 @@ alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
 alias ip='ip -c -o -d -s'
+alias tc='tc -col qdisc'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
 alias d2u=dos2unix
