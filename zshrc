@@ -183,6 +183,7 @@ zle_highlight=(
     suffix:bold
     isearch:underline
     paste:underline
+	comment:fg=white
 )
 
 function bindkey_func {
@@ -368,7 +369,7 @@ function filter_last_output {
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
 		--preview 'echo {} | pygmentize -l zsh' \
-		--preview-window 'up:45%:wrap:hidden' \
+		--preview-window 'up:45%:wrap' \
 		| tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
@@ -663,7 +664,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc
+compdef _gnu_generic autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc tc 
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
