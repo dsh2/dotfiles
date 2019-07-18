@@ -145,7 +145,7 @@ alias tt=set_terminal_title
 
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 alias tcpd='PCAP=~/.pcaps/tcpdump-$(nn).pcap; tcpdump --packet-buffered -w - | tee $PCAP | tcpdump -r -'
-alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark -Fpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
+alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark -pFpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
 alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
