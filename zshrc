@@ -368,7 +368,7 @@ function filter_last_output {
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
-		--preview 'echo {} | pygmentize -l zsh' \
+		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
 		--preview-window 'up:45%:wrap' \
 		| tr '\t\n' '  ' | tr -s ' ')
 }
@@ -382,7 +382,7 @@ function diff_last_two_outputs {
 	[[ -s $o1 ]] || { zle -M "Output \"$o1\" is empty."; return }
 	[[ -s $o2 ]] || { zle -M "Output \"$o2\" is empty."; return }
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
-	tmux new-window vimdiff $o1 $o2
+	tmux new-window "cd ~/.tmux-log/; vimdiff $o1 $o2"
 }
 bindkey_func '^x^m' diff_last_two_outputs
 
