@@ -791,8 +791,7 @@ p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
-alias vpst="$EDITOR +ProcessTree"
-pp() { [[ -z $* ]] && vpst || vpst "+/${*:s, ,.\*,}" "+FzfLines $*" }
+pp() { [[ -z $* ]] && sudo -E $EDITOR +ProcessTree || sudo -E $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
@@ -1070,7 +1069,7 @@ c() {
 }
 
 typeset -a expand_ealias_skip
-expand_ealias_skip=(l ls pst)
+expand_ealias_skip=(l ls)
 expand_ealias() {
 	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias 
 	# zle expand-word
