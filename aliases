@@ -151,6 +151,7 @@ alias tskc='capinfos -m -T ~/.pcaps/* | column -nts,'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
 alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
+alias wgq=wg-quick
 alias nmap='nmap -oA ~/.nmap/log-$(nn)'
 alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
@@ -319,6 +320,8 @@ alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
 alias ip='ip -c -o -d -s'
+alias ipr='\ip -c -o -d -s route show table unspec'
+alias ipt='\ip -c -o route show table unspec'
 alias tc='tc -col qdisc'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
