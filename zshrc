@@ -377,6 +377,10 @@ bindkey_func '^o' filter_last_output
 function diff_last_two_outputs {
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
+	[[ -e $o1 ]] || { zle -M "Output \"$o1\" not found."; return }
+	[[ -e $o2 ]] || { zle -M "Output \"$o2\" not found."; return }
+	[[ -s $o1 ]] || { zle -M "Output \"$o1\" is empty."; return }
+	[[ -s $o2 ]] || { zle -M "Output \"$o2\" is empty."; return }
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
 	tmux new-window vimdiff $o1 $o2
 }
