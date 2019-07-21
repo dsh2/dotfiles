@@ -58,7 +58,7 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
-PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
+PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}J=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
@@ -328,7 +328,7 @@ bindkey_func '^x^r' page_tmux_pane
 
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window $EDITOR $tmux_log_file \
+	tmux new-window "cd $tmux_log_file:h; $EDITOR $tmux_log_file" \
 		-c 'set buftype=nofile' \
 		-c 'AnsiEsc' \
 		+normal\ gg
@@ -377,10 +377,10 @@ bindkey_func '^o' filter_last_output
 function diff_last_two_outputs {
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
-	[[ -e $o1 ]] || { zle -M "Output \"$o1\" not found."; return }
-	[[ -e $o2 ]] || { zle -M "Output \"$o2\" not found."; return }
-	[[ -s $o1 ]] || { zle -M "Output \"$o1\" is empty."; return }
-	[[ -s $o2 ]] || { zle -M "Output \"$o2\" is empty."; return }
+	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found." 
+	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found." 
+	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
+	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
 	tmux new-window "cd ~/.tmux-log/; vimdiff $o1 $o2"
 }
