@@ -457,6 +457,7 @@ if vim_plug_available
 	let g:airline#extensions#branch#enabled = 1
 	let g:airline#extensions#syntastic#enabled = 1
 	let g:airline#extensions#whitespace#enabled = 0
+	let g:airline_detect_paste=0
 	let g:airline_detect_modified=1
 	let g:airline_detect_spelllang=1
 	let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
@@ -510,7 +511,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
-	autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType dosini,sshconfig,sshdconfig,shell,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
@@ -557,6 +558,7 @@ if vim_plug_available
 	let g:ale_lint_on_enter = 1
 	let g:ale_lint_on_text_changed = "never"
 	let g:ale_open_list = "never"
+	let g:ale_go_gopls_executable="/home/dsf/src/GO/bin/gopls"
 	" }}}
 	Plug 'machakann/vim-highlightedyank'"{{{
 	let g:highlightedyank_highlight_duration = 333
@@ -604,7 +606,7 @@ if vim_plug_available
 	Plug 'mogelbrod/vim-jsonpath'
 	Plug 'pedrohdz/vim-yaml-folds'
 	Plug 'matze/vim-ini-fold' "{{{
-	autocmd vimrc BufNewFile,BufReadPost *.nmconnection,*/NetworkManager/system-connections/* setfiletype dosini"
+	autocmd vimrc BufNewFile,BufReadPost wg*\.conf,*.nmconnection,*/NetworkManager/system-connections/* setfiletype dosini"
 	"}}}
 	Plug 'tpope/vim-bundler'
 	Plug 'machakann/vim-highlightedundo'"{{{
@@ -633,11 +635,31 @@ if vim_plug_available
 	Plug 'tmhedberg/matchit'
 	Plug 'chrisbra/Colorizer'
 	Plug 'chrisbra/Recover.vim'
+	Plug 'StanAngeloff/php.vim'
+	Plug 'rayburgemeestre/phpfolding.vim'
 	Plug 'christoomey/vim-sort-motion'
 	Plug 'christoomey/vim-system-copy'
+	Plug 'fatih/vim-go'"{{{
+	let g:go_def_mode='gopls'
+	let g:go_info_mode='gopls'
+	"}}}
 	Plug 'dkprice/vim-easygrep'
-	Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' }
 	Plug 'dsh2/vim-unimpaired'
+	" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' } " {{{
+	" augroup manlaunchtoc
+	"     autocmd!
+	"     if has('nvim')
+	" 	autocmd FileType man
+	" 		    \ call man#show_toc() |
+	" 		    \ setlocal laststatus=0 nonumber norelativenumber |
+	" 		    \ nnoremap <buffer> l <Enter> |
+	" 		    \ wincmd H |
+	" 		    \ vert resize 35 |
+	" 		    \ wincmd p
+	"     endif
+	" augroup end
+	" }}}
+
 	Plug 'embear/vim-foldsearch'
 	Plug 'ervandew/matchem'
 	Plug 'ervandew/matchem'
@@ -671,9 +693,6 @@ if vim_plug_available
 	" Plug 'nvie/vim-flake8'
 	" Plug 'xolox/vim-pyref'
 	" }}}
-
-	"
-	" }}}
 	let g:deoplete#enable_at_startup = 0
 	autocmd vimrc InsertEnter * call deoplete#enable()
 	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -706,7 +725,6 @@ if vim_plug_available
 	call deoplete#custom#source('member', 'filetypes', [])
 	call deoplete#custom#source('emoji', 'filetypes', [])
 	call deoplete#custom#source('emoji', 'converters', ['converter_emoji'])
-	" }}}
 endif
 " Global options {{{
 set autoindent
@@ -818,7 +836,6 @@ nmap <leader>DO :diffoff<CR>
 nmap <leader>DS :vertical diffsplit<CR>
 " TODO: Clean this up...
 nnoremap <leader>cd :execute ":lcd " . substitute(expand("%:p:h"), ' ', '\\ ', 'g')<cr>:pwd<cr>"<cr>
-nnoremap U <c-r>
 nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za
@@ -953,7 +970,7 @@ function! RestorePosition()
 endfunction
 "}}}
 " Configure help system {{{
-" runtime! ftplugin/man.vim
+runtime! ftplugin/man.vim
 nmap K :exe "Vman " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
