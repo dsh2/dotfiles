@@ -791,6 +791,8 @@ p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
+# nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
+nsdo() { for ns in $(ip netns list); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
 pp() { [[ -z $* ]] && sudo -E $EDITOR +ProcessTree || sudo -E $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
