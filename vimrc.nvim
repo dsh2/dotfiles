@@ -1257,6 +1257,7 @@ map <leader>0m :call KeepView('silent! %s/\%xd//')<cr>
 map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: understand why \zs does NOT work
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
+map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
