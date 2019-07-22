@@ -946,6 +946,7 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LV=' |& lnav'
+alias -g LVT=' |& lnav -t'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
 alias -g SN='| sort -n'
