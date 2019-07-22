@@ -199,7 +199,7 @@ envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 alias doc=docker
 alias dock=docker
-alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:SecretKey = :" 3>&-'
+alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
 # Vim aliases
 # alias v=vim
 alias v=$EDITOR
