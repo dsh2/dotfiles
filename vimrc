@@ -749,7 +749,8 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=4
+" set tabstop=4
+set tabstop=8
 set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
