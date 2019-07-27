@@ -964,11 +964,16 @@ alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs'
-alias -g gg='|& grep -i --color -- '
-alias -g ggs='|& strings | grep -i --color '
-alias -g ggv='|& grep -v '
+# TODO: use rg with rust regex instead
+alias -g gg='| grep -i -- '
+alias -g GE="| grep -i -E '^'"
+alias -g ggs='| strings | grep -i --'
+alias -g ggv='| grep -v -- '
+alias -g J="| jq '.[]'"
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g xr='|xxd -r -p'
+alias -g E2='2>&1 '
+alias -g E@='2>&1 '
 
 has() {
   local verbose=false
