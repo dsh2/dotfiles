@@ -769,7 +769,7 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 " }}}
 " Mappings {{{
 nmap Q :qall<cr>
-nmap <leader>J :set ft=json<cr><leader>S
+nmap <leader>J :set ft=json<cr>:Autoformat<cr>
 map  
 nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>

@@ -810,7 +810,7 @@ inoremap <c-s> <c-o>:update<cr><esc>
 
 " Mappings {{{
 nmap Q :qall<cr>
-nmap <leader>J :set ft=json<cr><leader>S
+nmap <leader>J :set ft=json<cr>:Autoformat<cr>
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
