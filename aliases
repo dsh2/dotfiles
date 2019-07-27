@@ -320,9 +320,12 @@ alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
 alias ip='ip -c -o -d -s'
-alias ipr='\ip -c -o -d -s route show table unspec'
-alias ipt='\ip -c -o route show table unspec'
-alias tc='tc -col qdisc'
+alias ipr='\ip -c -o -d -s route show table all'
+alias ipt='\ip -c -o -d -s route show table all'
+alias ipl='\ip -c -o -d -s link show | column -t'
+alias ipln="ip -j link show | jq -r '.[].ifname'"
+alias P='parallel -i $SHELL -c "echo {} {}" -- $()'
+alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
 alias d2u=dos2unix
@@ -342,6 +345,8 @@ alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias sc=systemctl
+alias sca='sysctl -A'
+alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
