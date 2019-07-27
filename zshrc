@@ -723,9 +723,6 @@ setopt cdablevars
 setopt histsubstpattern
 stty -ixon
 
-# TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
-# REPORTTIME=3
-# TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
@@ -956,6 +953,7 @@ alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
+alias -g S='| sort'
 alias -g SN='| sort -n'
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
@@ -1017,7 +1015,7 @@ die() {
 if has trash; then
 	alias rm='trash --'
 	alias rmm='\rm'
-	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
+	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
 else
 	tl() { err "trash-cli NOT installed." }
 fi
@@ -1070,7 +1068,7 @@ else
 fi
 
 if has lnav; then
-	alias tff='sudo true && (cd /var/log && sudo lnav )'
+	alias tff='sudo true && cd /var/log && sudo lnav auth.log syslog '
 else
 	alias tff='err("lnav not found")'
 fi
