@@ -374,6 +374,11 @@ function filter_last_output {
 }
 bindkey_func '^o' filter_last_output
 
+function unify_whitespace() {
+    BUFFER=${BUFFER:fs:# :::fs:  : :}
+}
+bindkey_func '^x^ ' unify_whitespace
+
 function diff_last_two_outputs {
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
