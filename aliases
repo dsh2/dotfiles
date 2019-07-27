@@ -323,7 +323,7 @@ alias ip='ip -c -o -d -s'
 alias ipr='\ip -c -o -d -s route show table all'
 alias ipt='\ip -c -o -d -s route show table all'
 alias ipl='\ip -c -o -d -s link show | column -t'
-alias ipln="ip -j link show | jq -r '.[].ifname'"
+alias ipln="\ip -j link show | jq -r '.[].ifname'"
 alias P='parallel -i $SHELL -c "echo {} {}" -- $()'
 alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
