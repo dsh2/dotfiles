@@ -25,7 +25,7 @@ source ~/.dotfiles/z/z.sh
 
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
-alias adbk='adb shell input keyboard text'
+alias adbk='adb shell input keyboard text \"\"'
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb-logcat/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -w ~/.logs/adb-logcat/$(date "+%F-%T").log'
 alias add='adb devices -l'
@@ -193,6 +193,7 @@ alias vf=vimdiff.nvim
 alias vd=vimdiff.nvim
 alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanip2='curl https://checkip.amazonaws.com'
+alias wan_name='dig +short -x $(wanip)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
@@ -325,7 +326,7 @@ alias ipt='\ip -c -o -d -s route show table all'
 alias ipl='\ip -c -o -d -s link show | column -t'
 alias ipj='\ip -d -s -j'
 alias ipln="\ip -j link show | jq -r '.[].ifname'"
-alias P='parallel -i $SHELL -c "echo {} {}" -- $('
+alias P='parallel -i $SHELL -c "echo {} {} |& stdbuf -oL sed \"s|^|{}-\$$:\\t|\"" -- $('
 alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
