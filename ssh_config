@@ -19,6 +19,7 @@ RemoteForward 22222 localhost:22
 Include ~/.ssh/config.local
 HashKnownHosts yes
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
+VisualHostKey yes
 
 Host *.amazonaws.com
 ForwardAgent no
