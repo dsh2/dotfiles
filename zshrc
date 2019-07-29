@@ -630,6 +630,12 @@ zle-keymap-select() {
 echo -ne "\e]12;darkred\a"
 zle -N zle-keymap-select
 
+zle-line-init() { [[ $zle_keymap = vi ]] && zle -K vicmd || zle -K emacs }
+zle -N zle-line-init
+
+zle-toggle-keymap() { [[ $zle_keymap = vi ]] && zle_keymap=emacs || zle_keymap=vi ; zle-line-init }
+bindkey_func '^]^]' zle-toggle-keymap
+
 # }}}
 
 # Completion {{{
