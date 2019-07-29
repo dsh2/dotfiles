@@ -701,6 +701,7 @@ setopt autocd
 setopt autopushd
 set push
 setopt cdablevars
+setopt autonamedirs
 setopt histsubstpattern
 stty -ixon
 
