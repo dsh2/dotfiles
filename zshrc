@@ -58,7 +58,7 @@ LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
 PS1=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
-PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}l=%j%F{240}].)'	# Add number of jobs - if any
+PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}J=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}%n%'				# Add user name
@@ -82,7 +82,7 @@ PSVAR+=$ZLE_LINE_ABORTED
 PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
 PS1+='%f%# '						# Add user status
-PS1+='(%!) '						# Add number of next shell event
+# PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
 # }}}
@@ -183,6 +183,7 @@ zle_highlight=(
     suffix:bold
     isearch:underline
     paste:underline
+	comment:fg=white
 )
 
 function bindkey_func {
@@ -327,7 +328,7 @@ bindkey_func '^x^r' page_tmux_pane
 
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window $EDITOR $tmux_log_file \
+	tmux new-window "cd $tmux_log_file:h; $EDITOR $tmux_log_file" \
 		-c 'set buftype=nofile' \
 		-c 'AnsiEsc' \
 		+normal\ gg
@@ -367,19 +368,37 @@ function filter_last_output {
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
-		--preview 'echo {} | pygmentize -l zsh' \
-		--preview-window 'up:45%:wrap:hidden' \
+		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
+		--preview-window 'up:45%:wrap' \
 		| tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
+function unify_whitespace() {
+    BUFFER=${BUFFER:fs:# :::fs:  : :}
+}
+bindkey_func '^x^ ' unify_whitespace
+
 function diff_last_two_outputs {
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
+	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found." 
+	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found." 
+	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
+	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
-	tmux new-window vimdiff $o1 $o2
+	tmux new-window "cd ~/.tmux-log/; vimdiff $o1 $o2"
 }
 bindkey_func '^x^m' diff_last_two_outputs
+
+function run_prepend {
+	[[ -z $BUFFER ]] && zle up-history
+	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
+	zle beginning-of-line
+	zle -U -- "$ZSH_PREPEND "
+}
+bindkey_func '^xp' run_prepend
+bindkey_func '^x^p' run_prepend
 
 function run_sudo {
     [[ -z $BUFFER ]] && zle up-history
@@ -654,7 +673,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc
+compdef _gnu_generic autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc tc bmon nmap nping capinfos teamd teamdctl teamnl ncat netcat
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -705,9 +724,6 @@ setopt autonamedirs
 setopt histsubstpattern
 stty -ixon
 
-# TODO: Disable TIME_REPORT for INTERACTIVE_COMMANDS
-# REPORTTIME=3
-# TIMEFMT='REPORTTIME for job "%J": runtime = %E, user = %U, kernel = %S, swapped = %W, shared = %X KiB, unshared = %D KiB, major page = %F, minor page = %R, input = %I, output = %O, recv = %r, sent = %s, waits = %w, switches = %c'
 
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
@@ -778,8 +794,9 @@ p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
-alias vpst="$EDITOR +ProcessTree"
-pp() { [[ -z $* ]] && vpst || vpst "+/${*:s, ,.\*,}" "+FzfLines $*" }
+# nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
+nsdo() { for ns in $(ip netns list); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
+pp() { [[ -z $* ]] && sudo -E $EDITOR +ProcessTree || sudo -E $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
@@ -920,7 +937,7 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-alias -g C="| column -nts $'\t'"
+alias -g C="| column -t"
 alias -g Ct="| column -nts $'\t'"
 alias -g C,="| column -nts,"
 alias -g Cc="| column -nts,"
@@ -934,8 +951,10 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LV=' |& lnav'
+alias -g LVT=' |& lnav -t'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
+alias -g S='| sort'
 alias -g SN='| sort -n'
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
@@ -949,11 +968,16 @@ alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs'
-alias -g gg='|& grep -i --color -- '
-alias -g ggs='|& strings | grep -i --color '
-alias -g ggv='|& grep -v '
+# TODO: use rg with rust regex instead
+alias -g gg='| grep -i -- '
+alias -g GE="| grep -i -E '^'"
+alias -g ggs='| strings | grep -i --'
+alias -g ggv='| grep -v -- '
+alias -g J="| jq '.[]'"
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g xr='|xxd -r -p'
+alias -g E2='2>&1 '
+alias -g E@='2>&1 '
 
 has() {
   local verbose=false
@@ -992,7 +1016,7 @@ die() {
 if has trash; then
 	alias rm='trash --'
 	alias rmm='\rm'
-	alias tl='cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'
+	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
 else
 	tl() { err "trash-cli NOT installed." }
 fi
@@ -1045,7 +1069,7 @@ else
 fi
 
 if has lnav; then
-	alias tff='sudo true && (cd /var/log && sudo lnav )'
+	alias tff='sudo true && cd /var/log && sudo lnav auth.log syslog '
 else
 	alias tff='err("lnav not found")'
 fi
@@ -1057,7 +1081,7 @@ c() {
 }
 
 typeset -a expand_ealias_skip
-expand_ealias_skip=(l ls pst)
+expand_ealias_skip=(l ls)
 expand_ealias() {
 	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias 
 	# zle expand-word

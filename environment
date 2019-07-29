@@ -35,7 +35,9 @@ pathprepend $NDK
 # Pager
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
 # export PAGER=fzf
-export PAGER=less
+# export PAGER=less
+export PAGER=
+export SYSTEMD_PAGER=
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
 export LESS=cRMiWSJ

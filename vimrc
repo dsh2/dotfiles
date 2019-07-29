@@ -315,6 +315,7 @@ let g:csv_autocmd_arrange = 1
 " TODO: If readonly set nofile?
 map <leader>CT :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim="\t"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>C; :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=";"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+map <leader>C, :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=","<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
 map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
 autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
@@ -748,7 +749,8 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-set tabstop=4
+" set tabstop=4
+set tabstop=8
 set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
@@ -768,7 +770,7 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 " }}}
 " Mappings {{{
 nmap Q :qall<cr>
-nmap <leader>J :set ft=json<cr><leader>S
+nmap <leader>J :set ft=json<cr>:Autoformat<cr>
 map  
 nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>

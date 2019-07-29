@@ -63,7 +63,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 alias g=git
 alias gc='git commit --verbose'
 alias gcn='git clean -n'
-alias gca='git commit --amend --verbose'
+alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
 alias gdf='git diff --ignore-space-change --ignore-blank-lines'
 alias grp='git reset --patch'
@@ -145,10 +145,13 @@ alias tt=set_terminal_title
 
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 alias tcpd='PCAP=~/.pcaps/tcpdump-$(nn).pcap; tcpdump --packet-buffered -w - | tee $PCAP | tcpdump -r -'
-alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark -Fpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
+alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -pFpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
+alias tsc='capinfos -m -T ~/.pcaps/* | column -nts,'
+alias tskc='capinfos -m -T ~/.pcaps/* | column -nts,'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
 alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
+alias wgq=wg-quick
 alias nmap='nmap -oA ~/.nmap/log-$(nn)'
 alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
@@ -196,7 +199,7 @@ envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 alias doc=docker
 alias dock=docker
-
+alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
 # Vim aliases
 # alias v=vim
 alias v=$EDITOR
@@ -270,7 +273,7 @@ alias ae='aws ec2'
 alias e2='aws ec2'
 alias ae2='aws ec2 describe-instances --query "Reservations[].Instances[].InstanceId" --output text --filter Name=ip-address,Values='
 alias aeA='aws ec2 describe-instances --filter Name=instance-state-name,Values=running --query "Reservations[].Instances[].InstanceId" --output text'
-alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances  | jq -r ".Reservations[].Instances[] | [.LaunchTime, .InstanceId, .ImageId, .InstanceType, .State.Name, [[.Tags[]?] | map(.Key + \"=\" + .Value) | .[] ] ] | flatten | @tsv" | sed "s,^,$region\t,"& done; wait ) | sort -k 2,1 '
+alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances  | jq -r ".Reservations[].Instances[] | [.LaunchTime, .InstanceId, .ImageId, .InstanceType, .PublicIpAddress, .State.Name, [[.Tags[]?] | map(.Key + \"=\" + .Value) | .[] ] ] | flatten | @csv" | sed "s:^:$region,:"& done; wait ) | sort -k 2,1 | column -tns, | tr \" \ '
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
 alias aed="aws ec2 describe-instances --instance-ids"
 alias ac='aws cloudformation'
@@ -281,7 +284,6 @@ alias TCPTRACEOPTS_normal='export TCPTRACEOPTS='
 alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([! ]*\).*$,add :0 . \1,' | tee /dev/stderr | xauth"
 alias le=$PAGER
 alias el=$PAGER
-alias pst=pp
 alias psp='pstree -laps'
 alias p_s='port search --line'
 alias tm=tmux
@@ -290,6 +292,7 @@ alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
+alias tmss='tmux set-option -g status-bg colour$(($RANDOM%255))'
 alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
@@ -316,7 +319,14 @@ alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
-alias ip='ip -c'
+alias ip='ip -c -o -d -s'
+alias ipr='\ip -c -o -d -s route show table all'
+alias ipt='\ip -c -o -d -s route show table all'
+alias ipl='\ip -c -o -d -s link show | column -t'
+alias ipj='\ip -d -s -j'
+alias ipln="\ip -j link show | jq -r '.[].ifname'"
+alias P='parallel -i $SHELL -c "echo {} {}" -- $('
+alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
 xp() { echo "$*" | xc; }
 alias d2u=dos2unix
@@ -336,6 +346,8 @@ alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias sc=systemctl
+alias sca='sysctl -A'
+alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
@@ -347,6 +359,7 @@ alias tgi=telegram-cli
 alias ncn=nmcli
 alias ncc=nmcli
 alias ncnn='nmcli dev'
+alias nd='nmcli dev'
 alias ncnc='nmcli con'
 alias hx='hexdump -C'
 alias vv=voltron
@@ -445,7 +458,7 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
 alias H=hostname
-alias 0="ping $(\ip route show default | head -1 | sed -nE 's:^.* via ([.:0-9]*) .*$:\1:p')"
+alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
 alias 1='ping 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
