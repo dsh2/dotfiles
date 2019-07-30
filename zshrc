@@ -730,7 +730,6 @@ setopt autonamedirs
 setopt histsubstpattern
 stty -ixon
 
-
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
@@ -1005,7 +1004,7 @@ min_version() {
 	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
 }
 
-if has nvim && min_version ${$(nvim --version):1:1} 0.3; then
+if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
 	export VISUAL=nvim
 else
 	export VISUAL=vim
