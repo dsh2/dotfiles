@@ -60,7 +60,6 @@ hc keybind $SUPER-Shift-Return spawn $TERMINAL
 hc keybind $CTRL-Return spawn $BROWSER
 hc keybind $SUPER-a spawn $hc_bin/i3lock-wrapper.sh
 hc keybind $SUPER-Shift-a spawn xset dpms 0 0 5
-hc keybind $SUPER-l chain X fullscreen false X focus right
 # }}}
 # Keybindings for moving clients {{{
 hc keybind $SUPER-$CTRL-h shift left
