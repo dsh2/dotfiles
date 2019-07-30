@@ -10,4 +10,5 @@ tmux set-window-option pane-border-format \
 ' '\
 '#{pane_id}'\
 '#{?pane_synchronized, SYNC,}'\
+'#{?pane_title,: #{pane_title},}'\
 ']'\
