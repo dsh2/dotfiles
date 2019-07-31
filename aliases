@@ -408,8 +408,10 @@ alias dd='dd status=progress'
 alias hc=herbstclient
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias x0='[[ -z $DISPLAY ]] && export DISPLAY=:0'
+alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; print_variables DISPLAY'
+alias x0p='print_variables DISPLAY'
 alias x00='export DISPLAY=:0'
+alias x000='export DISPLAY=localhost:10.0'
 alias digr='dig -x'
 alias y=yum
 
