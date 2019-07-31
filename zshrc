@@ -328,7 +328,7 @@ bindkey_func '^x^r' page_tmux_pane
 
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window "cd $tmux_log_file:h; $EDITOR $tmux_log_file" \
+	tmux new-window $EDITOR $tmux_log_file \
 		-c 'set buftype=nofile' \
 		-c 'AnsiEsc' \
 		+normal\ gg
