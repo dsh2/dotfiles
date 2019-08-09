@@ -392,19 +392,25 @@ function diff_last_two_outputs {
 bindkey_func '^x^m' diff_last_two_outputs
 
 function run_prepend {
-	[[ -z $BUFFER ]] && zle up-history
 	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
-	zle beginning-of-line
-	zle -U -- "$ZSH_PREPEND "
+	[[ -z $BUFFER ]] && zle up-history
+	BUFFER="$ZSH_PREPEND \$($BUFFER)"
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
 
+function run_subshell {
+	[[ -z $BUFFER ]] && zle up-history
+	BUFFER=" \$($BUFFER)"
+	zle beginning-of-line
+}
+bindkey_func '^x^b' run_subshell
+
 function run_sudo {
-    [[ -z $BUFFER ]] && zle up-history
-    zle beginning-of-line
-	[[ -n $SUDO_TARGET_USER ]] && zle -U -- '-u $SUDO_TARGET_USER '
-	zle -U 'sudo '
+	[[ -z $BUFFER ]] && zle up-history
+	[[ -n $SUDO_TARGET_USER ]] && BUFFER="-u $SUDO_TARGET_USER $BUFFER"
+	BUFFER="sudo $BUFFER"
+	zle beginning-of-line
 }
 bindkey_func '^x^s' run_sudo
 
