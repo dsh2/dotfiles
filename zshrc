@@ -391,10 +391,19 @@ function diff_last_two_outputs {
 }
 bindkey_func '^x^m' diff_last_two_outputs
 
+function run_ab {
+	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- 'zsh_a and zsh_b are not set.'; return }
+	[[ -z $BUFFER ]] && zle up-history
+	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
+	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
+	BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
+}
+bindkey_func '^x^f' run_ab
+
 function run_prepend {
 	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
 	[[ -z $BUFFER ]] && zle up-history
-	BUFFER="$ZSH_PREPEND \$($BUFFER)"
+	BUFFER="$ZSH_PREPEND $BUFFER"
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
