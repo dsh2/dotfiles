@@ -519,7 +519,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
-bindkey -s cl\  'cat $tmux_log_file\t'
+bindkey -s cl\  'cat $tmux_log_file\t '
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  'l ~/INCOMING/*(.om[1])\t'
