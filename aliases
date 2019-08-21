@@ -321,6 +321,7 @@ alias rh=rehash
 alias ipp='ipython3 -- '
 alias pz=python
 alias ip='ip -c -o -d -s'
+alias ip4='ip -4 -c -o -d -s'
 alias ipr='\ip -c -o -d -s route show table all'
 alias ipt='sudo iptables -nv'
 alias ipta='sudo iptables -nv'
