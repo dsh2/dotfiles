@@ -21,6 +21,8 @@ alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
+alias cdv='cd $(prl $dirstack | fzf)'
+
 source ~/.dotfiles/z/z.sh
 
 # AOSP
