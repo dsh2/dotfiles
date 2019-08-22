@@ -22,7 +22,6 @@ alias ...='cd ../..'
 alias ..='cd ..'
 alias cdd=popd
 alias cdv='cd $(prl $dirstack | fzf)'
-
 source ~/.dotfiles/z/z.sh
 
 # AOSP
@@ -144,7 +143,7 @@ alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
 alias fr='fc -R'
 alias tt=set_terminal_title
-
+alias vb=vboxmanage
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 alias tcpd='PCAP=~/.pcaps/tcpdump-$(nn).pcap; tcpdump --packet-buffered -w - | tee $PCAP | tcpdump -r -'
 alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark -i any --capture-comment "" -qwnlpFpcapng -qwn -w - | tee $pcap | tshark --color -r -'
@@ -325,6 +324,9 @@ alias ipp='ipython3 -- '
 alias pz=python
 alias ip='ip -c -o -d -s'
 alias ip4='ip -4 -c -o -d -s'
+alias 4ip='ip -4 -c -o -d -s'
+alias ip6='ip -6 -c -o -d -s'
+alias 6ip='ip -6 -c -o -d -s'
 alias ipr='\ip -c -o -d -s route show table all'
 alias ipt='sudo iptables -nv'
 alias ipta='sudo iptables -nv'
