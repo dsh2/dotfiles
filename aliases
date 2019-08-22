@@ -147,7 +147,8 @@ alias tt=set_terminal_title
 
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 alias tcpd='PCAP=~/.pcaps/tcpdump-$(nn).pcap; tcpdump --packet-buffered -w - | tee $PCAP | tcpdump -r -'
-alias tsk='PCAP=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -lpFpcapng -QWn -w - | tee $PCAP | tshark --color -r -'
+alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark -i any --capture-comment "" -lpfpcapng -qwn -w - | tee $pcap | tshark --color -r -'
+# alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
 alias tsc='capinfos -m -T ~/.pcaps/* | column -nts,'
 alias tskc='capinfos -m -T ~/.pcaps/* | column -nts,'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
@@ -330,7 +331,7 @@ alias ipta='sudo iptables -nv'
 alias iptn='sudo iptables -nv -t nat'
 alias iptL='sudo iptables -nvv --line-numbers -L'
 alias iptl='sudo iptables -nvv --line-numbers -L'
-alias ipts='sudo iptables -S'
+alias ipts='for table in security raw nat mangle filter ; do sudo iptables -S -t $table | sed "s:^:-t $table :" ; done'
 alias ipl='\ip -c -o -d -s link show | column -t'
 alias ipj='\ip -d -s -j -p'
 alias ipln="\ip -j link show | jq -r '.[].ifname'"
@@ -376,7 +377,7 @@ alias vv=voltron
 alias k=kill
 alias kk='kill -STOP '
 alias pf=pidof
-alias fu=fuser
+alias fu='sudo fuser -afuv'
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias s=stat
 alias sd=sysdig
@@ -469,7 +470,7 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 # TODO: make C a zle binding
-alias C='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
+alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
 alias RR=reset
 alias H=hostname
 alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
