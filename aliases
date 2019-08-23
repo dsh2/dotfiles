@@ -145,11 +145,12 @@ alias fr='fc -R'
 alias tt=set_terminal_title
 alias vb=vboxmanage
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
-alias tsk='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
-alias tskO='columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
+alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
+alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
 # alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
-alias tsc='capinfos -m -T ~/.pcaps/* | column -nts,'
-alias tskc='capinfos -m -T ~/.pcaps/* | column -nts,'
+alias tsc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
+alias tskc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
 alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
@@ -158,8 +159,9 @@ alias nmap='nmap -oA ~/.nmap/log-$(nn)'
 alias nmr='nmap --resume ~/.nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
-alias lnn=lnav
-alias lvv=lnav
+alias lv='lnav -q'
+alias lnn='lnav -q'
+alias lvv='lnav -q'
 alias r=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
@@ -303,7 +305,7 @@ alias vpp=vpcsv
 alias tag=prompt_tag
 gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
-alias pg='ping gdns |& lnav -t'
+alias pg='ping gdns |& lnav -qt'
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
@@ -386,7 +388,6 @@ alias sd=sysdig
 alias st='strace -fs 0 -x -a $(($COLUMNS - 12)) -r -f'
 alias sudo='sudo '
 alias uu=uniq
-alias lv=lnav
 alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
