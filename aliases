@@ -483,7 +483,7 @@ alias 1='ping 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
-
+alias 8='ping -W 1 -c 5 -A 8.8.8.8'
 alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
 alias uf='uftrace --no-pager'
