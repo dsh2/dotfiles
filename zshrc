@@ -380,6 +380,7 @@ function unify_whitespace() {
 bindkey_func '^x^ ' unify_whitespace
 
 function diff_last_two_outputs {
+	# TODO: better derive event numbers from internal shell history
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
 	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found." 
@@ -779,6 +780,20 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	TMOUT=
 fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
+
+# Try to save tmux from OOM 
+if [[ -n $TMUX ]]; then
+    local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
+    if [[ -n $tmux_pid ]]; then
+	if [[ "$(cat /proc/$tmux_pid/oom_adj)" != "-17" ]]; then
+	    local oom_save="echo '-17' | sudo tee /proc/$tmux_pid/oom_adj"
+	    print -l -- "WARNING: tmux server is not save from out of memory killer (OOM)." $oom_save
+	    # TODO: find some zle redirection for $oom_save
+	fi
+    else
+	print "WARNING: No process for tmux server found, but \"\$TMUX=$TMUX\"."
+    fi
+fi
 
 if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
