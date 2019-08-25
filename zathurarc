@@ -1,7 +1,8 @@
 map <Esc> quit
 map <C-c> abort
-map <Space> full-down
-map <S-Space> full-up
+map <Space> scroll full-down
+map <S-Space> scroll full-up
+map b scroll full-up
 map ] navigate full-down
 map [ navigate full-up
 
