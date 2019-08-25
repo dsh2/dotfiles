@@ -993,6 +993,7 @@ alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs'
+alias -g X0='| xargs -0'
 # TODO: use rg with rust regex instead
 alias -g gg='| grep -i -- '
 alias -g GE="| grep -i -E '^'"
