@@ -958,6 +958,10 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
+alias -g 00='0.0.0.0'
+alias -g 000='0.0.0.0/0'
+alias -g 0s='::1'
+alias -g 0s0='::1/0'
 alias -g C="| column -t"
 alias -g Ct="| column -nts $'\t'"
 alias -g C,="| column -nts,"
@@ -1036,7 +1040,7 @@ die() {
 
 if has trash; then
 	alias rm='trash --'
-	alias rmm='\rm'
+	alias rmm='\rm -rf'
 	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
 else
 	tl() { err "trash-cli NOT installed." }
