@@ -1201,7 +1201,7 @@ nmn() {
 		fi
 	done 
 	print_variables targets excludes
-	nmap -PS2222 -p- -oA ~/.nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
+	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
