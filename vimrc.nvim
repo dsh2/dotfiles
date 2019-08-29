@@ -826,8 +826,10 @@ map <silent><leader>R :source ~/.config/nvim/init.vim<cr>
 map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <NUL> <space>h
+nmap <leader>.. :cd ..<cr>:pwd<cr>
 " TODO: Filter ansi escape sequences from filename when file not found
 nmap <leaer>gf vgf
+nmap com :se modifiable!<cr>
 nnoremap gf gF
 nnoremap gF :tabedit <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
