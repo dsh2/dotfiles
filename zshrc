@@ -61,11 +61,13 @@ PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}J=%j%F{240}].)'	# Add number of jobs - if any
 PS1+='%F{240}%(2L.[l=%{$fg_no_bold[red]%}%L%F{240}].)'	# Add shell level iff above 1
 psvar[1]=$SSH_TTY
-PS1+='%F{255}[%F{244}%n%'				# Add user name
-PS1+='(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
+PS1+='%F{255}[%F{244}'
+PS1+='%(!.$fg_no_bold[red]ROOT%F{255}.%n)'		# Add user name
+PS1+='%(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
 PS1+='%F{255}] '	
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
+
 zle_check_send_break() { 
   # psvar[2]=$(( $zsh_preexec ? "" : "break" ))
   if (($zsh_preexec)); then 
