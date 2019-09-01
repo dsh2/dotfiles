@@ -525,7 +525,7 @@ bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s cl\  'cat $tmux_log_file\t '
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
-bindkey -s Dl\  'l ~/INCOMING/*(.om[1])\t'
+bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
