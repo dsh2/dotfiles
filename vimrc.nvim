@@ -186,7 +186,7 @@ if vim_plug_available
 	" noremap <leader>ldr :Diffoff!<CR>
 	" noremap <leader>ldo :Diffoff!<CR>
 	" " }}}
-	" Plug 'Ilink/cscope-quickfix' "{{{
+	Plug 'Ilink/cscope-quickfix' "{{{
 	set cscopepathcomp=2
 	" set cscopeprg=/opt/local/bin/cscope
 	set cscopetag
