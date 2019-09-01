@@ -784,7 +784,7 @@ fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 
 # Try to save tmux from OOM 
-if [[ -n $TMUX ]]; then
+if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
     local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
     if [[ -n $tmux_pid ]]; then
 	if [[ "$(cat /proc/$tmux_pid/oom_adj)" != "-17" ]]; then
