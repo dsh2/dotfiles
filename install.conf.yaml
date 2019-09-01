@@ -4,17 +4,15 @@
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
   - [mkdir -p ~/.config/copyq ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
-  - [mkdir -p ~/.ssh/hosts, Setting up directory for local ssh]
+  - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
   - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
   - [mkdir -p ~/.pcaps, Creating pcap dump directory]
   - [mkdir -p ~/bin, Creating local bin]
-  - [chmod 0700 wg, Restricting file permissions: wg]
   - [cp -a wg ~/.wg, Copying wireguard template directory]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
   - [src/fzf/install --all, Installing fzf]
-  - [src/grc/install.sh $HOME, Installing Generic Colouriser (grc) ]
 
 - link:
     ~/.aliases: aliases
@@ -40,7 +38,6 @@
     ~/.gitconfig: gitconfig
     ~/.git_template: git_template/
     ~/.gitignore_global: gitignore_global
-    ~/.grc: colors/grc
     ~/.liquidpromptrc: liquidpromptrc
     ~/.inputrc:
         path: inputrc
@@ -50,12 +47,11 @@
     ~/.config/copyq/copyq.conf: copyq
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
-    ~/.vim/scripts.vim: vim/scripts.vim
     ~/.vimrc: vimrc
     ~/.config/nvim/init.vim: vimrc.nvim
     ~/.ssh/config: ssh_config
     ~/.ssh/known_hosts_common: ssh_known_hosts_common
-    ~/.ssh/config.local.template: ssh_config_template
+    ~/.ssh/hosts/_host_config_template: ssh_host_config_template/
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
     ~/.config/procps/toprc: toprc
@@ -67,5 +63,6 @@
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod 0600 ssh_config, Restricting file permissions: ssh_config]
+  - [chmod 0600 ssh_config, Restricting file permissions for ssh_config]
+  - [chmod 0700 wg, Restricting file permissions of wg]
   - [bin/vim-plug-install, Configuring vim]
