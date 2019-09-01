@@ -141,7 +141,7 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
-alias fr='fc -R'
+alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
