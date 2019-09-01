@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+set -e
+
+err() { printf '\e[31m%s\e[0m\n' "$*" >&2 }
+die() { (( $# > 0 )) && err "$*"; exit 1 }
+
+[[ -n $1 ]] || die "usage: $0 file"
+[[ -e $1 ]] || die "file \"$1\" not found or readable."
+[[ $(file -bi $1) =~ "application/pdf; *" ]] || die "file \"$1\" does not seem to be an PDF."
+pdftext=$(pdftotext $1 -)
+dates=($(print -rl $pdftext | grep -oP '\d\d\.\d\d\.\d\d\d\d' | perl -pe 's/(\d\d)\.(\d\d)\.(\d\d\d\d)/\3-\2-\1/g' | uniq))
+if (( $#dates == 0 )); then 
+    err "no dates found in file \"$1\"."
+    print "ln -s \"$1\" ../\"NN - Belegdatum 2019- - Reisedatum 2019- - Betreff\".pdf" 
+    exit 0
+fi
+(( $#dates == 1 )) && dates+=$dates[1]
+print "ln -s \"$1\" ../\"NN - Belegdatum $dates[1] - Reisedatum $dates[2] - Betreff\".pdf"
