@@ -1092,9 +1092,8 @@ if has apt; then
 	compdef _command_names PS
 elif has yum; then
 	alias pi='sudo yum -y install '
-	alias pii='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
-	PL() { yum info $* && rpm -lq $*}
-	# compdef _some_rpm_func PL
+	alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	dpl() { yum info $* && rpm -lq $*}
 	PS() { PL $(rpm -qf $(whh $*)) }
 	compdef _command_names PS
 elif has port; then
