@@ -79,7 +79,7 @@ gcr() {
 	set -x
 	git clone --recursive --jobs=8 --verbose $1 &&
 		cd ${1:t} &&
-		ranger .
+		$EDITOR .
 	}
 
 ghssh() {
