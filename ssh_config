@@ -7,6 +7,10 @@ ServerAliveCountMax 2
 # PermitLocalCommand yes
 # LocalCommand logger -ist ssh -- Automounting sshfs from %u@%l to %r@%h ; sshfs -p %p %d:/ %d/mnt/%n-root ; sshfs -o LogLevel=DEBUG -p %p %d: %d/mnt/%n
 
+ControlMaster auto
+ControlPersist yes
+ControlPath ~/.ssh/control_master/%n-%p-%r
+
 # EscapeChar ^^
 HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common

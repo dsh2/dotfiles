@@ -7,9 +7,6 @@ Host HOSTNAME
 # Port 9022 
 User USERNAME
 
-ControlMaster auto
-ControlPath ~/.ssh/control_master/%n-%p-%r
-
 # IdentityAgent none 
 IdentitiesOnly yes 
 IdentityFile ./id.key
