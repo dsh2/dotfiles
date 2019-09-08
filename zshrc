@@ -1118,8 +1118,7 @@ else
 fi
 
 c() {
-	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
-	[[ -d $1 ]] && { ls -ald $1; return }
+	[[ -d $1 ]] && { ls -al $1; ls -ald $1; return }
 	cat $1
 }
 
