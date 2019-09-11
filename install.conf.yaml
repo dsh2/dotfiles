@@ -63,6 +63,6 @@
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod -R g-rwx,o-rwx ~/.ssh, Restricting file permissions for ssh_config]
+  - [chmod -R g-rwx,o-rwx ssh_config ssh_host_config_template ~/.ssh, Restricting file permissions for ssh_config]
   - [chmod 0700 wg, Restricting file permissions of wg]
   - [bin/vim-plug-install, Configuring vim]
