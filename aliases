@@ -301,6 +301,7 @@ alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
 alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
+alias tmO='old_clients=$(tmux list-clients -F "#{client_activity},#{client_tty}" | sort | tail -n+2 | cut -d, -f2); if [ -n $old_clients ]; then for old_client in $old_clients; do tmux detach-client -t $old_client; done; else echo "No other tmux clients."; fi'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
