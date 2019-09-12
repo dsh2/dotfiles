@@ -369,7 +369,6 @@ alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
-alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F__%T'"

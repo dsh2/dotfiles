@@ -1084,6 +1084,7 @@ if has apt; then
 	alias pi='sudo apt-get install --fix-missing -y '
 	alias pii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^[Pp]ackage: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
 	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
+	alias dps='dpkg -S'
 	dpl() { apt-cache show $* && dpkg -L $*}
 	compdef _deb_packages dpl
 	dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
@@ -1094,8 +1095,11 @@ if has apt; then
 	compdef _command_names PS
 elif has yum; then
 	alias pi='sudo yum -y install '
-	alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
-	dpl() { yum info $* && rpm -lq $*}
+	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias pii='sudo yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias dps='rpm -qf'
+	dpL() { dpl $(dps $(whh $*) 1>&2 ) }
+	alias dpl='rpm -qli'
 	PS() { PL $(rpm -qf $(whh $*)) }
 	compdef _command_names PS
 elif has port; then
