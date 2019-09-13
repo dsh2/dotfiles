@@ -50,7 +50,7 @@ hc keybind F8 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \
 # }}}
 # Miscellaneous keybindings {{{
 hc keybind $SUPER-q close
-hc keybind $ALT-F4 close
+# hc keybind $ALT-F4 close
 # hc keybind $SUPER-Shift-q close_and_remove
 # hc keybind $SUPER-Shift-q close_or_remove
 hc keybind $SUPER-r remove
