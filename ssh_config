@@ -1,4 +1,5 @@
 AddKeysToAgent confirm
+StrictHostKeyChecking yes 
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
