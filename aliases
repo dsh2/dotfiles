@@ -274,7 +274,6 @@ RUN() {
 }
 
 # Miscellaneous
-alias o=exo-open
 alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
@@ -315,6 +314,7 @@ alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
 alias pd='patool diff'
+alias o=xdg-open
 alias q='qiv -uBfta '
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
