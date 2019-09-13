@@ -523,9 +523,13 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s cl\  'cat $tmux_log_file\t '
+bindkey -s clq\  'cat $tmux_log_file\t | jq .'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
+bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
+bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
+bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
