@@ -151,6 +151,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
+zsh_local_history_blacklist="(/mnt|~/mnt|/tmp)"
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
 	# TODO: try to understand why the following regexp matches 
@@ -162,7 +163,7 @@ zshaddhistory() {
 	# echo zshaddhistory: line NOT skipped
 	print -sr -- ${1%%$'\n'}
 	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-	if [[ -w $PWD ]]; then
+	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
 		if [[ $PWD != $HOME ]]; then
 			# print "zshaddhistory: adding to local history in PWD = $PWD"
 			fc -p .zsh_local_history
@@ -170,8 +171,8 @@ zshaddhistory() {
 			# print "zshaddhistory: no local history for HOME = $HOME"
 		fi
 	else
-		dir=~/.zsh_local_history_dir${(q)PWD}
-		# echo zshaddhistory: Working directory NOT writeable: fc -p $dir/history
+		local dir=~/.zsh_local_history_dir${(q)PWD}
+		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
 		mkdir -p $dir && fc -p $dir/history
 	fi
 }
