@@ -1,15 +1,12 @@
 # vim: se ft=sshconfig:
 
 Host HOSTNAME
-# HostName HOSTNAME_IP
-# HostName [fe80::a418:dc6e:9da2:53ba]
 # HostKeyAlias HOSTNAME2
-# Port 9022 
 User USERNAME
 
 # IdentityAgent none 
 IdentitiesOnly yes 
-IdentityFile ./id.key
+IdentityFile ~/.ssh/hosts/HOSTNAME/id.key
 
 ForwardAgent no
 ForwardX11 no
@@ -18,5 +15,8 @@ ForwardX11 no
 # LocalForward 2525 localhost:2501
 
 # Match host = HOSTNAME exec "nmcli con show --active | grep -q dsn5"
-# Match host = HOSTNAME exec "[ $(ifdata -pa eth0) = '192.168.2.107' ]"
-# HostName 192.168.2.103
+# HostName HOSTNAME.local
+# Port 22
+# Match host = HOSTNAME all
+# HostName HOSTNAME
+# Port 9022 
