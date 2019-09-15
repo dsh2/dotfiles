@@ -432,6 +432,7 @@ alias x00='export DISPLAY=:0'
 alias x000='export DISPLAY=localhost:10.0'
 alias digr='dig -x'
 alias y=yum
+alias ZS='sudo -E $SHELL'
 
 src_index() {
 	find . \
