@@ -177,6 +177,11 @@ zshaddhistory() {
 }
 # }}}
 
+PP() {
+    local file=${1:-/dev/stdin}
+    curl --data-binary @${file} https://paste.rs          
+} 
+
 # ZLE {{{
 zle_highlight=( 
     default:fg=default,bg=default
