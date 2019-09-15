@@ -1127,7 +1127,7 @@ else
 fi
 
 if has lnav; then
-	alias tff='sudo true && cd /var/log && sudo lnav auth.log syslog '
+	alias tff="sudo true && cd $tf_file:h && sudo lnav $tf_file:t "
 else
 	alias tff='err("lnav not found")'
 fi
