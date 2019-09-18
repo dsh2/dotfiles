@@ -428,7 +428,7 @@ function run_sudo {
 	[[ -z $BUFFER ]] && zle up-history
 	[[ -n $SUDO_TARGET_USER ]] && BUFFER="-u $SUDO_TARGET_USER $BUFFER"
 	BUFFER="sudo $BUFFER"
-	zle beginning-of-line
+	CURSOR=5
 }
 bindkey_func '^x^s' run_sudo
 
