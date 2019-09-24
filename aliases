@@ -54,7 +54,7 @@ gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex --basename'
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
-loce() { loc \.$1\$ }
+loce() { loc \\.$1\$ }
 locl() { lc "$*" | sed -ne 's,^$'PWD',.,pi' | grep --ignore-case --color "$*"; }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
