@@ -568,18 +568,22 @@ function start_tmux_logging()
 	# -create log_file_name from cmdline contents and timestamp as history event
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
-	tmux pipe-pane "cat > $tmux_log_file"
+	if has dos2unix; then
+	    tmux pipe-pane "dos2unix -f > $tmux_log_file"
+	else
+	    tmux pipe-pane "cat> $tmux_log_file"
+	fi
 }
 
 function stop_tmux_logging() 
 {
-    [ -z $tmux_log_file ] && return
-    tmux pipe-pane 
-    # HACK: Convert tmux line endings TODO: Check tmux src why
+	[ -z $tmux_log_file ] && return
+	tmux pipe-pane
+	# HACK: Convert tmux line endings TODO: Check tmux src why
 	#
 	# Wait for log file to appear - stop_tmux_logging may be faster than tmux pipe-pane
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
-	sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
 
 function set_terminal_title() 
