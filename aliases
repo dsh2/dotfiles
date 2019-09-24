@@ -494,5 +494,6 @@ alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set 
 alias x='xeyes &'
 alias jr=journalctl
-
+alias vi=virsh
+alias vir=virsh
 # vim: se ft=sh:
