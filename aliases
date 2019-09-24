@@ -496,4 +496,5 @@ alias x='xeyes &'
 alias jr=journalctl
 alias vi=virsh
 alias vir=virsh
+alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 # vim: se ft=sh:
