@@ -218,7 +218,9 @@ viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable"
 vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
-
+alias qm=qemu-system-sparc64
+alias qe=qemu-system-sparc64
+alias qmi=qemu-img
 RUN() {
 	# TODO
 	# -Add option to run through watch to show diffs in output
@@ -496,5 +498,6 @@ alias x='xeyes &'
 alias jr=journalctl
 alias vi=virsh
 alias vir=virsh
+alias pk=pkill
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 # vim: se ft=sh:
