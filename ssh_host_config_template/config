@@ -16,6 +16,10 @@ ForwardX11 no
 # LocalForward 2580 localhost:80
 # LocalForward 2525 localhost:2501
 
+# PermitLocalCommand yes
+# LocalCommand (sleep 1; ssh -qO check %n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p %r@%n: %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
+# LocalCommand (sleep 1; ssh -qO check %n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p root@%n:/ %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
+
 # Match host = HOSTNAME exec "nmcli con show --active | grep -q NETWORK"
 # Match host = HOSTNAME exec "timeout 0.5 avahi-resolve --name HOSTNAME.local 2> /dev/null"
 # HostName HOSTNAME.local
