@@ -6,18 +6,21 @@ User USERNAME
 
 # IdentityAgent none 
 IdentitiesOnly yes 
-IdentityFile ~/.ssh/hosts/HOSTNAME/id.key
+IdentityFile ~/.ssh/hosts/HOSTNAME/id
 
 ForwardAgent no
 ForwardX11 no
-# RemoteForward localhost:7234 localhost:7213
+
+# DynamicForward 1080
+# RemoteForward 1080
 # LocalForward 2580 localhost:80
 # LocalForward 2525 localhost:2501
 
-# Match host = HOSTNAME exec "nmcli con show --active | grep -q dsn5"
+# Match host = HOSTNAME exec "nmcli con show --active | grep -q NETWORK"
 # Match host = HOSTNAME exec "timeout 0.5 avahi-resolve --name HOSTNAME.local 2> /dev/null"
 # HostName HOSTNAME.local
 # Port 22
+
 # Match host = HOSTNAME all
 # HostName HOSTNAME
 # Port 9022 
