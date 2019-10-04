@@ -508,4 +508,7 @@ alias fm=findmnt
 alias jr=journalctl
 alias jc=journalctl
 alias sf=sshfs
+alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
+alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
+alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 # vim: se ft=sh:
