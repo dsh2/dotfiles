@@ -410,9 +410,17 @@ function run_ab {
 bindkey_func '^x^f' run_ab
 
 function run_prepend {
-	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
-	[[ -z $BUFFER ]] && zle up-history
+	if [[ -z $ZSH_PREPEND ]]; then
+		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
+			ZSH_PREPEND="ssh ${match[1]%%/*}"
+		else 
+			zle -M -- 'ZSH_PREPEND is not set.'
+			return 
+		fi 
+	fi
+	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
 	BUFFER="$ZSH_PREPEND $BUFFER"
+	CURSOR=$[$#ZSH_PREPEND+1]
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
