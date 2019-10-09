@@ -405,7 +405,13 @@ function run_ab {
 	[[ -z $BUFFER ]] && zle up-history
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
-	BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
+	if echo $BUFFER | grep -q $zsh_a; then
+	    BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
+	elif echo $BUFFER | grep -q $zsh_b; then
+	    BUFFER=$(echo $BUFFER | sed "s:$zsh_b:$zsh_a:g")
+	else
+	    zle -M "[$zsh_a <> $zsh_b] Not found."
+	fi
 }
 bindkey_func '^x^f' run_ab
 
