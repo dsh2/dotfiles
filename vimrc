@@ -511,7 +511,7 @@ map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
 "}}}
 Plug 'tpope/vim-commentary' "{{{
 autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts setlocal commentstring=#\ %s
-autocmd vimrc FileType sshconfig,sshdconfig,shell,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+autocmd vimrc FileType sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 autocmd vimrc FileType autohotkey setlocal commentstring=;\ %s
 nmap gcC yygccp
 "}}}
