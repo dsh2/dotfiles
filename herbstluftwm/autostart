@@ -15,7 +15,7 @@ shutter &
 # parcellite &
 copyq &
 dunst &
-xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker 'i3lock-wrapper.sh -b' -detectsleep &
+xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -nowlocker 'i3lock-wrapper.sh' -locker 'i3lock-wrapper.sh -b' &
 # -notify -notifier 'notify-send Locking soon...' &
 # TODO: Build .xmodmap
 xset -b -c r rate 200 140 dpms 0 0 3600 s off 
