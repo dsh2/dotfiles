@@ -3,7 +3,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/copyq ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.config/copyq ~/.config/dunstrc ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
@@ -54,6 +54,7 @@
     ~/.ssh/hosts/_host_config_template: ssh_host_config_template/
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
+    ~/.config/dunst/dunstrc: dunstrc
     ~/.config/procps/toprc: toprc
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
