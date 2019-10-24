@@ -108,7 +108,7 @@ gch() {
 		awk -F $sep '{printf "%s #%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3, $4}' |
 		fzf --ansi --multi \
 			--prompt "chrome history ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " |
-		sed 's#.*\(https*://\)#\1#' | xargs exo-open > /dev/null 2>&1
+		sed 's#.*\(https*://\)#\1#' | xargs xdg-open > /dev/null 2>&1
 	zle && zle redisplay
 }
 zle -N gch; bindkey '\eU' gch
