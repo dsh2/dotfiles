@@ -208,3 +208,7 @@ $if gdb
     '\c-n': "next\n"
     '\c-s': "step\n"
 $endif
+
+$if psql
+set disable-completion off
+$endif
