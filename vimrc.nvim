@@ -694,6 +694,7 @@ if vim_plug_available
 	let g:jedi#use_splits_not_buffers = ""
 	let g:jedi#squelch_py_warning = 1
 	" let g:jedi#force_py_version = 3.4
+	Plug 'tmhedberg/SimpylFold', {'for': 'python'} 
 	" Plug 'nvie/vim-flake8'
 	" Plug 'xolox/vim-pyref'
 	" }}}
@@ -707,12 +708,12 @@ if vim_plug_available
 	Plug 'deoplete-plugins/deoplete-jedi'
 	call plug#end()
 	call deoplete#custom#option({
-      \ 'auto_refresh_delay': 10,
-      \ 'camel_case': v:true,
-      \ 'skip_multibyte': v:true,
-	  \ 'prev_completion_mode': 'filter',
-      \ 'auto_preview': v:true,
-      \ })
+		\ 'auto_refresh_delay': 10,
+		\ 'camel_case': v:true,
+		\ 'skip_multibyte': v:true,
+		\ 'prev_completion_mode': 'filter',
+		\ 'auto_preview': v:true,
+		\ })
 	" \ 'prev_completion_mode': 'none',
 
 	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
