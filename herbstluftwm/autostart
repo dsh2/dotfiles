@@ -1,4 +1,4 @@
-#!env bash
+#!/usr/bin/env bash
 # vim: foldmethod=marker 
 hc() { echo HC: "$*"; herbstclient "$@"; }
 # hc() { echo HC: "$*"; /home/dsf/src/WM/herbstluftwm/tmp-2018-07-03_17:17:39-BUILD/bin/herbstclient "$@"; }
@@ -14,7 +14,7 @@ $hc_bin/alt-tab.sh &
 shutter &
 # parcellite &
 copyq &
-dunst &
+pkill dunst; dunst &
 xautolock -time 8 -corners '--++' -cornerdelay 1 -cornerredelay 60 -nowlocker 'i3lock-wrapper.sh' -locker 'i3lock-wrapper.sh -b' &
 # -notify -notifier 'notify-send Locking soon...' &
 # TODO: Build .xmodmap
@@ -27,13 +27,15 @@ SUPER=Mod4
 ALT=Mod1
 CTRL=Control
 terminal=${terminal:-xfce4-terminal} 
-browser=${browser:-chromium-browser} 
+terminal_execute="-x"
+# browser=${browser:-chromium-browser} 
+browser=${browser:-google-chrome-stable} 
 # }}}
 # Setup basic tags {{{
 tag_names=(log root coms mail )
 for tag_index in {0..9}; do
-	hc keybind "$SUPER-$ALT-$tag_index" use_index "$tag_index"
-	hc keybind "$SUPER-$ALT-Shift-$tag_index" move_index "$tag_index"
+	hc keybind "$SUPER+$ALT+$tag_index" use_index "$tag_index"
+	hc keybind "$SUPER+$ALT+Shift+$tag_index" move_index "$tag_index"
 	tag_name="${tag_names[$tag_index]}"
 	[ -n "$tag_name" ] && hc add "$tag_name"
 done
@@ -42,102 +44,115 @@ done
 hc keybind $SUPER+Tab spawn rofi -show window -window-format '{w}{t}{n}{r}{c}' 
 hc keybind $SUPER+Tab spawn rofi -show window -monitor -1 -width 95 -lines 40 -window-format '[{w}] {t} | n={n} | r={r} | c={c}' 
 hc keybind $ALT+space spawn rofi -fullscreen -show combi
-hc keybind $ALT+$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
-hc keybind F5 spawn $hc_bin/dlf.sh
-hc keybind F6 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
-hc keybind F7 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
-hc keybind F8 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
+hc keybind $ALT-$CTRL+Shift+s spawn /home/dsf/.dotfiles/bin/rofimoji.py
+hc keybind $ALT+F5 spawn $hc_bin/dlf.sh
+hc keybind $ALT+F6 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
+hc keybind $ALT+F7 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
+hc keybind $ALT+F8 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
+# hc keybind F5 spawn $hc_bin/dlf.sh
+# hc keybind F6 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') -10%
+# hc keybind F7 spawn pactl set-sink-volume $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') +10%
+# hc keybind F8 spawn pactl set-sink-mute $(pactl info | sed -n 's/Default Sink: \(.*\)/\1/p') toggle
 # }}}
 # Miscellaneous keybindings {{{
-hc keybind $SUPER-q close
-# hc keybind $ALT-F4 close
-# hc keybind $SUPER-Shift-q close_and_remove
-# hc keybind $SUPER-Shift-q close_or_remove
-hc keybind $SUPER-r remove
-# hc keybind $SUPER-Shift-r reload
-hc keybind $SUPER-Return spawn $terminal -e zsh -ic tmm
-hc keybind $SUPER-Shift-Return spawn $terminal
-hc keybind $CTRL-Return spawn $browser
-hc keybind $SUPER-a spawn $hc_bin/i3lock-wrapper.sh
-hc keybind $SUPER-Shift-a spawn xset dpms 0 0 5
+hc keybind $SUPER+q close
+# hc keybind $ALT+F4 close
+# hc keybind $SUPER+Shift+q close_and_remove
+# hc keybind $SUPER+Shift+q close_or_remove
+hc keybind $SUPER+r remove
+# hc keybind $SUPER+Shift+r reload
+# hc keybind $SUPER+Return spawn $terminal -e zsh -ic tmm
+hc keybind $SUPER+Return spawn $terminal $terminal_execute zsh -ic tmm
+hc keybind $SUPER+Shift+Return spawn $terminal
+hc keybind $CTRL+Return spawn $browser
+hc keybind $SUPER+a spawn $hc_bin/i3lock-wrapper.sh
+hc keybind $SUPER+Shift+a spawn xset dpms 0 0 5
 # }}}
 # Keybindings for moving clients {{{
-hc keybind $SUPER-$CTRL-h shift left
-hc keybind $SUPER-$CTRL-j shift down
-hc keybind $SUPER-$CTRL-k shift up
-hc keybind $SUPER-$CTRL-l shift right
-hc keybind $SUPER-Shift-1 chain I move_index -1 I use_index -1
-hc keybind $SUPER-Shift-2 chain I move_index +1 I use_index +1
-hc keybind $SUPER-bracketleft chain I lock I shift_to_monitor -1 I cycle_monitor -1 I unlock
-hc keybind $SUPER-bracketright chain I lock I shift_to_monitor +1 I cycle_monitor +1 I unlock
+hc keybind $SUPER+$CTRL+h shift left
+hc keybind $SUPER+$CTRL+j shift down
+hc keybind $SUPER+$CTRL+k shift up
+hc keybind $SUPER+$CTRL+l shift right
+hc keybind $SUPER+Shift+1 chain I move_index -1 I use_index -1
+hc keybind $SUPER+Shift+2 chain I move_index +1 I use_index +1
+hc keybind $SUPER+bracketleft chain I lock I shift_to_monitor -1 I cycle_monitor -1 I unlock
+hc keybind $SUPER+bracketright chain I lock I shift_to_monitor +1 I cycle_monitor +1 I unlock
 # }}}
 # Keybindings for splitting frames {{{
-hc keybind $SUPER-6 split explode
-hc keybind $SUPER-7 chain I split right 0.5 I focus right 
-# hc keybind $SUPER-7 chain I split right 0.5 I focus right I spawn $terminal
-hc keybind $SUPER-8 chain I split bottom 0.5
+hc keybind $SUPER+6 split explode
+hc keybind $SUPER+7 chain I split right 0.5 I focus right 
+# hc keybind $SUPER+7 chain I split right 0.5 I focus right I spawn $terminal
+hc keybind $SUPER+8 chain I split bottom 0.5
 # TODO: 'focus bottom' does not work. Fix it.
-# hc keybind $SUPER-8 chain I split bottom 0.8 I focus bottom
-# hc keybind $SUPER-8 chain I split bottom 0.5 I focus bottom I spawn $terminal
+# hc keybind $SUPER+8 chain I split bottom 0.8 I focus bottom
+# hc keybind $SUPER+8 chain I split bottom 0.5 I focus bottom I spawn $terminal
 # }}}
 # Keybindings for resizing frames {{{
 resizestep=0.05
-hc keybind $SUPER-Shift-h resize left +$resizestep
-hc keybind $SUPER-Shift-j resize down +$resizestep
-hc keybind $SUPER-Shift-k resize up +$resizestep
-hc keybind $SUPER-Shift-l resize right +$resizestep
+hc keybind $SUPER+Shift+h resize left +$resizestep
+hc keybind $SUPER+Shift+j resize down +$resizestep
+hc keybind $SUPER+Shift+k resize up +$resizestep
+hc keybind $SUPER+Shift+l resize right +$resizestep
 # }}}
 # Keybindings to cycle through tags {{{
-hc keybind $SUPER-1 use_index -1 --skip-visible
-hc keybind $SUPER-comma use_index -1 --skip-visible
-# hc keybind $SUPER-1 use_index -1 
-# hc keybind $SUPER-comma use_index -1 
-hc keybind $SUPER-2 use_index +1 --skip-visible
-hc keybind $SUPER-period use_index +1 --skip-visible
-# hc keybind $SUPER-2 use_index +1 
-# hc keybind $SUPER-period use_index +1 
-hc keybind $SUPER-3 use_previous
+hc keybind $SUPER+1 use_index -1 --skip-visible
+hc keybind $SUPER+comma use_index -1 --skip-visible
+# hc keybind $SUPER+1 use_index -1 
+# hc keybind $SUPER+comma use_index -1 
+hc keybind $SUPER+2 use_index +1 --skip-visible
+hc keybind $SUPER+period use_index +1 --skip-visible
+# hc keybind $SUPER+2 use_index +1 
+# hc keybind $SUPER+period use_index +1 
+hc keybind $SUPER+3 use_previous
 # TODO: Think about how FO could help here...
-hc keybind $SUPER-9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
-hc keybind $SUPER-0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
-hc keybind $SUPER-Shift-0 spawn $hc_bin/clear_empty_tags.sh
+hc keybind $SUPER+9 and AND or OR compare tags.focus.name = coms OR chain FALSE use coms FALSE false AND use_previous AND
+hc keybind $SUPER+0 and AND or OR compare tags.focus.name = log OR chain FALSE use log FALSE false AND use_previous AND
+hc keybind $SUPER+Shift+0 spawn $hc_bin/clear_empty_tags.sh
 # }}}
 # Keybindings to change layout {{{
-hc keybind $SUPER-s floating toggle
-hc keybind $SUPER-p pseudotile toggle
-hc keybind $SUPER-space spawn $hc_bin/windowmenu.sh
-hc keybind $SUPER-$ALT-space spawn $hc_bin/handle_tag.sh
-hc keybind $SUPER-$ALT-$CTRL-space chain X add TMP X move TMP X use TMP X spawn $hc_bin/handle_tag.sh
-hc keybind $SUPER-$ALT-$CTRL-j spawn lux -s 10%
-hc keybind $SUPER-$ALT-$CTRL-k spawn lux -a 10%
-hc keybind $SUPER-$ALT-$CTRL-Shift-j spawn lux -S 1%
-hc keybind $SUPER-$ALT-$CTRL-Shift-k spawn lux -S 100%
-hc keybind $SUPER-z chain X fullscreen false X spawn $hc_bin/maximize.sh
-hc keybind $SUPER-f chain X fullscreen false X spawn $hc_bin/maximize.sh
-hc keybind $SUPER-Shift-z fullscreen toggle
-hc keybind $SUPER-Shift-f fullscreen toggle
+hc keybind $SUPER+s floating toggle
+hc keybind $SUPER+p pseudotile toggle
+hc keybind $SUPER+space spawn $hc_bin/windowmenu.sh
+hc keybind $SUPER+$ALT+space spawn $hc_bin/handle_tag.sh
+hc keybind $SUPER-$ALT+$CTRL+space chain X add TMP X move TMP X use TMP X spawn $hc_bin/handle_tag.sh
+hc keybind $SUPER-$ALT+$CTRL+j spawn lux -s 10%
+hc keybind $SUPER-$ALT+$CTRL+k spawn lux -a 10%
+hc keybind $SUPER-$ALT-$CTRL+Shift+j spawn lux -S 1%
+hc keybind $SUPER-$ALT-$CTRL+Shift+k spawn lux -S 100%
+hc keybind $SUPER+z chain X fullscreen false X spawn $hc_bin/maximize.sh
+hc keybind $SUPER+f chain X fullscreen false X spawn $hc_bin/maximize.sh
+hc keybind $SUPER+Shift+z fullscreen toggle
+hc keybind $SUPER+Shift+f fullscreen toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
-hc keybind $SUPER-e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max , cycle_layout +1 
-hc keybind $SUPER-Shift-e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout -1 vertical horizontal max , cycle_layout -1 
-# hc keybind $SUPER-e cycle_layout
+hc keybind $SUPER+e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout +1 vertical horizontal max , cycle_layout +1 
+hc keybind $SUPER+Shift+e or , and . compare tags.focus.curframe_wcount = 2 . cycle_layout -1 vertical horizontal max , cycle_layout -1 
+# hc keybind $SUPER+e cycle_layout
 # }}}
 # Keybindings to change focus {{{
-hc keybind $SUPER-BackSpace cycle_monitor +1
-hc keybind $SUPER-Shift-BackSpace cycle_monitor -1
-hc keybind $SUPER-c cycle_all +1
-hc keybind $SUPER-Shift-c cycle_all -1
-hc keybind $SUPER-i jumpto urgent
+hc keybind $SUPER+BackSpace cycle_monitor +1
+hc keybind $SUPER+Shift+BackSpace cycle_monitor -1
+hc keybind $SUPER+c cycle_all +1
+hc keybind $SUPER+Shift+c cycle_all -1
+hc keybind $SUPER+i jumpto urgent
 hc keybind $ALT+Shift+1 spawn sh -c "$hc_bin/jumpto.sh chrome"
 hc keybind $ALT+Shift+2 spawn sh -c "$hc_bin/jumpto.sh thunderbird"
 hc keybind $ALT+Shift+3 spawn sh -c "$hc_bin/jumpto.sh $terminal"
-hc keybind $SUPER-n chain X add NEW X use NEW X spawn $browser
+hc keybind $SUPER+n chain X add NEW X use NEW X spawn $browser
 # TODO: Not only fullscreen false but unmaximize.sh
-hc keybind $SUPER-h chain X fullscreen false X focus left
-hc keybind $SUPER-j chain X fullscreen false X focus down
-hc keybind $SUPER-k chain X fullscreen false X focus up
-hc keybind $SUPER-l chain X fullscreen false X focus right
+hc keybind $SUPER+h chain X fullscreen false X focus left
+hc keybind $SUPER+j chain X fullscreen false X focus down
+hc keybind $SUPER+k chain X fullscreen false X focus up
+hc keybind $SUPER+l chain X fullscreen false X focus right
+# }}}
+# Keybindings to move cursor {{{
+hc keybind $ALT+F12 spawn xvkbd
+# hc keybind $ALT+$CTRL+j spawn logger $(echo a) ; spawn logger $(xdotool getwindowfocus)
+# hc keybind $ALT+$CTRL+k spawn sh -c 'xvkbd -xsendevent -no-back-pointer -no-jump-pointer -debug -text \{Left} |& logger --tag xvkbd'          
+# hc keybind $ALT+$CTRL+k spawn xvkbd -text '\[Up]'
+# hc keybind $ALT+$CTRL+k spawn xvkbd -text '\D1\[Up]'
+# hc keybind $ALT+$CTRL+l spawn xvkbd -text '\D1\[Left]'
 # }}}
 # Mouse bindings {{{
 hc mouseunbind --all
