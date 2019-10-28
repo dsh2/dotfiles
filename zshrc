@@ -36,10 +36,12 @@ in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
 setopt prompt_subst
 setopt prompt_cr
-setopt prompt_sp
+# TODO: try to understand why SP outputs term seqs even when no partial line is present
+setopt noprompt_sp
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< \n missing'
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line (\n missing)'
-export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
+# export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
+unset PROMPT_EOL_MARK
 autoload -Uz vcs_info
 autoload -U colors && colors
 zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f '
