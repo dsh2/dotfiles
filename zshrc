@@ -168,6 +168,9 @@ zshaddhistory() {
 	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
 		if [[ $PWD != $HOME ]]; then
 			# print "zshaddhistory: adding to local history in PWD = $PWD"
+			if [[ ! -f $PWD/.zsh_local_history ]]; then  
+			    print "Creating new .zsh_local_history in \"$PWD\"."
+			fi
 			fc -p .zsh_local_history
 		else
 			# print "zshaddhistory: no local history for HOME = $HOME"
@@ -175,14 +178,18 @@ zshaddhistory() {
 	else
 		local dir=~/.zsh_local_history_dir${(q)PWD}
 		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
-		mkdir -p $dir && fc -p $dir/history
+		if [[ ! -d $dir ]]; then
+		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
+		    mkdir -p $dir 
+		fi
+		fc -p $dir/history
 	fi
 }
 # }}}
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs          
+    curl --data-binary @${file} https://paste.rs
 } 
 
 # ZLE {{{
