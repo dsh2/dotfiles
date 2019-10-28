@@ -690,7 +690,7 @@ bindkey_func '^]^]' zle-toggle-keymap
 zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
-fpath+=~/src/RE/radare2/doc/zsh
+fpath+=~/src/radare2/doc/zsh
 
 zmodload zsh/complist
 autoload -U compinit && compinit
@@ -727,7 +727,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic alsactl autossh capinfos iftop mausezahn ncat netcat nping qmicli qrencode speedometer speedtest-cli tc uuidgen virt-filesystems winedbg zbarimg autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc tc bmon nmap nping capinfos teamd teamdctl teamnl ncat netcat iperf iperf3 nsenter findmnt ctags mmcli
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder  scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -783,6 +783,7 @@ stty -ixon
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
+
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
@@ -1252,3 +1253,8 @@ zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputim
 zmodload zsh/stat
 [[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
 rnd() {(($[RANDOM%${1:-2}]>${2:-0}))}
+# fz() { [ -f $1 -a -r $1 ] && mkdir -p $1.DIR && fuse-zip $1 $1.DIR && cd $1.DIR }
+fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd $1:t.DIR && $EDITOR . }
+fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
+compdef _files fz
+compdef _directories fU
