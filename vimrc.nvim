@@ -1284,6 +1284,7 @@ map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: underst
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
+" map M :exe "!tmux send -t 2 'some command \\\"" . getline(".") . "\\\"' Enter"<cr>
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
