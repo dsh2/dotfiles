@@ -512,7 +512,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
-	autocmd vimrc FileType dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
@@ -806,6 +806,7 @@ set wildmenu
 set wildmode=list:longest,full
 autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
+autocmd vimrc BufNewFile,BufReadPost *-strace* setfiletype strace
 
 " }}}
 
