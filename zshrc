@@ -441,9 +441,21 @@ bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
 
 function run_subshell {
-	[[ -z $BUFFER ]] && zle up-history
-	BUFFER=" \$($BUFFER)"
-	zle beginning-of-line
+	if [[ -n $BUFFER ]]; then
+		local current_buffer=$BUFFER
+		if (( CURSOR )); then
+			zle up-history
+			integer new_cursor=$((CURSOR + $#BUFFER + 3))
+			BUFFER="$current_buffer \$($BUFFER)"
+			CURSOR=new_cursor
+		else
+			BUFFER=" \$($current_buffer)"
+		fi
+	else
+		zle up-history
+		BUFFER=" \$($BUFFER)"
+		CURSOR=0 
+	fi
 }
 bindkey_func '^x^b' run_subshell
 
