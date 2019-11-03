@@ -814,10 +814,12 @@ autocmd vimrc BufNewFile,BufReadPost *-strace* setfiletype strace
 
 cabbr BB <buffer>
 nmap <nowait> <leader>s :update<cr>
-nnoremap <c-s> :update<cr>
+" nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
+map <a-s> <c-o>:update<cr><esc>
 
 " Mappings {{{
+map <c-s> :Redir let<cr>gsae:se ft=conf<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
 nmap Q :qall<cr>
 nmap <leader>J :set ft=json<cr>:Autoformat<cr>
 nmap <leader>X :set ft=xml<cr>:Autoformat<cr>
