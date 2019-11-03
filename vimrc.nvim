@@ -91,6 +91,8 @@ if vim_plug_available
 	map <leader>lC :FzfBCommits<cr>
 	map <leader>CA :FzfCommands<cr>
 	map <leader>ff :FzfFiles<cr>
+	nmap <tab><tab> :FzfCommands<cr>
+	" nmap <tab> :FzfCommands<cr>
 	map <leader>lf :FzfFiles<cr>
 	map <leader>lt :FzfFiletypes<cr>
 	map <leader>w :FzfWindows<cr>
