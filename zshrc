@@ -392,7 +392,7 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:fs:# :::fs:  : :}
+    BUFFER=${BUFFER:s:# :::fs:  : :}
 }
 bindkey_func '^x^ ' unify_whitespace
 
@@ -565,6 +565,8 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s cl\  'cat $tmux_log_file\t '
 bindkey -s clq\  'cat $tmux_log_file\t | jq .'
+bindkey -s clj\  'cat $tmux_log_file\t | jq .'
+bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
@@ -809,7 +811,7 @@ if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
 elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
-	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in AWS.\n"
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in as cloud instance.\n"
 	TMOUT=
 elif [[ -n $TMUX ]]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
@@ -879,7 +881,7 @@ zsh_source ~/.environment
 zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
-p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
+p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O user,ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
@@ -958,7 +960,7 @@ cdp() {
 cd() {
 	if ! builtin cd $* 2>/dev/null; then
 		if [ -e $* ]; then
-			dir=$(dirname $*)
+			local dir=$(dirname $*)
 			if [ $dir = "." ]; then
 				print WARNING: no directory change
 			else
@@ -1149,8 +1151,8 @@ elif has yum; then
 	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias pii='sudo yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias dps='rpm -qf'
-	dpL() { dpl $(dps $(whh $*) 1>&2 ) }
-	alias dpl='rpm -qli'
+	alias dpl='rpm -qvli'
+	dpL() { rpm -qli $(rpm -qf $(whh $*) ) }
 	PS() { PL $(rpm -qf $(whh $*)) }
 	compdef _command_names PS
 elif has port; then
@@ -1175,7 +1177,7 @@ fi
 
 c() {
 	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
-	[[ -d $1 ]] && { ls -ald $1; return }
+	[[ -d $1 ]] && { ls -al $1; return }
 	cat $1
 }
 
