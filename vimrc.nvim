@@ -648,8 +648,33 @@ if vim_plug_available
 	Plug 'fatih/vim-go'"{{{
 	let g:go_def_mode='gopls'
 	let g:go_info_mode='gopls'
-	"}}}
-	Plug 'dkprice/vim-easygrep'
+	" run :GoBuild or :GoTestCompile based on the go file
+	function! s:build_go_files()
+	  let l:file = expand('%')
+	  if l:file =~# '^\f\+_test\.go$'
+	    call go#test#Test(0, 1)
+	  elseif l:file =~# '^\f\+\.go$'
+	    call go#cmd#Build(0)
+	  endif
+	endfunction
+
+	autocmd vimrc FileType go nmap <f9> :GoDebugBreakpoint<cr>
+	autocmd vimrc FileType go nmap <a-s-r> :GoDebugStart<cr>
+	autocmd vimrc FileType go nmap <c-a-s-r> :GoDebugStop<cr>
+	autocmd vimrc FileType go nmap <s-f10> :GoDebugNext<cr>
+	autocmd vimrc FileType go nmap <s-f11> :GoDebugStep<cr>
+	autocmd vimrc FileType go nmap <a-s-f11> :GoDebugStepOut<cr>
+	autocmd vimrc FileType go nmap <leader>T :GoDecls<CR>
+	autocmd vimrc FileType go nmap <c-space> :GoDescribe<CR>
+	autocmd vimrc FileType go nmap <leader>m :<C-u>call <SID>build_go_files()<CR>
+
+	autocmd vimrc FileType go map <buffer> <leader>r :GoRun<cr>
+	" let g:go_debug = [ 'shell-commands', 'debugger-state', 'debugger-commands', 'lsp' ]
+	let g:go_debug = [ 'lsp' ]
+	let g:go_info_mode = 'guru'
+	let g:go_fmt_command = "goimports"
+	" }}}
+	" Plug 'dkprice/vim-easygrep'
 	Plug 'dsh2/vim-unimpaired'
 	" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' } " {{{
 	" augroup manlaunchtoc
