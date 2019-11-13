@@ -519,7 +519,7 @@ alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --outpu
 alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 alias ci=criu
-alias lsof='lsof +c0'
+alias lsof='lsof +c0 -P -n'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
@@ -527,4 +527,5 @@ alias psl=psql
 alias py3=python3
 alias pod=podman
 alias setD='sudo date -u --set="$(curl -H '\''Cache-Control: no-cache'\'' -sD - http://google.com |\grep --color '\''^Date:'\'' |cut -d'\'' '\'' -f3-6)"'
+alias U=usbip
 # vim: se ft=sh:
