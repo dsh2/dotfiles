@@ -55,7 +55,7 @@ alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex --basename'
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
 loce() { loc \\.$1\$; }
-locl() { lc "$*" | sed -ne 's,^$'PWD',.,pi' | grep --ignore-case --color "$*"; }
+locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
@@ -483,7 +483,7 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 # TODO: make C a zle binding
-alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
+alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H=hostname
 alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
@@ -525,4 +525,6 @@ alias pa=patool
 alias s=ssh
 alias psl=psql
 alias py3=python3
+alias pod=podman
+alias setD='sudo date -u --set="$(curl -H '\''Cache-Control: no-cache'\'' -sD - http://google.com |\grep --color '\''^Date:'\'' |cut -d'\'' '\'' -f3-6)"'
 # vim: se ft=sh:
