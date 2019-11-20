@@ -219,7 +219,7 @@ viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable"
 vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
-alias qm=qemu-system-sparc64
+alias qm=qmicli
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
 RUN() {
@@ -526,6 +526,6 @@ alias s=ssh
 alias psl=psql
 alias py3=python3
 alias pod=podman
-alias setD='sudo date -u --set="$(curl -H '\''Cache-Control: no-cache'\'' -sD - http://google.com |\grep --color '\''^Date:'\'' |cut -d'\'' '\'' -f3-6)"'
+alias setD='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
 alias U=usbip
 # vim: se ft=sh:
