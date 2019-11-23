@@ -1264,6 +1264,10 @@ nmn() {
 	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
 
+at() {
+	print "at $*" | socat - /dev/modem,crnl
+}
+
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
 
