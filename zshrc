@@ -563,6 +563,9 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
+bindkey -s at\  "a''t "
+bindkey -s ati\  "a''t !"
+bindkey -s atii\  "a''t !=?"
 bindkey -s cl\  'cat $tmux_log_file\t '
 bindkey -s clq\  'cat $tmux_log_file\t | jq .'
 bindkey -s clj\  'cat $tmux_log_file\t | jq .'
@@ -1265,7 +1268,8 @@ nmn() {
 }
 
 at() {
-	print "at $*" | socat - /dev/modem,crnl
+	# print "at $*" | socat - /dev/modem,crnl
+	print "at $*" | sudo socat - /dev/modem,crnl
 }
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
