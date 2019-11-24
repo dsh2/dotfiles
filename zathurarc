@@ -1,14 +1,28 @@
+# vim: ft=conf
 map <Esc> quit
 map <C-c> abort
+
+map j navigate next
+# map j scroll next
+map J scroll down
+
+# map k scroll previous
+map k navigate previous
+map K scroll up
+
 map <Space> scroll full-down
 map <S-Space> scroll full-up
 map b scroll full-up
+
 map ] navigate full-down
 map [ navigate full-up
+# map k navigate full-up
 
 # BUG: Separate mapping for normal and fullscreen seems necessary
 map [normal]     e toggle_fullscreen 
+map [normal]     E toggle_fullscreen 
 map [fullscreen] e toggle_fullscreen  
+map [fullscreen] E toggle_fullscreen  
 map w toggle_page_mode
 map t toggle_statusbar
 
@@ -28,12 +42,13 @@ set statusbar-fg "#606060"
 set inputbar-bg "#202020" 
 set inputbar-fg "#909090"
 
+# set guioptions = shv
 set guioptions = shv
 set incremental-search = true
 set page-cache-size = 50
 set pages-per-row = 5
 
-
+set scroll-wrap false
 set statusbar-basename true
 set selection-clipboard "clipboard"
 
