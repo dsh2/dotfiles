@@ -5,9 +5,16 @@ set -e
 err() { printf '\e[31m%s\e[0m\n' "$*" >&2 }
 die() { (( $# > 0 )) && err "$*"; exit 1 }
 
+# Check usage
 [[ -n $1 ]] || die "usage: $0 file"
+
+# Check if file is readable
 [[ -e $1 ]] || die "file \"$1\" not found or readable."
+
+# Check if file is pdf
 [[ $(file -bi $1) =~ "application/pdf; *" ]] || die "file \"$1\" does not seem to be an PDF."
+
+# Try to find dates in pdf text
 pdftext=$(pdftotext $1 -)
 dates=($(print -rl $pdftext | grep -oP '\d\d\.\d\d\.\d\d\d\d' | perl -pe 's/(\d\d)\.(\d\d)\.(\d\d\d\d)/\3-\2-\1/g' | uniq))
 if (( $#dates == 0 )); then 
@@ -16,4 +23,16 @@ if (( $#dates == 0 )); then
     exit 0
 fi
 (( $#dates == 1 )) && dates+=$dates[1]
-print "ln -s \"$1\" ../\"NN - Belegdatum $dates[1] - Reisedatum $dates[2] - Betreff\".pdf"
+
+# Show already linked receipes
+# find .. -printf '%i: ' -exec readlink -f {} \; | sort -n | uniq -Dw8 | \grep -v _Originale
+find .. -printf '%i: ' -exec readlink -f {} \; | sort -n | uniq -Dw8 
+# find .. -printf '%i: %f\n' | sort -n | uniq -Dw8 | \grep -v _Originale
+
+# Suggest naming schema for rename/link
+local NN=$(cd ..; print -rl -- [0-9][0-9]*(On[1]) | cut -c 1,2) || NN=0
+NN=$[NN+1]
+NN=$(printf "%02d" NN)
+local command="ln \"$1\" ../\"$NN - Belegdatum $dates[1] - Reisedatum $dates[2] - Betreff\".pdf"
+print -n "$command (y/N) "
+read answer && [[ $answer = y ]] && eval ${=command} 
