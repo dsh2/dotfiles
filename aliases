@@ -127,6 +127,7 @@ alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
 alias gsmp='git submodule foreach git pull'
 alias gsmcm='git submodule foreach git checkout master'
+alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gl='git lg | less'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
@@ -278,7 +279,7 @@ RUN() {
 }
 
 # Miscellaneous
-alias a=aws
+# alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -528,4 +529,10 @@ alias py3=python3
 alias pod=podman
 alias setD='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
 alias U=usbip
+alias pe=printenv
+# alias units="\units --verbose '"
+alias u="\units --verbose '"
+alias g2=grub2-
+alias ssl=openssl
+sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
 # vim: se ft=sh:
