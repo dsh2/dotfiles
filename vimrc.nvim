@@ -498,7 +498,7 @@ if vim_plug_available
 	"}}}
 	Plug 'nathanaelkane/vim-indent-guides', {'on': 'IndentGuidesToggle'} "{{{
 	let g:indent_guides_guide_size = 1
-	let g:indent_guides_start_level = 2
+	" let g:indent_guides_start_level = 2
 	"}}}
 	Plug 'junegunn/vim-peekaboo' "{{{
 	let g:peekaboo_window = 'vertical botright 51new'
@@ -521,7 +521,7 @@ if vim_plug_available
 	autocmd vimrc FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 	"}}}
 	Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
-	map <leader>B :AsyncRun binwalk %<cr>
+	" map <leader>B :AsyncRun binwalk %<cr>
 	autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
 	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 	"}}}
@@ -603,6 +603,7 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'junegunn/vim-easy-align'
 	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
 	Plug 'nfnty/vim-nftables'
@@ -659,18 +660,23 @@ if vim_plug_available
 	endfunction
 
 	autocmd vimrc FileType go nmap <f9> :GoDebugBreakpoint<cr>
+	autocmd vimrc FileType go nmap <leader>B :GoDebugBreakpoint<cr>
 	autocmd vimrc FileType go nmap <a-s-r> :GoDebugStart<cr>
 	autocmd vimrc FileType go nmap <c-a-s-r> :GoDebugStop<cr>
 	autocmd vimrc FileType go nmap <s-f10> :GoDebugNext<cr>
 	autocmd vimrc FileType go nmap <s-f11> :GoDebugStep<cr>
 	autocmd vimrc FileType go nmap <a-s-f11> :GoDebugStepOut<cr>
 	autocmd vimrc FileType go nmap <leader>T :GoDecls<CR>
-	autocmd vimrc FileType go nmap <c-space> :GoDescribe<CR>
 	autocmd vimrc FileType go nmap <leader>m :<C-u>call <SID>build_go_files()<CR>
 
 	autocmd vimrc FileType go map <buffer> <leader>r :GoRun<cr>
+	autocmd vimrc FileType go map <buffer> <leader>~ :GoDescribe<cr>
+	autocmd vimrc FileType go nmap <c-space> :GoDescribe<CR>
+	autocmd vimrc FileType go map <buffer> <s-f2> :GoRename<cr>
+	autocmd vimrc FileType go map <buffer> <c-\>s :GoReferrers<cr>
+	autocmd vimrc FileType go map <buffer> <leader><c-]> :<C-U>call go#def#Jump("vert", 0)<CR>
 	" let g:go_debug = [ 'shell-commands', 'debugger-state', 'debugger-commands', 'lsp' ]
-	let g:go_debug = [ 'lsp' ]
+	" let g:go_debug = [ 'lsp' ]
 	let g:go_info_mode = 'guru'
 	let g:go_fmt_command = "goimports"
 	" }}}
@@ -733,15 +739,18 @@ if vim_plug_available
 	Plug 'Shougo/context_filetype.vim'
 	" Plugin key-mappings.
 	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+	inoremap <expr><tab>  pumvisible() ? "<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+	snoremap <expr><tab>  pumvisible() ? "<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+	xnoremap <expr><tab>  pumvisible() ? "<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 	xmap <C-k>     <Plug>(neosnippet_expand_target)
 	" SuperTab like snippets behavior.
 	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-	"imap <expr><TAB>
-	" \ pumvisible() ? "\<C-n>" :
-	" \ neosnippet#expandable_or_jumpable() ?
-	" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+	imap <expr><TAB>
+	 \ pumvisible() ? "\<C-n>" :
+	 \ neosnippet#expandable_or_jumpable() ?
+	 \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 	\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
@@ -756,28 +765,37 @@ if vim_plug_available
 	Plug 'deoplete-plugins/deoplete-jedi'
 	call plug#end()
 	call deoplete#custom#option({
-		\ 'auto_refresh_delay': 10,
+		\ 'auto_refresh_delay': 100,
 		\ 'camel_case': v:true,
+		\ 'smart_case': v:true,
 		\ 'skip_multibyte': v:true,
 		\ 'prev_completion_mode': 'filter',
-		\ 'auto_preview': v:true,
+		\ 'auto_preview': v:false,
 		\ })
+	" \ 'auto_preview': v:true,
 	" \ 'prev_completion_mode': 'none',
+	" inoremap <expr><c-j>  pumvisible() ? "\<c-n>" : "\<c-j>"
+	" inoremap <expr><c-k>  pumvisible() ? "\<c-p>" : "\<c-k>"
+	" inoremap <silent><expr> <tab>
+	"       \ pumvisible() ? "\<C-n>" :
+	"       \ <SID>check_back_space() ? "\<TAB>" :
+	"       \ deoplete#manual_complete()
+	" function! s:check_back_space() abort
+	"   let col = col('.') - 1
+	"   return !col || getline('.')[col - 1]  =~ '\s'
+	" endfunction
 
-	inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
-	inoremap <silent><expr> <TAB>
-	      \ pumvisible() ? "\<C-n>" :
-	      \ <SID>check_back_space() ? "\<TAB>" :
-	      \ deoplete#manual_complete()
-	function! s:check_back_space() abort
-	  let col = col('.') - 1
-	  return !col || getline('.')[col - 1]  =~ '\s'
-	endfunction
-
-	call deoplete#custom#var('around', { 'range_above': 15, 'range_below': 15, 'mark_above': '[↑]', 'mark_below': '[↓]', 'mark_changes': '[*]',})
+	call deoplete#custom#var(
+	    \ 'around', { 
+		\ 'range_above': 15,
+		\ 'range_below': 15,
+		\ 'mark_above': '[↑]',
+		\ 'mark_below': '[↓]',
+		\ 'mark_changes': '[*]',})
 	call deoplete#custom#source('member', 'filetypes', [])
 	call deoplete#custom#source('emoji', 'filetypes', [])
 	call deoplete#custom#source('emoji', 'converters', ['converter_emoji'])
+	call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 endif
 " Global options {{{
 set autoindent
@@ -788,7 +806,8 @@ set backspace=indent,eol,start
 set cmdheight=2
 set cmdwinheight=10
 set complete+=kt
-set completeopt=menuone,preview
+" set completeopt=menuone,preview
+set completeopt=menuone
 set concealcursor=n
 set conceallevel=0
 set clipboard=unnamedplus
@@ -799,7 +818,7 @@ set encoding=utf8
 set exrc
 let g:xml_syntax_folding=1
 set foldmethod=syntax
-set foldlevelstart=99
+" set foldlevelstart=99
 " set foldopen=hor,mark,percent,quickfix,search,tag,undo
 set foldopen=hor,search,quickfix,tag
 set gdefault
@@ -847,8 +866,10 @@ set notimeout
 set nottimeout
 set ttimeoutlen=50
 set undodir=~/.vim/undodir/
+set nofoldenable 
 set undofile
 set updatetime=500
+set virtualedit=all
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
@@ -881,8 +902,11 @@ nmap <nowait> <leader>s :update<cr>
 map <silent><leader>R :source ~/.config/nvim/init.vim<cr>
 map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
-imap <NUL> <space>h
-nmap <leader>.. :cd ..<cr>:pwd<cr>
+" prepend space on <c-space>?
+" imap <NUL> <space>h
+" imap <c-space> <space>h
+imap <s-space> <space>h
+nmap <leader>cc :cd ..<cr>:pwd<cr>
 " TODO: Filter ansi escape sequences from filename when file not found
 nmap <leaer>gf vgf
 nmap com :se modifiable!<cr>
@@ -1136,6 +1160,14 @@ nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 " Miscellaneous {{{
 match ErrorMsg /error/
 2match WarningMsg /warning/
+" highlight too long lines
+" match Error /\%>80c/
+function! s:create_toggle_map(letter, test, off, on)
+  execute 'nnoremap [o' . a:letter . ' :' . a:on . '<CR>'
+  execute 'nnoremap ]o' . a:letter . ' :' . a:off . '<CR>'
+  execute 'nnoremap co' . a:letter . ' :' . '<C-r>=' . a:test . '?"' . a:off . '":"' . a:on . '"<CR><CR>'
+endfunction
+call s:create_toggle_map('t', 'match(&colorcolumn, "+1")>=0', 'set colorcolumn-=+1', 'set colorcolumn+=+1')
 
 autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
@@ -1335,11 +1367,34 @@ map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: underst
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
-" map M :exe "!tmux send -t 2 'some command \\\"" . getline(".") . "\\\"' Enter"<cr>
+
+map <c-w>k :close<cr>
+map <c-w><c-k> :close<cr>
+
+let cmd_prefix='ssh esim sudo qmicli -d /dev/cdc-wdm1'
+" let cmd_prefix='qmicli -d /dev/cdc-wdm0'
+" let cmd_prefix='sudo mbimcli -d /dev/cdc-wdm0'
+" map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>:echo s<cr>:let cmd="!tmux send -t 2 \"echo " . shellescape(cmd_prefix . " " . s) . "\" Enter"<cr>:echo cmd<cr>:execute(cmd)<cr>
+map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>
+	    \ :let @0=system(cmd_prefix . " " . s)<cr>
+	    \ "0p<}
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
 " TODO: try to understand why vim does this
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}
+
+tnoremap <expr> <c-s-v> '<c-\><c-n>"'.nr2char(getchar()).'pi'
+tnoremap <c-[> <c-\><c-n>
+
+nnoremap ,w :call TermDebugSendCommand('where')<CR>
+nnoremap <m-s-r> :Stop<cr>
+nnoremap <f9> :Break<cr>
+nnoremap <leader>B :Break<cr>
+nnoremap <s-f10> :Over<cr>
+nnoremap <s-f11> :Step<cr>
+nnoremap <c-s-f11> :Finish<cr>
+
+" tnoremap <cr> i
 
