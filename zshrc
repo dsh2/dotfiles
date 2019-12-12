@@ -566,9 +566,10 @@ bindkey -s rq\  'r2 -Nqc '' -'
 bindkey -s at\  "a''t "
 bindkey -s ati\  "a''t !"
 bindkey -s atii\  "a''t !=?"
-bindkey -s cl\  'cat $tmux_log_file\t '
-bindkey -s clq\  'cat $tmux_log_file\t | jq .'
-bindkey -s clj\  'cat $tmux_log_file\t | jq .'
+bindkey -s atp\  "a''t ^"
+bindkey -s cl\  'c $tmux_log_file\t '
+bindkey -s clq\  'c $tmux_log_file\t | jq .'
+bindkey -s clj\  'c $tmux_log_file\t | jq .'
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
@@ -884,7 +885,7 @@ zsh_source ~/.environment
 zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
-p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O user,ppid,start_time ) }
+p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
@@ -945,6 +946,16 @@ alias Kr=tmux_send_keys_right
 alias Kl=tmux_send_keys_left
 alias Ka=tmux_send_keys_above
 alias Kb=tmux_send_keys_below
+
+tmux_send_line_right() { tmux send-keys -t $(tmux_neighbor_pane right) "$*" $'\n' }
+tmux_send_line_left() { tmux send-keys -t $(tmux_neighbor_pane left) "$*" $'\n'}
+tmux_send_line_above() { tmux send-keys -t $(tmux_neighbor_pane above) "$*" $'\n' }
+tmux_send_line_below() { tmux send-keys -t $(tmux_neighbor_pane below) "$*" $'\n' }
+
+alias Lr=tmux_send_line_right
+alias Ll=tmux_send_line_left
+alias La=tmux_send_line_above
+alias Lb=tmux_send_line_below
 
 
 cdp() {
@@ -1047,6 +1058,7 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LV=' |& lnav'
+alias -g LQ=' |& lnav -q'
 alias -g LVT=' |& lnav -t'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
