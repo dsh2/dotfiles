@@ -535,4 +535,7 @@ alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
 sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
+alias nw=notmuch
+alias sw=sway
+alias swm=swaymsg
 # vim: se ft=sh:
