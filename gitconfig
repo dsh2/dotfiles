@@ -35,3 +35,5 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+[diff]
+	submodule = log
