@@ -217,7 +217,8 @@ alias v=$EDITOR
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+# vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias qm=qmicli
