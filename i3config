@@ -1,22 +1,20 @@
-# TODO:
-# -add more mouse bindings
-# -add default sizes
-#  -thunderbird reminders
-#  -youtube floating
-# -empty node cleanup
-# Set variables
-set $SUPER Mod4
-set $ALT Mod1
-set $CTRL Control
+# vim: filetype=config fdm=marker sw=4 ts=4
 
+# Set modifier {{{
+set $shift Shift
+set $ctrl Control
+set $meta Mod4
+set $ALT Mod1
+# }}}
+
+# Set direction keys {{{
 set $up k
 set $down j
 set $left h
 set $right l
+# }}}
 
-set $LOCKER xautolock -locknow && sleep 0.1
-
-# Colors
+# Colors {{{
 # class                 border  backgr. text    indicator child_border
 client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
 client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
@@ -24,299 +22,406 @@ client.unfocused        #333333 #222222 #888888 #292d2e   #222222
 client.urgent           #2f343a #900000 #ffffff #900000   #900000
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 client.background       #ffffff
+# }}}
 
-# Set options
-floating_modifier $ALT
-floating_modifier $SUPER
+# Font {{{
+# set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# set $font pango:monospace 10
+# set $font pango:Noto Sans Mono 10
+set $font "pango:DejaVu Sans Mono 11"
+font $font
+# set $i3input i3-input -f "$font"
+# TODO: make eval on right side of set work
+set $i3input i3-input -f "pango:DejaVu Sans Mono 11"
+# }}}
+
+# Set default applications {{{
+set $browser google-chrome-stable
+set $terminal kitty
+set $terminal_tmux kitty zsh -ic 'tmm'
+set $locker xautolock -locknow && sleep 0.1
+# set $i3input i3-input -f "$font"
+# }}}
+
+# Options {{{
+floating_modifier $alt
+
+floating_minimum_size 200 x 200
+# floating_maximum_size 200 x 200
+
 focus_follows_mouse yes
-focus_wrapping no
-# focus_wrapping force
+focus_wrapping wrapping # focus_wrapping force
 hide_edge_borders both
 no_focus [window_role="pop-up"]
 force_display_urgency_hint 500 ms
-popup_during_fullscreen leave_fullscreen
-# popup_during_fullscreen ignore
-# popup_during_fullscreen smart
+popup_during_fullscreen leave_fullscreen # ignore, smart
 show_marks yes
 for_window [class=".*"] title_format "%title"
 # for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 # for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
-# TODO: make this work
-bindsym $SUPER+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-workspace_layout tabbed
-workspace_auto_back_and_forth yes
 
-floating_minimum_size 75 x 50
-floating_maximum_size 200 x 200
+# bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+workspace_layout stacking # default, stacking, tabbed
+workspace_auto_back_and_forth yes
 
 for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
 for_window [class="wireshark"] floating enable
-bindsym $SUPER+z exec --no-startup-id i3-msg 'workspace 5; exec wireshark; workspace 1'
+# }}}
 
-# Font
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-font pango:monospace 10
-# font pango:DejaVu Sans Mono 11
-# font pango:Noto Sans Mono 11
+# Focus standard applications{{{
+# bindsym $alt+shift+1 [window_role="(?i)browser"] focus
+bindsym $alt+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
+# bindsym $alt+shift+1 fullscreen disable; [class="(?i)chrome"] focus
+# bindsym $alt+shift+3 exec rofi -e Terminal
+bindsym $alt+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"] focus
+# }}}
 
-# Key bindings
+# Key bindings {{{
 
-# rofi
-# TODO: 
-# -add binding to move selected window to 
-#  -current container
-#  -new split
-#  -new tab
-# bindsym $ALT+Tab exec rofi -lines 20 -window-format '{w} {t} {n} {r} {c}' show-icons -show window
-bindsym $ALT+Tab exec rofi -show window
+# Move focused container to workspace {{{
+bindsym $meta+$alt+$shift+1 move container to workspace number 1
+bindsym $meta+$alt+$shift+2 move container to workspace number 2
+bindsym $meta+$alt+$shift+3 move container to workspace number 3
+bindsym $meta+$alt+$shift+4 move container to workspace number 4
+bindsym $meta+$alt+$shift+5 move container to workspace number 5
+bindsym $meta+$alt+$shift+6 move container to workspace number 6
+bindsym $meta+$alt+$shift+7 move container to workspace number 7
+bindsym $meta+$alt+$shift+8 move container to workspace number 8
+bindsym $meta+$alt+$shift+9 move container to workspace number 9
+bindsym $meta+$alt+$shift+0 move container to workspace number 0
+# }}}
+
+# Change workspaces {{{
+
+bindsym $meta+BackSpace focus output left
+bindsym $meta+$shift+BackSpace focus output right
+
+bindsym $meta+1 workspace prev_on_output
+bindsym $meta+2 workspace next_on_output
+# TODO: Make these work
+bindsym $meta+3 workspace back_and_forth
+bindsym $meta+9 workspace $WS_COMS
+bindsym $meta+0 workspace $WS_LOG
+
+### }}}
+
+# Rofi {{{
+bindsym $alt+Tab exec rofi -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
-# bindsym $ALT+Tab workspace back_and_forth
-bindsym $ALT+space exec rofi -mesg ok -fullscreen -show combi
-bindsym $SUPER+space exec rofi -show run -sidebar-mode -lines 0
-bindsym $ALT+$CTRL+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
+# bindsym $alt+Tab workspace back_and_forth
+bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
+bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
+# }}}
 
-# Focus standard applications
-# bindsym $ALT+shift+1 [window_role="(?i)browser"] focus
-bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
-# bindsym $ALT+shift+1 fullscreen disable; [class="(?i)chrome"] focus
-# bindsym $ALT+shift+3 exec rofi -e Terminal
-bindsym $ALT+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"] focus
+bindsym $meta+$shift+r reload
+bindsym $meta+$shift+n bar mode toggle
 
 # Kill focused window
-bindsym $SUPER+shift+q kill
-bindsym $Alt+F4 kill
+bindsym $meta+q kill
+bindsym $meta+$shift+q kill
+bindsym $alt+F4 kill
 
 # Change focus
-bindsym $SUPER+$left focus left
-bindsym $SUPER+$right focus right
-bindsym $SUPER+$up focus up
-bindsym $SUPER+$down focus down
-bindsym $SUPER+a focus parent
-bindsym $SUPER+d focus child
-bindsym $SUPER+Shift+p focus output primary
-bindsym $SUPER+Shift+s sticky toggle
+bindsym $meta+$left focus left
+bindsym $meta+c focus left
+bindsym $meta+$right focus right
+bindsym $meta+$up focus up
+bindsym $meta+$down focus down
+bindsym $meta+a focus parent
+bindsym $meta+d focus child
+bindsym $meta+$shift+p focus output primary
+bindsym $meta+$shift+s sticky toggle
 
 # Change split
-bindsym $SUPER+shift+v split h
-bindsym $SUPER+v split v
+bindsym $meta+shift+v split h
+bindsym $meta+v split v
+
+# Resize focued window
+bindsym $meta+shift+$right resize grow width 10 px or 10 ppt
+bindsym $meta+shift+$left resize shrink width 10 px or 10 ppt
+bindsym $meta+shift+$up resize shrink height 10 px or 10 ppt
+bindsym $meta+shift+$down move downmove down
+# bindsym $meta+s layout stacking
+# bindsym $meta+t layout tabbed
+# bindsym $meta+e layout toggle split
 
 # Change container layout
-bindsym $SUPER+shift+$left move left
-bindsym $SUPER+shift+$right move right
-bindsym $SUPER+shift+$up move up
-bindsym $SUPER+shift+$down move down
-bindsym $SUPER+s layout stacking
-bindsym $SUPER+t layout tabbed
-bindsym $SUPER+e layout toggle split
+bindsym $meta+$ctrl+$left move left
+bindsym $meta+$ctrl+$right move right
+bindsym $meta+$ctrl+$up move up
+bindsym $meta+$ctrl+$down move down
+bindsym $meta+s layout stacking
+bindsym $meta+t layout tabbed
+bindsym $meta+e layout toggle split
 
-bindsym $SUPER+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
-bindsym $SUPER+shift+f fullscreen
+bindsym $meta+$alt+$shift+$left focus output left
+bindsym $meta+$alt+$shift+$right focus output right
+bindsym $meta+$alt+$left move workspace to output left; focus output left
+bindsym $meta+$alt+$right move workspace to output right; focus output right
+bindsym $meta+x [urgent=latest] focus
+
+# Fullscreen
+bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+# bindsym $meta+shift+f fullscreen
+bindsym $meta+$shift+f fullscreen
+bindsym $meta+z fullscreen
+bindsym $meta+$alt+$shift+f fullscreen global
 
 # Toggle tiling / floating
-bindsym $SUPER+c floating toggle
-bindsym $SUPER+shift+c focus mode_toggle
+bindsym $meta+i floating toggle
+bindsym $meta+shift+i focus mode_toggle
+bindsym $meta+shift+c focus mode_toggle
+
+# Border changing
+bindsym $meta+b border toggle
 
 # Scratchpad
 # TODO: make scratchpad visible
-# bindsym $SUPER+m move scratchpad
-# bindsym $SUPER+o scratchpad show
+# bindsym $meta+m move scratchpad
+# bindsym $meta+o scratchpad show
 
 # Start a terminal
-bindsym $SUPER+Return exec i3-sensible-terminal
+bindsym $meta+Return exec $terminal_tmux
+bindsym $meta+$shift+Return exec $terminal
+bindsym $meta+7 exec $terminal
+bindsym $meta+$shift+7 exec $terminal_tmux
+bindsym $meta+8 exec $terminal
+bindsym $meta+$shift+8 exec $terminal_tmux
 
-# Border changing
-bindsym $SUPER+b border toggle
+# Screen brightness
+bindsym $meta+$alt+$ctrl+j exec "lux -s 25"
+bindsym $meta+$alt+$ctrl+k exec "lux -a 25"
 
-# Pulse audio volume control
-bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -- '-5%'
-bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
-bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
+# Start a browser
+bindsym $ctrl+Return exec $browser
+bindsym $meta+n workspace NEW, exec $browser
 
+# bindsym $meta+$alt+space exec $i3input -F 'workspace "%s", exec $terminal_tmux' -P 'New workspace name: ', $MODE_RETURN
+bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"' -P 'New workspace name: ', $MODE_RETURN
+# Lock screen
+bindsym $meta+$shift+a exec $hc_bin/i3lock-wrapper.sh
+
+# Pulse audio volume control {{{
+# set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@ -- '+5%'
+# bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -- '-5%'
+# bindsym $alt+f7  exec pactl set-sink-volume @DEFAULT_SINK@ -- '-5%'
+
+# bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ -- '+5%'
+
+set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $alt+F9 $pa_toggle_mute
+bindsym XF86AudioMute $pa_toggle_mute
+# }}}
+
+# Mode bindings {{{
 set $MODE_RETURN mode "default"
-
-set $MODE_I3 "I3"
-set $MODE_I3_KEY i
+# Mode "i3 general" {{{
+set $MODE_I3 "I3: (r)ename workspace, (t)ag container, (s)how bar"
+set $MODE_I3_KEY u
+bindsym $meta+$MODE_I3_KEY mode $MODE_I3
 mode $MODE_I3 {
-    bindsym r exec i3-input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
-    bindsym t exec i3-input -F 'mark "%s"' -P 'Tag: ', $MODE_RETURN
-    # bindsym m exec i3-input -F 'mark %s' -l 1 -P 'Mark: ', $MODE_RETURN
-    bindsym m exec i3-input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
-    bindsym n workspace new, exec i3-sensible-terminal, $MODE_RETURN
-    bindsym Shift+n move container to workspace new, $MODE_RETURN
-    # bindsym o exec i3-input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
+	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
+	# bindsym "$" exec $i3input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
+	bindsym t exec $i3input -F 'mark "%s"' -P 'Tag: ', $MODE_RETURN
+	bindsym s bar mode toggle, $MODE_RETURN
+	bindsym m exec $i3input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
+	# bindsym m exec $i3input -F 'mark %s' -l 1 -P 'Mark: ', $MODE_RETURN
+	# bindsym Shift+n move container to workspace new, $MODE_RETURN
+	# bindsym o exec $i3input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
 
-    # Focus standard workspaces
-    bindsym 1 workspace $WS_ROOT, $MODE_RETURN
-    bindsym 9 workspace $WS_COMS, $MODE_RETURN
-    bindsym 0 workspace $WS_LOG, $MODE_RETURN
+	# Focus standard workspaces
+	bindsym 1 workspace $WS_ROOT, $MODE_RETURN
+	bindsym 9 workspace $WS_COMS, $MODE_RETURN
+	bindsym 0 workspace $WS_LOG, $MODE_RETURN
 
-    # Move to focused container to workspace
-    bindsym Shift+1 move container to workspace $WS_ROOT, $MODE_RETURN
-    bindsym Shift+9 move container to workspace $WS_COMS, $MODE_RETURN
-    bindsym Shift+0 move container to workspace $WS_LOG, $MODE_RETURN
+	# Move to focused container to workspace
+	bindsym Shift+1 move container to workspace $WS_ROOT, $MODE_RETURN
+	bindsym Shift+9 move container to workspace $WS_COMS, $MODE_RETURN
+	bindsym Shift+0 move container to workspace $WS_LOG, $MODE_RETURN
 
-    # Exit mode
-    bindsym Return $MODE_RETURN
-    bindsym Escape $MODE_RETURN
-    bindsym $SUPER+$MODE_I3_KEY $MODE_RETURN
+	# Exit mode
+	bindsym $ctrl+c $MODE_RETURN
+	bindsym Return $MODE_RETURN
+	bindsym Escape $MODE_RETURN
+	bindsym $meta+$MODE_I3_KEY $MODE_RETURN
 }
-bindsym $SUPER+$MODE_I3_KEY mode $MODE_I3
+# }}}
 
-# Workspace setup
-# Define standard workspaces
-set $WS_ROOT "1: root"
-# TODO: add WS_CAL
-set $WS_COMS "9: comms"
+# Mode "move" {{{
+set $MODE_MOVE "MOVE"
+bindsym $meta+m mode $MODE_MOVE
+mode $MODE_MOVE {
+bindsym $left move left
+bindsym $up move up
+bindsym $down move down
+bindsym $right move right
+# TODO: add shift mod to move faster (i.e. more pixels)
+
+# Exit mode
+bindsym $ctrl+c $MODE_RETURN
+bindsym Return $MODE_RETURN
+bindsym Escape $MODE_RETURN
+bindsym $meta+m $MODE_RETURN
+bindsym $meta+r mode $MODE_RESIZE
+bindsym $meta+$shift+m mode $MODE_MANIPULATE
+}
+# }}}
+
+# Mode "resize" {{{
+set $MODE_RESIZE "RESIZE"
+bindsym $meta+r mode $MODE_RESIZE
+mode $MODE_RESIZE {
+bindsym $right resize shrink width 10 px or 10 ppt
+bindsym $left resize grow width 10 px or 10 ppt
+bindsym $up resize shrink height 10 px or 10 ppt
+bindsym $down resize grow height 10 px or 10 ppt
+
+bindsym $ctrl+$left resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+bindsym $ctrl+$up resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
+bindsym $ctrl+$down resize grow height 10 px or 10 ppt; resize grow width 10 px or 10 ppt
+
+bindsym shift+$left move left
+bindsym shift+$up move up
+bindsym shift+$down move down
+bindsym shift+$right move right
+
+# Exit mode
+bindsym $ctrl+c $MODE_RETURN
+bindsym Return $MODE_RETURN
+bindsym Escape $MODE_RETURN
+bindsym $meta+r $MODE_RETURN
+bindsym $meta+m mode $MODE_MOVE
+bindsym $meta+shift+m mode $MODE_MANIPULATE
+}
+# }}}
+
+# Mode "manipulate" {{{
+set $MODE_MANIPULATE "MANIPULATE"
+set $MODE_MANIPULATE_step 6
+bindsym $meta+shift+m mode $MODE_MANIPULATE
+mode $MODE_MANIPULATE {
+bindsym $left resize shrink width $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+bindsym $up resize shrink height $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+bindsym $down resize grow height $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+bindsym $right resize grow width $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+
+bindsym $ctrl+$left resize shrink width $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt; resize shrink height $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+bindsym $ctrl+$up resize shrink width $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt; resize shrink height $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+bindsym $ctrl+$down resize grow height $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt; resize grow width $MODE_MANIPULATE_step px or $MODE_MANIPULATE_step ppt
+
+bindsym shift+$left move left
+bindsym shift+$up move up
+bindsym shift+$down move down
+bindsym shift+$right move right
+
+# Exit mode
+bindsym $ctrl+c $MODE_RETURN
+bindsym Return $MODE_RETURN
+bindsym Escape $MODE_RETURN
+bindsym $meta+shift+m $MODE_RETURN
+bindsym $meta+r mode $MODE_RESIZE
+bindsym $meta+m mode $MODE_MANIPULATE
+}
+# }}}
+
+# Mode "system" {{{
+bindsym $meta+o mode "$MODE_SYSTEM"
+set $MODE_SYSTEM  (s)uspend, (h)ibernate, (l)ock, (e)xit
+mode "$MODE_SYSTEM" {
+bindsym l exec --no-startup-id $locker, $MODE_RETURN
+bindsym e exec --no-startup-id i3-msg exit, $MODE_RETURN
+bindsym s exec --no-startup-id $locker && systemctl suspend, $MODE_RETURN
+bindsym h exec --no-startup-id $locker && systemctl hibernate, $MODE_RETURN
+# bindsym r exec --no-startup-id systemctl reboot, $MODE_RETURN
+# bindsym Shift+s exec --no-startup-id  systemctl poweroff -i, $MODE_RETURN
+
+bindsym Return $MODE_RETURN
+bindsym Escape $MODE_RETURN
+bindsym $meta+f $MODE_RETURN
+bindsym $meta+o $MODE_RETURN
+}
+# bindsym $meta+Del exec $locker
+# }}}
+
+# Passthrough mode  {{{
+# TODO: what is going on here...?
+bindsym $meta+p mode "passthrough"
+mode "passthrough" {
+bindsym $meta+p $MODE_RETURN
+}
+# }}}
+
+# }}}
+
+# }}}
+
+# Mouse bindings {{{
+bindsym --whole-window $meta+button1 floating toggle
+# bindsym --release button1 floating toggle
+bindsym --release button2 kill
+
+bindsym $meta+$shift+w exec "notify-send \\"Hello, i3; from $USER\\""
+
+# The side buttons move the window around
+bindsym button8 move right
+bindsym button9 move left
+
+# }}}
+
+# Bars {{{
+bar {
+	position top
+	font $font
+	status_command i3status
+	tray_output primary
+	tray_padding 3 px 
+	separator_symbol " | "
+	strip_workspace_numbers no
+	strip_workspace_name no
+	binding_mode_indicator yes
+	workspace_buttons yes
+	# mode dock
+	# hidden_state show
+	colors {
+		background #000000
+		statusline #ffffff
+		separator #666666
+
+		focused_workspace  #4c7899 #285577 #ffffff
+		active_workspace   #333333 #5f676a #ffffff
+		inactive_workspace #333333 #222222 #888888
+		urgent_workspace   #2f343a #900000 #ffffff
+		binding_mode       #2f343a #909000 #ffffff
+	}
+}
+# }}}
+
+# Default workspaces {{{
+
 set $WS_LOG "0: log"
+set $WS_ROOT "1: root"
+set $WS_COMS "9: comms"
 
-# WS_COM
+# WS_ROOT {{{
+# }}}
+
+# WS_COM {{{
 # TODO: Make these work
 assign [class="google-chrome" title="Telegram Web"] $WS_COMS
 assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
-for_window [class="wireshark"] move to workspace 5
+# for_window [class="wireshark"] move to workspace 5
+# }}}
 
-# WS_ROOT
+# }}}
 
-# Workspace setup
-# TODO: add bindsym to i3-input to rename a WS
-# Define standard workspaces
-set $WS_ROOT "1: root"
-set $WS_COMS "9: comms"
-set $WS_LOG "0: log"
 
-# Change workspaces
-bindsym $SUPER+1 workspace prev
-bindsym $SUPER+2 workspace next
-# TODO: Make these work
-# bindsym $SUPER+, workspace prev
-# bindsym $SUPER+. workspace next
-bindsym $SUPER+3 workspace back_and_forth
-bindsym $SUPER+9 workspace $WS_COMS
-bindsym $SUPER+0 workspace $WS_LOG
-
-# restart/exit
-bindsym $SUPER+shift+r restart
-bindsym $SUPER+shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-
-# Multiple screens
-bindsym $SUPER+u move workspace to output right
-
-# Mouse bindings
-# TODO: Does not seem to work... test more
-# bindsym --while-window $SUPER+button1 floating toggle
-
-set $MODE_MOVE "MOVE"
-mode $MODE_MOVE {
-    bindsym $left move left
-    bindsym $up move up
-    bindsym $down move down
-    bindsym $right move right
-    # TODO: add shift mod to move faster (i.e. more pixels)
-
-    # Exit mode
-    bindsym Return $MODE_RETURN
-    bindsym Escape $MODE_RETURN
-    bindsym $SUPER+m $MODE_RETURN
-    bindsym $SUPER+r mode $MODE_RESIZE
-    bindsym $SUPER+shift+m mode $MODE_MANIPULATE
-}
-bindsym $SUPER+m mode $MODE_MOVE
-
-set $MODE_RESIZE "RESIZE"
-mode $MODE_RESIZE {
-    bindsym $left resize shrink width 10 px or 10 ppt
-    bindsym $up resize shrink height 10 px or 10 ppt
-    bindsym $down resize grow height 10 px or 10 ppt
-    bindsym $right resize grow width 10 px or 10 ppt
-
-    bindsym $CTRL+$left resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
-    bindsym $CTRL+$up resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
-    bindsym $CTRL+$down resize grow height 10 px or 10 ppt; resize grow width 10 px or 10 ppt
-
-    bindsym shift+$left move left
-    bindsym shift+$up move up
-    bindsym shift+$down move down
-    bindsym shift+$right move right
-
-    # Exit mode
-    bindsym Return $MODE_RETURN
-    bindsym Escape $MODE_RETURN
-    bindsym $SUPER+r $MODE_RETURN
-    bindsym $SUPER+m mode $MODE_MOVE
-    bindsym $SUPER+shift+m mode $MODE_MANIPULATE
-}
-bindsym $SUPER+r mode $MODE_RESIZE
-
-set $MODE_MANIPULATE "MANIPULATE"
-mode $MODE_MANIPULATE {
-    bindsym $left resize shrink width 10 px or 10 ppt
-    bindsym $up resize shrink height 10 px or 10 ppt
-    bindsym $down resize grow height 10 px or 10 ppt
-    bindsym $right resize grow width 10 px or 10 ppt
-
-    bindsym $CTRL+$left resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
-    bindsym $CTRL+$up resize shrink width 10 px or 10 ppt; resize shrink height 10 px or 10 ppt
-    bindsym $CTRL+$down resize grow height 10 px or 10 ppt; resize grow width 10 px or 10 ppt
-
-    bindsym shift+$left move left
-    bindsym shift+$up move up
-    bindsym shift+$down move down
-    bindsym shift+$right move right
-
-    # Exit mode
-    bindsym Return $MODE_RETURN
-    bindsym Escape $MODE_RETURN
-    bindsym $SUPER+shift+m $MODE_RETURN
-    bindsym $SUPER+r mode $MODE_RESIZE
-    bindsym $SUPER+m mode $MODE_MANIPULATE
-}
-bindsym $SUPER+shift+m mode $MODE_MANIPULATE
-
-# i3bars
-# TODO: add long bars for big screens
-bar {
-    status_command i3status
-    # position top
-    # mode hide
-    # modifier $SUPER
-    tray_output primary
-    workspace_buttons yes
-}
-
-# Passthrough mode
-mode "passthrough" {
-        bindsym $SUPER+p $MODE_RETURN
-}
-bindsym $SUPER+p mode "passthrough"
-
-set $MODE_SYSTEM  (s)uspend, (h)ibernate, (l)ock, (e)xit
-mode "$MODE_SYSTEM" {
-    bindsym l exec --no-startup-id $LOCKER, $MODE_RETURN
-    bindsym e exec --no-startup-id i3-msg exit, $MODE_RETURN
-    bindsym s exec --no-startup-id $LOCKER && systemctl suspend, $MODE_RETURN
-    bindsym h exec --no-startup-id $LOCKER && systemctl hibernate, $MODE_RETURN
-    # bindsym r exec --no-startup-id systemctl reboot, $MODE_RETURN
-    # bindsym Shift+s exec --no-startup-id  systemctl poweroff -i, $MODE_RETURN
-
-    bindsym Return $MODE_RETURN
-    bindsym Escape $MODE_RETURN
-    bindsym $SUPER+f $MODE_RETURN
-    bindsym $SUPER+o $MODE_RETURN
-}
-bindsym $SUPER+o mode "$MODE_SYSTEM"
-# bindsym $SUPER+Del exec $LOCKER
-
-# Autostart
+# Autostart {{{
 exec_always --no-startup-id xset -b -c r rate 200 140
 exec_always --no-startup-id shutter
-exec_always --no-startup-id parcellite
 exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
-# TODO: add notifier to xautolock
-exec --no-startup-id nm-applet
-exec --no-startup-id pa-applet
-# exec --no-startup-id batti # Battery indicator
-# exec_always --no-startup-id sleep 3 && xmodmap ~/.xmodmap
-# TODO:
-# -start while nping, filter stderr-events in separate window to document network condition/uptime behavior 
-
-# vim:filetype=i3config
+exec_always --no-startup-id nm-applet
+exec_always --no-startup-id pa-applet
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id notify-send "i3config loaded."
+# }}}
