@@ -538,4 +538,6 @@ sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnec
 alias nw=notmuch
 alias sw=sway
 alias swm=swaymsg
+alias i3m=i3-msg
+alias ki=kitty
 # vim: se ft=sh:
