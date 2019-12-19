@@ -302,7 +302,15 @@ alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
-alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+# alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+tmm() {
+    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
+    TAG_NAME=$(echo $TAG_NAME | tr -d " :" )
+    if tmux has-session -t $TAG_NAME >/dev/null; then
+	tmux attach-session -t $TAG_NAME
+    else tmux new-session -s $TAG_NAME
+	fi
+    }
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
