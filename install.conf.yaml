@@ -3,7 +3,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/copyq ~/.config/dunstrc ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.config/kitty ~/.config/copyq ~/.config/dunst ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
@@ -34,6 +34,7 @@
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
     ~/.config/i3/config: i3config
+    ~/.config/kitty/kitty.konf: kitty.conf
     ~/.clang-format: clang-format
     ~/.environment: environment
     ~/.fzfrc: fzfrc
