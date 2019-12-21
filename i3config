@@ -50,7 +50,7 @@ floating_minimum_size 200 x 200
 # floating_maximum_size 200 x 200
 
 focus_follows_mouse yes
-focus_wrapping wrapping # focus_wrapping force
+focus_wrapping yes # focus_wrapping force
 hide_edge_borders both
 no_focus [window_role="pop-up"]
 force_display_urgency_hint 500 ms
@@ -78,6 +78,19 @@ bindsym $alt+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"]
 
 # Key bindings {{{
 
+# Focus workspace {{{
+bindsym $meta+$alt+1 workspace number 1
+bindsym $meta+$alt+2 workspace number 2
+bindsym $meta+$alt+3 workspace number 3
+bindsym $meta+$alt+4 workspace number 4
+bindsym $meta+$alt+5 workspace number 5
+bindsym $meta+$alt+6 workspace number 6
+bindsym $meta+$alt+7 workspace number 7
+bindsym $meta+$alt+8 workspace number 8
+bindsym $meta+$alt+9 workspace number 9
+bindsym $meta+$alt+0 workspace number 0
+# }}}
+
 # Move focused container to workspace {{{
 bindsym $meta+$alt+$shift+1 move container to workspace number 1
 bindsym $meta+$alt+$shift+2 move container to workspace number 2
@@ -98,7 +111,10 @@ bindsym $meta+$shift+BackSpace focus output right
 
 bindsym $meta+1 workspace prev_on_output
 bindsym $meta+2 workspace next_on_output
-# TODO: Make these work
+bindsym $ctrl+$meta+$alt+9 workspace prev
+bindsym $ctrl+$meta+$alt+0 workspace next
+bindsym $meta+$shift+1 workspace prev
+bindsym $meta+$shift+2 workspace next
 bindsym $meta+3 workspace back_and_forth
 bindsym $meta+9 workspace $WS_COMS
 bindsym $meta+0 workspace $WS_LOG
@@ -155,10 +171,12 @@ bindsym $meta+s layout stacking
 bindsym $meta+t layout tabbed
 bindsym $meta+e layout toggle split
 
-bindsym $meta+$alt+$shift+$left focus output left
-bindsym $meta+$alt+$shift+$right focus output right
-bindsym $meta+$alt+$left move workspace to output left; focus output left
-bindsym $meta+$alt+$right move workspace to output right; focus output right
+bindsym $meta+$alt+$left move container to output left
+bindsym $meta+$alt+$right move container to output right
+
+bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
+bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
+
 bindsym $meta+x [urgent=latest] focus
 
 # Fullscreen
@@ -176,11 +194,6 @@ bindsym $meta+shift+c focus mode_toggle
 # Border changing
 bindsym $meta+b border toggle
 
-# Scratchpad
-# TODO: make scratchpad visible
-# bindsym $meta+m move scratchpad
-# bindsym $meta+o scratchpad show
-
 # Start a terminal
 bindsym $meta+Return exec $terminal_tmux
 bindsym $meta+$shift+Return exec $terminal
@@ -190,8 +203,8 @@ bindsym $meta+8 exec $terminal
 bindsym $meta+$shift+8 exec $terminal_tmux
 
 # Screen brightness
-bindsym $meta+$alt+$ctrl+j exec "lux -s 25"
-bindsym $meta+$alt+$ctrl+k exec "lux -a 25"
+bindsym $meta+$alt+$ctrl+j exec "lux -s 45"
+bindsym $meta+$alt+$ctrl+k exec "lux -a 45"
 
 # Start a browser
 bindsym $ctrl+Return exec $browser
@@ -225,6 +238,9 @@ mode $MODE_I3 {
 	# bindsym "$" exec $i3input -F 'rename workspace to "%s"' -P 'Workspace name: ', $MODE_RETURN
 	bindsym t exec $i3input -F 'mark "%s"' -P 'Tag: ', $MODE_RETURN
 	bindsym s bar mode toggle, $MODE_RETURN
+	bindsym h move scratchpad, $MODE_RETURN
+	bindsym m scratchpad show, $MODE_RETURN
+
 	bindsym m exec $i3input -F 'move container to %s' -l 1 -P 'Mark: ', $MODE_RETURN
 	# bindsym m exec $i3input -F 'mark %s' -l 1 -P 'Mark: ', $MODE_RETURN
 	# bindsym Shift+n move container to workspace new, $MODE_RETURN
@@ -376,7 +392,7 @@ bar {
 	status_command i3status
 	tray_output primary
 	tray_padding 3 px 
-	separator_symbol " | "
+	separator_symbol "|"
 	strip_workspace_numbers no
 	strip_workspace_name no
 	binding_mode_indicator yes
@@ -399,9 +415,9 @@ bar {
 
 # Default workspaces {{{
 
-set $WS_LOG "0: log"
-set $WS_ROOT "1: root"
-set $WS_COMS "9: comms"
+set $WS_LOG "0:log"
+set $WS_COMS "1:comms"
+set $WS_ROOT "3:root"
 
 # WS_ROOT {{{
 # }}}
@@ -415,10 +431,9 @@ assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
 
 # }}}
 
-
 # Autostart {{{
 exec_always --no-startup-id xset -b -c r rate 200 140
-exec_always --no-startup-id shutter
+exec_always --no-startup-id dunst
 exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
