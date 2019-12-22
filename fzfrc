@@ -102,13 +102,13 @@ gch() {
 	title_width=$(( COLUMNS / 2 ))
 	sep='{{::}}'
 	tmp_file=$(mktemp)
-    cp -f "$HOME/.config/google-chrome-history" $tmp_file &&
+	cp -f "$HOME/.config/google-chrome/History" $tmp_file &&
 		sqlite3 -separator $sep $tmp_file  \
 			"select datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), visit_count, substr(title, 1, $title_width), url from urls order by last_visit_time desc" |
 		awk -F $sep '{printf "%s #%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3, $4}' |
 		fzf --ansi --multi \
 			--prompt "chrome history ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " |
-		sed 's#.*\(https*://\)#\1#' | xargs exo-open > /dev/null 2>&1
+		sed 's#.*\(https*://\)#\1#' | xargs xdg-open > /dev/null 2>&1
 	zle && zle redisplay
 }
 zle -N gch; bindkey '\eU' gch
@@ -125,7 +125,7 @@ gcb() {
 		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " \
 		--multi | 
 	    cut -f 3) &&
-	    exo-open $=urls
+	    xdg-open $=urls
 }
 zle -N gcb; bindkey '\eB' gcb
 

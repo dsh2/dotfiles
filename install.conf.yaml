@@ -3,7 +3,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/copyq ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.config/kitty ~/.config/copyq ~/.config/dunst ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
@@ -25,6 +25,7 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
+    ~/.config/i3/config: i3config
     ~/.config/herbstluftwm: herbstluftwm/
     ~/.config/ranger/scope.sh: ranger/scope.sh
     ~/.config/ranger/rifle.conf: ranger/rifle.conf
@@ -32,6 +33,8 @@
     ~/.config/ranger/commands.py: ranger/commands.py
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
+    ~/.config/i3/config: i3config
+    ~/.config/kitty/kitty.konf: kitty.conf
     ~/.clang-format: clang-format
     ~/.environment: environment
     ~/.fzfrc: fzfrc
@@ -54,6 +57,7 @@
     ~/.ssh/hosts/_host_config_template: ssh_host_config_template/
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
+    ~/.config/dunst/dunstrc: dunstrc
     ~/.config/procps/toprc: toprc
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
@@ -63,6 +67,7 @@
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod 0600 ssh_config, Restricting file permissions for ssh_config]
+  - [chmod -R g-rwx ssh_config ssh_host_config_template ~/.ssh, Restricting file permissions for ssh_config]
+  - [chmod -R o-rwx ssh_config ssh_host_config_template ~/.ssh, Restricting file permissions for ssh_config]
   - [chmod 0700 wg, Restricting file permissions of wg]
   - [bin/vim-plug-install, Configuring vim]

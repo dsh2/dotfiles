@@ -36,10 +36,12 @@ in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
 setopt prompt_subst
 setopt prompt_cr
-setopt prompt_sp
+# TODO: try to understand why SP outputs term seqs even when no partial line is present
+setopt noprompt_sp
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< \n missing'
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line (\n missing)'
-export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
+# export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
+unset PROMPT_EOL_MARK
 autoload -Uz vcs_info
 autoload -U colors && colors
 zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%f '
@@ -151,6 +153,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
+zsh_local_history_blacklist="(/mnt|~/mnt|/tmp)"
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
 	# TODO: try to understand why the following regexp matches 
@@ -162,20 +165,32 @@ zshaddhistory() {
 	# echo zshaddhistory: line NOT skipped
 	print -sr -- ${1%%$'\n'}
 	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-	if [[ -w $PWD ]]; then
+	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
 		if [[ $PWD != $HOME ]]; then
 			# print "zshaddhistory: adding to local history in PWD = $PWD"
+			if [[ ! -f $PWD/.zsh_local_history ]]; then  
+			    print "Creating new .zsh_local_history in \"$PWD\"."
+			fi
 			fc -p .zsh_local_history
 		else
 			# print "zshaddhistory: no local history for HOME = $HOME"
 		fi
 	else
-		dir=~/.zsh_local_history_dir${(q)PWD}
-		# echo zshaddhistory: Working directory NOT writeable: fc -p $dir/history
-		mkdir -p $dir && fc -p $dir/history
+		local dir=~/.zsh_local_history_dir${(q)PWD}
+		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
+		if [[ ! -d $dir ]]; then
+		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
+		    mkdir -p $dir 
+		fi
+		fc -p $dir/history
 	fi
 }
 # }}}
+
+PP() {
+    local file=${1:-/dev/stdin}
+    curl --data-binary @${file} https://paste.rs
+} 
 
 # ZLE {{{
 zle_highlight=( 
@@ -371,13 +386,13 @@ function filter_last_output {
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
 		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
-		--preview-window 'up:45%:wrap' \
+		--preview-window 'up:45%:wrap:hidden' \
 		| tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:fs:# :::fs:  : :}
+    BUFFER=${BUFFER:s:# :::fs:  : :}
 }
 bindkey_func '^x^ ' unify_whitespace
 
@@ -399,22 +414,48 @@ function run_ab {
 	[[ -z $BUFFER ]] && zle up-history
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
-	BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
+	if echo $BUFFER | grep -q $zsh_a; then
+	    BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
+	elif echo $BUFFER | grep -q $zsh_b; then
+	    BUFFER=$(echo $BUFFER | sed "s:$zsh_b:$zsh_a:g")
+	else
+	    zle -M "[$zsh_a <> $zsh_b] Not found."
+	fi
 }
 bindkey_func '^x^f' run_ab
 
 function run_prepend {
-	[[ -z $ZSH_PREPEND ]] && { zle -M -- 'ZSH_PREPEND is not set.'; return }
-	[[ -z $BUFFER ]] && zle up-history
+	if [[ -z $ZSH_PREPEND ]]; then
+		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
+			ZSH_PREPEND="ssh ${match[1]%%/*}"
+		else 
+			zle -M -- 'ZSH_PREPEND is not set.'
+			return 
+		fi 
+	fi
+	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
 	BUFFER="$ZSH_PREPEND $BUFFER"
+	CURSOR=$[$#ZSH_PREPEND+1]
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
 
 function run_subshell {
-	[[ -z $BUFFER ]] && zle up-history
-	BUFFER=" \$($BUFFER)"
-	zle beginning-of-line
+	if [[ -n $BUFFER ]]; then
+		local current_buffer=$BUFFER
+		if (( CURSOR )); then
+			zle up-history
+			integer new_cursor=$((CURSOR + $#BUFFER + 3))
+			BUFFER="$current_buffer \$($BUFFER)"
+			CURSOR=new_cursor
+		else
+			BUFFER=" \$($current_buffer)"
+		fi
+	else
+		zle up-history
+		BUFFER=" \$($BUFFER)"
+		CURSOR=0 
+	fi
 }
 bindkey_func '^x^b' run_subshell
 
@@ -422,7 +463,7 @@ function run_sudo {
 	[[ -z $BUFFER ]] && zle up-history
 	[[ -n $SUDO_TARGET_USER ]] && BUFFER="-u $SUDO_TARGET_USER $BUFFER"
 	BUFFER="sudo $BUFFER"
-	zle beginning-of-line
+	CURSOR=5
 }
 bindkey_func '^x^s' run_sudo
 
@@ -522,10 +563,21 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
-bindkey -s cl\  'cat $tmux_log_file\t '
+bindkey -s at\  "a''t "
+bindkey -s ati\  "a''t !"
+bindkey -s atii\  "a''t !=?"
+bindkey -s atp\  "a''t ^"
+bindkey -s cl\  'c $tmux_log_file\t '
+bindkey -s clq\  'c $tmux_log_file\t | jq .'
+bindkey -s cql\  'c $tmux_log_file\t | jq .'
+bindkey -s clj\  'c $tmux_log_file\t | jq .'
+bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
+bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
+bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
+bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
@@ -558,18 +610,22 @@ function start_tmux_logging()
 	# -create log_file_name from cmdline contents and timestamp as history event
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
-	tmux pipe-pane "cat > $tmux_log_file"
+	if has dos2unix; then
+	    tmux pipe-pane "dos2unix -f > $tmux_log_file"
+	else
+	    tmux pipe-pane "cat> $tmux_log_file"
+	fi
 }
 
 function stop_tmux_logging() 
 {
-    [ -z $tmux_log_file ] && return
-    tmux pipe-pane 
-    # HACK: Convert tmux line endings TODO: Check tmux src why
+	[ -z $tmux_log_file ] && return
+	tmux pipe-pane
+	# HACK: Convert tmux line endings TODO: Check tmux src why
 	#
 	# Wait for log file to appear - stop_tmux_logging may be faster than tmux pipe-pane
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
-	sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
 
 function set_terminal_title() 
@@ -660,7 +716,7 @@ bindkey_func '^]^]' zle-toggle-keymap
 zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
-fpath+=~/src/RE/radare2/doc/zsh
+fpath+=~/src/radare2/doc/zsh
 
 zmodload zsh/complist
 autoload -U compinit && compinit
@@ -697,7 +753,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic alsactl autossh capinfos iftop mausezahn ncat netcat nping qmicli qrencode speedometer speedtest-cli tc uuidgen virt-filesystems winedbg zbarimg autorandr capinfos fzf lnav lspci pstree pv shuf tee tshark tty wireshark pandoc tc bmon nmap nping capinfos teamd teamdctl teamnl ncat netcat
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -735,7 +791,7 @@ zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
 setopt menu_complete
 # }}}
-
+ 
 # Shell options {{{
 autoload zmv
 autoload run-help
@@ -746,19 +802,21 @@ set push
 setopt cdablevars
 setopt autonamedirs
 setopt histsubstpattern
+setopt noclobber
 stty -ixon
 
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
+
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
 	TMOUT=
 elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
-	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in AWS.\n"
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in as cloud instance.\n"
 	TMOUT=
 elif [[ -n $TMUX ]]; then
 	TMUX_LOCK_COMMAND=$(tmux show-options -qgv lock-command)
@@ -828,7 +886,7 @@ zsh_source ~/.environment
 zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
-p() { grep --color=always -e "${*:s- -.\*-}" =( ps -e -O ppid,start_time ) }
+p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
@@ -838,10 +896,6 @@ pp() { [[ -z $* ]] && sudo -E $EDITOR +ProcessTree || sudo -E $EDITOR +ProcessTr
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
-dpl() { apt-cache show $* && dpkg -L $*}
-compdef _deb_packages dpl
-dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
-compdef _command_names dpL
 compdef _man vimman
 compdef _ps pf
 compdef _ps pidof
@@ -894,6 +948,16 @@ alias Kl=tmux_send_keys_left
 alias Ka=tmux_send_keys_above
 alias Kb=tmux_send_keys_below
 
+tmux_send_line_right() { tmux send-keys -t $(tmux_neighbor_pane right) "$*" $'\n' }
+tmux_send_line_left() { tmux send-keys -t $(tmux_neighbor_pane left) "$*" $'\n'}
+tmux_send_line_above() { tmux send-keys -t $(tmux_neighbor_pane above) "$*" $'\n' }
+tmux_send_line_below() { tmux send-keys -t $(tmux_neighbor_pane below) "$*" $'\n' }
+
+alias Lr=tmux_send_line_right
+alias Ll=tmux_send_line_left
+alias La=tmux_send_line_above
+alias Lb=tmux_send_line_below
+
 
 cdp() {
 	CD_PIDS=(${=$(pidof "$*")})
@@ -911,7 +975,7 @@ cdp() {
 cd() {
 	if ! builtin cd $* 2>/dev/null; then
 		if [ -e $* ]; then
-			dir=$(dirname $*)
+			local dir=$(dirname $*)
 			if [ $dir = "." ]; then
 				print WARNING: no directory change
 			else
@@ -979,6 +1043,8 @@ alias -g 00='0.0.0.0'
 alias -g 000='0.0.0.0/0'
 alias -g 0s='::1'
 alias -g 0s0='::1/0'
+alias -g 0m='| tr \\0 \\n'
+alias -g 0,="| perl -pe 's:\0:, :g'"
 alias -g C="| column -t"
 alias -g Ct="| column -nts $'\t'"
 alias -g C,="| column -nts,"
@@ -993,6 +1059,7 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LV=' |& lnav'
+alias -g LQ=' |& lnav -q'
 alias -g LVT=' |& lnav -t'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
@@ -1086,15 +1153,22 @@ if has apt; then
 	alias pi='sudo apt-get install --fix-missing -y '
 	alias pii='sudo apt install --fix-missing -y $(apt-cache dump | \grep --color "^[Pp]ackage: " | cut -c 10- |&fzf --ansi --multi --preview-window=top:50% --query="!:i386$ " --preview "apt-cache show {}"); rehash'
 	alias agr='sudo apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
+	alias dps='dpkg -S'
+	dpl() { apt-cache show $* && dpkg -L $*}
+	compdef _deb_packages dpl
+	dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
+	compdef _command_names dpL
 	PL() { apt-cache show $* && dpkg -L $*}
 	compdef _deb_packages PL
 	PS() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 	compdef _command_names PS
 elif has yum; then
 	alias pi='sudo yum -y install '
-	alias pii='sudo yum -y install $(yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
-	PL() { yum info $* && rpm -lq $*}
-	# compdef _some_rpm_func PL
+	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias pii='sudo yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias dps='rpm -qf'
+	alias dpl='rpm -qvli'
+	dpL() { rpm -qli $(rpm -qf $(whh $*) ) }
 	PS() { PL $(rpm -qf $(whh $*)) }
 	compdef _command_names PS
 elif has port; then
@@ -1112,13 +1186,14 @@ else
 fi
 
 if has lnav; then
-	alias tff='sudo true && cd /var/log && sudo lnav auth.log syslog '
+	alias tff="sudo true && cd $tf_file:h && sudo lnav $tf_file:t "
 else
 	alias tff='err("lnav not found")'
 fi
 
 c() {
-	[[ -d $1 ]] && { ls -al $1; ls -ald $1; return }
+	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
+	[[ -d $1 ]] && { ls -al $1; return }
 	cat $1
 }
 
@@ -1205,6 +1280,11 @@ nmn() {
 	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
 
+at() {
+	# print "at $*" | socat - /dev/modem,crnl
+	print "at $*" | sudo socat - /dev/modem,crnl
+}
+
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
 
@@ -1214,3 +1294,9 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
 [[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
+rnd() {(($[RANDOM%${1:-2}]>${2:-0}))}
+# fz() { [ -f $1 -a -r $1 ] && mkdir -p $1.DIR && fuse-zip $1 $1.DIR && cd $1.DIR }
+fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd $1:t.DIR && $EDITOR . }
+fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
+compdef _files fz
+compdef _directories fU

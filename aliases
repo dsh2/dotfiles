@@ -27,8 +27,8 @@ source ~/.dotfiles/z/z.sh
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 alias adbk='adb shell input keyboard text \"\"'
-alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -w ~/.logs/adb/$(date "+%F-%T").log'
-alias adll='adb logcat -v threadtime |& lnav -w ~/.logs/adb/$(date "+%F-%T").log'
+alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
+alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
 alias add='adb devices -l'
 alias ads='adb shell '
 alias aps='adb shell ps '
@@ -54,7 +54,8 @@ gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex --basename'
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
-locl() { lc "$*" | sed -ne 's,^$'PWD',.,pi' | grep --ignore-case --color "$*"; }
+loce() { loc \\.$1\$; }
+locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; }
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
@@ -79,7 +80,7 @@ gcr() {
 	set -x
 	git clone --recursive --jobs=8 --verbose $1 &&
 		cd ${1:t} &&
-		ranger .
+		$EDITOR .
 	}
 
 ghssh() {
@@ -126,6 +127,7 @@ alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
 alias gsmp='git submodule foreach git pull'
 alias gsmcm='git submodule foreach git checkout master'
+alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gl='git lg | less'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
@@ -164,6 +166,7 @@ alias ln='ln -rsv'
 alias lv='lnav -q'
 alias lnn='lnav -q'
 alias lvv='lnav -q'
+alias lqq='lnav -q'
 alias r=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
@@ -205,6 +208,7 @@ alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 alias doc=docker
+alias docc=docker-compose
 alias dock=docker
 alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
 # Vim aliases
@@ -213,10 +217,13 @@ alias v=$EDITOR
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+# vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
-
+alias qm=qmicli
+alias qe=qemu-system-sparc64
+alias qmi=qemu-img
 RUN() {
 	# TODO
 	# -Add option to run through watch to show diffs in output
@@ -273,8 +280,7 @@ RUN() {
 }
 
 # Miscellaneous
-alias o=exo-open
-alias a=aws
+# alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -296,11 +302,20 @@ alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
-alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+# alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+tmm() {
+    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
+    TAG_NAME=$(echo $TAG_NAME | tr -d " :" )
+    if tmux has-session -t $TAG_NAME >/dev/null; then
+	tmux attach-session -t $TAG_NAME
+    else tmux new-session -s $TAG_NAME
+	fi
+    }
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
 alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
+alias tmO='old_clients=$(tmux list-clients -F "#{client_activity},#{client_tty}" | sort | tail -n+2 | cut -d, -f2); if [ -n $old_clients ]; then for old_client in $old_clients; do tmux detach-client -t $old_client; done; else echo "No other tmux clients."; fi'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
@@ -313,7 +328,9 @@ alias r22='rabin2 -gx'
 alias pl='patool list'
 alias px='patool extract'
 alias pd='patool diff'
-alias q='qiv -uBfta '
+alias o=xdg-open
+# alias q='qiv -uBfta '
+alias q=qemu
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias wp='echo -n $(powershell.exe Get-Clipboard)'
@@ -325,6 +342,7 @@ alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
 alias ipp='ipython3 -- '
+alias iz=ipython3
 alias pz=python
 alias ip='ip -c -o -d -s'
 alias ip4='ip -4 -c -o -d -s'
@@ -368,7 +386,6 @@ alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
-alias dps='dpkg -S'
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F__%T'"
@@ -385,9 +402,9 @@ alias kk='kill -STOP '
 alias pf=pidof
 alias fu='sudo fuser -afuv'
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
-alias s=stat
 alias sd=sysdig
-alias st='strace -fs 0 -x -a $(($COLUMNS - 12)) -r -f'
+alias st='strace -xttrfs 4096 -a $(($COLUMNS - 15))'
+alias stt='strace_log=$(mktemp --suffix=-$(date "+%F__%T")-strace); strace -ffo $strace_log -xttrfs 4096 ; v "+:se ft=strace" $strace_log*'
 alias sudo='sudo '
 alias uu=uniq
 alias e=echo
@@ -414,6 +431,7 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
+alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
 alias sshl="ssh -p 22222 $USER@localhost"
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
@@ -431,6 +449,7 @@ alias x00='export DISPLAY=:0'
 alias x000='export DISPLAY=localhost:10.0'
 alias digr='dig -x'
 alias y=yum
+alias ZS='sudo -E $SHELL'
 
 src_index() {
 	find . \
@@ -475,7 +494,7 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 # TODO: make C a zle binding
-alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &'
+alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H=hostname
 alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
@@ -490,6 +509,45 @@ alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set 
 alias x='xeyes &'
+alias vi=virsh
+alias vir=virsh
+alias pk=pkill
+alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
+alias mnt=mount
+# alias sdd=systemd
+# alias ssd=systemd
+# alias sy=systemd
+alias sr=systemd-resolve
+alias rc=systemd-resolve
+alias gp=gpg
+alias fm=findmnt
 alias jr=journalctl
-
+alias jc=journalctl
+alias sf=sshfs
+alias cu=curl
+alias fj=frida
+alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
+alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
+alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
+alias ci=criu
+alias lsof='lsof +c0 -P -n'
+alias dpp=docker-packer
+alias pa=patool
+alias s=ssh
+alias psl=psql
+alias py3=python3
+alias pod=podman
+alias setD='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
+alias U=usbip
+alias pe=printenv
+# alias units="\units --verbose '"
+alias u="\units --verbose '"
+alias g2=grub2-
+alias ssl=openssl
+sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
+alias nw=notmuch
+alias sw=sway
+alias swm=swaymsg
+alias i3m=i3-msg
+alias ki=kitty
 # vim: se ft=sh:
