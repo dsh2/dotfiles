@@ -813,7 +813,7 @@ TMOUT=200
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
-	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell (ssh).\n"
 	TMOUT=
 elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in as cloud instance.\n"
