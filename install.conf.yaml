@@ -9,7 +9,6 @@
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
   - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
   - [mkdir -p ~/.pcaps, Creating pcap dump directory]
-  - [mkdir -p ~/bin, Creating local bin]
   - [cp -a wg ~/.wg, Copying wireguard template directory]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
   - [src/fzf/install --all, Installing fzf]
@@ -25,6 +24,7 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
+    ~/bin: bin
     ~/.config/i3/config: i3config
     ~/.config/herbstluftwm: herbstluftwm/
     ~/.config/ranger/scope.sh: ranger/scope.sh
