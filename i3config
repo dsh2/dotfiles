@@ -63,7 +63,6 @@ workspace_auto_back_and_forth yes
 workspace_layout stacking # default, stacking, tabbed
 # }}}
 
-
 # Key bindings {{{
 
 # Focus workspaces {{{
@@ -85,8 +84,8 @@ bindsym $meta+$left focus left
 bindsym $meta+$right focus right
 bindsym $meta+$up focus up
 bindsym $meta+$down focus down
-bindsym $meta+a focus parent
-bindsym $meta+d focus child
+bindsym $meta+$shift+a focus parent
+bindsym $meta+$shift+d focus child
 bindsym $meta+$shift+p focus output primary
 bindsym $meta+$shift+s sticky toggle
 # }}}
@@ -210,14 +209,20 @@ bindsym $ctrl+Return exec $browser
 bindsym $meta+n workspace new, exec $browser
 # }}}
 
-bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"' -P 'New workspace: ', exec $terminal_tmux
+# bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
+bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
+# bindsym $meta+$alt+space exec notify-send O,exec notify-send P
+# bindsym $meta+$alt+space exec $i3input -F 'exec notify-send O,exec notify-send P -P 'New workspace: '
 
 # Screen brightness
-bindsym $meta+$alt+$ctrl+j exec "lux -s 45"
-bindsym $meta+$alt+$ctrl+k exec "lux -a 45"
+bindsym $meta+$alt+$ctrl+j exec lux -s 60
+bindsym $meta+$alt+$ctrl+k exec lux -a 60
+bindsym $meta+$alt+$ctrl+$shift+j exec lux -S 1%
+bindsym $meta+$alt+$ctrl+$shift+k exec lux -S 100%
 
 # Lock screen
-bindsym $meta+$shift+a exec $lock_now
+# bindsym $meta+$shift+a exec $lock_now
+bindsym $meta+a exec $lock_now
 bindsym $meta+w exec $lock_now
 
 # Pulse audio volume control {{{
@@ -260,7 +265,10 @@ mode $mode_i3 {
 	bindsym s bar mode toggle, $mode_return
 	bindsym t exec $i3input -F 'mark "%s"' -P 'tag: ', $mode_return
 	bindsym y sticky toggle, $mode_return
-
+	# bindsym n exec $i3input -F 'move container to workspace %s' -P 'Move container to new workspace: ', $mode_return
+	bindsym n exec i3-ws-move, $mode_return
+	bindsym $shift+n exec i3-ws-move -f, $mode_return
+ 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
 	bindsym Return $mode_return
