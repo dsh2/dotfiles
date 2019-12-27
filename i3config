@@ -4,7 +4,7 @@
 set $shift Shift
 set $ctrl Control
 set $meta Mod4
-set $ALT Mod1
+set $alt Mod1
 # }}}
 
 # Set direction keys {{{
@@ -25,14 +25,15 @@ client.background       #ffffff
 # }}}
 
 # Font {{{
-# set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+set $font "pango:DejaVu Sans Mono 10"
+# set $font "pango:DejaVu Sans Mono 11"
 # set $font pango:monospace 10
+# set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # set $font pango:Noto Sans Mono 10
-set $font "pango:DejaVu Sans Mono 11"
 font $font
 # set $i3input i3-input -f "$font"
 # TODO: make eval on right side of set work
-set $i3input i3-input -f "pango:DejaVu Sans Mono 11"
+set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 # }}}
 
 # Set default applications {{{
@@ -43,40 +44,29 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 # }}}
 
 # Options {{{
-floating_modifier $alt
-
-floating_minimum_size 200 x 200
+# bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 # floating_maximum_size 200 x 200
-
+# for_window [class=".*"] title_format "%title"
+# for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+# for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
+# for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
+hide_edge_borders none
+floating_minimum_size 200 x 200
+floating_modifier $alt
 focus_follows_mouse yes
 focus_wrapping yes # focus_wrapping force
-hide_edge_borders both
+force_display_urgency_hint 666 ms
 no_focus [window_role="pop-up"]
-force_display_urgency_hint 500 ms
 popup_during_fullscreen leave_fullscreen # ignore, smart
 show_marks yes
-for_window [class=".*"] title_format "%title"
-# for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-# for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
-
-# bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-workspace_layout stacking # default, stacking, tabbed
 workspace_auto_back_and_forth yes
-
-for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
+workspace_layout stacking # default, stacking, tabbed
 # }}}
 
-# Focus standard applications{{{
-# bindsym $alt+shift+1 [window_role="(?i)browser"] focus
-bindsym $alt+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
-# bindsym $alt+shift+1 fullscreen disable; [class="(?i)chrome"] focus
-# bindsym $alt+shift+3 exec rofi -e Terminal
-bindsym $alt+shift+3 fullscreen disable; [class="(?i)terminal" workspace="root"] focus
-# }}}
 
 # Key bindings {{{
 
-# Focus workspace {{{
+# Focus workspaces {{{
 bindsym $meta+$alt+1 workspace number 1
 bindsym $meta+$alt+2 workspace number 2
 bindsym $meta+$alt+3 workspace number 3
@@ -87,6 +77,24 @@ bindsym $meta+$alt+7 workspace number 7
 bindsym $meta+$alt+8 workspace number 8
 bindsym $meta+$alt+9 workspace number 9
 bindsym $meta+$alt+0 workspace number 0
+# }}}
+
+# Focus windows/containers {{{
+bindsym $meta+$left focus left
+# bindsym $meta+c focus left
+bindsym $meta+$right focus right
+bindsym $meta+$up focus up
+bindsym $meta+$down focus down
+bindsym $meta+a focus parent
+bindsym $meta+d focus child
+bindsym $meta+$shift+p focus output primary
+bindsym $meta+$shift+s sticky toggle
+# }}}
+
+# Focus standard applications {{{
+# bindsym $meta+$shift+3 [class="Google-chrome"] focus
+# bindsym $meta+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
+bindsym $meta+shift+3 [window_role="(?i)browser"] focus
 # }}}
 
 # Move focused container to workspace {{{
@@ -128,34 +136,25 @@ bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
 bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
 # }}}
 
-bindsym $meta+$shift+r reload
-bindsym $meta+$shift+n bar mode toggle
-
 # Kill focused window
 bindsym $meta+q kill
 bindsym $meta+$shift+q kill
 bindsym $alt+F4 kill
 
-# Change focus
-bindsym $meta+$left focus left
-bindsym $meta+c focus left
-bindsym $meta+$right focus right
-bindsym $meta+$up focus up
-bindsym $meta+$down focus down
-bindsym $meta+a focus parent
-bindsym $meta+d focus child
-bindsym $meta+$shift+p focus output primary
-bindsym $meta+$shift+s sticky toggle
-
 # Change split
 bindsym $meta+shift+v split horizontal
 bindsym $meta+v split vertical
 
-# Resize focued window
+bindsym $meta+$shift+r reload
+bindsym $meta+$shift+n bar mode toggle
+
+
+# Resize focused window
 bindsym $meta+shift+$right resize grow width 10 px or 10 ppt
 bindsym $meta+shift+$left resize shrink width 10 px or 10 ppt
 bindsym $meta+shift+$up resize shrink height 10 px or 10 ppt
 bindsym $meta+shift+$down resize grow height 10 px or 10 ppt
+
 # bindsym $meta+s layout stacking
 # bindsym $meta+t layout tabbed
 # bindsym $meta+e layout toggle split
@@ -169,9 +168,11 @@ bindsym $meta+s layout stacking
 bindsym $meta+t layout tabbed
 bindsym $meta+e layout toggle split
 
+# Move container
 bindsym $meta+$alt+$left move container to output left
 bindsym $meta+$alt+$right move container to output right
 
+# Move workspace
 bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
 bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
 
@@ -183,28 +184,33 @@ bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; f
 bindsym $meta+$shift+f fullscreen
 bindsym $meta+z fullscreen
 bindsym $meta+$alt+$shift+f fullscreen global
+bindsym $meta+$alt+$shift+z fullscreen global
 
 # Toggle tiling / floating
 bindsym $meta+i floating toggle
+bindsym $meta+c focus mode_toggle
 bindsym $meta+shift+i focus mode_toggle
 bindsym $meta+shift+c focus mode_toggle
 
 # Border changing
 bindsym $meta+b border toggle
+bindsym $meta+$shift+b border toggle
+
 
 # Start a terminal
 bindsym $meta+Return exec $terminal_tmux
 bindsym $meta+$shift+Return exec $terminal
-
 bindsym $meta+7 split horizontal, exec $terminal
 bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
-
 bindsym $meta+8 split vertical, exec $terminal
 bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
 
-# Start a browser
+# Start a browser {{{
 bindsym $ctrl+Return exec $browser
-bindsym $meta+n workspace NEW, exec $browser
+bindsym $meta+n workspace new, exec $browser
+# }}}
+
+bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"' -P 'New workspace: ', exec $terminal_tmux
 
 # Screen brightness
 bindsym $meta+$alt+$ctrl+j exec "lux -s 45"
@@ -215,7 +221,6 @@ bindsym $meta+$shift+a exec $lock_now
 bindsym $meta+w exec $lock_now
 
 # Pulse audio volume control {{{
-
 set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  -10
 set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  +10
@@ -230,7 +235,7 @@ bindsym XF86AudioRaiseVolume $pa_volume_up
 # }}}
 
 # Mode bindings {{{
-set $mode_i3 "[i3: h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag]"
+set $mode_i3 "[i3: b:border h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag, y:sticky]"
 
 set $step_size 10 px
 set $mode_move "[move: hjkl]"
@@ -244,12 +249,17 @@ set $mode_return mode "default"
 set $mode_i3_key u
 bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
+	bindsym b border toggle
 	bindsym h move scratchpad, $mode_return
+	bindsym $shift+h move window to workspace "new", $mode_return
 	bindsym i floating toggle, $mode_return
-	bindsym m scratchpad show, $mode_return
-	bindsym r exec $i3input -f 'rename workspace to "%s"' -p 'workspace name: ', $mode_return
+	bindsym m scratchpad show
+	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
+	# TODO: Make the following binding work
+	# bindsym "," exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
 	bindsym s bar mode toggle, $mode_return
-	bindsym t exec $i3input -f 'mark "%s"' -p 'tag: ', $mode_return
+	bindsym t exec $i3input -F 'mark "%s"' -P 'tag: ', $mode_return
+	bindsym y sticky toggle, $mode_return
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
@@ -338,10 +348,10 @@ mode $mode_manipulate {
 # Mode "system" {{{
 bindsym $meta+o mode $mode_system
 mode $mode_system {
-	bindsym o exec $lock_now, $mode_return
 	bindsym l exec $lock_now, $mode_return
 	bindsym s exec systemctl suspend, $mode_return
 	bindsym $shift+l exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
+	bindsym o exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
 	bindsym $shift+s exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
 	bindsym h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
 	bindsym $shift+h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
@@ -359,7 +369,7 @@ mode $mode_system {
 # TODO: what is going on here...?
 bindsym $meta+p mode "passthrough"
 mode "passthrough" {
-bindsym $meta+p $MODE_RETURN
+bindsym $meta+p $mode_return
 }
 # }}}
 
@@ -400,7 +410,7 @@ bar {
 		separator #666666
 
 		focused_workspace  #4c7899 #285577 #ffffff
-		active_workspace   #333333 #5f676a #ffffff
+		active_workspace   #555555 #5f676a #ffffff
 		inactive_workspace #333333 #222222 #888888
 		urgent_workspace   #2f343a #900000 #ffffff
 		binding_mode       #2f343a #909000 #ffffff
@@ -421,7 +431,6 @@ set $WS_ROOT "3:root"
 # TODO: Make these work
 assign [class="google-chrome" title="Telegram Web"] $WS_COMS
 assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
-# for_window [class="wireshark"] move to workspace 5
 # }}}
 
 # }}}
