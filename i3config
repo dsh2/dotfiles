@@ -80,7 +80,7 @@ bindsym $meta+$alt+0 workspace number 0
 
 # Focus windows/containers {{{
 bindsym $meta+$left focus left
-# bindsym $meta+c focus left
+bindsym $meta+c exec i3-win-cycle
 bindsym $meta+$right focus right
 bindsym $meta+$up focus up
 bindsym $meta+$down focus down
@@ -187,7 +187,6 @@ bindsym $meta+$alt+$shift+z fullscreen global
 
 # Toggle tiling / floating
 bindsym $meta+i floating toggle
-bindsym $meta+c focus mode_toggle
 bindsym $meta+shift+i focus mode_toggle
 bindsym $meta+shift+c focus mode_toggle
 
