@@ -304,8 +304,9 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
+    set -x
     TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
-    TAG_NAME=$(echo $TAG_NAME | tr -d " :" )
+    TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
     if tmux has-session -t $TAG_NAME >/dev/null; then
 	tmux attach-session -t $TAG_NAME
     else tmux new-session -s $TAG_NAME
@@ -548,6 +549,8 @@ sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnec
 alias nw=notmuch
 alias sw=sway
 alias swm=swaymsg
-alias i3m='i3-msg -s $i3_socket'
+alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 alias ki=kitty
+alias Z='while :; do echo -ne .; sleep 0.3; done'
+alias dnp='dnf provides'
 # vim: se ft=sh:
