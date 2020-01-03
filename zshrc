@@ -563,10 +563,10 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
-bindkey -s at\  "a''t "
-bindkey -s ati\  "a''t !"
-bindkey -s atii\  "a''t !=?"
-bindkey -s atp\  "a''t ^"
+bindkey -s AT\  "a''t "
+bindkey -s ATi\  "a''t !"
+bindkey -s ATii\  "a''t !=?"
+bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s clq\  'c $tmux_log_file\t | jq .'
 bindkey -s cql\  'c $tmux_log_file\t | jq .'
@@ -810,6 +810,7 @@ stty -ixon
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
 
+# set -x
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
@@ -840,6 +841,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	TMOUT=
 fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
+# set +x
 
 # Try to save tmux from OOM 
 if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
