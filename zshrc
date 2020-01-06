@@ -1,6 +1,6 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 
-[[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+[[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
 # TODO: think about run-away loops
@@ -283,9 +283,9 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
 function backward_kill_default_word() {
-    WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+    WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
