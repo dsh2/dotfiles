@@ -603,6 +603,7 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'robbles/logstash.vim'
 	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
 	Plug 'nfnty/vim-nftables'
