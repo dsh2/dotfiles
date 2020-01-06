@@ -217,12 +217,17 @@ alias v=$EDITOR
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+# vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
+alias q=qemu
+alias qq=qemu-system-x86_64
+alias qqi=qemu-system-i386
 alias qm=qmicli
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
+alias qi=qemu-img
 RUN() {
 	# TODO
 	# -Add option to run through watch to show diffs in output
@@ -321,7 +326,6 @@ alias px='patool extract'
 alias pd='patool diff'
 alias o=xdg-open
 # alias q='qiv -uBfta '
-alias q=qemu
 alias bw='binwalk -veBAEJ -cf binwalk-log.csv '
 alias xc='xclip -selection clipboard -in'
 alias wp='echo -n $(powershell.exe Get-Clipboard)'
@@ -426,6 +430,7 @@ alias sshl="ssh -p 22222 $USER@localhost"
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
+alias sskg'echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
@@ -520,7 +525,7 @@ alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --outpu
 alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 alias ci=criu
-alias lsof='lsof +c0 -P -n'
+alias lsof='sudo lsof +c0 -P -n'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
@@ -535,4 +540,8 @@ alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
 sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
+alias zzz='while :; do print -n .; sleep 0.2; done'
+alias b=bridge
+alias p3='python3.8' 
+alias tsh=tshark
 # vim: se ft=sh:
