@@ -1,0 +1,12 @@
+#!/bin/zsh
+set -ue
+integer i=0
+local i3_socket=$(echo /var/run/user/$UID/i3/ipc-socket*(om[1]) )
+i3m() { i3-msg -s $i3_socket $@ }
+i3m -t get_workspaces | jq -r '.[].name' | while read ws; do
+    # local ws_name=${ws:s.*:..}
+    local ws_name=${ws##*:}
+    print $ws to $ws_name
+    i3m rename workspace \"$ws\" to "$i:$ws_name"
+    i=$[i+1]
+done

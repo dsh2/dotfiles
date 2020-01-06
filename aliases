@@ -128,6 +128,7 @@ alias grH='git reset HEAD@{1}'
 alias gsm='git submodule'
 alias gsmp='git submodule foreach git pull'
 alias gsmcm='git submodule foreach git checkout master'
+alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gl='git lg | less'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
@@ -217,7 +218,8 @@ alias v=$EDITOR
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+# vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias qm=qmicli
@@ -279,7 +281,7 @@ RUN() {
 }
 
 # Miscellaneous
-alias a=aws
+# alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -301,7 +303,16 @@ alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
-alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+# alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+tmm() {
+    set -x
+    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
+    TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
+    if tmux has-session -t $TAG_NAME >/dev/null; then
+	tmux attach-session -t $TAG_NAME
+    else tmux new-session -s $TAG_NAME
+	fi
+    }
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
@@ -371,7 +382,7 @@ alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
-alias sc=systemctl
+alias sc='systemctl -l'
 alias sca='sudo sysctl -A | fzf -m | tr -d " "'
 alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
@@ -422,6 +433,7 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
+alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
 alias sshl="ssh -p 22222 $USER@localhost"
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
@@ -529,4 +541,17 @@ alias py3=python3
 alias pod=podman
 alias setD='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
 alias U=usbip
+alias pe=printenv
+# alias units="\units --verbose '"
+alias u="\units --verbose '"
+alias g2=grub2-
+alias ssl=openssl
+sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
+alias nw=notmuch
+alias sw=sway
+alias swm=swaymsg
+alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
+alias ki=kitty
+alias Z='while :; do echo -ne .; sleep 0.3; done'
+alias dnp='dnf provides'
 # vim: se ft=sh:

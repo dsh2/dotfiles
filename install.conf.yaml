@@ -3,13 +3,12 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/copyq ~/.config/dunstrc ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.config/kitty ~/.config/copyq ~/.config/dunst ~/.config/ranger ~/.config/procps ~/.config/radare2 ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
   - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
   - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
   - [mkdir -p ~/.pcaps, Creating pcap dump directory]
-  - [mkdir -p ~/bin, Creating local bin]
   - [cp -a wg ~/.wg, Copying wireguard template directory]
   - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
   - [src/fzf/install --all, Installing fzf]
@@ -25,6 +24,8 @@
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
+    ~/bin: bin
+    ~/.config/i3/config: i3config
     ~/.config/herbstluftwm: herbstluftwm/
     ~/.config/ranger/scope.sh: ranger/scope.sh
     ~/.config/ranger/rifle.conf: ranger/rifle.conf
@@ -32,6 +33,8 @@
     ~/.config/ranger/commands.py: ranger/commands.py
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
+    ~/.config/i3/config: i3config
+    ~/.config/kitty/kitty.konf: kitty.conf
     ~/.clang-format: clang-format
     ~/.environment: environment
     ~/.fzfrc: fzfrc

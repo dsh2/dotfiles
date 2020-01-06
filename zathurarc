@@ -1,57 +1,81 @@
 # vim: ft=conf
+
+# quit
 map <Esc> quit
-map <C-c> abort
+map <Esc> quit
+map [normal] q quit
+map [fullscreen] q quit
+map [normal] Q quit
+map [fullscreen] Q quit
 
-map j navigate next
-# map j scroll next
-map J scroll down
+# abort
+map [normal] <C-[> abort
+map [fullscreen] <C-[> abort
+map [normal] <C-c> abort
+map [fullscreen] <C-c> abort
 
-# map k scroll previous
-map k navigate previous
-map K scroll up
+# scroll
+map [normal] b scroll full-up
+map [fullscreen] b scroll full-up
 
-map <Space> scroll full-down
-map <S-Space> scroll full-up
-map b scroll full-up
+# navigate
+map [normal] , navigate previous
+map [normal] m navigate next
+map [fullscreen] , navigate previous
+map [fullscreen] m navigate next
+map [normal] ] navigate full-down
+map [normal] [ navigate full-up
+map [fullscreen] ] navigate full-down
+map [fullscreen] [ navigate full-up
 
-map ] navigate full-down
-map [ navigate full-up
-# map k navigate full-up
+# toggle_fullscreen
+map [normal]     e toggle_fullscreen
+map [normal]     E toggle_fullscreen
+map [fullscreen] e toggle_fullscreen
+map [fullscreen] E toggle_fullscreen
 
-# BUG: Separate mapping for normal and fullscreen seems necessary
-map [normal]     e toggle_fullscreen 
-map [normal]     E toggle_fullscreen 
-map [fullscreen] e toggle_fullscreen  
-map [fullscreen] E toggle_fullscreen  
-map w toggle_page_mode
-map t toggle_statusbar
+# toggle_page_mode
+map [normal] w toggle_page_mode
+map [fullscreen] w toggle_page_mode
 
-map = zoom 100%
-map i zoom in 
-map o zoom out
-map <C-o> jumplist previous
-map <C-i> jumplist next
+# toggle_statusbar
+map [normal] t toggle_statusbar
+map [fullscreen] t toggle_statusbar
 
+# zoom
+map [fullscreen] = zoom 100%
+map [normal] = zoom 100%
+map [fullscreen] i zoom in 
+map [normal] i zoom in 
+map [fullscreen] o zoom out
+map [normal] o zoom out
+
+# jump
+map [normal] <C-o> jumplist previous
+map [normal] <C-i> jumplist next
+map [fullscreen] <C-o> jumplist previous
+map [fullscreen] <C-i> jumplist next
+
+# settings
 set window-width 1980
 set window-height 1080
-set adjust-open "width" 
+set adjust-open "width"
 
-set font "Terminus normal 11"  
-set statusbar-bg "#202020" 
-set statusbar-fg "#606060" 
-set inputbar-bg "#202020" 
+set font "Terminus normal 11"
+set statusbar-bg "#202020"
+set statusbar-fg "#606060"
+set inputbar-bg "#202020"
 set inputbar-fg "#909090"
 
-# set guioptions = shv
-set guioptions = shv
-set incremental-search = true
-set page-cache-size = 50
-set pages-per-row = 5
+set guioptions shv
+set incremental-search true
+set page-cache-size 50
+set pages-per-row 5
 
 set scroll-wrap false
 set statusbar-basename true
 set selection-clipboard "clipboard"
 
 set recolor-lightcolor "#333333"
-set recolor-keephue = true
-set recolor-reverse-video = true
+set recolor-keephue true
+set recolor-reverse-video true

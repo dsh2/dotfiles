@@ -1,0 +1,456 @@
+# vim: filetype=config fdm=marker sw=4 ts=4
+
+# Set modifier {{{
+set $shift Shift
+set $ctrl Control
+set $meta Mod4
+set $alt Mod1
+# }}}
+
+# Set direction keys {{{
+set $up k
+set $down j
+set $left h
+set $right l
+# }}}
+
+# Colors {{{
+# class                 border  backgr. text    indicator child_border
+client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+client.background       #ffffff
+# }}}
+
+# Font {{{
+set $font "pango:DejaVu Sans Mono 10"
+# set $font "pango:DejaVu Sans Mono 11"
+# set $font pango:monospace 10
+# set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# set $font pango:Noto Sans Mono 10
+font $font
+# set $i3input i3-input -f "$font"
+# TODO: make eval on right side of set work
+set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
+# }}}
+
+# Set default applications {{{
+set $browser google-chrome-stable
+set $terminal kitty
+set $terminal_tmux kitty zsh -ic 'tmm'
+set $lock_now ~/bin/i3lock-wrapper.sh
+# }}}
+
+# Options {{{
+# bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+# floating_maximum_size 200 x 200
+# for_window [class=".*"] title_format "%title"
+# for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+# for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
+# for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
+hide_edge_borders none
+floating_minimum_size 200 x 200
+floating_modifier $alt
+focus_follows_mouse yes
+focus_wrapping yes # focus_wrapping force
+force_display_urgency_hint 666 ms
+no_focus [window_role="pop-up"]
+popup_during_fullscreen leave_fullscreen # ignore, smart
+show_marks yes
+workspace_auto_back_and_forth yes
+workspace_layout stacking # default, stacking, tabbed
+# }}}
+
+# Key bindings {{{
+
+# Focus workspaces {{{
+bindsym $meta+$alt+1 workspace number 1
+bindsym $meta+$alt+2 workspace number 2
+bindsym $meta+$alt+3 workspace number 3
+bindsym $meta+$alt+4 workspace number 4
+bindsym $meta+$alt+5 workspace number 5
+bindsym $meta+$alt+6 workspace number 6
+bindsym $meta+$alt+7 workspace number 7
+bindsym $meta+$alt+8 workspace number 8
+bindsym $meta+$alt+9 workspace number 9
+bindsym $meta+$alt+0 workspace number 0
+# }}}
+
+# Focus windows/containers {{{
+bindsym $meta+$left focus left
+bindsym $meta+c exec i3-win-cycle
+bindsym $meta+$right focus right
+bindsym $meta+$up focus up
+bindsym $meta+$down focus down
+bindsym $meta+$shift+a focus parent
+bindsym $meta+$shift+d focus child
+bindsym $meta+$shift+p focus output primary
+bindsym $meta+$shift+s sticky toggle
+# }}}
+
+# Focus standard applications {{{
+# bindsym $meta+$shift+3 [class="Google-chrome"] focus
+# bindsym $meta+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
+bindsym $meta+shift+3 [window_role="(?i)browser"] focus
+# }}}
+
+# Move focused container to workspace {{{
+bindsym $meta+$alt+$shift+1 move container to workspace number 1
+bindsym $meta+$alt+$shift+2 move container to workspace number 2
+bindsym $meta+$alt+$shift+3 move container to workspace number 3
+bindsym $meta+$alt+$shift+4 move container to workspace number 4
+bindsym $meta+$alt+$shift+5 move container to workspace number 5
+bindsym $meta+$alt+$shift+6 move container to workspace number 6
+bindsym $meta+$alt+$shift+7 move container to workspace number 7
+bindsym $meta+$alt+$shift+8 move container to workspace number 8
+bindsym $meta+$alt+$shift+9 move container to workspace number 9
+bindsym $meta+$alt+$shift+0 move container to workspace number 0
+# }}}
+
+# Change workspaces {{{
+
+bindsym $meta+BackSpace focus output left
+bindsym $meta+$shift+BackSpace focus output right
+
+bindsym $meta+1 workspace prev_on_output
+bindsym $meta+2 workspace next_on_output
+bindsym $ctrl+$meta+$alt+9 workspace prev
+bindsym $ctrl+$meta+$alt+0 workspace next
+bindsym $meta+$shift+1 workspace prev
+bindsym $meta+$shift+2 workspace next
+bindsym $meta+3 workspace back_and_forth
+bindsym $meta+9 workspace $WS_COMS
+bindsym $meta+0 workspace $WS_LOG
+
+### }}}
+
+# Rofi {{{
+bindsym $alt+Tab exec rofi -show window
+# TODO: make it toggle-cycle through windows (...and move binding)
+# bindsym $alt+Tab workspace back_and_forth
+bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
+bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
+# }}}
+
+# Kill focused window
+bindsym $meta+q kill
+bindsym $meta+$shift+q kill
+bindsym $alt+F4 kill
+
+# Change split
+bindsym $meta+shift+v split horizontal
+bindsym $meta+v split vertical
+
+bindsym $meta+$shift+r reload
+bindsym $meta+$shift+n bar mode toggle
+
+# Resize focused window
+bindsym $meta+shift+$right resize grow width $step_size
+bindsym $meta+shift+$left resize shrink width $step_size
+bindsym $meta+shift+$up resize shrink height $step_size
+bindsym $meta+shift+$down resize grow height $step_size
+
+# bindsym $meta+s layout stacking
+# bindsym $meta+t layout tabbed
+# bindsym $meta+e layout toggle split
+
+# Change container layout
+bindsym $meta+$ctrl+$left move left
+bindsym $meta+$ctrl+$right move right
+bindsym $meta+$ctrl+$up move up
+bindsym $meta+$ctrl+$down move down
+bindsym $meta+s layout stacking
+bindsym $meta+t layout tabbed
+bindsym $meta+e layout toggle split
+
+# Move container
+bindsym $meta+$alt+$left move container to output left
+bindsym $meta+$alt+$right move container to output right
+
+# Move workspace
+bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
+bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
+
+bindsym $meta+x [urgent=latest] focus
+
+# Fullscreen
+bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+# bindsym $meta+shift+f fullscreen
+bindsym $meta+$shift+f fullscreen
+bindsym $meta+z fullscreen
+bindsym $meta+$alt+$shift+f fullscreen global
+bindsym $meta+$alt+$shift+z fullscreen global
+
+# Toggle tiling / floating
+bindsym $meta+i floating toggle
+bindsym $meta+shift+i focus mode_toggle
+bindsym $meta+shift+c focus mode_toggle
+
+# Border changing
+bindsym $meta+b border toggle
+bindsym $meta+$shift+b border toggle
+
+
+# Start a terminal
+bindsym $meta+Return exec $terminal_tmux
+bindsym $meta+$shift+Return exec $terminal
+bindsym $meta+7 split horizontal, exec $terminal
+bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
+bindsym $meta+8 split vertical, exec $terminal
+bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
+
+# Start a browser {{{
+bindsym $ctrl+Return exec $browser
+bindsym $meta+n workspace new, exec i3-ws-enum, exec $browser
+# }}}
+
+# bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
+bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
+# bindsym $meta+$alt+space exec notify-send O,exec notify-send P
+# bindsym $meta+$alt+space exec $i3input -F 'exec notify-send O,exec notify-send P -P 'New workspace: '
+
+# Screen brightness
+bindsym $meta+$alt+$ctrl+$down exec lux -s 60
+bindsym $meta+$alt+$ctrl+$up exec lux -a 60
+bindsym $meta+$alt+$ctrl+$shift+$down exec lux -S 1%
+bindsym $meta+$alt+$ctrl+$shift+$up exec lux -S 100%
+
+# Lock screen
+bindsym $meta+a exec $lock_now
+bindsym $meta+w exec $lock_now && sleep 0.1 && systemctl suspend
+
+# Pulse audio volume control {{{
+set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  -10
+set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  +10
+
+bindsym $alt+F9 $pa_toggle_mute
+bindsym $alt+F10 $pa_volume_down 
+bindsym $alt+F11 $pa_volume_up 
+
+bindsym XF86AudioMute $pa_toggle_mute
+bindsym XF86AudioLowerVolume $pa_volume_down 
+bindsym XF86AudioRaiseVolume $pa_volume_up 
+# }}}
+
+# Mode bindings {{{
+set $mode_i3 "[i3: b:border h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag, y:sticky]"
+
+set $step_size 15 px
+set $mode_move "[move: hjkl]"
+set $mode_resize "[resize: hjkl+shift/ctrl]"
+set $mode_manipulate "[manipulate: hjkl+shift/ctrl]"
+set $mode_system "[system: l:lock, s:suspend, S:lock&suspend, h:hibernate]"
+
+set $mode_return mode "default"
+
+# Mode "i3" {{{
+set $mode_i3_key u
+bindsym $meta+$mode_i3_key mode $mode_i3
+mode $mode_i3 {
+	bindsym $shift+h move window to workspace "new", $mode_return
+	bindsym a exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, $mode_return
+	bindsym x exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1,move container to output right, $mode_return 
+	bindsym b border toggle
+	bindsym h move scratchpad, $mode_return
+	bindsym i floating toggle, $mode_return
+	bindsym m scratchpad show
+	bindsym n move window to workspace "new", exec i3-ws-enum, $mode_return
+	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
+	bindsym s bar mode toggle, $mode_return
+	bindsym t exec $i3input -F 'mark "%s"' -P 'tag: ', $mode_return
+	bindsym v split toggle
+	bindsym y sticky toggle, $mode_return
+
+	# TODO: Make the following binding work
+	# bindsym "," exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
+	# bindsym n exec $i3input -F 'move container to workspace %s' -P 'Move container to new workspace: ', $mode_return
+	bindsym n exec i3-ws-move, $mode_return
+	bindsym $shift+n exec i3-ws-move -f, $mode_return
+ 
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+$mode_i3_key $mode_return
+}
+# }}}
+
+# Mode "move" {{{
+bindsym $meta+m mode $mode_move
+mode $mode_move {
+	bindsym $left move left
+	bindsym $up move up
+	bindsym $down move down
+	bindsym $right move right
+	# TODO: add shift mod to move faster (i.e. more pixels)
+
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+m $mode_return
+	bindsym $meta+r mode $mode_resize
+	bindsym $meta+$shift+m mode $mode_manipulate
+}
+# }}}
+
+# Mode "resize" {{{
+bindsym $meta+r mode $mode_resize
+mode $mode_resize {
+	# bindsym $right resize shrink width $step_size
+	bindsym $left resize shrink width $step_size
+	bindsym $right resize grow width $step_size
+	bindsym $up resize shrink height $step_size
+	bindsym $down resize grow height $step_size
+
+	bindsym $ctrl+$left resize shrink width $step_sizze; resize shrink height $step_size
+	bindsym $ctrl+$right resize grow width $step_sizze; resize grow height $step_size
+	bindsym $ctrl+$up resize shrink width $step_sizze; resize shrink height $step_size
+	bindsym $ctrl+$down resize grow height $step_sizze; resize grow width $step_size
+
+	bindsym shift+$left move left $step_size
+	bindsym shift+$up move up $step_size
+	bindsym shift+$down move down $step_size
+	bindsym shift+$right move right $step_size
+
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+r $mode_return
+	bindsym $meta+m mode $mode_move
+	bindsym $meta+shift+m mode $mode_manipulate
+}
+# }}}
+
+# Mode "manipulate" {{{
+bindsym $meta+shift+m mode $mode_manipulate
+mode $mode_manipulate {
+	bindsym $left resize shrink width $step_size
+	bindsym $up resize shrink height $step_size
+	bindsym $down resize grow height $step_size
+	bindsym $right resize grow width $step_size
+
+	bindsym $ctrl+$left resize shrink width $step_size; resize shrink height $step_size
+	bindsym $ctrl+$right resize grow width $step_size; resize grow height $step_size
+	bindsym $ctrl+$up resize shrink width $step_size; resize shrink height $step_size
+	bindsym $ctrl+$down resize grow height $step_size; resize grow width $step_size
+
+	bindsym shift+$left move left $step_size
+	bindsym shift+$up move up $step_size
+	bindsym shift+$down move down $step_size
+	bindsym shift+$right move right $step_size
+
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+shift+m $mode_return
+	bindsym $meta+r mode $mode_resize
+	bindsym $meta+m mode $mode_manipulate
+}
+# }}}
+
+# Mode "system" {{{
+bindsym $meta+o mode $mode_system
+mode $mode_system {
+	bindsym l exec $lock_now, $mode_return
+	bindsym s exec systemctl suspend, $mode_return
+	bindsym $shift+l exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
+	bindsym o exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
+	bindsym $shift+s exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
+	bindsym h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
+	bindsym $shift+h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
+
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+f $mode_return
+	bindsym $meta+o $mode_return
+}
+# }}}
+
+# Passthrough mode  {{{
+# TODO: what is going on here...?
+bindsym $meta+p mode "passthrough"
+mode "passthrough" {
+bindsym $meta+p $mode_return
+}
+# }}}
+
+# }}}
+
+# }}}
+
+# Mouse bindings {{{
+bindsym --whole-window $meta+button1 floating toggle
+# bindsym --release button1 floating toggle
+bindsym --release button2 kill
+
+bindsym $meta+$shift+w exec "notify-send \\"Hello, i3; from $USER\\""
+
+# The side buttons move the window around
+bindsym button8 move right
+bindsym button9 move left
+
+# }}}
+
+# Bars {{{
+bar {
+	position top
+	font $font
+	status_command i3status
+	tray_output primary
+	tray_padding 3 px 
+	separator_symbol "|"
+	strip_workspace_numbers no
+	strip_workspace_name no
+	binding_mode_indicator yes
+	workspace_buttons yes
+	# mode dock
+	# hidden_state show
+	colors {
+		background #000000
+		statusline #ffffff
+		separator #666666
+
+		focused_workspace  #4c7899 #285577 #ffffff
+		active_workspace   #555555 #5f676a #ffffff
+		inactive_workspace #333333 #222222 #888888
+		urgent_workspace   #2f343a #900000 #ffffff
+		binding_mode       #2f343a #909000 #ffffff
+	}
+}
+# }}}
+
+# Default workspaces {{{
+
+set $WS_LOG "0:log"
+set $WS_COMS "1:coms"
+set $WS_ROOT "3:root"
+
+# WS_ROOT {{{
+# }}}
+
+# WS_COM {{{
+# TODO: Make these work
+assign [class="google-chrome" title="Telegram Web"] $WS_COMS
+assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
+# }}}
+
+# }}}
+
+# Autostart {{{
+exec_always --no-startup-id xset -b -c r rate 200 140
+exec_always --no-startup-id dunst
+exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+exec_always --no-startup-id nm-applet
+exec_always --no-startup-id pa-applet
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id notify-send "i3config loaded."
+# }}}
