@@ -11,7 +11,7 @@ revert() {
 	msg "Reverted locking settings."
 }
 
-if [ "$1" = "-b" ] && nmcli con show --active | grep -q dsn5; then
+if [ "$1" = "-b" ] && nmcli con show --active | grep -qE '(dsn3|dsn5)'; then
 	msg "Screenlock NOT activated because we are at home."
 	exit 0
 fi
@@ -24,6 +24,7 @@ xset +dpms dpms 10 10 10
 [ $(herbstclient list_monitors | wc -l) = 1 ] && herbstclient use log
 pkill -USR1 dunst
 msg "Locking screen..."
+pstree -ps $$ | logger
 i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password
 msg "Screen unlocked."
 # TODO:
