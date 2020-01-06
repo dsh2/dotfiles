@@ -11,6 +11,8 @@ pathprepend $HOME/bin
 pathprepend $HOME/.dotfiles/bin
 pathprepend $HOME/.dotfiles/fzf/target
 pathprepend $HOME/node_modules/.bin/
+pathprepend $HOME/.local/bin
+pathprepend $HOME/.cargo/bin
 # pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
 
 # Android
@@ -99,5 +101,3 @@ export WIRESHARK=/usr/bin/wireshark
 export XENVIRONMENT=$HOME/.Xresources
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
 export RIPGREP_CONFIG_PATH=~/.ripgreprc 
-# Source local envars like token, etc.
-[ -e ~/.environment.local ] && source ~/.environment.local 
