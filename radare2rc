@@ -14,3 +14,4 @@ eco solarized
 ?e Sourced radare2rc
 $r=. /home/dsf/.config/radare2/radare2rc
 $R=. /home/dsf/.config/radare2/radare2rc
+$H=?**~...
