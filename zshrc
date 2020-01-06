@@ -325,15 +325,26 @@ function copy_last_command {
 }
 bindkey_func '^x^k' copy_last_command
 
-# Copy last command's output to xclipboard
+# Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
 	check_output $XC || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC \
-		&& zle -M "Copied last command's output." \
+		&& zle -M "Copied last command's output WITH ansi escape sequences." \
 		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
 }
 bindkey_func '^x^o' copy_last_output
+
+# Copy last command's output to xclipboard WITHOUT ansi escape sequences
+function copy_last_output_stripped {
+	check_output $XC || return
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
+	cat $tmux_log_file | strip-ansi | $=XC \
+		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
+		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+}
+bindkey_func '^xo' copy_last_output_stripped
 
 function page_tmux_pane {
 	# zle -M "page_tmux_pane"
