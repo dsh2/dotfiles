@@ -1212,6 +1212,12 @@ function space_prepend {
 }
 bindkey_func '^ ' space_prepend
 
+function zle_mkdir {
+    zle -M "owi: $BUFFER "
+    zle -M "owii: ${${(Oaz)BUFFER}[1]} "
+}
+bindkey_func '^xd' zle_mkdir
+
 # TODO
 # -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
 env_vars() {
