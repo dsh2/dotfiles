@@ -1,6 +1,6 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 
-[[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+[[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
 # TODO: think about run-away loops
@@ -283,9 +283,9 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
 function backward_kill_default_word() {
-    WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+    WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
@@ -325,15 +325,26 @@ function copy_last_command {
 }
 bindkey_func '^x^k' copy_last_command
 
-# Copy last command's output to xclipboard
+# Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
 	check_output $XC || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC \
-		&& zle -M "Copied last command's output." \
+		&& zle -M "Copied last command's output WITH ansi escape sequences." \
 		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
 }
 bindkey_func '^x^o' copy_last_output
+
+# Copy last command's output to xclipboard WITHOUT ansi escape sequences
+function copy_last_output_stripped {
+	check_output $XC || return
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
+	cat $tmux_log_file | strip-ansi | $=XC \
+		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
+		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+}
+bindkey_func '^xo' copy_last_output_stripped
 
 function page_tmux_pane {
 	# zle -M "page_tmux_pane"
@@ -1013,29 +1024,26 @@ GG() {
 }
 
 cloc() {
-	locate --existing -0 .zsh_local_history |
-		xargs -0 grep --color=always --line-number -F "$*" |
-		sort -k 2
+	locate --existing --basename --null .zsh_local_history |
+		xargs -0 grep --color=always --line-number -F "$*" 2>/dev/null |
+		grep -vE '\<clocd?\>' |
+		sed 's:/.zsh_local_history: :'
 	}
 
 clocd() {
-	locate --existing -0 .zsh_local_history |
+	locate --existing --basename --null .zsh_local_history |
 		xargs -0 grep --files-with-matches -F "$*" |
+		grep -vE '\<clocd?\>' |
 		sort -u
 	}
 
-clocdf() {
-	cd $(clocd $* |
-		fzf --preview "
-			grep --color=always -e "$*" {}
-			")
-		}
-	# TODO: move to zshrc or similar
-	zloc_file() {
-		local -r file=.zsh_local_history
-		[[ -r $file ]] && { echo -n $file ; return }
-		echo -n ~/.zsh_local_history_dir${(q)PWD}/history
-	}
+clocdf() { cd $(clocd $* | fzf --preview " grep --color=always -e "$*" {} ") }
+
+zloc_file() {
+	local -r file=.zsh_local_history
+	[[ -r $file ]] && { echo -n $file ; return }
+	echo -n ~/.zsh_local_history_dir${(q)PWD}/history
+}
 
 zloc() {
 	fc -p $(zloc_file)
@@ -1220,6 +1228,12 @@ function space_prepend {
 }
 bindkey_func '^ ' space_prepend
 
+function zle_mkdir {
+    zle -M "owi: $BUFFER "
+    zle -M "owii: ${${(Oaz)BUFFER}[1]} "
+}
+bindkey_func '^xd' zle_mkdir
+
 # TODO
 # -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
 env_vars() {
@@ -1304,3 +1318,4 @@ fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd
 fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
+[ -e ~/.environment.local ] && source ~/.environment.local 

@@ -13,7 +13,7 @@ revert() {
 	msg "Reverted locking settings."
 }
 
-if [ "$1" = "-b" ] && nmcli con show --active | grep -q dsn5; then
+if [ "$1" = "-b" ] && nmcli con show --active | grep -qE '(dsn3|dsn5)'; then
 	msg "Screenlock NOT activated because we are at home."
 	exit 0
 fi
@@ -27,9 +27,9 @@ xset +dpms dpms 10 10 10
 i3-msg workspace 0:log
 pkill -USR1 dunst
 msg "Locking screen..."
-# i3lock --color ff0000 --show-failed-attempts --ignore-empty-password
 xset +dpms dpms 5 5 5
-i3lock --color 00ff00 --show-failed-attempts --ignore-empty-password --nofork
+pstree -ps $$ | logger
+i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password
 msg "Screen unlocked."
 # TODO:
 # -add i3-nag/dmenu to rf unblock / toggle mute

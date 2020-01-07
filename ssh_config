@@ -3,7 +3,7 @@ StrictHostKeyChecking ask
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
-# UpdateHostKeys ask
+UpdateHostKeys ask
 # TODO: try to figure out if calling sshfs LocalCommand constitutes some kind of race condition or other bad idea
 # PermitLocalCommand yes
 # LocalCommand logger -ist ssh -- Automounting sshfs from %u@%l to %r@%h ; sshfs -p %p %d:/ %d/mnt/%n-root ; sshfs -o LogLevel=DEBUG -p %p %d: %d/mnt/%n
