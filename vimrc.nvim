@@ -514,7 +514,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
-	autocmd vimrc FileType exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
@@ -523,7 +523,7 @@ if vim_plug_available
 	Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
 	" map <leader>B :AsyncRun binwalk %<cr>
 	autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
+	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc,.nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
 	"}}}
 	Plug 'atimholt/spiffy_foldtext' "{{{
 	" TODO: Add more preview text, squece as much content as possible?
@@ -603,6 +603,7 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'robbles/logstash.vim'
 	Plug 'junegunn/vim-easy-align'
 	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
@@ -659,8 +660,9 @@ if vim_plug_available
 	  endif
 	endfunction
 
+	autocmd vimrc FileType go nmap <a-s-k> :GoDocBrowser<cr>
 	autocmd vimrc FileType go nmap <f9> :GoDebugBreakpoint<cr>
-	autocmd vimrc FileType go nmap <leader>B :GoDebugBreakpoint<cr>
+	autocmd vimrc FileType go nmap <leader>B :GoBuild<cr>
 	autocmd vimrc FileType go nmap <a-s-r> :GoDebugStart<cr>
 	autocmd vimrc FileType go nmap <c-a-s-r> :GoDebugStop<cr>
 	autocmd vimrc FileType go nmap <s-f10> :GoDebugNext<cr>
@@ -888,7 +890,8 @@ map <a-s> <c-o>:update<cr><esc>
 " Mappings {{{
 map <c-s> :Redir let<cr>gsae:se ft=conf<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
 nmap Q :qall<cr>
-nmap <leader>J :set ft=json<cr>:Autoformat<cr>
+map <leader>S :syn off \| syn on \| se foldenable foldlevel=2<cr>
+nmap <leader>J :set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
 nmap <leader>X :set ft=xml<cr>:Autoformat<cr>
 map  
 map  :bnext<cr>
@@ -900,7 +903,6 @@ nmap <nowait> <leader>s :update<cr>
 " TODO: merge witih neovim rc files
 " map <silent><leader>R :source ~/.config/nvim/init.vim \| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
 map <silent><leader>R :source ~/.config/nvim/init.vim<cr>
-map <leader>S :syn off \| syn on \| se foldlevel=1<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 " prepend space on <c-space>?
 " imap <NUL> <space>h

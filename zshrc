@@ -1,6 +1,6 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 
-[[ $(uname -a) =~ Microsoft ]] && unsetopt bgnice
+[[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
 # TODO: think about run-away loops
@@ -283,9 +283,9 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
 function backward_kill_default_word() {
-    WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+    WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
@@ -325,15 +325,26 @@ function copy_last_command {
 }
 bindkey_func '^x^k' copy_last_command
 
-# Copy last command's output to xclipboard
+# Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
 	check_output $XC || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	cat $tmux_log_file | $=XC \
-		&& zle -M "Copied last command's output." \
+		&& zle -M "Copied last command's output WITH ansi escape sequences." \
 		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
 }
 bindkey_func '^x^o' copy_last_output
+
+# Copy last command's output to xclipboard WITHOUT ansi escape sequences
+function copy_last_output_stripped {
+	check_output $XC || return
+	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
+	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
+	cat $tmux_log_file | strip-ansi | $=XC \
+		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
+		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+}
+bindkey_func '^xo' copy_last_output_stripped
 
 function page_tmux_pane {
 	# zle -M "page_tmux_pane"
@@ -563,12 +574,13 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
-bindkey -s at\  "a''t "
-bindkey -s ati\  "a''t !"
-bindkey -s atii\  "a''t !=?"
-bindkey -s atp\  "a''t ^"
+bindkey -s AT\  "a''t "
+bindkey -s ATi\  "a''t !"
+bindkey -s ATii\  "a''t !=?"
+bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s clq\  'c $tmux_log_file\t | jq .'
+bindkey -s cql\  'c $tmux_log_file\t | jq .'
 bindkey -s clj\  'c $tmux_log_file\t | jq .'
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
@@ -809,10 +821,11 @@ stty -ixon
 # TODO: Check if distros provide appropriate means to archive a safe setup
 TMOUT=200
 
+# set -x
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
 [[ -n $DISPLAY ]] && pgrep -u $(id --user) -x xautolock > /dev/null && X_AUTOLOCK=1
 if [[ -n $SSH_TTY ]]; then
-	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell \(ssh\).\n"
+	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in a secure shell (ssh).\n"
 	TMOUT=
 elif [[ $USER = ec-user || -d /var/lib/cloud/instance/ ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs in as cloud instance.\n"
@@ -839,6 +852,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	TMOUT=
 fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
+# set +x
 
 # Try to save tmux from OOM 
 if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then

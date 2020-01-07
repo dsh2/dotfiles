@@ -46,6 +46,7 @@ a_pidof1() { echo $(adb shell ps | grep "$@" | cut -c 9-15 | head -1 ); }
 # find
 alias f=find
 alias fBB='find . \( -type d -exec chmod -c 755 {} \; \) -o \( -type f -exec chmod -c 644 {} \; \)'
+alias fBBB='find . \( -type d -exec chmod -c 700 {} \; \) -o \( -type f -exec chmod -c 600 {} \; \)'
 alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable && chmod -c a+x $f; done || true'
 alias fdd='f . -type d'
 alias ff='f . -type f'
@@ -306,7 +307,16 @@ alias p_s='port search --line'
 alias tm=tmux
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
-alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+# alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
+tmm() {
+    set -x
+    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
+    TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
+    if tmux has-session -t $TAG_NAME >/dev/null; then
+	tmux attach-session -t $TAG_NAME
+    else tmux new-session -s $TAG_NAME
+	fi
+    }
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
@@ -375,7 +385,7 @@ alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
-alias sc=systemctl
+alias sc='systemctl -l'
 alias sca='sudo sysctl -A | fzf -m | tr -d " "'
 alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
@@ -426,6 +436,7 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
+alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
 alias sshl="ssh -p 22222 $USER@localhost"
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
@@ -540,8 +551,13 @@ alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
 sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
-alias zzz='while :; do print -n .; sleep 0.2; done'
+alias zzzz='while :; do print -n .; sleep 0.2; done'
+alias Z=zzzz
 alias b=bridge
 alias p3='python3.8' 
 alias tsh=tshark
+alias nw=notmuch
+alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
+alias ki=kitty
+alias dnp='dnf provides'
 # vim: se ft=sh:

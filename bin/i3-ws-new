@@ -1,0 +1,16 @@
+#!/bin/zsh
+set -ue
+integer i=0
+local i3_socket=$(echo /var/run/user/$UID/i3/ipc-socket*(om[1]) )
+i3m() { i3-msg -s $i3_socket $@ }
+i3m workspace $@
+i3-ws-enum
+
+echo $TERMINAL | while read -d : term ; do 
+    if type $term >& /dev/null; then 
+	$term
+	exit 0
+    fi
+done
+
+echo "No executable terminal found in TERMINAL=\"$TERMINAL\". "
