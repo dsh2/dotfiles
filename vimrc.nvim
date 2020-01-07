@@ -1397,5 +1397,7 @@ nnoremap <s-f10> :Over<cr>
 nnoremap <s-f11> :Step<cr>
 nnoremap <c-s-f11> :Finish<cr>
 
+nnoremap <leader>D :set spelllang=de<cr>
+
 " tnoremap <cr> i
 
