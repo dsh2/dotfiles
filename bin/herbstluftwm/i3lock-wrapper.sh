@@ -5,7 +5,9 @@ msg() {
 }
 revert() {
 	# TODO: parse output of xset q
-	xset dpms 0 0 3600
+	xset -b -c r rate 200 140 dpms 0 0 3600 s off
+	setxkbmap -layout us,de -option grp:alt_caps_toggle
+	xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
 	~/.dotfiles/herbstluftwm/restartpanels.sh &>/dev/null
 	pkill -USR2 dunst
 	msg "Reverted locking settings."
@@ -22,9 +24,12 @@ pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
 xset +dpms dpms 10 10 10
 # In single screen setups chose innocuous screen after unlock
 [ $(herbstclient list_monitors | wc -l) = 1 ] && herbstclient use log
+i3-msg workspace 0:log
 pkill -USR1 dunst
 msg "Locking screen..."
-i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password
+# i3lock --color ff0000 --show-failed-attempts --ignore-empty-password
+xset +dpms dpms 5 5 5
+i3lock --color 00ff00 --show-failed-attempts --ignore-empty-password --nofork
 msg "Screen unlocked."
 # TODO:
 # -add i3-nag/dmenu to rf unblock / toggle mute
