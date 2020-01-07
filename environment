@@ -8,6 +8,7 @@ pathprepend /opt/local/sbin
 pathprepend /usr/lib/ccache
 # pathprepend /opt/local/share/man MANPATH
 pathprepend $HOME/bin
+pathprepend $HOME/.cargo/bin
 pathprepend $HOME/.dotfiles/bin
 pathprepend $HOME/.dotfiles/fzf/target
 pathprepend $HOME/node_modules/.bin/
@@ -41,6 +42,7 @@ if [[ -z $TMUX ]]; then
 else
     export PAGER=
 fi
+export GIT_PAGER=less
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
 export LESS=cRMiWSJ
@@ -92,7 +94,7 @@ export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
 export RANGER_LOAD_DEFAULT_RC=FALSE
 export SSLKEYLOGFILE=$HOME/.ssl/keys && mkdir -p -m 0700 $SSLKEYLOGFILE:h
-export TERMINAL=xfce4-terminal
+export TERMINAL=kitty:sakura:xfce4-terminal:
 export TSHARK=/usr/bin/tshark
 export USE_CCACHE=1
 export WIRESHARK=/usr/bin/wireshark
