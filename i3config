@@ -224,8 +224,8 @@ bindsym $meta+w exec $lock_now && sleep 0.1 && systemctl suspend
 
 # Pulse audio volume control {{{
 set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  -10
-set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  +10
+set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  '-4%'
+set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  '+6%'
 
 bindsym $alt+F9 $pa_toggle_mute
 bindsym $alt+F10 $pa_volume_down 
