@@ -1177,6 +1177,8 @@ elif has port; then
 	alias pii='sudo port install -v $(port list | fzf --multi --sort --preview-window=top:50%:wrap --preview "port info {1}" --bind "ctrl-g:execute(port gohome {1})" | cut -f 1)'
 fi
 
+has kitty && kitty +complete setup zsh | source /dev/stdin
+
 has grc && tf_alias='command grc'
 tf_file=/var/log/messages
 [[ -e $tf_file ]] || tf_file=/var/log/syslog
