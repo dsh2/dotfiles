@@ -186,6 +186,7 @@ mcd() {
 	fi
 	mkd $DIR && cd $DIR
 }
+alias mcdb='mcd BUILD-$(nn)'
 alias mkp=mkd
 alias goo=googler
 alias wh='whence -sv'
@@ -304,7 +305,6 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
-    set -x
     TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
     TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
     if tmux has-session -t $TAG_NAME >/dev/null; then
@@ -506,6 +506,9 @@ alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
 alias rf='rfkill block all'
 alias rfw='rfkill unblock wifi'
+alias rfW='rfkill block wifi'
+alias rfb='rfkill unblock bluetooth'
+alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set 
