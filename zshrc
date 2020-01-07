@@ -1302,3 +1302,4 @@ fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd
 fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
+[ -e ~/.environment.local ] && source ~/.environment.local 
