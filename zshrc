@@ -1010,29 +1010,26 @@ GG() {
 }
 
 cloc() {
-	locate --existing -0 .zsh_local_history |
-		xargs -0 grep --color=always --line-number -F "$*" |
-		sort -k 2
+	locate --existing --basename --null .zsh_local_history |
+		xargs -0 grep --color=always --line-number -F "$*" 2>/dev/null |
+		grep -vE '\<clocd?\>' |
+		sed 's:/.zsh_local_history: :'
 	}
 
 clocd() {
-	locate --existing -0 .zsh_local_history |
+	locate --existing --basename --null .zsh_local_history |
 		xargs -0 grep --files-with-matches -F "$*" |
+		grep -vE '\<clocd?\>' |
 		sort -u
 	}
 
-clocdf() {
-	cd $(clocd $* |
-		fzf --preview "
-			grep --color=always -e "$*" {}
-			")
-		}
-	# TODO: move to zshrc or similar
-	zloc_file() {
-		local -r file=.zsh_local_history
-		[[ -r $file ]] && { echo -n $file ; return }
-		echo -n ~/.zsh_local_history_dir${(q)PWD}/history
-	}
+clocdf() { cd $(clocd $* | fzf --preview " grep --color=always -e "$*" {} ") }
+
+zloc_file() {
+	local -r file=.zsh_local_history
+	[[ -r $file ]] && { echo -n $file ; return }
+	echo -n ~/.zsh_local_history_dir${(q)PWD}/history
+}
 
 zloc() {
 	fc -p $(zloc_file)
