@@ -69,14 +69,16 @@ alias gcn='git clean -n'
 alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
 alias gdf='git diff --ignore-space-change --ignore-blank-lines'
+alias gdff='git diff --ignore-space-change --ignore-blank-lines -- .'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
 alias gst='git status -sb -- '
+alias gst.='git status -sb -- ./'
+alias gstt='git status -sb -- ./'
 # gst() {
 #	local git_min_version="2.10.0"
 
 # }
-alias gstt='gst .'
 gcr() {
 	set -x
 	git clone --recursive --jobs=8 --verbose $1 &&
@@ -374,6 +376,7 @@ alias bd=bindkey
 alias bdl='bindkey -L'
 alias kc='source ~/.keychain/*-sh(.om[1])'
 alias Gdb='gdb -q -ex "b main" -ex run --args '
+alias Gdbr='gdb -q -ex "target remote localhost:1234"'
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
 alias G='gdbserver :2000'
 alias fcp='fc -P'
