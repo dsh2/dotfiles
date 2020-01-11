@@ -905,7 +905,7 @@ faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
 nsdo() { for ns in $(ip netns list); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
-pp() { [[ -z $* ]] && sudo -E $EDITOR +ProcessTree || sudo -E $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
+pp() { [[ -z $* ]] && sudo --preserve-env=HOME $EDITOR +ProcessTree || sudo --preserve-env=HOME $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
