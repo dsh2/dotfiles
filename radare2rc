@@ -1,7 +1,7 @@
 # :vim: set ft=conf
-e cfg.fortunes = false
-# e scr.pager = less -R
-e scr.pager = ..
+e cfg.fortunes = true
+e scr.pager = less -R
+# e scr.pager = ..
 e scr.prompt = true
 e scr.prompt.flag = true
 e scr.prompt.sect = true
@@ -12,6 +12,6 @@ e cfg.newtab =1
 e scr.prompt.popup =1
 eco solarized
 ?e Sourced radare2rc
-$r=. /home/dsf/.config/radare2/radare2rc
-$R=. /home/dsf/.config/radare2/radare2rc
+$r=. $HOME/.config/radare2/radare2rc
+$R=. $HOME/.config/radare2/radare2rc
 $H=?**~...
