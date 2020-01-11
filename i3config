@@ -1,13 +1,13 @@
-# vim: filetype=config fdm=marker sw=4 ts=4
+# vim: filetype=config fdm=marker sw=4 ts=4 commentstring=#\ %s
 
-# Set modifier {{{
+# Modifiers {{{
 set $shift Shift
 set $ctrl Control
 set $meta Mod4
 set $alt Mod1
 # }}}
 
-# Set direction keys {{{
+# Direction keys {{{
 set $up k
 set $down j
 set $left h
@@ -36,7 +36,7 @@ font $font
 set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 # }}}
 
-# Set default applications {{{
+# Default applications {{{
 set $browser google-chrome-stable
 set $terminal kitty
 set $terminal_tmux kitty zsh -ic 'tmm'
@@ -77,7 +77,6 @@ bindsym $meta+$alt+8 workspace number 8
 bindsym $meta+$alt+9 workspace number 9
 bindsym $meta+$alt+0 workspace number 0
 # }}}
-
 # Focus windows/containers {{{
 bindsym $meta+$left focus left
 bindsym $meta+c exec i3-win-cycle
@@ -89,13 +88,25 @@ bindsym $meta+$shift+d focus child
 bindsym $meta+$shift+p focus output primary
 bindsym $meta+$shift+s sticky toggle
 # }}}
-
 # Focus standard applications {{{
 # bindsym $meta+$shift+3 [class="Google-chrome"] focus
 # bindsym $meta+shift+1 fullscreen disable; [class="(?i)chrome" workspace="root"] focus
 bindsym $meta+shift+3 [window_role="(?i)browser"] focus
 # }}}
-
+# Launch standard applications {{{
+# Start a terminal {{{
+bindsym $meta+Return exec $terminal_tmux
+bindsym $meta+$shift+Return exec $terminal
+bindsym $meta+7 split horizontal, exec $terminal
+bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
+bindsym $meta+8 split vertical, exec $terminal
+bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
+# }}}
+# Start a browser {{{
+bindsym $ctrl+Return exec $browser
+bindsym $meta+n workspace new, exec i3-ws-enum, exec $browser
+# }}}
+# }}}
 # Move focused container to workspace {{{
 bindsym $meta+$alt+$shift+1 move container to workspace number 1
 bindsym $meta+$alt+$shift+2 move container to workspace number 2
@@ -108,120 +119,88 @@ bindsym $meta+$alt+$shift+8 move container to workspace number 8
 bindsym $meta+$alt+$shift+9 move container to workspace number 9
 bindsym $meta+$alt+$shift+0 move container to workspace number 0
 # }}}
-
-# Change workspaces {{{
+# Switch active workspace {{{
+bindsym $meta+3 workspace back_and_forth
+bindsym $meta+x [urgent=latest] focus
 
 bindsym $meta+BackSpace focus output left
 bindsym $meta+$shift+BackSpace focus output right
 
 bindsym $meta+1 workspace prev_on_output
 bindsym $meta+2 workspace next_on_output
+
 bindsym $ctrl+$meta+$alt+9 workspace prev
 bindsym $ctrl+$meta+$alt+0 workspace next
+
 bindsym $meta+$shift+1 workspace prev
 bindsym $meta+$shift+2 workspace next
-bindsym $meta+3 workspace back_and_forth
+
 bindsym $meta+9 workspace $WS_COMS
 bindsym $meta+0 workspace $WS_LOG
-
 ### }}}
-
-# Rofi {{{
-bindsym $alt+Tab exec rofi -show window
-# TODO: make it toggle-cycle through windows (...and move binding)
-# bindsym $alt+Tab workspace back_and_forth
-bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
-bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
-bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
-# }}}
-
-# Kill focused window
+# Kill focused window {{{
 bindsym $meta+q kill
 bindsym $meta+$shift+q kill
 bindsym $alt+F4 kill
-
-# Change split
+# }}}
+# Change split {{{
 bindsym $meta+shift+v split horizontal
 bindsym $meta+v split vertical
-
-bindsym $meta+$shift+r reload
-bindsym $meta+$shift+n bar mode toggle
-
-# Resize focused window
+bindsym $meta+$alt+v split toggle
+# }}}
+# Resize focused window {{{
 bindsym $meta+shift+$right resize grow width $step_size
 bindsym $meta+shift+$left resize shrink width $step_size
 bindsym $meta+shift+$up resize shrink height $step_size
 bindsym $meta+shift+$down resize grow height $step_size
-
-# bindsym $meta+s layout stacking
-# bindsym $meta+t layout tabbed
-# bindsym $meta+e layout toggle split
-
-# Change container layout
+# }}}
+# Change container layout {{{
 bindsym $meta+$ctrl+$left move left
 bindsym $meta+$ctrl+$right move right
 bindsym $meta+$ctrl+$up move up
 bindsym $meta+$ctrl+$down move down
+
+bindsym $meta+e layout toggle split
 bindsym $meta+s layout stacking
 bindsym $meta+t layout tabbed
-bindsym $meta+e layout toggle split
-
-# Move container
+# }}}
+# Move container {{{
 bindsym $meta+$alt+$left move container to output left
 bindsym $meta+$alt+$right move container to output right
-
-# Move workspace
+# }}}
+# Move workspace {{{
 bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
 bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
-
-bindsym $meta+x [urgent=latest] focus
-
-# Fullscreen
+# }}}
+# Fullscreen {{{
 bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
 # bindsym $meta+shift+f fullscreen
 bindsym $meta+$shift+f fullscreen
 bindsym $meta+z fullscreen
 bindsym $meta+$alt+$shift+f fullscreen global
 bindsym $meta+$alt+$shift+z fullscreen global
-
-# Toggle tiling / floating
+# }}}
+# Toggle tiling / floating {{{
 bindsym $meta+i floating toggle
 bindsym $meta+shift+i focus mode_toggle
 bindsym $meta+shift+c focus mode_toggle
-
-# Border changing
+# }}}
+# Changing border style {{{
 bindsym $meta+b border toggle
 bindsym $meta+$shift+b border toggle
-
-
-# Start a terminal
-bindsym $meta+Return exec $terminal_tmux
-bindsym $meta+$shift+Return exec $terminal
-bindsym $meta+7 split horizontal, exec $terminal
-bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
-bindsym $meta+8 split vertical, exec $terminal
-bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
-
-# Start a browser {{{
-bindsym $ctrl+Return exec $browser
-bindsym $meta+n workspace new, exec i3-ws-enum, exec $browser
 # }}}
-
-# bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
-bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
-# bindsym $meta+$alt+space exec notify-send O,exec notify-send P
-# bindsym $meta+$alt+space exec $i3input -F 'exec notify-send O,exec notify-send P -P 'New workspace: '
-
-# Screen brightness
+# Screen brightness {{{
 bindsym $meta+$alt+$ctrl+$down exec lux -s 60
 bindsym $meta+$alt+$ctrl+$up exec lux -a 60
 bindsym $meta+$alt+$ctrl+$shift+$down exec lux -S 1%
 bindsym $meta+$alt+$ctrl+$shift+$up exec lux -S 100%
-
-# Lock screen
+bindsym $meta+$alt+$ctrl+$right exec redshift -x
+bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
+# }}}
+# Lock screen {{{
 bindsym $meta+a exec $lock_now
 bindsym $meta+w exec $lock_now && sleep 0.1 && systemctl suspend
-
+# }}}
 # Pulse audio volume control {{{
 set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  '-4%'
@@ -235,7 +214,23 @@ bindsym XF86AudioMute $pa_toggle_mute
 bindsym XF86AudioLowerVolume $pa_volume_down 
 bindsym XF86AudioRaiseVolume $pa_volume_up 
 # }}}
+# Rofi {{{
+bindsym $alt+Tab exec rofi -show window
+# TODO: make it toggle-cycle through windows (...and move binding)
+# bindsym $alt+Tab workspace back_and_forth
+bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
+bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
+# }}}
+# Miscellaneous {{{
+bindsym $meta+$shift+r reload
+bindsym $meta+$shift+n bar mode toggle
+# bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
+bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
+# bindsym $meta+$alt+space exec notify-send O,exec notify-send P
+# bindsym $meta+$alt+space exec $i3input -F 'exec notify-send O,exec notify-send P -P 'New workspace: '
 
+# }}}
 # Mode bindings {{{
 set $mode_i3 "[i3: b:border h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag, y:sticky]"
 
@@ -384,7 +379,6 @@ bindsym $meta+p $mode_return
 # }}}
 
 # }}}
-
 # }}}
 
 # Mouse bindings {{{
