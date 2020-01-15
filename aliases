@@ -26,7 +26,8 @@ source ~/.dotfiles/z/z.sh
 
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
-alias adbk='adb shell input keyboard text \"\"'
+# alias adbk='adb shell input keyboard text \"\"'
+adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
 alias add='adb devices -l'
