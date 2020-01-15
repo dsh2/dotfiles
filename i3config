@@ -386,6 +386,7 @@ bindsym $meta+p $mode_return
 bindsym --whole-window $meta+button1 floating toggle
 # bindsym --release button1 floating toggle
 bindsym --release button2 kill
+bindsym --release button3 floating toggle
 
 bindsym $meta+$shift+w exec "notify-send \\"Hello, i3; from $USER\\""
 
