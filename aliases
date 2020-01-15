@@ -66,6 +66,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # git
 alias g=git
 alias gc='git commit --verbose'
+alias gC='git cherry --verbose'
 alias gcn='git clean -n'
 alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
@@ -331,7 +332,8 @@ alias vpp=vpcsv
 alias tag=prompt_tag
 gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
-alias pg='ping gdns |& lnav -qt'
+# alias pg='ping gdns |& lnav -qt'
+alias pg=pgrep
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
