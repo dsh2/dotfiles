@@ -514,7 +514,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
-	autocmd vimrc FileType config,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,expect,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
@@ -551,7 +551,12 @@ if vim_plug_available
 	Plug 'vim-scripts/LargeFile'"{{{
 	let g:LargeFile = 50
 	set synmaxcol=2048"}}}
-	Plug 'w0rp/ale' "{{{
+	Plug 'w0rp/ale', {'for': 'cpp'} "{{{
+	autocmd vimrc FileType cpp nmap <leader><leader> :ALEGoToDefinitionInVSplit<cr>
+	autocmd vimrc FileType cpp nmap <leader> :ALEGoToDefinitionInSplit<cr>
+	autocmd vimrc FileType cpp nmap  :ALEGoToDefinition<cr>
+	autocmd vimrc FileType cpp nmap x :ALEFindReferences<cr>
+	autocmd vimrc FileType cpp nmap <leader>~ :ALEHover<cr>
 	let g:airline#extensions#ale#enabled = 1
 	let g:ale_set_loclist = 1
 	let g:ale_set_quickfix = 0
@@ -818,6 +823,7 @@ set diffopt=
 " set dir=~/.vim/swo
 set encoding=utf8
 set exrc
+set secure
 let g:xml_syntax_folding=1
 set foldmethod=syntax
 " set foldlevelstart=99
@@ -837,7 +843,8 @@ set mousefocus
 set nobackup
 set relativenumber
 set nospell
-set nowrap
+" set nowrap
+set wrap
 set linebreak
 set nowrapscan
 set number
@@ -877,8 +884,7 @@ set wildmenu
 set wildmode=list:longest,full
 autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
-autocmd vimrc BufNewFile,BufReadPost *-strace* setfiletype strace
-
+autocmd vimrc BufNewFile,BufReadPost *.run setfiletype expect
 " }}}
 
 cabbr BB <buffer>
@@ -995,6 +1001,10 @@ map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
 map Ypr :call YankUp(expand("%:."))<cr>
 map Ypt :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
+map Yph :call YankUp(expand("%:h"))<cr>
+" map YpH :echo("set path+=" . expand("%:h"))<cr>set path?<cr>
+map YpH :execute("set path+=" . expand("%:h"))<cr>:set path?<cr>
+map Ypc :execute("set path+=" . expand("%:h"))
 " TODO: add current function (c, cpp, py, etc.)
 " }}}
 " Special operations {{{
@@ -1118,8 +1128,8 @@ function! s:Redir(cmd) abort
     let @z = l:oldz
     " Remove blank lines and superfluous greater-than symbol (silently)
     silent! %g/^[\s>]*$/d
-    " Make the buffer not related to any sort of file, and will never be written
-    set buftype=nofile
+    execute "saveas /tmp/redir-vim-" . strftime('%F__%T')
+    set wrap
 endfunction
 command! -nargs=0 Messages call <SID>Redir("messages")
 " }}}"
@@ -1337,6 +1347,8 @@ function! ProcessTree(...)
 	\\|execute("TabooRename ".g:pid)<cr>
     " TODO: Does not work.... :(
     nnoremap <buffer> t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
+    " Attach gdbserver
+    " nnoremap <buffer> G :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
 endfunction
 command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 
@@ -1369,7 +1381,7 @@ map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: underst
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " map <leader><space><cr> :call KeepView("silent! '<,'>s/\s\+/\r/")<cr>
-map <leader><space><cr> :%s/\s\+/\r/<cr>
+map <leader><space><cr> :s/\s\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 
 map <c-w>k :close<cr>
@@ -1404,3 +1416,18 @@ nnoremap <leader>D :set spelllang=de<cr>
 
 " tnoremap <cr> i
 
+autocmd vimrc BufNewFile,BufReadPost *-strace* setfiletype strace
+
+map <leader><c-r> :update<cr>:source %<cr>
+
+function! ALEInformation()
+    " TODO: Make this work
+    Redir("call ale#debugging#Info()")
+    set filetype=sh
+    set wrap
+endfunction
+command! -nargs=0 ALEInformation call ALEInformation()
+
+nmap <leader><c-h> :colder<cr>
+nmap <leader><c-l> :cnewer<cr>
+nmap <leader>q :cclose<cr>
