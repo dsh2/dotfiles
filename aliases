@@ -461,19 +461,23 @@ alias y=yum
 alias ZS='sudo -E $SHELL'
 
 src_index() {
-	find . \
-		-name .repo -prune -o \
-		-name .git -prune -o \
-		-name out -prune -o \
-		-name build -prune -o \
-		-type f \( \
-		-name '*.c' -o \
-		-name '*.cc' -o \
-		-name '*.cpp' -o \
-		-name '*.h' -o \
-		-name '*.hpp' \
-		\) > cscope.files ; command cscope -bi cscope.files;
-	}
+    # find . \
+	# -type f \
+	# -name .repo -prune -o \
+	# -name .git -prune -o \
+	# -name out -prune -o \
+	# -name build -prune -o \
+	# -type f \( \
+	    # -name '*.c' -o \
+	    # -name '*.cc' -o \
+	    # -name '*.cpp' -o \
+	    # -name '*.h' -o \
+	    # -name '*.hpp' \
+	# \) > cscope.files 
+	setopt clobber
+	git ls-files > cscope.files
+	cscope -bi cscope.files
+}
 
 alias s3=sqlite3
 alias s3b='sqlitebrowser -R'
