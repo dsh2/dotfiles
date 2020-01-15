@@ -1,0 +1,15 @@
+#!/bin/zsh
+set -ue
+local i3_socket=$(echo /var/run/user/$UID/i3/ipc-socket*(om[1]) )
+i3m() { i3-msg -s $i3_socket $@ }
+i3m -t get_workspaces | jq -r '.[].name' | while read ws; do
+    local ws_name=${ws##*:}
+    print "Moving $ws to primamry output..."
+    # i3m move workspace \"$ws\" to output primary
+    i3m workspace \"$ws\" 
+    i3m move workspace to output primary
+done
+i3m workspace \"0:log\" 
+i3m move workspace to output left
+i3m workspace back_and_forth
+i3m focus output primary
