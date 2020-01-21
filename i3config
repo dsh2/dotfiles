@@ -80,6 +80,8 @@ bindsym $meta+$alt+0 workspace number 0
 # Focus windows/containers {{{
 bindsym $meta+$left focus left
 bindsym $meta+c exec i3-win-cycle
+bindsym $meta+shift+c exec i3-win-cycle
+# bindsym $meta+shift+c focus mode_toggle
 bindsym $meta+$right focus right
 bindsym $meta+$up focus up
 bindsym $meta+$down focus down
@@ -183,15 +185,14 @@ bindsym $meta+$alt+$shift+z fullscreen global
 # Toggle tiling / floating {{{
 bindsym $meta+i floating toggle
 bindsym $meta+shift+i focus mode_toggle
-bindsym $meta+shift+c focus mode_toggle
 # }}}
 # Changing border style {{{
 bindsym $meta+b border toggle
 bindsym $meta+$shift+b border toggle
 # }}}
 # Screen brightness {{{
-bindsym $meta+$alt+$ctrl+$down exec lux -s 60
-bindsym $meta+$alt+$ctrl+$up exec lux -a 60
+bindsym $meta+$alt+$ctrl+$down exec lux -s 90
+bindsym $meta+$alt+$ctrl+$up exec lux -a 90
 bindsym $meta+$alt+$ctrl+$shift+$down exec lux -S 1%
 bindsym $meta+$alt+$ctrl+$shift+$up exec lux -S 100%
 bindsym $meta+$alt+$ctrl+$right exec redshift -x
@@ -199,7 +200,9 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-bindsym $meta+w exec $lock_now && sleep 0.1 && systemctl suspend
+# bindsym $meta+w exec $lock_now & sleep 0.1 pgrep i3lock || notify-send "WARNING: i3lock failed." && systemctl suspend
+# bindsym $meta+w exec $lock_now & sleep 0.1 && pgrep i3lock || notify-send -u critical "WARNING: i3lock failed." 
+bindsym $meta+w exec $lock_now & sleep 0.4 && pgrep i3lock || notify-send -u critical "WARNING: i3lock failed." 
 # }}}
 # Pulse audio volume control {{{
 set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -247,7 +250,7 @@ set $mode_i3_key u
 bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
-	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary $mode_return
+	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
 	bindsym x exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
 	bindsym X exec i3-ws-primary $mode_return 
 	bindsym b border toggle
