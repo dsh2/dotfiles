@@ -77,6 +77,7 @@ alias grp='git reset --patch'
 alias gst='git status -sb -- '
 alias gst.='git status -sb -- ./'
 alias gstt='git status -sb -- ./'
+alias gw='git worktree'
 # gst() {
 #	local git_min_version="2.10.0"
 
@@ -310,6 +311,7 @@ alias el=$PAGER
 alias psp='pstree -laps'
 alias p_s='port search --line'
 alias tm=tmux
+alias tmda='tmux detach-client -a'
 alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
@@ -330,7 +332,7 @@ alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
 alias tag=prompt_tag
-gw() { grep --color -Iwri -- "$@" *; }
+# gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
 alias pg=pgrep
@@ -573,4 +575,6 @@ alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 alias ki=kitty
 alias dnp='dnf provides'
+TT() {nvim +'norm i' term://"$*" }
+T() {nvim term://"$*" }
 # vim: se ft=sh:
