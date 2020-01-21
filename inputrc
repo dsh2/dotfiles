@@ -203,10 +203,41 @@ set skip-completed-text on
 # 	is ‘off’.
 set visible-stats on
 
+$if term=linux
+	set vi-ins-mode-string \1\e[?0c\2
+	set vi-cmd-mode-string \1\e[?8c\2
+$else
+	set vi-ins-mode-string \1\e[6 q\2
+	set vi-cmd-mode-string \1\e[2 q\2
+$endif
+
+set show-mode-in-prompt on
+# Color files by types
+# Note that this may cause completion text blink in some terminals (e.g. xterm).
+set colored-stats On
+# Append char to indicate type
+set visible-stats On
+# Mark symlinked directories
+set mark-symlinked-directories On
+# Color the common prefix
+set colored-completion-prefix On
+# Color the common prefix in menu-complete
+set menu-complete-display-prefix On
+
+# Make Tab cycle between possible completions
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+Control-q: complete
+
 $if gdb
-    '\c-u': "finish\n"
-    '\c-n': "next\n"
-    '\c-s': "step\n"
+    "\eJ": "step\n"
+    "\eN": "next\n"
+    # "\eF": "stepi\n"
+    "\eK": "finish\n"
+    "\eD": "nexti\n"
+    # '\c-s': "step\n"
+    # Repeat second-previous
+    # '\c-b': "\C-p\C-p\C-m"
 $endif
 
 $if psql
