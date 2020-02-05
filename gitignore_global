@@ -33,5 +33,7 @@ Desktop.ini
 
 # Miscellaneous 
 .vimrc
+.nvimrc
 .zsh_local_history
 tmp-*
+.ccls-cache
