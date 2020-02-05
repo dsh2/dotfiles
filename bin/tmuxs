@@ -1,0 +1,4 @@
+#!/bin/sh 
+logger "tmuxs: $* ($( pstree -ps $$ ))"
+shift
+tmux split-window "$*"
