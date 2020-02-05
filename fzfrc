@@ -89,10 +89,11 @@ ftpane() {
   # -focus self
   # -what about colors
   panes=$( \
-    tmux list-panes -aF '#{window_activity_flag} #{window_bell_flag} #{window_silence_flag} #{window_stack_index} #{wrap_flag} #{window_flags}\t#{t:window_activity}\t[#{session_name}]\t#{window_index}|#{=13:window_name}\t#{s,/dev/,,:pane_tty}\t#{pane_id}\t#{pane_pid}\t#{pane_index}|#{=13:pane_current_command}\t#{pane_current_path}:#{pane_title}' |
+    tmux list-panes -aF '#{window_activity_flag} #{window_bell_flag} #{window_silence_flag} #{window_stack_index} #{wrap_flag} #{window_flags}\t#{t:window_activity}\t[#{session_name}]\t#{window_index}|#{=13:window_name}\t#{s,/dev/,,:pane_tty}\t#{pane_id}\t#{pane_pid}\t#{pane_index}|#{=13:pane_current_command}\t#{pane_current_path}:#{pane_title}' | 
+	sort -k 7dr |
     grep -v $$ # TODO: add \t-regex
     )
-  target=$(echo "$panes" | fzf +m --header=A\ B\ S\ I\ W\ F\ $'\t'\[ACTIVITY\]$'\t'\[SESSION\]$'\t'\ \|WINDOW$'\t'TTY$'\t'P_ID$'\t'P_PID$'\t'\ \|PANE$'\t'CWD:TITLE --tabstop=14 --layout=reverse ) || return
+  target=$(echo "$panes" | fzf +m --header=A\ B\ S\ I\ W\ F\ $'\t'\[ACTIVITY\]$'\t\t'\[SESSION\]$'\t'\ \|WINDOW$'\t'TTY$'\t'P_ID$'\t'P_PID$'\t'\ \|PANE$'\t'CWD:TITLE --tabstop=14 --layout=reverse ) || return
   tmux switch-client -t $(echo $target | cut -f 6)
 }
 
