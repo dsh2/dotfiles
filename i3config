@@ -46,10 +46,10 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 
 # Options {{{
 # bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-# floating_maximum_size 200 x 200
 # for_window [class=".*"] title_format "%title"
 # for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-# for_window [class="crx_nckgahadagoaajjgafhacjanaoiihapd"] floating enable
+for_window [class="Pavucontrol"] floating enable, resize set 540 260
+for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 # for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
 hide_edge_borders none
 floating_minimum_size 200 x 200
@@ -61,7 +61,7 @@ no_focus [window_role="pop-up"]
 popup_during_fullscreen leave_fullscreen # ignore, smart
 show_marks yes
 workspace_auto_back_and_forth yes
-workspace_layout stacking # default, stacking, tabbed
+workspace_layout tabbed # default, stacking, tabbed
 # }}}
 
 # Key bindings {{{
@@ -147,9 +147,8 @@ bindsym $meta+$shift+q kill
 bindsym $alt+F4 kill
 # }}}
 # Change split {{{
-bindsym $meta+shift+v split horizontal
-bindsym $meta+v split vertical
-bindsym $meta+$alt+v split toggle
+bindsym $meta+v split toggle
+bindsym $meta+shift+v layout toggle 
 # }}}
 # Resize focused window {{{
 bindsym $meta+shift+$right resize grow width $step_size
@@ -176,16 +175,16 @@ bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
 bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
 # }}}
 # Fullscreen {{{
-bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
-# bindsym $meta+shift+f fullscreen
+bindsym $meta+f layout toggle
 bindsym $meta+$shift+f fullscreen
+# bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+bindsym $meta+$ctrl+$shift+f fullscreen global
 bindsym $meta+z fullscreen
-bindsym $meta+$alt+$shift+f fullscreen global
 bindsym $meta+$alt+$shift+z fullscreen global
 # }}}
 # Toggle tiling / floating {{{
-bindsym $meta+i floating toggle
-bindsym $meta+shift+i focus mode_toggle
+bindsym $meta+i focus mode_toggle
+bindsym $meta+shift+i floating toggle
 # }}}
 # Changing border style {{{
 bindsym $meta+b border toggle
@@ -223,8 +222,9 @@ bindsym $alt+Tab exec rofi -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
 # bindsym $alt+Tab workspace back_and_forth
 bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
-bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
-bindsym $alt+$ctrl+Shift+s exec python ~/.dotfiles/bin/rofimoji.py
+bindsym $meta+space exec rofi -mesg ok -fullscreen -show combi
+# bindsym $meta+space exec rofi -show run -sidebar-mode -lines 0
+bindsym $alt+$ctrl+$shift+s exec python ~/.dotfiles/bin/rofimoji.py
 # }}}
 # Miscellaneous {{{
 bindsym $meta+$shift+r reload
@@ -236,15 +236,14 @@ bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
 
 # }}}
 # Mode bindings {{{
-set $mode_i3 "[i3: b:border h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag, y:sticky]"
 
-set $step_size 15 px
+set $mode_i3 "[i3: b:border h:hide, i:float, m:scratchpad, r:rename ws, s:toggle bar, t:tag, y:sticky]"
 set $mode_move "[move: hjkl]"
 set $mode_resize "[resize: hjkl+shift/ctrl]"
 set $mode_manipulate "[manipulate: hjkl+shift/ctrl]"
 set $mode_system "[system: l:lock, s:suspend, S:lock&suspend, h:hibernate]"
-
 set $mode_return mode "default"
+set $step_size 15 px
 
 # Mode "i3" {{{
 set $mode_i3_key u
@@ -257,7 +256,7 @@ mode $mode_i3 {
 	bindsym b border toggle
 	bindsym h move scratchpad, $mode_return
 	bindsym i floating toggle, $mode_return
-	bindsym m scratchpad show
+	bindsym m scratchpad show, $mode_return
 	bindsym n move window to workspace "new", exec i3-ws-enum, $mode_return
 	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
 	bindsym s bar mode toggle, $mode_return
@@ -286,6 +285,10 @@ mode $mode_move {
 	bindsym $up move up
 	bindsym $down move down
 	bindsym $right move right
+	bindsym $shift+$left move left 80
+	bindsym $shift+$up move up 80
+	bindsym $shift+$down move down 80
+	bindsym $shift+$right move right 80
 	# TODO: add shift mod to move faster (i.e. more pixels)
 
 	# Exit mode
@@ -417,9 +420,9 @@ bar {
 	colors {
 		background #000000
 		statusline #ffffff
-		separator #666666
+		separator #007000
 
-		focused_workspace  #4c7899 #285577 #ffffff
+		focused_workspace  #4c7899 #007000 #ffffff
 		active_workspace   #555555 #5f676a #ffffff
 		inactive_workspace #333333 #222222 #888888
 		urgent_workspace   #2f343a #900000 #ffffff
