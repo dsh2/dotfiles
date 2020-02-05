@@ -211,7 +211,7 @@ $else
 	set vi-cmd-mode-string \1\e[2 q\2
 $endif
 
-set show-mode-in-prompt on
+set show-mode-in-prompt off
 # Color files by types
 # Note that this may cause completion text blink in some terminals (e.g. xterm).
 set colored-stats On
@@ -230,14 +230,12 @@ TAB: menu-complete
 Control-q: complete
 
 $if gdb
-    "\eJ": "step\n"
-    "\eN": "next\n"
-    # "\eF": "stepi\n"
+    "\e\C-j": "step\n"
+	"\e\C-k": "next\n"
+	"\e\C-i": "finish\n"
     "\eK": "finish\n"
-    "\eD": "nexti\n"
-    # '\c-s': "step\n"
     # Repeat second-previous
-    # '\c-b': "\C-p\C-p\C-m"
+    # "\e\C-u": "\C-p\C-p\C-m"
 $endif
 
 $if psql
