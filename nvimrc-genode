@@ -1,0 +1,76 @@
+" Reset options
+set path=.,/usr/include
+let g:ale_cpp_clang_options=""
+let g:ale_cpp_gcc_options=""
+let cpp_include_options=""
+
+" Repositories
+let repos=['base', 'os']
+" let cpp_include_path+=['gems']
+
+" Spec
+" let specs=['32bit']
+let specs=['64bit']
+let specs+=['x86']
+let specs+=['x86_64']
+
+for repo in repos
+    let repo_include_path="repos/" . repo . "/include"
+    if !isdirectory(repo_include_path)
+	echoerr "Include path for repo " . repo . " not found: " . repo_include_path
+	continue
+    endif
+
+    " Add repo include path to vim search path
+    let &path.="," . repo_include_path
+
+    let cpp_include_options=" -I " . repo_include_path
+
+    " Check if repo has board specific includes
+    for spec in specs
+	" let spec_include_path=repo_include_path . "/spec/" . spec . "/" . repo 
+	let spec_include_path=repo_include_path . "/spec/" . spec 
+	if isdirectory(spec_include_path)
+	    let &path.="," . spec_include_path
+	    let cpp_include_options.=" -I " . spec_include_path
+	endif
+    endfor
+    let g:ale_cpp_clang_options.=cpp_include_options
+    let g:ale_cpp_gcc_options.=cpp_include_options
+endfor
+
+" Make
+let &makeprg="make"
+
+" Make - build_dir
+" let &makeprg.=" -C " . expand('%:p:h')
+let &makeprg.=" -C " . expand('<sfile>:p:h')
+let &makeprg.="/build/"
+" let &makeprg.="x86_32" 
+" let &makeprg.="x86_64" 
+" let &makeprg.="linux" 
+" let &makeprg.="wg_linux" 
+let &makeprg.="wg_tmp" 
+
+" Make - target
+let &makeprg.=" " 
+" let &makeprg.=" run/" 
+
+" let &makeprg.="noux_gdb"
+" let &makeprg.="hello-wg1"
+let &makeprg.="wg"
+
+" Make - verbosity
+let &makeprg.=" VERBOSE="
+" let &makeprg.=" VERBOSE_MK="
+
+"
+" ALE options
+let g:ale_max_buffer_history_size=1000
+" let g:ale_linters = {'cpp': ['ccls', 'clang', 'clangcheck', 'clangd', 'clangtidy', 'clazy', 'cppcheck', 'cpplint', 'cquery', 'flawfinder', 'gcc']}
+" Disable clangcheck, clangtidy until compile db is availabe
+let g:ale_linters = {'cpp': ['ccls', 'clang', 'clangd', 'cppcheck', 'cpplint', 'flawfinder', 'gcc']}
+
+set errorformat^=%-G%f:%l:\ warning:%m
+au BufEnter call ale#toggle#Disable()
+" set commentstring=#\ %s
