@@ -429,27 +429,36 @@ bar {
 
 # Default workspaces {{{
 
+# WS_ROOT {{{
 set $WS_LOG "0:log"
+exec_always --no-startup-id i3-msg 'workspace $WS_LOG; exec $terminal_tmux'
+# }}}
+
+# WS_COMS {{{
 set $WS_COMS "1:coms"
-set $WS_ROOT "3:root"
+assign [class="Google-chrome" title="Telegram Web - Google Chrome"] $WS_COMS
+assign [instance="crx_nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
+assign [class="Pidgin"] $WS_COMS
+# }}}
 
 # WS_ROOT {{{
+set $WS_ROOT "2:root"
+exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
+exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $browser'
 # }}}
 
-# WS_COM {{{
-# TODO: Make these work
-assign [class="google-chrome" title="Telegram Web"] $WS_COMS
-assign [class="nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
+# WS_QEMU {{{
+set $WS_QEMU "8:log"
+assign [class="qemu-system-x86_64"] 8:qemu
 # }}}
-
 # }}}
 
 # Autostart {{{
 exec_always --no-startup-id xset -b -c r rate 200 140
 exec_always --no-startup-id dunst
-exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+# exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id notify-send "i3config loaded."
 # }}}
