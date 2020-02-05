@@ -70,13 +70,13 @@ alias gC='git cherry --verbose'
 alias gcn='git clean -n'
 alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
-alias gdf='git diff --ignore-space-change --ignore-blank-lines'
-alias gdff='git diff --ignore-space-change --ignore-blank-lines -- .'
+alias gdf='noglob git diff --ignore-space-change --ignore-blank-lines'
+alias gdff='noglob git diff --ignore-space-change --ignore-blank-lines -- .'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='git status -sb -- '
-alias gst.='git status -sb -- ./'
-alias gstt='git status -sb -- ./'
+alias gst='noglob git status -sb -- '
+alias gst.='noglob git status -sb -- ./'
+alias gstt='noglob git status -sb -- ./'
 alias gw='git worktree'
 # gst() {
 #	local git_min_version="2.10.0"
@@ -116,9 +116,10 @@ alias gcom='git checkout master'
 alias gcol='git checkout local'
 alias gA='mlocate -eb \\HEAD | while read p; do p=${p:h}; [[ -d $p/objects && -f $p/config ]] && echo $p; done'
 alias gk='x0; gitk --all&'
-alias gkk='v +GV'
+alias gkk='v +"GV --all"'
 alias gss='GIT_MODIFIED_FILES=$(git ls-files --modified) && [ -n $GIT_MODIFIED_FILES ] && $EDITOR $=GIT_MODIFIED_FILES +Gstatus +only'
-alias gcp='git cherry-pick'
+alias gcp='git cherry-pick -x'
+alias gs='git stash'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
@@ -383,7 +384,8 @@ alias kc='source ~/.keychain/*-sh(.om[1])'
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Gdbr='gdb -q -ex "target remote localhost:1234"'
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
-alias G='gdbserver :2000'
+alias Gb='gdb --nh -q --batch -ex "'
+alias GG='gdbserver :2000'
 alias fcp='fc -P'
 alias func=function
 alias fuc=function
@@ -417,7 +419,7 @@ alias fu='sudo fuser -afuv'
 alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias sd=sysdig
 alias st='strace -xttrfs 4096 -a $(($COLUMNS - 15))'
-alias stt='strace_log=$(mktemp --suffix=-$(date "+%F__%T")-strace); strace -ffo $strace_log -xttrfs 4096 ; v "+:se ft=strace" $strace_log*'
+alias stt='strace_log=$(mkt strace;pwd); strace -ffo $strace_log/strace -xttrfs 4096 ; (cd $strace_log; v *)'
 alias sudo='sudo '
 alias uu=uniq
 alias e=echo
@@ -440,6 +442,7 @@ mvO() {
 		fi
 	done
 }
+mvOO() { for f in $*; do mv -v -- $f $f-$(nn); done; }
 mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
@@ -480,7 +483,9 @@ src_index() {
 	    # -name '*.hpp' \
 	# \) > cscope.files 
 	setopt clobber
-	git ls-files > cscope.files
+	# TODO: Does not work?
+	# git ls-files -x '*.tff' 
+	git ls-files | grep -v 'tff$' > cscope.files 
 	cscope -bi cscope.files
 }
 
@@ -522,6 +527,7 @@ alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
 alias rf='rfkill block all'
+alias rff=rfkill
 alias rfw='rfkill unblock wifi'
 alias rfW='rfkill block wifi'
 alias rfb='rfkill unblock bluetooth'
@@ -577,4 +583,6 @@ alias ki=kitty
 alias dnp='dnf provides'
 TT() {nvim +'norm i' term://"$*" }
 T() {nvim term://"$*" }
+alias ng=noglob
+alias Pi='ping -D -W 1 -i 0.2 '
 # vim: se ft=sh:
