@@ -574,6 +574,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  'r2 -Nqc '' -'
+bindkey -s AD\  "adbk ''"
 bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
@@ -586,6 +587,7 @@ bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
+bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t'
 bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
@@ -811,7 +813,7 @@ setopt autocd
 setopt autopushd
 set push
 setopt cdablevars
-setopt autonamedirs
+# setopt autonamedirs
 setopt histsubstpattern
 setopt noclobber
 stty -ixon
@@ -905,7 +907,13 @@ faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
 nsdo() { for ns in $(ip netns list); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
-pp() { [[ -z $* ]] && sudo --preserve-env=HOME $EDITOR +ProcessTree || sudo --preserve-env=HOME $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" }
+pp() { 
+    if [[ -z $* ]]; then 
+	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree 
+    else 
+	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" 
+    fi
+}
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
@@ -1001,7 +1009,7 @@ cd() {
 }
 
 
-GG() {
+GG_w() {
 	(
 	while true; do
 		print -P $LINE_SEPARATOR
@@ -1081,7 +1089,7 @@ alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
-alias -g TT='| tesseract - - | strings'
+alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
@@ -1318,4 +1326,11 @@ fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd
 fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
+gcd() { 
+    if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
+	cd $(git rev-parse --show-toplevel) 
+    else
+	echo "Not in git work tree."
+    fi
+}
 [ -e ~/.environment.local ] && source ~/.environment.local 
