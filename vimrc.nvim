@@ -1292,6 +1292,7 @@ endfunction
 function! PsSendSignal(pid, signal)
     let line_num = line(".")
     silent! execute "!kill -" . a:signal . " " . a:pid
+    echomsg "Sent " . a:signal . " to " . a:pid . "."
     ProcessTree()
     execute "norm " . line_num . "G"
 endfunction
@@ -1304,51 +1305,63 @@ function! PsFoldExpression(lnum)
     return 1 + (match_index - arg_index) / 3
 endfunction
 
+function! PsProcessDetails(pid)
+    let proc_path="/proc/" . a:pid
+    execute("tabnew " . proc_path . "/stack | se ft=sh")
+    execute("split " . proc_path . "/maps | se ft=sh")
+    execute("split " . proc_path . "/status | se ft=sh")
+    " execute("NERDTree " . proc_path . "/task/ | norm ul?fdl")
+    execute("NERDTree " . proc_path . "/task/ | norm ul")
+    " execute("NERDTree " . proc_path . "/fd/ | norm ul")
+    execute("TabooRename " . a:pid)
+endfunction
+
 function! ProcessTree(...)
-    if a:0 == 1 | let pid=a:1 | else | let pid=ProcessTreePid() | endif
+    " if a:0 == 1 | let pid=a:1 | else | let pid=ProcessTreePid() | endif
     let l:current_line_num = line(".")
     let l:current_fold_level = &foldlevel
     " let @/ = Field_to_colregex("pid", "\\<".pid."\\>")
     " Create new buffer for current pstree
-    execute "e ps-" . strftime('%F_%T')
-    silent! execute "read !ps -e --forest " . Fields_to_psparm()
+    execute("e ps-" . strftime('%F_%T'))
+    execute("TabooRename " . strftime('%F_%T'))
+    " Add buffer-local mappings
+    nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
+    " nnoremap <buffer> D :execute("!tmux splitw gdb -q -p ") . ProcessTreePid()<cr>i
+    nnoremap <buffer> D :execute("silent! !tmux splitw gdb -q -p ") . ProcessTreePid()<cr>
+    nnoremap <buffer> <leader>D :execute("tabnew term://gdb -q -p ") . ProcessTreePid()<cr>i
+    nnoremap <buffer> i :call PsProcessDetails(ProcessTreePid())<cr>
+    nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
+    nnoremap <buffer> C :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
+    nnoremap <buffer> r :call ProcessTree()<cr>
+    nnoremap <buffer> S :call PsSendSignal(ProcessTreePid(), "STOP")<cr>
+    " nnoremap <buffer> t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
+    nnoremap <buffer> t :execute("bot split term://strace -p ") . ProcessTreePid()<cr>
+    nnoremap <buffer> yp :call YankUp(ProcessTreePid())<cr>
+    " Fill buffer with ps output
+    execute "silent read !ps -e --forest " . Fields_to_psparm()
+
     set buftype=nofile filetype=sh cursorline nonumber norelativenumber nowrap
     silent! ALEDisable
     " Cut header from ps output
     silent! norm ggdd0"ad$ddn
-	" Delete old header - if any
-	wincmd k
-	if bufname("") == "HEADER" | bdelete! | endif
+    " Delete old header - if any
+    wincmd k
+    if bufname("") == "HEADER" | bdelete! | endif
     " Move header into separate window
-	1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
-    set buftype=nofile nonumber norelativenumber nowrap
+    1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
+    set buftype=nofile nonumber norelativenumber nowrap 
     let &foldcolumn=g:pst_fold_columns
     wincmd j
+    execute "norm " . l:current_line_num . "G"
+    set nowrap 
     let &foldcolumn=g:pst_fold_columns
+    return 
     set foldexpr=PsFoldExpression(v:lnum)
     set foldmethod=expr
     let &foldlevel=l:current_fold_level
     set foldenable
-    execute "norm " . l:current_line_num . "G"
     " norm zv
     " call PsEnableCsvVim()
-    " Add buffer-local mappings
-    nnoremap <buffer> r :call ProcessTree()<cr>
-    nnoremap <buffer> yp :call YankUp(ProcessTreePid())<cr>
-    nnoremap <buffer> s :call PsSendSignal(ProcessTreePid(), "STOP")<cr>
-    nnoremap <buffer> c :call PsSendSignal(ProcessTreePid(), "CONT")<cr>
-    nnoremap <buffer> K :call PsSendSignal(ProcessTreePid(), "TERM")<cr>
-    nnoremap <buffer> ( :call PsSendSignal(ProcessTreePid(), "KILL")<cr>
-    nnoremap <buffer> i :let pid=ProcessTreePid()
-	\\|execute("tabnew /proc/" . pid . "/stack")
-	\\|execute("split \| e /proc/" . pid . "/status")
-	\\|execute("NERDTreeFind")
-	\\|execute("NERDTreeFind /proc/" . pid . "/fd/0")
-	\\|execute("TabooRename ".g:pid)<cr>
-    " TODO: Does not work.... :(
-    nnoremap <buffer> t :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
-    " Attach gdbserver
-    " nnoremap <buffer> G :execute("Dispatch! sudo strace -p ") . ProcessTreePid()
 endfunction
 command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 
@@ -1381,7 +1394,8 @@ map <leader>0s :call KeepView('silent! %s/\s\+\(\S\)/\r\1/')<cr> " TODO: underst
 " TODO: Try to find a way to restrict a mapping on a selection if there is a selection and operate on the entire buffer if there is no selection
 map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " map <leader><space><cr> :call KeepView("silent! '<,'>s/\s\+/\r/")<cr>
-map <leader><space><cr> :s/\s\+/\r/<cr>
+" map <leader><space><cr> :s/\s\+/\r/<cr>
+map <leader><leader><cr> :s/\s\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 
 map <c-w>k :close<cr>
@@ -1414,9 +1428,11 @@ nnoremap <c-s-f11> :Finish<cr>
 
 nnoremap <leader>D :set spelllang=de<cr>
 
-" tnoremap <cr> i
+" nmapemap <cr> i
+" tnoremap <leader><c-k> ?@(gdb)
+" tnoremap <c-k> ?@(gdb)
 
-autocmd vimrc BufNewFile,BufReadPost *-strace* setfiletype strace
+autocmd vimrc BufReadPost *-strace*,strace\.* setfiletype strace
 
 map <leader><c-r> :update<cr>:source %<cr>
 
@@ -1430,4 +1446,58 @@ command! -nargs=0 ALEInformation call ALEInformation()
 
 nmap <leader><c-h> :colder<cr>
 nmap <leader><c-l> :cnewer<cr>
-nmap <leader>q :cclose<cr>
+command! -bang -nargs=? QFixToggle call QFixToggle(<bang>0)
+function! QFixToggle(forced)
+  if exists("g:qfix_win") && a:forced == 0
+    cclose
+    unlet g:qfix_win
+  else
+    copen 10
+    let g:qfix_win = bufnr("$")
+  endif
+endfunction
+nmap <leader>q :QFixToggle<cr>
+
+nmap <m-8> :bot split term://$SHELL<cr>i
+
+" Using floating windows of Neovim to start fzf
+
+" function! FloatingFZF()
+"     let width = float2nr(&columns * 0.9)
+"     let height = float2nr(&lines * 0.6)
+"     let opts = { 'relative': 'editor',
+" 		\ 'row': (&lines - height) / 2,
+" 		\ 'col': (&columns - width) / 2,
+" 		\ 'width': width,
+" 		\ 'height': height }
+
+"     let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+"     call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
+" endfunction
+" let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+autocmd! FileType fzf
+autocmd  FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber cmdheight=1
+	    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+" Make qf taller/etc.
+au FileType qf call TweakQf(3, 16)
+function! TweakQf(minheight, maxheight)
+	nmap <buffer> ; <cr><c-w><c-w>
+	nmap <buffer> p <cr><c-w><c-w>
+	nmap <buffer> s <cr><c-w>s<c-^><c-w><c-w><c-w><c-w>
+	" exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+	set nowrap
+endfunction
+
+" cabbr g Git
+" cabbr gco Git checkout
+" nmap g<space> :Git 
+" map <space><space><cr> :s/\s\+/\r/<cr>
+map <leader>_ :s/\s\+/\r/<cr>
+map <leader>_ :s/\s\+/\r/<cr>
+vmap <leader>_ :'<,'>s/\s\+/\r/<cr>
+map <leader><leader><cr> :s/\s\+/\r/<cr>
+vmap <leader><leader><cr> :'<'>s/\s\+/\r/<cr>
+cmap <m-v> <c-r>"
+
