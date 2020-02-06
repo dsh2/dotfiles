@@ -79,6 +79,7 @@ map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
 " }}}
 Plug 'tpope/vim-fugitive' "{{{
+Plug 'tpope/vim-rhubarb'
 " HELP: Find out why the screwed up map works and the other one NOT!
 " nmap <leader>gd :Gvdiff<cr><c-w>l
 nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
@@ -1241,3 +1242,7 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}
+map <leader>_ :s/\s\+/\r/<cr>
+vmap <leader>_ :'<,'>s/\s\+/\r/<cr>
+map <leader><leader><cr> :s/\s\+/\r/<cr>
+vmap <leader><leader><cr> :'<,'>s/\s\+/\r/<cr>
