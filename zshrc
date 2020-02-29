@@ -83,9 +83,10 @@ add-zsh-hook precmd zle_check_send_break
 zle_prepare_send_break_check() { zsh_preexec=1 }
 add-zsh-hook preexec zle_prepare_send_break_check
 PSVAR+=$ZLE_LINE_ABORTED
-PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
+PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}]))'	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
-PS1+='%f%# '						# Add user status
+PS1+='%(2V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}].)'  # Add netns
+PS1+='😎 '						    # Add user status
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
