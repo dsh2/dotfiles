@@ -904,7 +904,20 @@ jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
-nsdo() { for ns in $(ip netns list); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
+nsdo() { for ns in $(ip netns list | cut -d\  -f 1); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
+nsrm() { for ns in $(ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
+nsrm() { for ns in $(ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
+alias nsls='ip netns list'
+alias ipe='sudo ip netns exec'
+alias nse='sudo ip netns exec'
+# alias nsee='sudo ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh'
+nsee() {
+	[[ -f /var/run/netns/$1 ]] || { print usage: $0 netns; ls -1 /var/run/netns/; return; }
+	psvar[2]=$1
+	export psvar
+	export ns=$1
+	sudo -E ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh
+}
 pp() { 
     if [[ -z $* ]]; then 
 	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree 
