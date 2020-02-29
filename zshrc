@@ -1337,6 +1337,15 @@ fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd
 fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
+
+gcdd() { 
+	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
+		cd $(git rev-parse --git-dir)
+	else
+		echo "Not in git work tree."
+	fi
+}
+
 gcd() { 
     if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
 	cd $(git rev-parse --show-toplevel) 
@@ -1344,4 +1353,5 @@ gcd() {
 	echo "Not in git work tree."
     fi
 }
+
 [ -e ~/.environment.local ] && source ~/.environment.local 
