@@ -770,7 +770,8 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 
 " }}}
 " Mappings {{{
-nmap Q :qall<cr>
+" nmap Q :qall<cr>
+nmap Q :cq<cr>
 nmap <leader>J :set ft=json<cr>:Autoformat<cr>
 map  
 nnoremap <c-s> :update<cr>
@@ -788,7 +789,8 @@ imap <NUL> <space>h
 " TODO: Filter ansi escape sequences from filename when file not found
 nmap <leaer>gf vgf
 nnoremap gf gF
-nnoremap gF :tabedit <cfile><cr>
+" nnoremap gF :tabedit <cfile><cr>
+nnoremap gF :split <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
 vmap DP :diffput<cr>
 vmap DG :diffget<cr>
@@ -1246,3 +1248,6 @@ map <leader>_ :s/\s\+/\r/<cr>
 vmap <leader>_ :'<,'>s/\s\+/\r/<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
 vmap <leader><leader><cr> :'<,'>s/\s\+/\r/<cr>
+
+map <c-w><c-l> <c-w>v<c-w>l
+map <c-w><c-j> <c-w>s<c-w>j
