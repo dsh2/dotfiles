@@ -290,6 +290,7 @@ function backward_kill_default_word() {
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
+bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
@@ -355,12 +356,11 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+# vimp='vim -c AnsiEsc -c "s/\%xd//" -c go1'
+vimp='vim +AnsiEsc'
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window $EDITOR $tmux_log_file \
-		-c 'set buftype=nofile' \
-		-c 'AnsiEsc' \
-		+normal\ gg
+	tmux new-window $=vimp $tmux_log_file
 }
 bindkey_func '^xx' page_last_output_fullscreen
 
@@ -370,10 +370,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 $EDITOR $tmux_log_file \
-		-c 'set buftype=nofile' \
-		-c 'AnsiEsc' \
-		+normal\ gg
+	tmux split -vbp 60 $=vimp $tmux_log_file 
 }
 bindkey_func '^x^x' page_last_output
 
