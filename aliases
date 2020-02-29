@@ -587,4 +587,9 @@ TT() {nvim +'norm i' term://"$*" }
 T() {nvim term://"$*" }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
+alias gvv='nvim +GV\ --all'
+alias nmm='nm --defined-only -l'
+alias mz=mausezahn
+alias ns=netsniff-ng
+alias i=ip
 # vim: se ft=sh:
