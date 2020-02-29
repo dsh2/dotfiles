@@ -435,7 +435,7 @@ bar {
 
 # WS_ROOT {{{
 set $WS_LOG "0:log"
-exec_always --no-startup-id i3-msg 'workspace $WS_LOG; exec $terminal_tmux'
+# exec_always --no-startup-id i3-msg 'workspace $WS_LOG; exec $terminal_tmux'
 # }}}
 
 # WS_COMS {{{
@@ -447,8 +447,8 @@ assign [class="Pidgin"] $WS_COMS
 
 # WS_ROOT {{{
 set $WS_ROOT "2:root"
-exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
-exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $browser'
+# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
+# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $browser'
 # }}}
 
 # WS_QEMU {{{
