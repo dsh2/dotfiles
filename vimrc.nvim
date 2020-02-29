@@ -1480,9 +1480,10 @@ autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber cmdheight=1
 	    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
-" Make qf taller/etc.
 au FileType qf call TweakQf(3, 16)
 function! TweakQf(minheight, maxheight)
+	nmap <buffer> J /error:<cr>
+	nmap <buffer> K ?error:<cr>
 	nmap <buffer> ; <cr><c-w><c-w>
 	nmap <buffer> p <cr><c-w><c-w>
 	nmap <buffer> s <cr><c-w>s<c-^><c-w><c-w><c-w><c-w>
@@ -1501,3 +1502,5 @@ map <leader><leader><cr> :s/\s\+/\r/<cr>
 vmap <leader><leader><cr> :'<'>s/\s\+/\r/<cr>
 cmap <m-v> <c-r>"
 
+map <c-w><c-l> <c-w>v<c-w>l
+map <c-w><c-j> <c-w>s<c-w>j
