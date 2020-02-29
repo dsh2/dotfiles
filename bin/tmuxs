@@ -1,4 +1,6 @@
-#!/bin/sh 
+#!/bin/bash 
 logger "tmuxs: $* ($( pstree -ps $$ ))"
-shift
-tmux split-window "$*"
+[ $1 = "-e" -o $1 = "-x" ] && shift
+cmd=$*
+command -v $1 || cmd="vim $cmd"
+tmux split-window $TMUXS_OPTIONS $cmd
