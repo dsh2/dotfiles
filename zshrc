@@ -83,10 +83,16 @@ add-zsh-hook precmd zle_check_send_break
 zle_prepare_send_break_check() { zsh_preexec=1 }
 add-zsh-hook preexec zle_prepare_send_break_check
 PSVAR+=$ZLE_LINE_ABORTED
-PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}]))'	# Add exit status of last job
+PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}] ))'	# Add exit status of last job
 # PS1+='%(0?..%($ZLE_LINE_ABORTED..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])) '	# Add exit status of last job
-PS1+='%(2V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}].)'  # Add netns
+[[ -n $ns ]] && psvar[3]=$ns
+
+PS1+='%(3V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}] .)'  # Add netns
 PS1+='😎 '						    # Add user status
+# PS1+='💙 '						    # Add user status
+# PS1+='❤️ '						    # Add user status
+# PS1+='🤮 '						    # Add user status
+
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -154,7 +160,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|/tmp)"
+zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
 	# TODO: try to understand why the following regexp matches 
@@ -286,7 +292,7 @@ bindkey_func '^z' focus_backgroud
 
 WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
 function backward_kill_default_word() {
-    WORDCHARS='*?_-.[]~&!#$%^(){}<>|'
+    WORDCHARS='*?-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
@@ -854,19 +860,19 @@ fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 # set +x
 
-# Try to save tmux from OOM 
-if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
-    local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
-    if [[ -n $tmux_pid ]]; then
-	if [[ "$(cat /proc/$tmux_pid/oom_adj)" != "-17" ]]; then
-	    local oom_save="echo '-17' | sudo tee /proc/$tmux_pid/oom_adj"
-	    print -l -- "WARNING: tmux server is not save from out of memory killer (OOM)." $oom_save
-	    # TODO: find some zle redirection for $oom_save
-	fi
-    else
-	print "WARNING: No process for tmux server found, but \"\$TMUX=$TMUX\"."
-    fi
-fi
+# # Try to save tmux from OOM 
+# if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
+#     local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
+#     if [[ -n $tmux_pid ]]; then
+# 	if [[ "$(cat /proc/$tmux_pid/oom_adj)" != "-17" ]]; then
+# 	    local oom_save="echo '-17' | sudo tee /proc/$tmux_pid/oom_adj"
+# 	    print -l -- "WARNING: tmux server is not save from out of memory killer (OOM)." $oom_save
+# 	    # TODO: find some zle redirection for $oom_save
+# 	fi
+#     else
+# 	print "WARNING: No process for tmux server found, but \"\$TMUX=$TMUX\"."
+#     fi
+# fi
 
 if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
@@ -913,10 +919,7 @@ alias nse='sudo ip netns exec'
 # alias nsee='sudo ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh'
 nsee() {
 	[[ -f /var/run/netns/$1 ]] || { print usage: $0 netns; ls -1 /var/run/netns/; return; }
-	psvar[2]=$1
-	export psvar
-	export ns=$1
-	sudo -E ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh
+	ns=$1 sudo -E ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh
 }
 pp() { 
     if [[ -z $* ]]; then 
@@ -1347,11 +1350,11 @@ gcdd() {
 }
 
 gcd() { 
-    if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
-	cd $(git rev-parse --show-toplevel) 
-    else
-	echo "Not in git work tree."
-    fi
+	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
+		cd $(git rev-parse --show-toplevel) 
+	else
+		echo "Not in git work tree."
+	fi
 }
 
 [ -e ~/.environment.local ] && source ~/.environment.local 
