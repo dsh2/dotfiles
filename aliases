@@ -17,6 +17,7 @@ if [ "$OSTYPE" = "cygwin" ]; then
 fi
 
 # Change directory
+alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
@@ -122,6 +123,7 @@ alias gss='GIT_MODIFIED_FILES=$(git ls-files --modified) && [ -n $GIT_MODIFIED_F
 alias gcp='git cherry-pick -x'
 alias gcpa='git cherry-pick --abort'
 alias gs='git stash'
+alias gsl='git stash list -p'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
 alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
@@ -312,6 +314,7 @@ alias Xreseed="dd if=/dev/urandom count=1 2> /dev/null | md5sum | sed -e 's,^\([
 alias le=$PAGER
 alias el=$PAGER
 alias psp='pstree -laps'
+alias psme='pstree -ahups $$'
 alias p_s='port search --line'
 alias tm=tmux
 alias tmda='tmux detach-client -a'
@@ -370,7 +373,7 @@ alias ipta='sudo iptables -nv'
 alias iptn='sudo iptables -nv -t nat'
 alias iptL='sudo iptables -nvv --line-numbers -L'
 alias iptl='sudo iptables -nvv --line-numbers -L'
-alias ipts='for table in security raw nat mangle filter ; do sudo iptables -S -t $table | sed "s:^:-t $table :" ; done'
+alias ipts='for ipt in iptables ip6tables; do for table in security raw nat mangle filter ; do sudo $ipt -S -t $table | sed "s:^:-t $table :" ; done ; done'
 alias ipl='\ip -c -o -d -s link show | column -t'
 alias ipj='\ip -d -s -j -p'
 alias ipln="\ip -j link show | jq -r '.[].ifname'"
@@ -592,4 +595,5 @@ alias nmm='nm --defined-only -l'
 alias mz=mausezahn
 alias ns=netsniff-ng
 alias i=ip
+alias pst=pstree
 # vim: se ft=sh:
