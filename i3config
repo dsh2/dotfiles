@@ -201,9 +201,8 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-# bindsym $meta+w exec $lock_now & sleep 0.1 pgrep i3lock || notify-send "WARNING: i3lock failed." && systemctl suspend
-# bindsym $meta+w exec $lock_now & sleep 0.1 && pgrep i3lock || notify-send -u critical "WARNING: i3lock failed." 
-bindsym $meta+w exec $lock_now & sleep 0.4 && pgrep i3lock || notify-send -u critical "WARNING: i3lock failed." 
+bindsym $meta+w exec $lock_now & sleep 0.2 && pgrep i3lock && systemctl suspend || notify-send -u critical "WARNING: i3lock failed." 
+bindsym $meta+$shift+w exec systemctl hibernate || notify-send -u critical "WARNING: hibernate failed." 
 # }}}
 # Pulse audio volume control {{{
 set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -229,6 +228,7 @@ bindsym $alt+$ctrl+$shift+s exec python ~/.dotfiles/bin/rofimoji.py
 # }}}
 # Miscellaneous {{{
 bindsym $meta+$shift+r reload
+bindsym $meta+$ctrl+$shift+r restart
 bindsym $meta+$shift+n bar mode toggle
 # bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
 bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
@@ -396,8 +396,6 @@ bindsym --whole-window $meta+button1 floating toggle
 bindsym --release button2 kill
 bindsym --release button3 floating toggle
 
-bindsym $meta+$shift+w exec "notify-send \\"Hello, i3; from $USER\\""
-
 # The side buttons move the window around
 bindsym button8 move right
 bindsym button9 move left
@@ -460,10 +458,11 @@ assign [class="qemu-system-x86_64"] 8:qemu
 
 # Autostart {{{
 exec_always --no-startup-id xset -b -c r rate 200 140
-exec_always --no-startup-id dunst
+# exec_always --no-startup-id dunst
 # exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
+exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5
 # exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id notify-send "i3config loaded."
 # }}}
