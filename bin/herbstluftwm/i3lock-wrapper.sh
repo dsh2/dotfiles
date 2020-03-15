@@ -1,4 +1,5 @@
 #!/bin/sh
+
 msg() {
 	echo i3lock: $* | ts '[%F %T]'
 	logger --tag i3lock -- $*
@@ -24,12 +25,15 @@ pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
 xset +dpms dpms 10 10 10
 # In single screen setups chose innocuous screen after unlock
 [ $(herbstclient list_monitors | wc -l) = 1 ] && herbstclient use log
+# i3-msg workspace --no-auto-back-and-forth 0:log
+# TODO: --no-auto-back-and-forth does not seem to work
 i3-msg workspace 0:log
-pkill -USR1 dunst
-msg "Locking screen..."
 xset +dpms dpms 5 5 5
 pstree -ps $$ | logger
+rfkill block all
+msg "Locking screen... (no fork)"
 i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password
+pkill -USR1 dunst
 msg "Screen unlocked."
 # TODO:
 # -add i3-nag/dmenu to rf unblock / toggle mute
