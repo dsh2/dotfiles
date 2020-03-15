@@ -1226,9 +1226,12 @@ else
 fi
 
 c() {
-	[[ $# = 1 ]] || { die "usage: c file_or_directory"; return }
-	[[ -d $1 ]] && { ls -al $1; return }
-	cat $1
+	[[ $# = 0 ]] && { die "usage: c files_and_directories"; return }
+	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
+	[[ $1 = 1 ]] && { cc $1; return }
+	for f in $@; do 
+		cc $f | sed "s.^.$f:\t."
+	done
 }
 
 typeset -a expand_ealias_skip
