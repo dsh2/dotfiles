@@ -131,7 +131,9 @@ bindsym $meta+BackSpace focus output left
 bindsym $meta+$shift+BackSpace focus output right
 
 bindsym $meta+1 workspace prev_on_output
+bindsym $meta+0x2c workspace prev_on_output
 bindsym $meta+2 workspace next_on_output
+bindsym $meta+0x2e workspace next_on_output
 
 bindsym $ctrl+$meta+$alt+9 workspace prev
 bindsym $ctrl+$meta+$alt+0 workspace next
@@ -212,6 +214,7 @@ set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  '+6%'
 bindsym $alt+F9 $pa_toggle_mute
 bindsym $alt+F10 $pa_volume_down 
 bindsym $alt+F11 $pa_volume_up 
+bindsym $alt+F12 $pa_toggle_mute
 
 bindsym XF86AudioMute $pa_toggle_mute
 bindsym XF86AudioLowerVolume $pa_volume_down 
@@ -260,6 +263,7 @@ mode $mode_i3 {
 	bindsym m scratchpad show, $mode_return
 	bindsym n move window to workspace "new", exec i3-ws-enum, $mode_return
 	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
+	bindsym 0x2c exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
 	bindsym s bar mode toggle, $mode_return
 	bindsym t exec $i3input -F 'mark "%s"' -P 'tag: ', $mode_return
 	bindsym v split toggle
@@ -273,6 +277,7 @@ mode $mode_i3 {
  
 	# Exit mode
 	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
 	bindsym Return $mode_return
 	bindsym Escape $mode_return
 	bindsym $meta+$mode_i3_key $mode_return
@@ -294,6 +299,7 @@ mode $mode_move {
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
 	bindsym Return $mode_return
 	bindsym Escape $mode_return
 	bindsym $meta+m $mode_return
@@ -323,6 +329,7 @@ mode $mode_resize {
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
 	bindsym Return $mode_return
 	bindsym Escape $mode_return
 	bindsym $meta+r $mode_return
@@ -351,6 +358,7 @@ mode $mode_manipulate {
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
 	bindsym Return $mode_return
 	bindsym Escape $mode_return
 	bindsym $meta+shift+m $mode_return
@@ -372,6 +380,7 @@ mode $mode_system {
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
 	bindsym Return $mode_return
 	bindsym Escape $mode_return
 	bindsym $meta+f $mode_return
