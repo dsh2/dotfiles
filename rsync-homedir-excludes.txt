@@ -1,0 +1,47 @@
+# vim: commentstring=#\ %s
+/.aptitude
+/.cache
+/.ccache/?
+/.ccache/tmp
+/.config/chromium/Profile ?/Application Cache
+/.config/chromium/Profile ?/History Index *
+/.config/chromium/Profile ?/Session Storage
+/.config/google-chrome/Profile ?/Extensions/*
+/.config/google-chrome/Profile ?/Service Worker/CacheStorage
+/.config/google-chrome/Profile ?/Session Storage
+/.config/google-chrome/ShaderCache
+/.dbus
+/.gnupg/*.lock
+/.gnupg/.#*
+/.gnupg/gpg-agent-info-*
+/.gnupg/random_seed
+/.gnupg/rnd
+/.googleearth/Cache
+/.googleearth/Temp
+/.gradle
+/.gradle/caches
+/.gvfs
+/.java/deployment/cache
+/.local/share/torbrowser
+/.local/share/zeitgeist
+/.m2/repository
+/.mozilla/firefox/*/.parentlock
+/.mozilla/firefox/*/Cache
+/.mozilla/firefox/*/XPC.mfasl
+/.mozilla/firefox/*/XUL.mfasl
+/.mozilla/firefox/*/compreg.dat
+/.mozilla/firefox/*/extensions.cache
+/.mozilla/firefox/*/extensions.ini
+/.mozilla/firefox/*/extensions.rdf
+/.mozilla/firefox/*/extensions.sqlite
+/.mozilla/firefox/*/extensions.sqlite-journal
+/.mozilla/firefox/*/pluginreg.dat
+/.mozilla/firefox/*/urlclassifier3.sqlite
+/.mozilla/firefox/*/xpti.dat
+/.npm
+/.nvm
+/.rvm
+/.thunderbird/*/Cache
+/.vagrant
+/.vagrant.d
+/.wine
