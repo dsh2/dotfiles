@@ -640,6 +640,13 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'derekwyatt/vim-fswitch'"{{{
+	autocmd vimrc BufEnter *.h let b:fswitchdst = 'cc' | let b:fswitchlocs = '../inc'
+	autocmd vimrc BufEnter *.cc let b:fswitchdst = 'h' | let b:fswitchlocs = '../inc'
+	let g:fsnonewfiles="off"
+	nmap <silent> <Leader>of :FSHere<cr>
+	nmap <silent> cof :FSHere<cr>
+	"}}}
 	Plug 'tommcdo/vim-exchange'
 	Plug 'robbles/logstash.vim'
 	Plug 'junegunn/vim-easy-align'
