@@ -501,7 +501,8 @@ if vim_plug_available
 	map <leader>m :update<cr>:Make<cr>:checktime<cr>
 	" }}}
 	Plug 'sickill/vim-pasta' "{{{
-	let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
+	" let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
+	let g:pasta_disabled_filetypes = ['qf', 'tagbar']
 	"}}}
 	Plug 'powerman/vim-plugin-AnsiEsc', {'on': 'AnsiEsc'} "{{{
 	map <leader>W :AnsiEsc<cr>
