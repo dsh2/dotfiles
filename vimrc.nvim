@@ -10,7 +10,7 @@ let vim_plug_available = 0
 let vim_plug_path='~/.local/share/nvim/site/autoload/plug.vim'
 let vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let vim_plug_getters = [
-			\ { 'name': 'curl', 'command': '!curl --fail --location --create-dirs --output ' . vim_plug_path .  " " . vim_plug_url }, 
+			\ { 'name': 'curl', 'command': '!curl --fail --location --create-dirs --output ' . vim_plug_path .  " " . vim_plug_url },
 			\ { 'name': 'wget', 'command': '!wget' },
 			\]
 
@@ -641,6 +641,9 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'terryma/vim-expand-region'
+	Plug 'mhinz/vim-rfc'
+	Plug 'nakal/vim-smarttabs'
 	Plug 'derekwyatt/vim-fswitch'"{{{
 	autocmd vimrc BufEnter *.h let b:fswitchdst = 'cc' | let b:fswitchlocs = '../inc'
 	autocmd vimrc BufEnter *.cc let b:fswitchdst = 'h' | let b:fswitchlocs = '../inc'
@@ -648,6 +651,7 @@ if vim_plug_available
 	nmap <silent> <Leader>of :FSHere<cr>
 	nmap <silent> cof :FSHere<cr>
 	"}}}
+	Plug 'bfrg/vim-cpp-modern'
 	Plug 'tommcdo/vim-exchange'
 	Plug 'robbles/logstash.vim'
 	Plug 'junegunn/vim-easy-align'
@@ -948,7 +952,7 @@ nmap <nowait> <leader>s :update<cr>
 " TODO: PWD vs. CWD
 " TODO: merge witih neovim rc files
 " map <silent><leader>R :source ~/.config/nvim/init.vim \| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
-" TODO: source scriptname instead 
+" TODO: source scriptname instead
 map <silent><leader>R :update<cr>:source ~/.config/nvim/init.vim<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 " prepend space on <c-space>?
@@ -1370,13 +1374,13 @@ function! ProcessTree(...)
     if bufname("") == "HEADER" | bdelete! | endif
     " Move header into separate window
     1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
-    set buftype=nofile nonumber norelativenumber nowrap 
+    set buftype=nofile nonumber norelativenumber nowrap
     let &foldcolumn=g:pst_fold_columns
     wincmd j
     execute "norm " . l:current_line_num . "G"
-    set nowrap 
+    set nowrap
     let &foldcolumn=g:pst_fold_columns
-    return 
+    return " TODO: fix rest of function as well
     set foldexpr=PsFoldExpression(v:lnum)
     set foldmethod=expr
     let &foldlevel=l:current_fold_level
@@ -1388,25 +1392,25 @@ command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 
 let s:StatusbarHidden = 0
 function! StatusbarToggle()
-    if s:StatusbarHidden  == 0
-	let s:StatusbarHidden = 1
-	set noshowmode
-	set noruler
-	set laststatus=0
-	set noshowcmd
-    else
-	let s:StatusbarHidden = 0
-	set showmode
-	set ruler
-	set laststatus=2
-	set showcmd
-    endif
+	if s:StatusbarHidden  == 0
+		let s:StatusbarHidden = 1
+		set noshowmode
+		set noruler
+		set laststatus=0
+		set noshowcmd
+	else
+		let s:StatusbarHidden = 0
+		set showmode
+		set ruler
+		set laststatus=2
+		set showcmd
+	endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
 function! KeepView(cmd)
-    let w = winsaveview()
+	let w = winsaveview()
 	exec a:cmd
-    call winrestview(w)
+	call winrestview(w)
 endfunction
 cabbr BB <buffer>
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
@@ -1514,7 +1518,7 @@ endfunction
 
 " cabbr g Git
 " cabbr gco Git checkout
-" nmap g<space> :Git 
+" nmap g<space> :Git
 " map <space><space><cr> :s/\s\+/\r/<cr>
 map <leader>_ :s/\s\+/\r/<cr>
 map <leader>_ :s/\s\+/\r/<cr>
@@ -1527,8 +1531,8 @@ map <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
 
 function! ToggleOption(name)
-    silent execute "set " . a:name . "!"
-    execute "set " . a:name . "?"
+	silent execute "set " . a:name . "!"
+	execute "set " . a:name . "?"
 endfunction
 
 nmap <silent> com :call ToggleOption("modifiable")<cr>
@@ -1536,21 +1540,28 @@ nmap <silent> coR :call ToggleOption("readonly")<cr>
 nmap <silent> coe :call ToggleOption("eol")<cr>
 
 function! StripHtml()
-    if executable("w3m")
-	execute "%!w3m -s -dump -T text/html"
-    else
-	echoerr "TODO: Add some regex helper"
-    endif
+	if executable("w3m")
+		execute "%!w3m -s -dump -T text/html"
+	else
+		echoerr "TODO: Add some regex helper"
+	endif
 endfunction
 command! StripHtml call StripHtml()
 
-function ToggleTabsize()
-	if &ts == 8 
-		let &ts = 4 
-		let &sw = 4 
-	else 
-		let &ts = 8 
+function! ToggleTabsize()
+	if &ts == 8
+		let &ts = 4
+		let &sw = 4
+	else
+		let &ts = 8
 		let &sw = 8
 	endif
 endfunction
 nmap co8 :call ToggleTabsize()<cr>
+
+function! TrimWhitespace()
+	let l:save = winsaveview()
+	keeppatterns %s/\s\+$//e
+	call winrestview(l:save)
+endfunction
+command! TrimWhitespace call TrimWhitespace()
