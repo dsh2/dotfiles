@@ -105,6 +105,8 @@ if vim_plug_available
 	"     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 	" }}}
 	Plug 'tpope/vim-fugitive' "{{{
+	Plug 'tpope/vim-rhubarb'
+	Plug 'tommcdo/vim-fubitive'
 	" HELP: Find out why the screwed up map works and the other one NOT!
 	" nmap <leader>gd :Gvdiff<cr><c-w>l
 	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
@@ -114,6 +116,8 @@ if vim_plug_available
 	nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
 	nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 	nmap <leader>gb :Gblame<cr>
+	nmap <leader>gB :Gbrowse<cr>
+	vmap <leader>gB :Gbrowse<cr>
 	nmap <leader>gp :Gpush<cr>
 	nmap <leader>gw :Gwrite<cr>
 	nmap <leader>gg :Git
