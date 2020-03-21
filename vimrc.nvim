@@ -113,6 +113,8 @@ if vim_plug_available
 	map <leader>gm :MerginalToggle<cr>
 	map <leader>y :MerginalToggle<cr>
 	"}}}
+	" HELP: Find out why the screwed up map works and the other one NOT!
+	" nmap <leader>gd :Gvdiff<cr><c-w>l
 	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
 	nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
 	nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
@@ -311,27 +313,27 @@ if vim_plug_available
 	let g:mundo_verbose_graph=0
 
 	let g:mundo_mappings = {
-		  \ '<CR>': 'preview',
-		  \ 'o': 'preview',
-		  \ 'j': 'move_older',
-		  \ 'k': 'move_newer',
-		  \ '<down>': 'move_older',
-		  \ '<up>': 'move_newer',
-		  \ 'J': 'move_older_write',
-		  \ 'K': 'move_newer_write',
-		  \ 'gg': 'move_top',
-		  \ 'G': 'move_bottom',
-		  \ 'P': 'play_to',
-		  \ 'd': 'diff',
-		  \ 'i': 'toggle_inline',
-		  \ '/': 'search',
-		  \ 'n': 'next_match',
-		  \ 'N': 'previous_match',
-		  \ 'p': 'diff_current_buffer',
-		  \ 'r': 'diff',
-		  \ '?': 'toggle_help',
-		  \ 'q': 'quit',
-		  \ '<2-LeftMouse>': 'mouse_click' }
+		\ '<CR>': 'preview',
+		\ 'o': 'preview',
+		\ 'j': 'move_older',
+		\ 'k': 'move_newer',
+		\ '<down>': 'move_older',
+		\ '<up>': 'move_newer',
+		\ 'J': 'move_older_write',
+		\ 'K': 'move_newer_write',
+		\ 'gg': 'move_top',
+		\ 'G': 'move_bottom',
+		\ 'P': 'play_to',
+		\ 'd': 'diff',
+		\ 'i': 'toggle_inline',
+		\ '/': 'search',
+		\ 'n': 'next_match',
+		\ 'N': 'previous_match',
+		\ 'p': 'diff_current_buffer',
+		\ 'r': 'diff',
+		\ '?': 'toggle_help',
+		\ 'q': 'quit',
+		\ '<2-LeftMouse>': 'mouse_click' }
 
 	autocmd vimrc FileType Mundo nnoremap <buffer> ; <cr>l
 	" }}}
@@ -402,17 +404,17 @@ if vim_plug_available
 	Plug 'Xuyuanp/nerdtree-git-plugin'
 	let g:NERDTreeShowIgnoredStatus = 1
 	let g:NERDTreeIndicatorMapCustom = {
-	    \ "Modified"  : "M",
-	    \ "Staged"    : "+",
-	    \ "Untracked" : "N",
-	    \ "Renamed"   : "R",
-	    \ "Unmerged"  : "<",
-	    \ "Deleted"   : "D",
-	    \ "Dirty"     : ">",
-	    \ "Clean"     : "C",
-	    \ "Ignored"   : 'I',
-	    \ "Unknown"   : "?"
-	    \ }
+		\ "Modified"  : "M",
+		\ "Staged"    : "+",
+		\ "Untracked" : "N",
+		\ "Renamed"   : "R",
+		\ "Unmerged"  : "<",
+		\ "Deleted"   : "D",
+		\ "Dirty"     : ">",
+		\ "Clean"     : "C",
+		\ "Ignored"   : 'I',
+		\ "Unknown"   : "?"
+		\ }
 	let NERDTreeIgnore = ['\~$[[file]]', '\.pyc$[[file]]']
 	let NERDTreeShowHidden = 1
 	let NERDTreeWinSize = 46
