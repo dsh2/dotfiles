@@ -640,6 +640,7 @@ if vim_plug_available
 	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
 	" Plug rest... {{{
+	Plug 'tommcdo/vim-exchange'
 	Plug 'robbles/logstash.vim'
 	Plug 'junegunn/vim-easy-align'
 	Plug 'actionshrimp/vim-xpath'
