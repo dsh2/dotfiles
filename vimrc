@@ -51,6 +51,8 @@ map <leader>h :tabnew<cr>:FzfHelptags<cr>:only<cr>
 map <leader>la :FzfAg<cr>
 map <leader>ll :FzfBLines<cr>
 map <leader>lL :FzfLines<cr>
+map <leader>CA :FzfCommands<cr>
+nmap <leader>ca :FzfCommands<cr>
 "
 nnoremap <silent> <Leader>` :FzfMarks<CR>
 function! GetSelected()
@@ -692,6 +694,7 @@ Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'frioux/vim-regedit'
 " }}}
+Plug 'idanarye/vim-unstack'
 call plug#end()
 " }}}
 " Global options {{{
@@ -1251,3 +1254,20 @@ vmap <leader><leader><cr> :'<,'>s/\s\+/\r/<cr>
 
 map <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
+
+function! ToggleOption(name)
+    silent execute "set " . a:name . "!"
+    execute "set " . a:name . "?"
+endfunction
+
+nmap <silent> com :call ToggleOption("modifiable")<cr>
+nmap <silent> coR :call ToggleOption("readonly")<cr>
+
+function! StripHtml()
+    if executable("w3m")
+	execute "%!w3m -s -dump -T text/html"
+    else
+	echoerr "TODO: Add some regex helper"
+    endif
+endfunction
+command! StripHtml call StripHtml()
