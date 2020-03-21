@@ -697,12 +697,12 @@ if vim_plug_available
 	let g:go_info_mode='gopls'
 	" run :GoBuild or :GoTestCompile based on the go file
 	function! s:build_go_files()
-	  let l:file = expand('%')
-	  if l:file =~# '^\f\+_test\.go$'
-	    call go#test#Test(0, 1)
-	  elseif l:file =~# '^\f\+\.go$'
-	    call go#cmd#Build(0)
-	  endif
+		let l:file = expand('%')
+		if l:file =~# '^\f\+_test\.go$'
+			call go#test#Test(0, 1)
+		elseif l:file =~# '^\f\+\.go$'
+			call go#cmd#Build(0)
+		endif
 	endfunction
 
 	autocmd vimrc FileType go nmap <a-s-k> :GoDocBrowser<cr>
@@ -733,13 +733,13 @@ if vim_plug_available
 	" augroup manlaunchtoc
 	"     autocmd!
 	"     if has('nvim')
-	" 	autocmd FileType man
-	" 		    \ call man#show_toc() |
-	" 		    \ setlocal laststatus=0 nonumber norelativenumber |
-	" 		    \ nnoremap <buffer> l <Enter> |
-	" 		    \ wincmd H |
-	" 		    \ vert resize 35 |
-	" 		    \ wincmd p
+	"	autocmd FileType man
+	"		    \ call man#show_toc() |
+	"		    \ setlocal laststatus=0 nonumber norelativenumber |
+	"		    \ nnoremap <buffer> l <Enter> |
+	"		    \ wincmd H |
+	"		    \ vert resize 35 |
+	"		    \ wincmd p
 	"     endif
 	" augroup end
 	" }}}
@@ -774,7 +774,7 @@ if vim_plug_available
 	let g:jedi#use_splits_not_buffers = ""
 	let g:jedi#squelch_py_warning = 1
 	" let g:jedi#force_py_version = 3.4
-	Plug 'tmhedberg/SimpylFold', {'for': 'python'} 
+	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
 	" Plug 'nvie/vim-flake8'
 	" Plug 'xolox/vim-pyref'
 	" }}}
@@ -795,15 +795,15 @@ if vim_plug_available
 	" SuperTab like snippets behavior.
 	" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
 	imap <expr><TAB>
-	 \ pumvisible() ? "\<C-n>" :
-	 \ neosnippet#expandable_or_jumpable() ?
-	 \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+		\ pumvisible() ? "\<C-n>" :
+		\ neosnippet#expandable_or_jumpable() ?
+		\    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 	smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-	\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+		\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 	" For conceal markers.
 	if has('conceal')
-	  set conceallevel=2 concealcursor=niv
+		set conceallevel=2 concealcursor=niv
 	endif
 	Plug 'Shougo/neoinclude.vim'
 	Plug 'fszymanski/deoplete-emoji'
@@ -1063,10 +1063,10 @@ nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
 map <leader>c :colorscheme
 try
-colorscheme seoul256 | let g:airline_theme='qwq'
-" colorscheme gruvbox| let g:airline_theme='pencil'
-" colorscheme spring-night | let g:airline_theme='night_owl'
-" colorscheme solarized | let g:airline_theme='solarized_flood'
+    colorscheme seoul256 | let g:airline_theme='qwq'
+    " colorscheme gruvbox| let g:airline_theme='pencil'
+    " colorscheme spring-night | let g:airline_theme='night_owl'
+    " colorscheme solarized | let g:airline_theme='solarized_flood'
 catch
 endtry
 hi Folded cterm=NONE
@@ -1184,10 +1184,10 @@ command! -nargs=0 Messages call <SID>Redir("messages")
 " TODO: relax numbers to \d+
 command! -nargs=0 RelaxSearchPattern call <SID>RelaxSearchPattern()
 function! s:RelaxSearchPattern() abort
-    let @/=substitute(@/, "^\\V", "", "g")
-    let @/=substitute(@/, "_", ".*", "g")
-    let @/=substitute(@/, " ", ".*", "g")
-    let @/ = inputdialog("New search pattern: ", @/)
+	let @/=substitute(@/, "^\\V", "", "g")
+	let @/=substitute(@/, "_", ".*", "g")
+	let @/=substitute(@/, " ", ".*", "g")
+	let @/ = inputdialog("New search pattern: ", @/)
 endfunction
 " TODO: Find out why first mapping does not work
 " nmap <leader>/ call RelaxSearchPattern()
@@ -1199,9 +1199,9 @@ match ErrorMsg /error/
 " highlight too long lines
 " match Error /\%>80c/
 function! s:create_toggle_map(letter, test, off, on)
-  execute 'nnoremap [o' . a:letter . ' :' . a:on . '<CR>'
-  execute 'nnoremap ]o' . a:letter . ' :' . a:off . '<CR>'
-  execute 'nnoremap co' . a:letter . ' :' . '<C-r>=' . a:test . '?"' . a:off . '":"' . a:on . '"<CR><CR>'
+	execute 'nnoremap [o' . a:letter . ' :' . a:on . '<CR>'
+	execute 'nnoremap ]o' . a:letter . ' :' . a:off . '<CR>'
+	execute 'nnoremap co' . a:letter . ' :' . '<C-r>=' . a:test . '?"' . a:off . '":"' . a:on . '"<CR><CR>'
 endfunction
 call s:create_toggle_map('t', 'match(&colorcolumn, "+1")>=0', 'set colorcolumn-=+1', 'set colorcolumn+=+1')
 
