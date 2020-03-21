@@ -198,7 +198,7 @@ copy_clipboard=true
 copy_selection=false
 disable_tray=false
 edit_ctrl_return=true
-editor=kitty nvim %1\n
+editor=kitty nvim \"+set nofixendofline\" %1
 expire_tab=0
 hide_main_window=false
 hide_main_window_in_task_bar=false
@@ -308,13 +308,13 @@ system-run=
 toggle_clipboard_storing=
 
 [Tabs]
-1\icon=\xf5cc
+1\icon=\xf039
 1\max_item_count=0
-1\name=&url
+1\name=&Clipboard
 1\store_items=true
-2\icon=\xf039
+2\icon=\xf5cc
 2\max_item_count=0
-2\name=&Clipboard
+2\name=&url
 2\store_items=true
 3\icon=\xf2bb
 3\max_item_count=0
