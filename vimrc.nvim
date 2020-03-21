@@ -1482,3 +1482,32 @@ cmap <m-v> <c-r>"
 
 map <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
+
+function! ToggleOption(name)
+    silent execute "set " . a:name . "!"
+    execute "set " . a:name . "?"
+endfunction
+
+nmap <silent> com :call ToggleOption("modifiable")<cr>
+nmap <silent> coR :call ToggleOption("readonly")<cr>
+nmap <silent> coe :call ToggleOption("eol")<cr>
+
+function! StripHtml()
+    if executable("w3m")
+	execute "%!w3m -s -dump -T text/html"
+    else
+	echoerr "TODO: Add some regex helper"
+    endif
+endfunction
+command! StripHtml call StripHtml()
+
+function ToggleTabsize()
+	if &ts == 8 
+		let &ts = 4 
+		let &sw = 4 
+	else 
+		let &ts = 8 
+		let &sw = 8
+	endif
+endfunction
+nmap co8 :call ToggleTabsize()<cr>
