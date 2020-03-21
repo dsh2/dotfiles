@@ -211,28 +211,6 @@ if vim_plug_available
 	" noremap <leader>ldr :Diffoff!<CR>
 	" noremap <leader>ldo :Diffoff!<CR>
 	" " }}}
-	Plug 'Ilink/cscope-quickfix' "{{{
-	set cscopepathcomp=2
-	" set cscopeprg=/opt/local/bin/cscope
-	set cscopetag
-	set cscopequickfix=s-,c-,d-,i-,t-,e-
-	set cscoperelative
-	if filereadable("cscope.out") 
-	    silent! cscope add cscope.out
-	endif
-	set cscopeverbose  
-	function! QfLlNext()
-	    windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
-	endfunction
-	nnoremap <C-n> :call QfLlNext()<cr>
-	function! QfLlPrevious()
-	    windo if &l:buftype == "quickfix" | silent! cprevious | if &l:buftype == "location" | silent! lprevious | endif | endif
-	endfunction
-	nnoremap <C-p> :call QfLlPrevious()<cr>
-	" FIXME: does not work :(
-	autocmd vimrc FileType qf set norelativenumber
-	autocmd vimrc FileType qf wincmd J
-	"}}}
 	Plug 'hari-rangarajan/CCTree' "{{{
 	" TODO:
 	" let g:CCTreeCscopeDb = ".cscope/out"
@@ -254,6 +232,29 @@ if vim_plug_available
 	" -add command to load db to cscope load event
 	" -use async-run or similar for that
 	" }}}
+	Plug 'Ilink/cscope-quickfix' "{{{
+	set cscopepathcomp=2
+	" set cscopeprg=/opt/local/bin/cscope
+	set cscopetag
+	set cscopequickfix=s-,c-,d-,i-,t-,e-
+	set cscoperelative
+	if filereadable("cscope.out")
+	silent! cscope add cscope.out
+	" CCTreeLoadDB cscope.out
+	endif
+	set cscopeverbose
+	function! QfLlNext()
+		windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
+	endfunction
+	nnoremap <C-n> :call QfLlNext()<cr>
+	function! QfLlPrevious()
+		windo if &l:buftype == "quickfix" | silent! cprevious | if &l:buftype == "location" | silent! lprevious | endif | endif
+	endfunction
+	nnoremap <C-p> :call QfLlPrevious()<cr>
+	" FIXME: does not work :(
+	autocmd vimrc FileType qf set norelativenumber
+	autocmd vimrc FileType qf wincmd J
+	"}}}
 	" Plug 'text objects' {{{
 	Plug 'kana/vim-textobj-user'
 	Plug 'kana/vim-textobj-indent'
@@ -893,6 +894,7 @@ set ruler
 au BufEnter,BufNew,OptionSet * if &diff | set scrolloff=10 | else | set scrolloff=99 | endif
 set shellslash
 set shiftwidth=4
+set tabstop=4
 set shortmess=filnxtToOI
 set showbreak=›
 set showcmd
@@ -905,8 +907,6 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
-" set tabstop=4
-set tabstop=8
 set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
@@ -935,7 +935,7 @@ map <a-s> <c-o>:update<cr><esc>
 
 " Mappings {{{
 map <c-s> :Redir let<cr>gsae:se ft=conf<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
-nmap Q :qall<cr>
+nmap Q :cq<cr>
 map <leader>S :syn off \| syn on \| se foldenable foldlevel=2<cr>
 nmap <leader>J :set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
 nmap <leader>X :set ft=xml<cr>:Autoformat<cr>
@@ -957,8 +957,6 @@ nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 imap <s-space> <space>h
 nmap <leader>cc :cd ..<cr>:pwd<cr>
 " TODO: Filter ansi escape sequences from filename when file not found
-nmap <leaer>gf vgf
-nmap com :se modifiable!<cr>
 nnoremap gf gF
 " nnoremap gF :tabedit <cfile><cr>
 nnoremap gF :split <cfile><cr>
@@ -1061,7 +1059,6 @@ map Ypc :execute("set path+=" . expand("%:h"))
 " -make schema persist over session
 nmap <F6> :NextColorScheme<CR>
 map <leader>n :colorscheme Tomorrow-Night<cr>
-map <leader>c :colorscheme
 try
     colorscheme seoul256 | let g:airline_theme='qwq'
     " colorscheme gruvbox| let g:airline_theme='pencil'
