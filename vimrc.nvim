@@ -128,6 +128,9 @@ if vim_plug_available
 	nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 	" TODO: Find out why this end up in the left window
 	autocmd vimrc FileType gitcommit,fugitive map <buffer> ; odvlzi
+	autocmd vimrc FileType fugitive map <buffer> D =
+	autocmd vimrc FileType fugitive map <buffer> e =
+	autocmd vimrc FileType fugitive map <buffer> dd =
 	autocmd vimrc FileType gitcommit map <buffer> <leader>C :Gcommit\ --verbose<cr>
 	autocmd vimrc FileType gitrebase map <buffer> ; :execute("only\|bo Gvsplit " . substitute(getline('.'), '^\k\+\s\(\x\+\)\s.*$','\1','g'))<cr>
 	" autocmd vimrc FileType gitcommit map <buffer> ; :only<cr>dv
@@ -137,6 +140,9 @@ if vim_plug_available
 	" }}}
 	Plug 'gregsexton/gitv'
 	Plug 'junegunn/gv.vim' "{{{
+	command! Gvv GV --all
+	command! Gvvv GV --all --date-order
+	" nmap <leader>gv :GV --all<cr>
 	nmap <leader>gv :GV<cr>
 	nmap <leader>gV :GV!<cr>
 	vmap Gv :GV!<cr>
