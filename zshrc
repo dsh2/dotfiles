@@ -1230,7 +1230,7 @@ c() {
 	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
 	[[ $1 = 1 ]] && { cc $1; return }
 	for f in $@; do 
-		cc $f | sed "s.^.$f:\t."
+		cc $f | sed "s|^|$f:\t|"
 	done
 }
 
