@@ -27,8 +27,8 @@ if empty(glob(vim_plug_path))
 else
 	let vim_plug_available = 1
 endif
- 
-if vim_plug_available 
+
+if vim_plug_available
 	call plug#begin('~/.local/share/nvim/vim-plug')
 	" Plugins {{{
 	Plug 'junegunn/fzf' "{{{
@@ -90,10 +90,11 @@ if vim_plug_available
 	map <leader>lc :FzfCommits<cr>
 	map <leader>lC :FzfBCommits<cr>
 	map <leader>CA :FzfCommands<cr>
+	nmap <leader>ca :FzfCommands<cr>
 	map <leader>ff :FzfFiles<cr>
-	nmap <tab><tab> :FzfCommands<cr>
 	" nmap <tab> :FzfCommands<cr>
 	map <leader>lf :FzfFiles<cr>
+	map <leader>gf :FzfGFiles<cr>
 	map <leader>lt :FzfFiletypes<cr>
 	map <leader>w :FzfWindows<cr>
 	" }}}
