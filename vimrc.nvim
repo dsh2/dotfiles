@@ -107,8 +107,12 @@ if vim_plug_available
 	Plug 'tpope/vim-fugitive' "{{{
 	Plug 'tpope/vim-rhubarb'
 	Plug 'tommcdo/vim-fubitive'
-	" HELP: Find out why the screwed up map works and the other one NOT!
-	" nmap <leader>gd :Gvdiff<cr><c-w>l
+	" TODO: Find out why on-load tag does not work
+	" Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
+	Plug 'idanarye/vim-merginal' "{{{
+	map <leader>gm :MerginalToggle<cr>
+	map <leader>y :MerginalToggle<cr>
+	"}}}
 	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
 	nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
 	nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
