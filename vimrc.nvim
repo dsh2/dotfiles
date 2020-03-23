@@ -1035,25 +1035,45 @@ endfunction
 command! YankUp :call YankUp(@")
 nmap YY :YankUp<cr>
 
-map Ypa :call YankUp(expand("%:p"))<cr>
+
+" Yank path 
+" File path absolute
 map YP :call YankUp(expand("%:p"))<cr>
+map Ypa :call YankUp(expand("%:p"))<cr>
 map Ypp :call YankUp(expand("%:p"))<cr>
+
+" File name
+map Ypt :call YankUp(expand("%:t"))<cr>
+
+" File name + line number
 map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
 map Ypn :call YankUp(expand("%:t") . ":" . line("."))<cr>
+
+" File path absolute + line number
 map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
 map YpN :call YankUp(expand("%:p") . ":" . line("."))<cr>
-map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
-map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
-map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
-map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+
+" File path relative to cwd
 map Ypr :call YankUp(expand("%:."))<cr>
-map Ypt :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
-map Yph :call YankUp(expand("%:h"))<cr>
-" map YpH :echo("set path+=" . expand("%:h"))<cr>set path?<cr>
-map YpH :execute("set path+=" . expand("%:h"))<cr>:set path?<cr>
-map Ypc :execute("set path+=" . expand("%:h"))
-" TODO: add current function (c, cpp, py, etc.)
+
+" File directory path absolut
+map Ypd :call YankUp(expand("%:p:h"))<cr>
+map Yph :call YankUp(expand("%:p:h"))<cr>
+
+" File name + current tag
+map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+" File path absolute + current tag
+map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+" File name + current tag + relative line number
+map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+" File path + current tag + relative line number
+map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+
+" Add file path to search path
+map YpH :execute("set path+=" . expand("%:p:h"))<cr>:set path?<cr>
+" Remove file path to search path
+map Ypx :execute("set path-=" . expand("%:p:h"))<cr>:set path?<cr>
 " }}}
 " Special operations {{{
 " Setup colorschema{{{
