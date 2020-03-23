@@ -1176,6 +1176,7 @@ nmap <leader>zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
 au BufRead *.md set filetype=markdown | if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+autocmd vimrc BufReadPost *.mk :set filetype=make
 " }}}
 " Function: removes trailing spaces {{{
 command! RemoveTrailingSpaces call RemoveTrailingSpaces()
