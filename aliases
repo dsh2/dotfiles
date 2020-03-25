@@ -589,7 +589,6 @@ alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum }
 alias ki=kitty
-alias dnp='noglob dnf provides */'
 TT() {nvim +'norm i' term://"$*" }
 T() {nvim term://"$*" }
 alias ng=noglob
