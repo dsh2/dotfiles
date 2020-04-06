@@ -172,6 +172,8 @@ bindsym $meta+t layout tabbed
 # Move container {{{
 bindsym $meta+$alt+$left move container to output left
 bindsym $meta+$alt+$right move container to output right
+bindsym $meta+0x5b move container to output left
+bindsym $meta+0x5d move container to output right
 # }}}
 # Move workspace {{{
 bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
