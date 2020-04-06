@@ -225,6 +225,10 @@ bindsym $alt+F12 $pa_toggle_mute
 bindsym XF86AudioMute $pa_toggle_mute
 bindsym XF86AudioLowerVolume $pa_volume_down 
 bindsym XF86AudioRaiseVolume $pa_volume_up 
+bindsym $meta+$alt+$ctrl+0x2c $pa_volume_down 
+bindsym $meta+$alt+$ctrl+0x2e $pa_volume_up 
+bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute 
+bindsym $meta+$alt+$ctrl+m $pa_toggle_mute 
 # }}}
 # Rofi {{{
 bindsym $alt+Tab exec rofi -show window
