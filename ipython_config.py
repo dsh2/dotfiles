@@ -1,22 +1,5 @@
-# Configuration file for ipython.
-
-#------------------------------------------------------------------------------
-# InteractiveShellApp(Configurable) configuration
-#------------------------------------------------------------------------------
-
-## A Mixin for applications that start InteractiveShell instances.
-#  
-#  Provides configurables for loading extensions and executing files as part of
-#  configuring a Shell environment.
-#  
-#  The following methods should be called by the :meth:`initialize` method of the
-#  subclass:
-#  
-#    - :meth:`init_path`
-#    - :meth:`init_shell` (to be implemented by the subclass)
-#    - :meth:`init_gui_pylab`
-#    - :meth:`init_extensions`
-#    - :meth:`init_code`
+# vim: fdm=marker
+# InteractiveShellApp(Configurable) configuration {{{
 
 ## Execute the given command string.
 #c.InteractiveShellApp.code_to_run = ''
@@ -67,12 +50,8 @@
 
 ## Reraise exceptions encountered loading IPython extensions?
 #c.InteractiveShellApp.reraise_ipython_extension_failures = False
-
-#------------------------------------------------------------------------------
-# Application(SingletonConfigurable) configuration
-#------------------------------------------------------------------------------
-
-## This is an application.
+# }}}
+# Application(SingletonConfigurable) configuration {{{
 
 ## The date format used by logging formatters for %(asctime)s
 #c.Application.log_datefmt = '%Y-%m-%d %H:%M:%S'
@@ -82,10 +61,9 @@
 
 ## Set the log level by value or name.
 #c.Application.log_level = 30
+# }}}
 
-#------------------------------------------------------------------------------
-# BaseIPythonApplication(Application) configuration
-#------------------------------------------------------------------------------
+# BaseIPythonApplication(Application) configuration {{{
 
 ## IPython: an enhanced interactive Python shell.
 
@@ -119,9 +97,9 @@
 #  error.  The default is to append a short message to the usual traceback
 #c.BaseIPythonApplication.verbose_crash = False
 
-#------------------------------------------------------------------------------
-# TerminalIPythonApp(BaseIPythonApplication,InteractiveShellApp) configuration
-#------------------------------------------------------------------------------
+# }}}
+
+# TerminalIPythonApp(BaseIPythonApplication,InteractiveShellApp) configuration {{{
 
 ## Whether to display a banner upon starting IPython.
 c.TerminalIPythonApp.display_banner = False
@@ -136,12 +114,8 @@ c.TerminalIPythonApp.display_banner = False
 
 ## Start IPython quickly by skipping the loading of config files.
 #c.TerminalIPythonApp.quick = False
-
-#------------------------------------------------------------------------------
-# InteractiveShell(SingletonConfigurable) configuration
-#------------------------------------------------------------------------------
-
-## An enhanced, interactive shell for Python.
+# }}}
+# InteractiveShell(SingletonConfigurable) configuration {{{
 
 ## 'all', 'last', 'last_expr' or 'none', 'last_expr_or_assign' specifying which
 #  nodes should be run interactively (displaying output from expressions).
@@ -251,7 +225,7 @@ c.InteractiveShell.pdb = False
 
 ## Enables rich html representation of docstrings. (This requires the docrepr
 #  module).
-#c.InteractiveShell.sphinxify_docstring = False
+c.InteractiveShell.sphinxify_docstring = True
 
 ## 
 #c.InteractiveShell.wildcards_case_sensitive = True
@@ -259,12 +233,11 @@ c.InteractiveShell.pdb = False
 ## Switch modes for the IPython exception handlers.
 #c.InteractiveShell.xmode = 'Context'
 
-#------------------------------------------------------------------------------
-# TerminalInteractiveShell(InteractiveShell) configuration
-#------------------------------------------------------------------------------
+# }}}
+# TerminalInteractiveShell(InteractiveShell) configuration {{{
 
 ## Autoformatter to reformat Terminal code. Can be `'black'` or `None`
-#c.TerminalInteractiveShell.autoformatter = None
+c.TerminalInteractiveShell.autoformatter = None
 
 ## Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 #  Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a
@@ -309,7 +282,7 @@ c.TerminalInteractiveShell.enable_history_search = True
 
 ## Enable mouse support in the prompt (Note: prevents selecting text with the
 #  mouse)
-#c.TerminalInteractiveShell.mouse_support = False
+c.TerminalInteractiveShell.mouse_support = True
 
 ## Display the current vi mode (when using vi editing mode).
 #c.TerminalInteractiveShell.prompt_includes_vi_mode = True
