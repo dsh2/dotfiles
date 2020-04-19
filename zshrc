@@ -10,10 +10,10 @@ if [[ $RUNNING_SHELL != $SHELL ]]; then
     SHELL=$RUNNING_SHELL
 fi
 
-zsh_source() 
+zsh_source()
 {
 	# TODO: check if writeable for others than us
-	local quiet 
+	local quiet
 	[[ $1 = -q ]] && { quiet=1; shift; }
 	[[ ! -r $@ ]] && { (( quiet )) || "zsh_source: "$@" not found. "; return 1; }
 	source $@
@@ -66,13 +66,13 @@ psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}'
 PS1+='%(!.$fg_no_bold[red]ROOT%F{255}.%n)'		# Add user name
 PS1+='%(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
-PS1+='%F{255}] '	
+PS1+='%F{255}] '
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
 
-zle_check_send_break() { 
+zle_check_send_break() {
   # psvar[2]=$(( $zsh_preexec ? "" : "break" ))
-  if (($zsh_preexec)); then 
+  if (($zsh_preexec)); then
     psvar[2]=
     zsh_preexec=0
   else
@@ -163,7 +163,7 @@ setopt share_history
 zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
-	# TODO: try to understand why the following regexp matches 
+	# TODO: try to understand why the following regexp matches
 	# when the empty string ended in c-m, but NOT c-c! BUG?
 	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
 		# echo zshaddhistory: line skipped
@@ -175,7 +175,7 @@ zshaddhistory() {
 	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
 		if [[ $PWD != $HOME ]]; then
 			# print "zshaddhistory: adding to local history in PWD = $PWD"
-			if [[ ! -f $PWD/.zsh_local_history ]]; then  
+			if [[ ! -f $PWD/.zsh_local_history ]]; then
 			    print "Creating new .zsh_local_history in \"$PWD\"."
 			fi
 			fc -p .zsh_local_history
@@ -187,7 +187,7 @@ zshaddhistory() {
 		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
 		if [[ ! -d $dir ]]; then
 		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
-		    mkdir -p $dir 
+		    mkdir -p $dir
 		fi
 		fc -p $dir/history
 	fi
@@ -197,10 +197,10 @@ zshaddhistory() {
 PP() {
     local file=${1:-/dev/stdin}
     curl --data-binary @${file} https://paste.rs
-} 
+}
 
 # ZLE {{{
-zle_highlight=( 
+zle_highlight=(
     default:fg=default,bg=default
     special:fg=black,bg=red
     region:standout,fg=green
@@ -290,7 +290,7 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
 function backward_kill_default_word() {
     WORDCHARS='*?-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
@@ -305,7 +305,7 @@ if [[ -n $DISPLAY ]]; then
 	elif type xsel >/dev/null; then
 		XC="xsel --clipboard --input"
 	fi
-else 
+else
 	if type clip.exe > /dev/null; then
 		XC="clip.exe"
 	elif [[ -n $TMUX ]]; then
@@ -315,7 +315,7 @@ fi
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
-		filter_last_output 
+		filter_last_output
 	else
 		zle kill-line
 		echo -n $CUTBUFFER | $=XC 2> /dev/null
@@ -376,7 +376,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 $=vimp $tmux_log_file 
+	tmux split -vbp 60 $=vimp $tmux_log_file
 }
 bindkey_func '^x^x' page_last_output
 
@@ -396,7 +396,7 @@ function check_output {
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
 	check_output vp || return
-	RBUFFER=$( cat $tmux_log_file  | 
+	RBUFFER=$( cat $tmux_log_file |
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
@@ -415,8 +415,8 @@ function diff_last_two_outputs {
 	# TODO: better derive event numbers from internal shell history
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
-	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found." 
-	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found." 
+	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found."
+	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found."
 	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
 	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
@@ -443,10 +443,10 @@ function run_prepend {
 	if [[ -z $ZSH_PREPEND ]]; then
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
 			ZSH_PREPEND="ssh ${match[1]%%/*}"
-		else 
+		else
 			zle -M -- 'ZSH_PREPEND is not set.'
-			return 
-		fi 
+			return
+		fi
 	fi
 	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
 	BUFFER="$ZSH_PREPEND $BUFFER"
@@ -469,7 +469,7 @@ function run_subshell {
 	else
 		zle up-history
 		BUFFER=" \$($BUFFER)"
-		CURSOR=0 
+		CURSOR=0
 	fi
 }
 bindkey_func '^x^b' run_subshell
@@ -535,8 +535,8 @@ if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
     run-help-tmux() {
-	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
-	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
+	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do
+	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then
 		tmux split -vbp 80 $SHELL -ic "vimman $command"
 		break
 	    fi
@@ -557,7 +557,7 @@ function tmux_pane_words() {
 		tmux_word_valid $word || continue
 		compl_curr_pane+=$word
 	done
-	_wanted tmux_words expl 'words from current tmux pane' compadd -Qa compl_curr_pane 
+	_wanted tmux_words expl 'words from current tmux pane' compadd -Qa compl_curr_pane
 
 	local -a compl_other_panes
 	local current_pane_id=$(tmux display-message -pF '#{pane_id}')
@@ -598,8 +598,8 @@ bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
-function start_tmux_logging() 
-{ 
+function start_tmux_logging()
+{
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
 	# TODO: Add colors to output
 	# export ZSH_DEBUG=1
@@ -634,7 +634,7 @@ function start_tmux_logging()
 	fi
 }
 
-function stop_tmux_logging() 
+function stop_tmux_logging()
 {
 	[ -z $tmux_log_file ] && return
 	tmux pipe-pane
@@ -645,9 +645,9 @@ function stop_tmux_logging()
 	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
 
-function set_terminal_title() 
+function set_terminal_title()
 {
-    # TODO: 
+    # TODO:
     # -check esc sequences instead of wmctrl
     # -make this more portable
     # -check for ssh_tty
@@ -658,7 +658,7 @@ function set_terminal_title()
 	fi
 }
 
-function zsh_terminal_title() 
+function zsh_terminal_title()
 {
     # set -x
     # (( $ZSH_TERMINAL_TITLE_WORKER )) && kill $ZSH_TERMINAL_TITLE_WORKER
@@ -668,14 +668,14 @@ function zsh_terminal_title()
     # ZSH_TERMINAL_TITLE_WORKER=$$
 }
 
-function zsh_terminal_title_prompt() 
-{ 
+function zsh_terminal_title_prompt()
+{
     # TODO: add more sensible stuff here
     zsh_terminal_title "[zsh-ps] $(pwd) [$USER@${HOST}]"
 }
 
-function zsh_terminal_title_running() 
-{ 
+function zsh_terminal_title_running()
+{
     # TODO: add more sensible stuff here
 
     zsh_terminal_title "[zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
@@ -691,7 +691,7 @@ if whence tmux > /dev/null \
 then
     add-zsh-hook preexec start_tmux_logging
     add-zsh-hook precmd stop_tmux_logging
-fi 
+fi
 
 function showbuffers()
 {
@@ -710,13 +710,14 @@ function showbuffers()
 bindkey_func "^[o" showbuffers
 
 # Change cursor when switching to vicmd
-zle-keymap-select() { 
+zle-keymap-select() {
     case $KEYMAP in
 	vicmd) echo -ne "\e]12;darkgreen\a";;
 	vioop) echo -ne "\e]12;yellow\a";;
 	visual) echo -ne "\e]12;darkyellow\a";;
-	*) echo -ne "\e]12;darkred\a";;
-    esac 
+	# *) echo -ne "\e]12;darkred\a";;
+	*) echo -ne "\e]12;yellow\a";;
+    esac
 }
 echo -ne "\e]12;darkred\a"
 zle -N zle-keymap-select
@@ -860,7 +861,7 @@ fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 # set +x
 
-# # Try to save tmux from OOM 
+# # Try to save tmux from OOM
 # if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
 #     local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
 #     if [[ -n $tmux_pid ]]; then
@@ -883,7 +884,7 @@ if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting
 	ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
 	ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 elif zsh_source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
-	# fast-theme default 
+	# fast-theme default
 	FAST_HIGHLIGHT[use_async]=1
 fi
 # }}}
@@ -921,12 +922,12 @@ nsee() {
 	[[ -f /var/run/netns/$1 ]] || { print usage: $0 netns; ls -1 /var/run/netns/; return; }
 	ns=$1 sudo -E ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh
 }
-pp() { 
-    if [[ -z $* ]]; then 
-	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree 
-    else 
-	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" 
-    fi
+pp() {
+	if [[ -z $* ]]; then
+		sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree
+	else
+		sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*"
+	fi
 }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
@@ -1239,7 +1240,7 @@ expand_ealias_skip=(l ls)
 expand_ealias() {
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
-	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias 
+	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias
 	# zle expand-word
 	zle magic-space
 }
@@ -1273,27 +1274,27 @@ bindkey_func '^x^e' env_vars
 # }}}
 
 print_variables() {
-    zparseopts -D -A opts h
-    show_hidden=$+opts[-h]
-    vars=(${*:-${(ko)parameters}})
-    for var in $vars; do
+	zparseopts -D -A opts h
+	show_hidden=$+opts[-h]
+	vars=(${*:-${(ko)parameters}})
+	for var in $vars; do
 	type=${(tP)var}
 	print -n -- $var \($type, ${(P)#var}\)
 	if [[ $type = *hideval* && $show_hidden = 0 ]]; then
-	    print  \ = VALUE HIDDEN
-	    continue
+		print  \ = VALUE HIDDEN
+		continue
 	fi
 	if [[ $type = *assoc* ]]; then
 	    print -n : \(
 	    for k v in ${(kvP)var}; do
-			print -n -- $k: $v,\ 
+			print -n -- "$k: $v, "
 	    done
 	    print \)
 	else
 		print -- \ = ${(P)var} | tr \\n\\t ' ' | tr -s ' '; print
-	    # print -- \ = "${(P)var}" 
+	    # print -- \ = "${(P)var}"
 	fi
-    done 
+    done
 }
 compdef _parameter print_variables
 
@@ -1313,12 +1314,12 @@ zsh_source ~/.fzfrc
 nmn() {
 	targets=()
 	excludes=()
-	for if in $(command ls -1 /sys/class/net); do 
-		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then 
+	for if in $(command ls -1 /sys/class/net); do
+		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then
 			targets+=$(ifdata -pN $if)/24
 			excludes+=$(ifdata -pa $if)
 		fi
-	done 
+	done
 	print_variables targets excludes
 	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
@@ -1344,7 +1345,7 @@ fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
 
-gcdd() { 
+gcdd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
 		cd $(git rev-parse --git-dir)
 	else
@@ -1352,9 +1353,9 @@ gcdd() {
 	fi
 }
 
-gcd() { 
+gcd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
-		cd $(git rev-parse --show-toplevel) 
+		cd $(git rev-parse --show-toplevel)
 	else
 		echo "Not in git work tree."
 	fi
