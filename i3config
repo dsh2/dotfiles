@@ -41,6 +41,7 @@ set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 # Default applications {{{
 set $browser google-chrome-stable
 set $terminal kitty
+set $terminal_control kitty -o allow_remote_control=yes 
 set $terminal_tmux kitty zsh -ic 'tmm'
 set $lock_now ~/bin/i3lock-wrapper.sh
 # }}}
@@ -49,7 +50,8 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 # bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 # for_window [class=".*"] title_format "%title"
 # for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-for_window [class="Pavucontrol"] floating enable, resize set 540 260
+bindsym $meta+$alt+$ctrl+p exec pavucontrol
+for_window [class="Pavucontrol"] floating enable, resize set 600 550
 for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 # for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
 hide_edge_borders none
@@ -101,6 +103,7 @@ bindsym $meta+shift+3 [window_role="(?i)browser"] focus
 # Start a terminal {{{
 bindsym $meta+Return exec $terminal_tmux
 bindsym $meta+$shift+Return exec $terminal
+bindsym $meta+$alt+Return exec $terminal_control
 bindsym $meta+7 split horizontal, exec $terminal
 bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
 bindsym $meta+8 split vertical, exec $terminal
@@ -169,11 +172,13 @@ bindsym $meta+e layout toggle split
 bindsym $meta+s layout stacking
 bindsym $meta+t layout tabbed
 # }}}
-# Move container {{{
+# Move container to output {{{
 bindsym $meta+$alt+$left move container to output left
 bindsym $meta+$alt+$right move container to output right
 bindsym $meta+0x5b move container to output left
+bindsym $meta+$shift+0x5b move container to output left; focus output left
 bindsym $meta+0x5d move container to output right
+bindsym $meta+$shift+0x5d move container to output right; focus output right
 # }}}
 # Move container to workspace {{{
 bindsym $meta+$ctrl+0x5b move container to workspace prev
@@ -211,7 +216,7 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-bindsym $meta+w exec $lock_now & sleep 0.2 && pgrep i3lock && systemctl suspend || notify-send -u critical "WARNING: i3lock failed." 
+bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && systemctl suspend || notify-send -u critical "WARNING: i3lock failed." 
 bindsym $meta+$shift+w exec systemctl hibernate || notify-send -u critical "WARNING: hibernate failed." 
 bindsym $meta+$ctrl+$shift+w exec systemctl suspend || notify-send -u critical "WARNING: suspend failed." 
 bindsym $meta+$ctrl+$alt+w exec rfkill list wifi | grep -q -- "Soft blocked: yes" && rfkill unblock wifi || rfkill block wifi 
@@ -271,14 +276,15 @@ bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
 	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
-	bindsym x exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
-	bindsym X exec i3-ws-primary $mode_return 
+	bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
+	bindsym $shift+x exec i3-ws-primary, $mode_return 
 	bindsym b border toggle
 	bindsym h move scratchpad, $mode_return
 	bindsym i floating toggle, $mode_return
 	bindsym m scratchpad show, $mode_return
 	bindsym n move window to workspace "new", exec i3-ws-enum, $mode_return
 	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
+	bindsym $shift+r exec reload, $mode_return
 	bindsym 0x2c exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
 	bindsym s bar mode toggle, $mode_return
 	bindsym t exec $i3input -F 'mark "%s"' -P 'tag: ', $mode_return
