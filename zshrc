@@ -749,6 +749,7 @@ autoload -U zed
 zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
 zsh_source -q /usr/share/zsh/vendor-completions/_awscli
+zsh_source -q /usr/share/zsh/site-functions/_awscli
 zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
