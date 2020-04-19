@@ -31,7 +31,7 @@ bash_source() {
 }
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
-
+eval "$(pip completion --zsh)"
 in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
 setopt prompt_subst
