@@ -57,7 +57,10 @@ add-zsh-hook precmd vcs_info
 LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
-PS1=$LINE_SEPARATOR					# Add horizontal separator line
+
+PS1=''
+# PS1+='​'
+PS1+=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}J=%j%F{240}].)'	# Add number of jobs - if any
@@ -88,11 +91,13 @@ PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}] ))'	# Add ex
 [[ -n $ns ]] && psvar[3]=$ns
 
 PS1+='%(3V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}] .)'  # Add netns
-PS1+='😎 '						    # Add user status
+# PS1+='😎 '						    # Add user status
 # PS1+='💙 '						    # Add user status
 # PS1+='❤️ '						    # Add user status
 # PS1+='🤮 '						    # Add user status
-
+# PS1+=' '
+# PS1+='​'
+      
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -1361,4 +1366,30 @@ gcd() {
 	fi
 }
 
-[ -e ~/.environment.local ] && source ~/.environment.local 
+mount_dev() {
+	[[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
+	sudo sfdisk -J $1  |
+		jq -r '.partitiontable.partitions[].node' |
+		while read dev; do 
+			mnt=mnt/${dev#/dev/}
+			mkdir -p $mnt && sudo mount -v $dev $mnt
+		done
+}
+compdef _mount mount_dev
+alias uma='sudo umount mnt/*'
+
+mount_img() {
+	[[ -r $1 ]] || { echo "usage: $0 image"; return; }
+	img=$1
+	sfdisk -J $img |
+		jq -r '.partitiontable.partitions[] | ["mnt/"+.node, .start * 512] | @tsv' |
+		while read node offset; do
+			dev=$(sudo losetup --show -J --verbose --find --offset $offset $img) &&
+			mkdir -p $node &&
+			sudo mount $dev $node &&
+			echo "Mounted $node ($dev)"
+		done
+}
+	
+
+[ -e ~/.environment.local ] && source ~/.environment.local
