@@ -154,6 +154,7 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
+alias lS='ls -ahlrS'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
@@ -185,7 +186,7 @@ alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zs=zstyle
 alias zz='echo exec $SHELL; exec $SHELL'
 alias zzz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
-alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
+alias msf='./msfconsole --real-readline --quiet -r $HOME/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
@@ -296,7 +297,7 @@ RUN() {
 }
 
 # Miscellaneous
-# alias a=aws
+alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -305,7 +306,8 @@ alias aeA='aws ec2 describe-instances --filter Name=instance-state-name,Values=r
 alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances  | jq -r ".Reservations[].Instances[] | [.LaunchTime, .InstanceId, .ImageId, .InstanceType, .PublicIpAddress, .State.Name, [[.Tags[]?] | map(.Key + \"=\" + .Value) | .[] ] ] | flatten | @csv" | sed "s:^:$region,:"& done; wait ) | sort -k 2,1 | column -tns, | tr \" \ '
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
 alias aed="aws ec2 describe-instances --instance-ids"
-alias ac='aws cloudformation'
+# alias ac='aws cloudformation'
+alias ac='aws cognito-idp'
 alias ax=autorandr
 alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
@@ -359,7 +361,7 @@ alias makev='make SHELL="PS4=__[MAKE]__\  \$\$SHELL -x"'
 alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
-alias ipp='ipython3 -- '
+alias ipp='ipython3 -i -- '
 alias iz=ipython3
 alias pz=python
 alias p2=python2.7
@@ -416,7 +418,6 @@ alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias nd='nmcli dev'
 alias ncnc='nmcli con'
-alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
 alias kk='kill -STOP '
@@ -583,12 +584,14 @@ sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnec
 alias zzzz='while :; do print -n .; sleep 0.2; done'
 alias Z=zzzz
 alias b=bridge
-alias p3='python3.8' 
+# alias p3='python3.8' 
+alias p3='python3.7' 
 alias tsh=tshark
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum }
 alias ki=kitty
+alias K=kitty
 alias dnp='noglob dnf provides */'
 TT() {nvim +'norm i' term://"$*" }
 T() {nvim term://"$*" }
@@ -601,4 +604,15 @@ alias ns=netsniff-ng
 alias i=ip
 alias pst=pstree
 alias ne=neomutt
+alias V=v4l2ctrl
+alias zat=zathura
+alias dm='sudo dmsetup'
+alias cr=cryptsetup
+alias pv=print_variables
+alias PI='pip -vvv install'
+alias ju=jupyter
+alias ptp=ptpython
+alias rzsh='sudo HOME=$HOME zsh'
+alias rz='sudo HOME=$HOME zsh'
+
 # vim: se ft=sh:
