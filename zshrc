@@ -31,7 +31,13 @@ bash_source() {
 }
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
-eval "$(pip completion --zsh)"
+export pip_zsh_cache="~/.pip.zsh"
+# [[ -r $pip_zsh_cache ]] || pip completion --zsh > $pip_zsh_cache
+# TODO: What is wrong with redirection to filename coming from variables
+[[ -r $pip_zsh_cache ]] || pip completion --zsh > ~/.pip.zsh
+eval "$(cat ~/.pip.zsh)"
+unset pip_zsh_cache
+
 in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
 setopt prompt_subst
