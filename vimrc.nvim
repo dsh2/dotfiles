@@ -953,11 +953,12 @@ nmap <nowait> <leader>s :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
 map <a-s> <c-o>:update<cr><esc>
 
-map <c-s> :Redir let<cr>gsae:se ft=conf<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
+map <c-s> :Redir let<cr>gsae:se ft=conf buftype=nofile<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
 nmap Q :cq<cr>
 map <leader>S :syn off \| syn on \| se foldenable foldlevel=2<cr>
-nmap <leader>J :set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
-nmap <leader>X :set ft=xml<cr>:Autoformat<cr>
+nmap <leader>J :StripAnsi<cr>:set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
+nmap <leader>X :StripAnsi<cr>:set ft=xml<cr>:Autoformat<cr>
+nmap <leader>Y :StripAnsi<cr>:set ft=yaml<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
