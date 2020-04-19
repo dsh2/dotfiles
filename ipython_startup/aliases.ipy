@@ -1,0 +1,2 @@
+ %alias_magic -l %D %debug
+ %alias_magic -l %P %page
