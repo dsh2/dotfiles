@@ -1,5 +1,6 @@
 # Dev
 BUILD-*
+gdb.txt
 core
 gmon.out
 *.out
