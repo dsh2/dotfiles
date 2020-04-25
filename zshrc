@@ -770,7 +770,7 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 # TODO: Add infer-next-history-or-accept
 # bindkey -M menuselect '^m' accept-and-infer-next-history
 bindkey -M menuselect '^n' vi-forward-blank-word
-# TODO: 
+# TODO:
 # -patch zsh to support custom widgets
 # -patch zsh to support vi-backward-blank-word-first natively
 # vi-backward-blank-word-first() {
@@ -788,7 +788,7 @@ compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags d
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate tmux_pane_words
-# zstyle ':completion:*' completer _complete 
+# zstyle ':completion:*' completer _complete
 zstyle ':completion:*:approximate:::' max-errors 6 numeric
 zstyle ':completion:*:matches' group yes
 zstyle ':completion:*' group-name '' # Show each type of match in its own group
@@ -821,7 +821,7 @@ zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
 setopt menu_complete
 # }}}
- 
+
 # Shell options {{{
 autoload zmv
 autoload run-help
@@ -1349,7 +1349,7 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
-[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
+[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)."
 rnd() {(($[RANDOM%${1:-2}]>${2:-0}))}
 # fz() { [ -f $1 -a -r $1 ] && mkdir -p $1.DIR && fuse-zip $1 $1.DIR && cd $1.DIR }
 fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd $1:t.DIR && $EDITOR . }
