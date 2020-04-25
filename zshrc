@@ -595,9 +595,8 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
-bindkey -s clq\  'c $tmux_log_file\t | jq .'
-bindkey -s cql\  'c $tmux_log_file\t | jq .'
-bindkey -s clj\  'c $tmux_log_file\t | jq .'
+bindkey -s clq\  'c $tmux_log_file\t | jq '
+bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
