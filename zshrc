@@ -831,7 +831,7 @@ set push
 setopt cdablevars
 # setopt autonamedirs
 setopt histsubstpattern
-setopt noclobber
+# setopt noclobber
 stty -ixon
 
 # TODO: Think about if this is a really a safe setup
