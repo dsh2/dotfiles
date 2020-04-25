@@ -734,6 +734,8 @@ zle -N zle-keymap-select
 
 zle-line-init() { [[ $zle_keymap = vi ]] && zle -K vicmd || zle -K emacs }
 zle -N zle-line-init
+KEYTIMEOUT=23 # prevent delay when entering vi-mode
+# Check: https://www.reddit.com/r/vim/comments/60jl7h/zsh_vimode_no_delay_entering_normal_mode/
 
 zle-toggle-keymap() { [[ $zle_keymap = vi ]] && zle_keymap=emacs || zle_keymap=vi ; zle-line-init }
 bindkey_func '^]^]' zle-toggle-keymap
