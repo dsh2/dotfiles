@@ -629,5 +629,5 @@ pad() { patool create $1.tgz $1 }
 # TODO: find base85/91 implementation
 padd() { tar czf - $* | base64 | $=XC }
 paxx() { $=XP | base64 -d -i | tar xkzvf - }
-
+alias PA="$XP"
 # vim: se ft=sh:
