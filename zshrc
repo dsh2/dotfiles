@@ -31,12 +31,11 @@ bash_source() {
 }
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
-export pip_zsh_cache="~/.pip.zsh"
+# export pip_zsh_cache="~/.pip.zsh"
 # [[ -r $pip_zsh_cache ]] || pip completion --zsh > $pip_zsh_cache
 # TODO: What is wrong with redirection to filename coming from variables
-[[ -r $pip_zsh_cache ]] || pip completion --zsh > ~/.pip.zsh
+[[ -r ~/.pip.zsh ]] || pip completion --zsh > ~/.pip.zsh
 eval "$(cat ~/.pip.zsh)"
-unset pip_zsh_cache
 
 in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
@@ -608,9 +607,8 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
-bindkey -s clq\  'c $tmux_log_file\t | jq .'
-bindkey -s cql\  'c $tmux_log_file\t | jq .'
-bindkey -s clj\  'c $tmux_log_file\t | jq .'
+bindkey -s clq\  'c $tmux_log_file\t | jq '
+bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
@@ -748,6 +746,8 @@ zle -N zle-keymap-select
 
 zle-line-init() { [[ $zle_keymap = vi ]] && zle -K vicmd || zle -K emacs }
 zle -N zle-line-init
+KEYTIMEOUT=23 # prevent delay when entering vi-mode
+# Check: https://www.reddit.com/r/vim/comments/60jl7h/zsh_vimode_no_delay_entering_normal_mode/
 
 zle-toggle-keymap() { [[ $zle_keymap = vi ]] && zle_keymap=emacs || zle_keymap=vi ; zle-line-init }
 bindkey_func '^]^]' zle-toggle-keymap
@@ -783,7 +783,7 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 # TODO: Add infer-next-history-or-accept
 # bindkey -M menuselect '^m' accept-and-infer-next-history
 bindkey -M menuselect '^n' vi-forward-blank-word
-# TODO: 
+# TODO:
 # -patch zsh to support custom widgets
 # -patch zsh to support vi-backward-blank-word-first natively
 # vi-backward-blank-word-first() {
@@ -796,12 +796,12 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate tmux_pane_words
-# zstyle ':completion:*' completer _complete 
+# zstyle ':completion:*' completer _complete
 zstyle ':completion:*:approximate:::' max-errors 6 numeric
 zstyle ':completion:*:matches' group yes
 zstyle ':completion:*' group-name '' # Show each type of match in its own group
@@ -834,7 +834,7 @@ zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
 setopt menu_complete
 # }}}
- 
+
 # Shell options {{{
 autoload zmv
 autoload run-help
@@ -845,7 +845,7 @@ set push
 setopt cdablevars
 # setopt autonamedirs
 setopt histsubstpattern
-setopt noclobber
+# setopt noclobber
 stty -ixon
 
 # TODO: Think about if this is a really a safe setup
@@ -1097,7 +1097,6 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-# TODO: use rg with rust regex instead
 alias -g 0,="| perl -pe 's:\0:, :g'"
 alias -g 000='0.0.0.0/0'
 alias -g 00='0.0.0.0'
@@ -1122,7 +1121,6 @@ alias -g E2='2>&1 '
 alias -g E@='2>&1 '
 alias -g GE="| grep -i -E '^'"
 alias -g J="| jq '.[]'"
-alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LQ=' |& lnav -q'
 alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
@@ -1143,11 +1141,15 @@ alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X0='| xargs -0'
 alias -g X='| xargs'
-alias -g gg='| grep -i -- '
+alias -g gg='| grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
-alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-alias -g xr='|xxd -r -p'
+alias -g hh='| hexdump -C | less'
+alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
+alias -g hx='hexdump -C'
+alias -g lqq=' |& lnav -q'
+alias -g ss='| strings -t x -e S | less'
+alias -g xr='| xxd -r -p'
 
 has() {
   local verbose=false
@@ -1256,8 +1258,8 @@ fi
 c() {
 	[[ $# = 0 ]] && { die "usage: c files_and_directories"; return }
 	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
-	[[ $1 = 1 ]] && { cc $1; return }
-	for f in $@; do 
+	[[ $# = 1 ]] && { cc $1; return }
+	for f in $@; do
 		cc $f | sed "s|^|$f:\t|"
 	done
 }
@@ -1364,7 +1366,7 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
-[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
+[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)."
 rnd() {(($[RANDOM%${1:-2}]>${2:-0}))}
 # fz() { [ -f $1 -a -r $1 ] && mkdir -p $1.DIR && fuse-zip $1 $1.DIR && cd $1.DIR }
 fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd $1:t.DIR && $EDITOR . }

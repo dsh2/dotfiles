@@ -456,11 +456,18 @@ mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
 alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
-alias sshl="ssh -p 22222 $USER@localhost"
+# alias sshl="ssh -p 22222 $USER@localhost"
+alias sshl='ssh -o PermitLocalCommand=yes'
+alias ssha=ssh-add
+alias sshx='ssh -O exit'
+alias xssh='ssh -O exit'
+alias cssh='ssh -O check'
+alias sshc='ssh -O check'
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
-alias sskg'echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
+alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
+alias sa='eval export SSH_AUTH_SOCK=$(echo /tmp/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'

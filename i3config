@@ -256,6 +256,7 @@ bindsym $meta+$ctrl+$shift+r restart
 bindsym $meta+$shift+n bar mode toggle
 # bindsym $meta+$alt+space exec $i3input -F 'workspace "%s"\' -P 'New workspace: '
 bindsym $meta+$alt+space exec i3-ws-new $(dmenu -p 'New workspace: ')
+bindsym $meta+d workspace desktop
 # bindsym $meta+$alt+space exec notify-send O,exec notify-send P
 # bindsym $meta+$alt+space exec $i3input -F 'exec notify-send O,exec notify-send P -P 'New workspace: '
 
@@ -267,6 +268,7 @@ set $mode_move "[move: hjkl]"
 set $mode_resize "[resize: hjkl+shift/ctrl]"
 set $mode_manipulate "[manipulate: hjkl+shift/ctrl]"
 set $mode_system "[system: l:lock, s:suspend, S:lock&suspend, h:hibernate]"
+set $mode_wallpaper "[walpaper: n:next, p:previous, d:disable, e:enable, f:favorite]"
 set $mode_return mode "default"
 set $step_size 15 px
 
@@ -410,11 +412,24 @@ mode $mode_system {
 }
 # }}}
 
-# Passthrough mode  {{{
-# TODO: what is going on here...?
-bindsym $meta+p mode "passthrough"
-mode "passthrough" {
-bindsym $meta+p $mode_return
+# Mode "wallpaper"  {{{
+bindsym $meta+p mode $mode_wallpaper
+mode $mode_wallpaper {
+	bindsym n workspace --no-auto-back-and-forth desktop, exec variety --next
+	bindsym p exec variety --previous
+	bindsym f exec variety --favorite, $mode_return
+	# bindsym $shift+P exec variety --show-preferences, $mode_return
+	bindsym d exec variety --quit, exec xsetroot -solid black, exec rm -f /tmp/i3lock.png, $mode_return
+	bindsym e exec variety, exec xsetroot -solid black, $mode_return
+	bindsym c exec variety --current | tr -d \n | xclip, $mode_return
+                  
+	# Exit mode
+	bindsym $ctrl+c $mode_return
+	bindsym $ctrl+0x5b $mode_return
+	bindsym Return $mode_return
+	bindsym Escape $mode_return
+	bindsym $meta+f $mode_return
+	bindsym $meta+o $mode_return
 }
 # }}}
 
@@ -491,12 +506,13 @@ assign [class="qemu-system-x86_64"] 8:qemu
 exec_always --no-startup-id xset -b -c r rate 200 140 dpms 0 0 2400 s off
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_caps_toggle
 exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
-# exec_always --no-startup-id dunst
-# exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+exec_always --no-startup-id dunst
+exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
 exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5
 exec_always --no-startup-id copyq
-# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id xsetroot -solid black
+exec_always --no-startup-id variety --next
 exec_always --no-startup-id notify-send "i3config loaded."
 # }}}
