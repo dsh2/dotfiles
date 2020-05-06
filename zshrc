@@ -207,8 +207,10 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs
+    curl --data-binary @${file} https://paste.rs | tr -d \\n |  $=XC
 }
+
+alias PPd='curl -X DELETE '
 
 # ZLE {{{
 zle_highlight=(
