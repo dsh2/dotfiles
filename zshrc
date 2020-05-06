@@ -1097,17 +1097,20 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-alias -g 00='0.0.0.0'
-alias -g 000='0.0.0.0/0'
-alias -g 0s='::1'
-alias -g 0s0='::1/0'
-alias -g 0m='| tr \\0 \\n'
+# TODO: use rg with rust regex instead
 alias -g 0,="| perl -pe 's:\0:, :g'"
-alias -g C="| column -t"
-alias -g Ct="| column -nts $'\t'"
+alias -g 000='0.0.0.0/0'
+alias -g 00='0.0.0.0'
+alias -g 0m='| tr \\0 \\n'
+alias -g 0s0='::1/0'
+alias -g 0s='::1'
+alias -g BB=' | base64'
+alias -g BBD='| base64 -d -i | hexdump -C | less'
 alias -g C,="| column -nts,"
+alias -g C="| column -t"
 alias -g Cc="| column -nts,"
 alias -g Cs="| column -n"
+alias -g Ct="| column -nts $'\t'"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
 alias -g DH="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g DN2="2> /dev/null"
@@ -1115,13 +1118,17 @@ alias -g DN="> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: ' -e 's: $::' " # Delete and squeeze whitespace, i.e. make one-liners
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
+alias -g E2='2>&1 '
+alias -g E@='2>&1 '
+alias -g GE="| grep -i -E '^'"
+alias -g J="| jq '.[]'"
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
-alias -g LV=' |& lnav'
 alias -g LQ=' |& lnav -q'
+alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
+alias -g S='| sort'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
-alias -g S='| sort'
 alias -g SN='| sort -n'
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
@@ -1134,18 +1141,13 @@ alias -g UU='| sort | uniq'
 alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
-alias -g X='| xargs'
 alias -g X0='| xargs -0'
-# TODO: use rg with rust regex instead
+alias -g X='| xargs'
 alias -g gg='| grep -i -- '
-alias -g GE="| grep -i -E '^'"
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
-alias -g J="| jq '.[]'"
 alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g xr='|xxd -r -p'
-alias -g E2='2>&1 '
-alias -g E@='2>&1 '
 
 has() {
   local verbose=false
