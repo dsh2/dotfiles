@@ -615,5 +615,12 @@ alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
 alias rz='sudo HOME=$HOME zsh'
+alias chx='sudo chmod a+x'
+alias sq=seq
+alias ca=cat
+pad() { patool create $1.tgz $1 }
+# TODO: find base85/91 implementation
+padd() { tar czf - $* | base64 | $=XC }
+paxx() { $=XP | base64 -d -i | tar xkzvf - }
 
 # vim: se ft=sh:
