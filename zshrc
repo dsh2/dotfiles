@@ -309,6 +309,17 @@ function backward_kill_default_word() {
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
+XP=${XP:-/bin/false}
+if [[ -n $DISPLAY ]]; then
+    echo "TODO: set XP"
+else
+	if type powershell.exe > /dev/null; then
+		XP="powershell.exe -command Get-Clipboard"
+	elif [[ -n $TMUX ]]; then
+		XP="tmux paste-buffer "
+	fi
+fi
+
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
 	if type xclip >/dev/null; then
