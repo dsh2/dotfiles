@@ -310,14 +310,16 @@ function backward_kill_default_word() {
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
+set -x
 XP=${XP:-cat}
-if [[ -n $DISPLAY ]]; then
-    echo "TODO: set XP"
-else
-	if type powershell.exe > /dev/null; then
-		XP="powershell.exe -command Get-Clipboard"
-	fi
+if pidof copyqq >/dev/null; then
+	XP="copyq read 0"
+elif type xclip >/dev/null; then
+	XP="xclip -selection clipboard -out"
+elif type powershell.exe > /dev/null; then
+	XP="powershell.exe -command Get-Clipboard"
 fi
+set +x
 
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
@@ -1146,7 +1148,7 @@ alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
 alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-alias -g hx='hexdump -C'
+alias -g hx='| hexdump -C | less'
 alias -g lqq=' |& lnav -q'
 alias -g ss='| strings -t x -e S | less'
 alias -g xr='| xxd -r -p'
