@@ -189,7 +189,7 @@ if vim_plug_available
 	highlight GitGutterAdd ctermbg=black
 	map <leader>gG :GitGutterToggle<cr>
 	" }}}
-	Plug 'junegunn/vim-github-dashboard', {'on': 'GHActivity'} "{{{
+	Plug 'junegunn/vim-github-dashboard' "{{{
 	let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
 	" }}}
 	Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
@@ -307,7 +307,7 @@ if vim_plug_available
 	nmap <leader>tc :tabclose<cr>
 	" }}}
 	Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
-	map <leader>F :Ranger<cr>
+	map <leader>ff :Ranger<cr>
 	"}}}
 	Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
 	nnoremap <F4> :MundoToggle<cr>
@@ -563,6 +563,7 @@ if vim_plug_available
 	" TODO: Add more preview text, squece as much content as possible?
 	let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 	"}}}
+	Plug 't9md/vim-quickhl'
 	Plug 'dsh2/HiCursorWords' "{{{
 	let g:HiCursorWords_delay = 10
 	let g:HiCursorWords_hiGroupRegexp = ''
@@ -585,7 +586,7 @@ if vim_plug_available
 	Plug 'vim-scripts/LargeFile'"{{{
 	let g:LargeFile = 50
 	set synmaxcol=2048"}}}
-	Plug 'w0rp/ale', {'for': 'cpp'} "{{{
+	Plug 'w0rp/ale'  "{{{
 	autocmd vimrc FileType cpp nmap <leader><leader> :ALEGoToDefinitionInVSplit<cr>
 	autocmd vimrc FileType cpp nmap <leader> :ALEGoToDefinitionInSplit<cr>
 	autocmd vimrc FileType cpp nmap  :ALEGoToDefinition<cr>
@@ -593,13 +594,15 @@ if vim_plug_available
 	autocmd vimrc FileType cpp nmap <leader>~ :ALEHover<cr>
 	let g:airline#extensions#ale#enabled = 1
 	let g:ale_set_loclist = 1
-	let g:ale_set_quickfix = 0
+	let g:ale_set_quickfix = 1
 	let g:ale_open_list = 0
 	let g:ale_keep_list_window_open = 1
 	let g:ale_fix_on_save = 1
 	let g:ale_lint_on_enter = 1
-	let g:ale_lint_on_text_changed = "never"
-	let g:ale_open_list = "never"
+	" let g:ale_lint_on_text_changed = "never"
+	let g:ale_lint_on_text_changed = "always"
+	" let g:ale_open_list = "never"
+	let g:ale_open_list = "always"
 	" }}}
 	Plug 'machakann/vim-highlightedyank'"{{{
 	let g:highlightedyank_highlight_duration = 333
@@ -691,14 +694,18 @@ if vim_plug_available
 	let g:go_fmt_command = "goimports"
 	" }}}
 	Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
+
+	let g:jedi#goto_stubs_command = ''
+	let g:jedi#auto_close_doc = 0
 	let g:jedi#completions_command = "<C-space>"
 	let g:jedi#goto_command = "<c-]>"
-	let g:jedi#auto_close_doc = 0
 	let g:jedi#show_call_signatures = 2
 	let g:jedi#show_call_signatures_delay = 0
-	let g:jedi#use_tabs_not_buffers = 0
-	let g:jedi#use_splits_not_buffers = ""
+	let g:jedi#smart_auto_mappings = 1
 	let g:jedi#squelch_py_warning = 1
+	let g:jedi#use_splits_not_buffers = ""
+	let g:jedi#use_tabs_not_buffers = 1
+
 	" let g:jedi#force_py_version = 3.4
 	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
 	" Plug 'nvie/vim-flake8'
@@ -767,6 +774,7 @@ if vim_plug_available
 	Plug 'tpope/vim-eunuch'
 	Plug 'tpope/vim-rsi'
 	Plug 'tpope/vim-tbone'
+	Plug 'tpope/vim-abolish'
 	Plug 'vim-scripts/ReplaceWithRegister'
 	Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
 	Plug 'vim-scripts/info.vim', {'on': 'Info'}
@@ -1238,6 +1246,7 @@ endfunction
 call s:create_toggle_map('t', 'match(&colorcolumn, "+1")>=0', 'set colorcolumn-=+1', 'set colorcolumn+=+1')
 
 autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
+autocmd vimrc BufRead,BufNewFile *.ipy set filetype=python
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
@@ -1411,11 +1420,10 @@ function! ProcessTree(...)
     execute "norm " . l:current_line_num . "G"
     set nowrap
     let &foldcolumn=g:pst_fold_columns
-    return " TODO: fix rest of function as well
     set foldexpr=PsFoldExpression(v:lnum)
     set foldmethod=expr
     let &foldlevel=l:current_fold_level
-    set foldenable
+    " set foldenable
     " norm zv
     " call PsEnableCsvVim()
 endfunction
