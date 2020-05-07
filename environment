@@ -39,15 +39,13 @@ pathprepend $NDK
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
 # export PAGER=fzf
 # export PAGER=less
-if [[ -z $TMUX ]]; then
-    PAGER=less
-else
-    export PAGER=
-fi
+# [[ -z $TMUX ]] && PAGER=less
+PAGER=less
 export GIT_PAGER=less
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
-export LESS=cRMiWSJ
+# export LESS=cRMiWSJ
+export LESS=RF
 lesskey - <<EOF
 #command
 ^w toggle-option S
