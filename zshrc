@@ -310,7 +310,6 @@ function backward_kill_default_word() {
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
-set -x
 XP=${XP:-cat}
 if pidof copyqq >/dev/null; then
 	XP="copyq read 0"
@@ -319,7 +318,6 @@ elif type xclip >/dev/null; then
 elif type powershell.exe > /dev/null; then
 	XP="powershell.exe -command Get-Clipboard"
 fi
-set +x
 
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
