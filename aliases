@@ -621,5 +621,19 @@ alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
 alias rz='sudo HOME=$HOME zsh'
+alias ca=caja
+alias xdft='xdg-mime query filetype '
+alias xdft='xdg-mime query filetype '
+alias chme='sudo chown -R $(id -u):$(id -g) '
+alias sup=supermin
+alias chx='sudo chmod a+x'
+alias chme='sudo chown $(id -u):$(id -g)'
+alias lo='losetup --find --show'
+SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a }
+xdD() { 
+	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
+	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
+}
+
 
 # vim: se ft=sh:
