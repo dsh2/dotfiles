@@ -162,6 +162,7 @@ alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark -lt a -r - --color'
 alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+alias tmH='tmux rename-session $(hostname)'
 alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
 # alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
 alias tsc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
@@ -535,11 +536,12 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H=hostname
-alias 1='ping 1.1.1.1'
+alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
+alias 8n='nping -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 89='paste <(8 -c 50) <(9 -c 50)'
 # alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
@@ -622,7 +624,6 @@ alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
 alias rz='sudo HOME=$HOME zsh'
-alias ca=caja
 alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias chme='sudo chown -R $(id -u):$(id -g) '
@@ -636,9 +637,12 @@ xdD() {
 	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
 }
 
-um() { 
-	[ $# = 1 ] || { echo "usage: um mount-point" exit 1; }
-	sudo umount $1 || sudo fuser -afuv $1 
-}
 
+alias sq=seq
+alias ca=cat
+pad() { patool create $1.tgz $1 }
+# TODO: find base85/91 implementation
+padd() { tar czf - $* | base64 | $=XC }
+paxx() { $=XP | base64 -d -i | tar xkzvf - }
+alias PA="$XP"
 # vim: se ft=sh:

@@ -206,8 +206,10 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs
+    curl --data-binary @${file} https://paste.rs | tr -d \\n |  $=XC
 }
+
+alias PPd='curl -X DELETE '
 
 # ZLE {{{
 zle_highlight=(
@@ -307,6 +309,15 @@ function backward_kill_default_word() {
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
+
+XP=${XP:-cat}
+if [[ -n $DISPLAY ]]; then
+    echo "TODO: set XP"
+else
+	if type powershell.exe > /dev/null; then
+		XP="powershell.exe -command Get-Clipboard"
+	fi
+fi
 
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
@@ -1091,6 +1102,8 @@ alias -g 00='0.0.0.0'
 alias -g 0m='| tr \\0 \\n'
 alias -g 0s0='::1/0'
 alias -g 0s='::1'
+alias -g BB=' | base64'
+alias -g BBD='| base64 -d -i | hexdump -C | less'
 alias -g C,="| column -nts,"
 alias -g C="| column -t"
 alias -g Cc="| column -nts,"
@@ -1107,7 +1120,6 @@ alias -g E2='2>&1 '
 alias -g E@='2>&1 '
 alias -g GE="| grep -i -E '^'"
 alias -g J="| jq '.[]'"
-alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LQ=' |& lnav -q'
 alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
@@ -1136,7 +1148,7 @@ alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g hx='hexdump -C'
 alias -g lqq=' |& lnav -q'
-alias -g ss='| strings -t x -e s | less'
+alias -g ss='| strings -t x -e S | less'
 alias -g xr='| xxd -r -p'
 
 has() {
