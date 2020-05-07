@@ -219,7 +219,8 @@ alias wan_name='dig +short -x $(wanip)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
-alias va=vagrant
+# alias va=vagrant
+alias va=variety
 alias doc=docker
 alias docc=docker-compose
 alias dock=docker
@@ -616,7 +617,7 @@ alias zat=zathura
 alias dm='sudo dmsetup'
 alias cr=cryptsetup
 alias pv=print_variables
-alias PI='pip -vvv install'
+alias PI='pip install --user -vvv'
 alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
@@ -635,5 +636,9 @@ xdD() {
 	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
 }
 
+um() { 
+	[ $# = 1 ] || { echo "usage: um mount-point" exit 1; }
+	sudo umount $1 || sudo fuser -afuv $1 
+}
 
 # vim: se ft=sh:
