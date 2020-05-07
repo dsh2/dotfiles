@@ -446,6 +446,7 @@ bindsym --release button3 floating toggle
 bindsym button8 move right
 bindsym button9 move left
 
+# bindsym --whole-window $mod+button1 move right
 # }}}
 
 # Bars {{{
@@ -507,7 +508,8 @@ exec_always --no-startup-id xset -b -c r rate 200 140 dpms 0 0 2400 s off
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_caps_toggle
 exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
 exec_always --no-startup-id dunst
-exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+# xautolock's hotcorner seem to get confused when switching monitor setup
+# exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
 exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5
