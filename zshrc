@@ -746,6 +746,7 @@ zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
 fpath+=~/src/radare2/doc/zsh
+fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 
 zmodload zsh/complist
 autoload -U compinit && compinit
@@ -783,7 +784,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -1108,9 +1109,9 @@ alias -g GE="| grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
 alias -g LQ=' |& lnav -q'
-alias -g lqq=' |& lnav -q'
 alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
+alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
 alias -g S='| sort'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
@@ -1131,10 +1132,11 @@ alias -g X='| xargs'
 alias -g gg='| grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
+alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g hx='hexdump -C'
-alias -g hh='| hexdump -C | less'
-alias -g ss='| strings -t x -e S | less'
+alias -g lqq=' |& lnav -q'
+alias -g ss='| strings -t x -e s | less'
 alias -g xr='| xxd -r -p'
 
 has() {
