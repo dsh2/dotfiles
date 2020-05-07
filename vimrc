@@ -694,7 +694,6 @@ Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'frioux/vim-regedit'
 " }}}
-Plug 'idanarye/vim-unstack'
 call plug#end()
 " }}}
 " Global options {{{
