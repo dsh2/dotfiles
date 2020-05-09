@@ -279,6 +279,7 @@ mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
 	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
 	bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
+	bindsym c exec autorandr --change, $mode_return
 	bindsym $shift+x exec i3-ws-primary, $mode_return 
 	bindsym b border toggle
 	bindsym h move scratchpad, $mode_return
