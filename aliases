@@ -1,3 +1,4 @@
+# vim: se ft=sh:
 UNAME=$(uname)
 
 LS_COMMAND=ls
@@ -603,8 +604,8 @@ i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename worksp
 alias ki=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
-TT() {nvim +'norm i' term://"$*" }
-T() {nvim term://"$*" }
+TT() { nvim +'norm i' term://"$*" }
+T() { nvim term://"$*" }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
 alias gvv='nvim +GV\ --all'
@@ -645,4 +646,7 @@ pad() { patool create $1.tgz $1 }
 padd() { tar czf - $* | base64 | $=XC }
 paxx() { $=XP | base64 -d -i | tar xkzvf - }
 alias PA="$XP"
-# vim: se ft=sh:
+cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || echo "$funcstack[1] aborted..." }
+alias cvc=cvv
+alias xi=xinput
+alias xin=xinput
