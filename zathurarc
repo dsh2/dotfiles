@@ -49,11 +49,11 @@ map [normal] i zoom in
 map [fullscreen] o zoom out
 map [normal] o zoom out
 
-# jump
-map [normal] <C-o> jumplist previous
-map [normal] <C-i> jumplist next
-map [fullscreen] <C-o> jumplist previous
-map [fullscreen] <C-i> jumplist next
+# jumplist
+map [normal] <C-o> jumplist backward
+map [normal] <C-i> jumplist forward
+map [fullscreen] <C-o> jumplist backward
+map [fullscreen] <C-i> jumplist forward
 
 # settings
 set window-width 1980
