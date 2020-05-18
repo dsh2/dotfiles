@@ -51,6 +51,7 @@
         force: true
     ~/.minttyrc: minttyrc
     ~/.config/radare2/radare2rc: radare2rc
+    ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
     ~/.config/copyq/copyq-commands.ini: copyq-commands.ini
     ~/.screenlayouts: screenlayout
