@@ -46,6 +46,7 @@
     ~/.ipython/profile_default/startup: ipython_startup/
     ~/.config/ptpython/config.py: ptpython_config.py
     ~/.liquidpromptrc: liquidpromptrc
+    ~/.gef.rc: gef.rc
     ~/.inputrc:
         path: inputrc
         force: true
