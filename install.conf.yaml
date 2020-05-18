@@ -53,6 +53,7 @@
     ~/.config/radare2/radare2rc: radare2rc
     ~/.config/copyq/copyq.conf: copyq.conf
     ~/.config/copyq/copyq-commands.ini: copyq-commands.ini
+    ~/.screenlayouts: screenlayout
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc
