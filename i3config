@@ -50,6 +50,9 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 # bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 # for_window [class=".*"] title_format "%title"
 # for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
+bindsym $meta+$alt+$ctrl+a exec arandr
+bindsym $meta+$alt+$ctrl+c exec arandr
+for_window [class="Arandr"] floating enable, resize set 400 400
 bindsym $meta+$alt+$ctrl+p exec pavucontrol
 for_window [class="Pavucontrol"] floating enable, resize set 600 550
 for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
