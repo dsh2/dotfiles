@@ -302,7 +302,7 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
@@ -1132,6 +1132,7 @@ alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
+alias -g SS='| strings -t x -e S | less'
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
@@ -1148,7 +1149,6 @@ alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 alias -g hx='| hexdump -C | less'
 alias -g lqq=' |& lnav -q'
-alias -g ss='| strings -t x -e S | less'
 alias -g xr='| xxd -r -p'
 
 has() {
