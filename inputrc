@@ -230,8 +230,8 @@ TAB: menu-complete
 Control-q: complete
 
 $if gdb
-    "\e\C-j": "step\n"
-	"\e\C-k": "next\n"
+    "\e\C-l": "step\n"
+	"\e\C-j": "next\n"
 	"\e\C-i": "finish\n"
     "\eK": "finish\n"
     # Repeat second-previous
