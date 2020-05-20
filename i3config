@@ -517,5 +517,6 @@ exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --f
 exec_always --no-startup-id copyq
 exec_always --no-startup-id xsetroot -solid black
 exec_always --no-startup-id variety --next
+exec_always --no-startup-id blueman-tray
 exec_always --no-startup-id notify-send "i3config loaded."
 # }}}
