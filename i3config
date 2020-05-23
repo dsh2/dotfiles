@@ -53,6 +53,9 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 bindsym $meta+$alt+$ctrl+a exec arandr
 bindsym $meta+$alt+$ctrl+c exec arandr
 for_window [class="Arandr"] floating enable, resize set 400 400
+bindsym $meta+$alt+$ctrl+e exec xeyes
+bindsym $meta+$alt+$ctrl+n exec xeyes
+for_window [class="XEyes"] floating enable, resize set 350 200, border none
 bindsym $meta+$alt+$ctrl+p exec pavucontrol
 for_window [class="Pavucontrol"] floating enable, resize set 600 550
 for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
