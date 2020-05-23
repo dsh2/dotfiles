@@ -387,7 +387,7 @@ bindkey_func '^x^r' page_tmux_pane
 vimp='vim +AnsiEsc'
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window $=vimp $tmux_log_file
+	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
 }
 bindkey_func '^xx' page_last_output_fullscreen
 
