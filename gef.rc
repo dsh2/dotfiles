@@ -129,3 +129,4 @@ highlight rm = highlight remove
 hlr = highlight remove
 fmtstr-helper = format-string-helper
 screen-setup = tmux-setup
+hx = hexdump
