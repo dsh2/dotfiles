@@ -29,6 +29,8 @@ source ~/.dotfiles/z/z.sh
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
+alias adkl=adbk
+alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
@@ -234,7 +236,7 @@ gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 # vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
@@ -474,7 +476,8 @@ alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias dd='dd status=progress'
-alias hc=herbstclient
+# alias hc=herbstclient
+alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
 alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; print_variables DISPLAY'
@@ -542,9 +545,11 @@ alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
-alias 8n='nping -p 443 8.8.8.8'
+alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
+alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 89='paste <(8 -c 50) <(9 -c 50)'
+alias 89n='paste <(8n -c 50) <(9n -c 50)'
 # alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
 alias rf='rfkill block all'
 alias rff=rfkill
@@ -650,3 +655,8 @@ cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || ech
 alias cvc=cvv
 alias xi=xinput
 alias xin=xinput
+alias os=openssl
+alias xq='xset q'
+alias blc=bluetoothctl
+alias cm=command
+alias un=unset
