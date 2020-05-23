@@ -548,6 +548,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
+	autocmd vimrc FileType asn setlocal commentstring=--\ %s
 	autocmd vimrc FileType config,expect,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
@@ -594,7 +595,7 @@ if vim_plug_available
 	autocmd vimrc FileType cpp nmap <leader>~ :ALEHover<cr>
 	let g:airline#extensions#ale#enabled = 1
 	let g:ale_set_loclist = 1
-	let g:ale_set_quickfix = 1
+	let g:ale_set_quickfix = 0
 	let g:ale_open_list = 0
 	let g:ale_keep_list_window_open = 1
 	let g:ale_fix_on_save = 1
@@ -926,7 +927,7 @@ set undodir=~/.vim/undodir/
 set nofoldenable
 set undofile
 set updatetime=500
-set virtualedit=all
+" set virtualedit=all
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
@@ -1158,7 +1159,7 @@ endfunction
 "}}}
 " Configure help system {{{
 runtime! ftplugin/man.vim
-nmap K :exe "Vman " . expand("<cword>") <CR>
+nmap K :exe "Man " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
 let g:ft_man_open_mode = 'vert'
