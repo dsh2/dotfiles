@@ -444,10 +444,23 @@ mode $mode_wallpaper {
 # }}}
 
 # Mouse bindings {{{
-bindsym --whole-window $meta+button1 floating toggle
-# bindsym --release button1 floating toggle
+bindsym --release --whole-window $meta+button1 floating toggle
+bindsym --release --whole-window $meta+button2 kill 
 bindsym --release button2 kill
-bindsym --release button3 floating toggle
+bindsym button3 floating toggle
+bindsym button4 resize shrink width $step_size
+bindsym button5 resize grow width $step_size
+bindsym $shift+button4 resize shrink height $step_size
+bindsym $shift+button5 resize grow height $step_size
+# bindsym $alt+$shift+button4 resize shrinkg height $step_size, resize shrink height $step_size
+# bindsym $alt+$shift+button5 resize grow height $step_size, resize grow height $step_size
+ 
+bindsym --whole-window $alt+button4 resize shrink height $step_size, resize shrink width $step_size
+bindsym --whole-window $ctrl+$alt+button4 resize shrink height $step_size
+bindsym --whole-window $shift+$alt+button4 resize shrink width $step_size
+bindsym --whole-window $alt+button5 resize grow height $step_size, resize grow width $step_size
+bindsym --whole-window $ctrl+$alt+button5 resize grow height $step_size
+bindsym --whole-window $shift+$alt+button5 resize grow width $step_size
 
 # The side buttons move the window around
 bindsym button8 move right
