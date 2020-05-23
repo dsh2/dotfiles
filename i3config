@@ -335,7 +335,10 @@ mode $mode_move {
 	bindsym Escape $mode_return
 	bindsym $meta+m $mode_return
 	bindsym $meta+r mode $mode_resize
+	bindsym r mode $mode_resize
 	bindsym $meta+$shift+m mode $mode_manipulate
+	bindsym $shift+m mode $mode_manipulate
+	bindsym m mode $mode_manipulate
 }
 # }}}
 
@@ -365,6 +368,8 @@ mode $mode_resize {
 	bindsym Escape $mode_return
 	bindsym $meta+r $mode_return
 	bindsym $meta+m mode $mode_move
+	bindsym m mode $mode_move
+	bindsym r mode $mode_move
 	bindsym $meta+shift+m mode $mode_manipulate
 }
 # }}}
@@ -394,7 +399,9 @@ mode $mode_manipulate {
 	bindsym Escape $mode_return
 	bindsym $meta+shift+m $mode_return
 	bindsym $meta+r mode $mode_resize
-	bindsym $meta+m mode $mode_manipulate
+	bindsym k mode $mode_resize
+	bindsym $meta+m mode $mode_move
+	bindsym m mode $mode_move
 }
 # }}}
 
