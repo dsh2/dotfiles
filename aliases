@@ -583,6 +583,7 @@ alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
+alias lsofi='sudo lsof +c0 -P -n -i :'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
