@@ -55,7 +55,7 @@
     ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
     ~/.config/copyq/copyq-commands.ini: copyq-commands.ini
-    ~/.screenlayouts: screenlayout
+    ~/.screenlayout: screenlayout
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc
