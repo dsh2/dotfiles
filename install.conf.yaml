@@ -40,6 +40,7 @@
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
+    ~/.gdbinit: gdbinit/gdbinit
     ~/.git_template: git_template/
     ~/.gitignore_global: gitignore_global
     ~/.ipython/profile_default/ipython_config.py: ipython_config.py

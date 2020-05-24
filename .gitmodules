@@ -65,3 +65,6 @@
 [submodule "zsh/completion/zsh-users"]
 	path = zsh/completion/zsh-users
 	url = https://github.com/zsh-users/zsh-completions
+[submodule "gdbinit"]
+	path = gdbinit
+	url = https://github.com/dsh2/gdbinit.git
