@@ -394,6 +394,7 @@ alias d2u=dos2unix
 alias bd=bindkey
 alias bdl='bindkey -L'
 alias kc='source ~/.keychain/*-sh(.om[1])'
+alias G='gdb -q -ex "b main" -ex run --args '
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Gdbr='gdb -q -ex "target remote localhost:1234"'
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
@@ -459,7 +460,8 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
-alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
+alias shk='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
+alias skg='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
 # alias sshl="ssh -p 22222 $USER@localhost"
 alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
