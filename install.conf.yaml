@@ -62,6 +62,7 @@
     ~/.ssh/hosts/_host_config_template: ssh_host_config_template/
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
+    ~/.tsocks.conf: tsocks.conf
     ~/.config/dunst/dunstrc: dunstrc
     ~/.config/procps/toprc: toprc
     ~/.config/wireshark: wireshark
