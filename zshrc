@@ -383,8 +383,8 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
-# vimp='vim -c AnsiEsc -c "s/\%xd//" -c go1'
-vimp='vim +AnsiEsc'
+# vimp='vimx -c AnsiEsc -c "s/\%xd//" -c go1'
+vimp='vimx +AnsiEsc'
 function page_last_output_fullscreen {
 	check_output vp || return
 	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
@@ -1112,6 +1112,7 @@ alias -g Ct="| column -nts $'\t'"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
 alias -g DH="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g DN2="2> /dev/null"
+alias -g 2dn="2> /dev/null"
 alias -g DN="> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: ' -e 's: $::' " # Delete and squeeze whitespace, i.e. make one-liners
@@ -1174,7 +1175,11 @@ min_version() {
 if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
 	export VISUAL=nvim
 else
-	export VISUAL=vim
+	if has vimx; then
+		export VISUAL=vimx
+	else
+		export VISUAL=vim
+	fi
 fi
 
 err() {
@@ -1415,5 +1420,8 @@ mount_img() {
 		done
 }
 	
-
+mvA() {
+    mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
+}
+zsh_source ~/.android-serial
 [ -e ~/.environment.local ] && source ~/.environment.local
