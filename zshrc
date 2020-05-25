@@ -1353,10 +1353,14 @@ nmn() {
 	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
 
-at() {
-	# print "at $*" | socat - /dev/modem,crnl
-	print "at $*" | sudo socat - /dev/modem,crnl
+_at() {
+	cmd=$*
+	[[ ${cmd:0:2} = "at" ]] && cmd=${cmd:2}
+	print at $cmd | sudo socat - /dev/modem,crnl
 }
+alias AT='noglob _at'
+alias at='noglob _at'
+alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
