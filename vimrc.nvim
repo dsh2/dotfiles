@@ -123,7 +123,7 @@ if vim_plug_available
 	nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
 	nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 	nmap <leader>gb :Gblame<cr>
-	nmap <leader>gB :Gbrowse<cr>
+	nmap <leader>gB vap:Gbrowse<cr>
 	vmap <leader>gB :Gbrowse<cr>
 	nmap <leader>gp :Gpush<cr>
 	nmap <leader>gw :Gwrite<cr>
@@ -1466,12 +1466,12 @@ map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 map <c-w>k :close<cr>
 map <c-w><c-k> :close<cr>
 
-let cmd_prefix='ssh esim sudo qmicli -d /dev/cdc-wdm1'
+let cmd_prefix='ssh quec sudo qmicli -d /dev/cdc-wdm0'
 " let cmd_prefix='qmicli -d /dev/cdc-wdm0'
 " let cmd_prefix='sudo mbimcli -d /dev/cdc-wdm0'
 " map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>:echo s<cr>:let cmd="!tmux send -t 2 \"echo " . shellescape(cmd_prefix . " " . s) . "\" Enter"<cr>:echo cmd<cr>:execute(cmd)<cr>
 map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>
-	    \ :let @0=system(cmd_prefix . " " . s)<cr>
+	    \ :let @0=system(cmd_prefix . " " . s . " --device=/dev/cdc-wdm0")<cr>
 	    \ "0p<}
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
