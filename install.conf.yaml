@@ -40,19 +40,23 @@
     ~/.environment: environment
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
+    ~/.gdbinit: gdbinit/gdbinit
     ~/.git_template: git_template/
     ~/.gitignore_global: gitignore_global
     ~/.ipython/profile_default/ipython_config.py: ipython_config.py
     ~/.ipython/profile_default/startup: ipython_startup/
     ~/.config/ptpython/config.py: ptpython_config.py
     ~/.liquidpromptrc: liquidpromptrc
+    ~/.gef.rc: gef.rc
     ~/.inputrc:
         path: inputrc
         force: true
     ~/.minttyrc: minttyrc
     ~/.config/radare2/radare2rc: radare2rc
+    ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
     ~/.config/copyq/copyq-commands.ini: copyq-commands.ini
+    ~/.screenlayout: screenlayout
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc

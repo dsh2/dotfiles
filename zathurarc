@@ -1,8 +1,7 @@
 # vim: ft=conf
 
 # quit
-map <Esc> quit
-map <Esc> quit
+map <Esc> reload
 map [normal] q quit
 map [fullscreen] q quit
 map [normal] Q quit
@@ -20,9 +19,9 @@ map [fullscreen] b scroll full-up
 
 # navigate
 map [normal] , navigate previous
-map [normal] m navigate next
+map [normal] . navigate next
 map [fullscreen] , navigate previous
-map [fullscreen] m navigate next
+map [fullscreen] . navigate next
 map [normal] ] navigate full-down
 map [normal] [ navigate full-up
 map [fullscreen] ] navigate full-down
@@ -50,11 +49,11 @@ map [normal] i zoom in
 map [fullscreen] o zoom out
 map [normal] o zoom out
 
-# jump
-map [normal] <C-o> jumplist previous
-map [normal] <C-i> jumplist next
-map [fullscreen] <C-o> jumplist previous
-map [fullscreen] <C-i> jumplist next
+# jumplist
+map [normal] <C-o> jumplist backward
+map [normal] <C-i> jumplist forward
+map [fullscreen] <C-o> jumplist backward
+map [fullscreen] <C-i> jumplist forward
 
 # settings
 set window-width 1980
@@ -70,7 +69,10 @@ set inputbar-fg "#909090"
 set guioptions shv
 set incremental-search true
 set page-cache-size 50
-set pages-per-row 5
+set pages-per-row 2
+set link-hadjust  
+set search-hadjust
+set show-directories
 
 set scroll-wrap false
 set statusbar-basename true

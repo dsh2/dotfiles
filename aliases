@@ -1,3 +1,4 @@
+# vim: se ft=sh:
 UNAME=$(uname)
 
 LS_COMMAND=ls
@@ -28,6 +29,8 @@ source ~/.dotfiles/z/z.sh
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
+alias adkl=adbk
+alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
@@ -233,7 +236,7 @@ gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 # vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
@@ -391,6 +394,7 @@ alias d2u=dos2unix
 alias bd=bindkey
 alias bdl='bindkey -L'
 alias kc='source ~/.keychain/*-sh(.om[1])'
+alias G='gdb -q -ex "b main" -ex run --args '
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Gdbr='gdb -q -ex "target remote localhost:1234"'
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
@@ -456,7 +460,8 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
-alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
+alias shk='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
+alias skg='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
 # alias sshl="ssh -p 22222 $USER@localhost"
 alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
@@ -473,7 +478,8 @@ alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias dd='dd status=progress'
-alias hc=herbstclient
+# alias hc=herbstclient
+alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
 alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; print_variables DISPLAY'
@@ -541,9 +547,11 @@ alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
-alias 8n='nping -p 443 8.8.8.8'
+alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
+alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 89='paste <(8 -c 50) <(9 -c 50)'
+alias 89n='paste <(8n -c 50) <(9n -c 50)'
 # alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
 alias rf='rfkill block all'
 alias rff=rfkill
@@ -577,6 +585,7 @@ alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
+alias lsofi='sudo lsof +c0 -P -n -i :'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
@@ -603,8 +612,8 @@ i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename worksp
 alias ki=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
-TT() {nvim +'norm i' term://"$*" }
-T() {nvim term://"$*" }
+TT() { nvim +'norm i' term://"$*" }
+T() { nvim term://"$*" }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
 alias gvv='nvim +GV\ --all'
@@ -626,10 +635,13 @@ alias rzsh='sudo HOME=$HOME zsh'
 alias rz='sudo HOME=$HOME zsh'
 alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
-alias chme='sudo chown -R $(id -u):$(id -g) '
 alias sup=supermin
 alias chx='sudo chmod a+x'
-alias chme='sudo chown $(id -u):$(id -g)'
+alias chmer='sudo chown -c -R $(id -u):$(id -g) '
+alias chme='sudo chown -c $(id -u):$(id -g)'
+alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
+alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
+
 alias lo='losetup --find --show'
 SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a }
 xdD() { 
@@ -646,5 +658,13 @@ padd() { tar czf - $* | base64 | $=XC }
 paxx() { $=XP | base64 -d -i | tar xkzvf - }
 paxp() { cat | base64 -d -i | tar xkzvf - }
 alias PA="$XP"
+cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || echo "$funcstack[1] aborted..." }
+alias cvc=cvv
+alias xi=xinput
+alias xin=xinput
+alias os=openssl
+alias xq='xset q'
+alias blc=bluetoothctl
 alias cm=command
-# vim: se ft=sh:
+alias cmd=command
+alias un=unset

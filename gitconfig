@@ -20,6 +20,7 @@
 [core]
 	pager = cat
 	excludesfile = ~/.gitignore_global
+	autocrlf = input
 [init]
 	templatedir = ~/.git_template
 [alias]
