@@ -67,4 +67,4 @@
 	url = https://github.com/zsh-users/zsh-completions
 [submodule "gdbinit"]
 	path = gdbinit
-	url = https://github.com/dsh2/gdbinit.git
+	url = https://github.com/dsh2/gdbinit
