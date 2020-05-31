@@ -1427,5 +1427,5 @@ mount_img() {
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
-zsh_source ~/.android-serial
+zsh_source -q ~/.android-serial
 [ -e ~/.environment.local ] && source ~/.environment.local
