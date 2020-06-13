@@ -235,6 +235,9 @@ gui.column.format:
 	"Sequence number (BE)", "%Cus:icmp.seq:0:R",
 	"Status Code", "%Cus:http.response.code:0:R",
 	"Time to live", "%Cus:ip.ttl:0:R",
+	"Encrypted Packet", "%Cus:wg.encrypted_packet:0:R",
+	"Has Private Key", "%Cus:wg.static.known_privkey:0:R",
+	"Sender", "%Cus:wg.sender:0:R",
 	"Info", "%i"
 
 ####### User Interface: Font ########
@@ -421,7 +424,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host fe80::ff:feca:fe01 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe01, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, deny tcp host 10.0.2.1 any eq 0, deny tcp any eq 0 host 10.0.2.1, permit ip any any
+#extcap.ciscodump.remotefilter: deny tcp host fe80::ff:feca:fe13 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe13, deny tcp host fe80::ff:feca:fe12 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe12, deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70 any eq 0, deny tcp any eq 0 host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70, deny tcp host fe80::a89c:9c2c:d434:4c3d any eq 0, deny tcp any eq 0 host fe80::a89c:9c2c:d434:4c3d, deny tcp host 2003:d4:6f01:4180:10c:44eb:39f8:b88c any eq 0, deny tcp any eq 0 host 2003:d4:6f01:4180:10c:44eb:39f8:b88c, deny tcp host 11.11.11.1 any eq 0, deny tcp any eq 0 host 11.11.11.1, deny tcp host 13.13.13.1 any eq 0, deny tcp any eq 0 host 13.13.13.1, deny tcp host 13.13.13.1 any eq 0, deny tcp any eq 0 host 13.13.13.1, deny tcp host 12.12.12.1 any eq 0, deny tcp any eq 0 host 12.12.12.1, deny tcp host 12.12.12.1 any eq 0, deny tcp any eq 0 host 12.12.12.1, deny tcp host 192.168.2.101 any eq 0, deny tcp any eq 0 host 192.168.2.101, deny tcp host 192.168.2.111 any eq 0, deny tcp any eq 0 host 192.168.2.111, deny tcp host 192.168.2.2 any eq 0, deny tcp any eq 0 host 192.168.2.2, permit ip any any
 
 # Packets to capture
 # A string
@@ -501,7 +504,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not ((host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host fe80::ff:feca:fe01 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1 or host 10.0.2.1) and port 22)
+#extcap.sshdump.remotefilter: not ((host fe80::ff:feca:fe13 or host fe80::ff:feca:fe12 or host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70 or host fe80::a89c:9c2c:d434:4c3d or host 2003:d4:6f01:4180:10c:44eb:39f8:b88c or host 11.11.11.1 or host 13.13.13.1 or host 13.13.13.1 or host 12.12.12.1 or host 12.12.12.1 or host 192.168.2.101 or host 192.168.2.111 or host 192.168.2.2) and port 22)
 
 # Packets to capture
 # A string
@@ -2495,7 +2498,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Whether to validate the IPv4 checksum
 # TRUE or FALSE (case-insensitive)
-#ip.check_checksum: FALSE
+ip.check_checksum: TRUE
 
 # Whether to correct for TSO-enabled (TCP segmentation offload) hardware captures, such as spoofing the IP packet length
 # TRUE or FALSE (case-insensitive)
@@ -4962,7 +4965,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Whether to validate the UDP checksum
 # TRUE or FALSE (case-insensitive)
-#udp.check_checksum: FALSE
+udp.check_checksum: TRUE
 
 # Collect process flow information from IPFIX
 # TRUE or FALSE (case-insensitive)

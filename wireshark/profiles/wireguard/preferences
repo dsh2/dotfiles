@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 3.2.0.
+# Configuration file for Wireshark 3.2.3.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -66,11 +66,11 @@
 # (case-insensitive).
 #gui.toolbar_main_style: ICONS
 
-# Check for updates (Windows only)
+# Check for updates (Windows and macOS only)
 # TRUE or FALSE (case-insensitive)
 #gui.update.enabled: TRUE
 
-# The type of update to fetch. You should probably leave this set to UPDATE_CHANNEL_STABLE.
+# The type of update to fetch. You should probably leave this set to STABLE.
 # One of: DEVELOPMENT, STABLE
 # (case-insensitive).
 #gui.update.channel: STABLE
@@ -273,6 +273,10 @@ gui.layout_type: 2
 # TRUE or FALSE (case-insensitive)
 #gui.packet_list_separator.enabled: FALSE
 
+# Show column definition in packet list header
+# TRUE or FALSE (case-insensitive)
+#gui.packet_header_column_definition.enabled: TRUE
+
 # Show selected packet in the Status Bar
 # TRUE or FALSE (case-insensitive)
 #gui.show_selected_packet.enabled: FALSE
@@ -297,7 +301,7 @@ gui.layout_type: 2
 
 # Interface link-layer header types (Ex: en0(1),en1(143),...)
 # A string
-#capture.devices_linktypes: 
+capture.devices_linktypes: wg0(12),enp0s20f0u2u1(1),lo(1),any(113),enp0s31f6(1),bluetooth-monitor(254),nflog(239),nfqueue(228),bluetooth0(201),ciscodump(147),dpauxmon(275),sdjournal(147),sshdump(147),udpdump(252)
 
 # Interface descriptions (Ex: eth0(eth0 descr),eth1(eth1 descr),...)
 # A string
@@ -313,19 +317,19 @@ gui.layout_type: 2
 
 # Interface buffer size (Ex: en0(1),en1(143),...)
 # A string
-#capture.devices_buffersize: 
+capture.devices_buffersize: wg0(2),enp0s20f0u2u1(2),lo(2),any(2),enp0s31f6(2),bluetooth-monitor(2),nflog(2),nfqueue(2),bluetooth0(2),usbmon0(2),usbmon1(2),usbmon2(2),wlp0s20f3(2),usbmon3(2),usbmon4(2),ciscodump(2),dpauxmon(2),sdjournal(2),sshdump(2),udpdump(2)
 
 # Interface snap length (Ex: en0(65535),en1(1430),...)
 # A string
-#capture.devices_snaplen: 
+capture.devices_snaplen: wg0:0(262144),enp0s20f0u2u1:0(262144),lo:0(262144),any:0(262144),enp0s31f6:0(262144),bluetooth-monitor:0(262144),nflog:0(262144),nfqueue:0(262144),bluetooth0:0(262144),usbmon0:0(262144),usbmon1:0(262144),usbmon2:0(262144),wlp0s20f3:0(262144),usbmon3:0(262144),usbmon4:0(262144),ciscodump:0(262144),dpauxmon:0(262144),sdjournal:0(262144),sshdump:0(262144),udpdump:0(262144)
 
 # Interface promiscuous mode (Ex: en0(0),en1(1),...)
 # A string
-#capture.devices_pmode: 
+capture.devices_pmode: wg0(0),enp0s20f0u2u1(1),lo(0),any(0),enp0s31f6(0),bluetooth-monitor(0),nflog(0),nfqueue(0),bluetooth0(0),usbmon0(0),usbmon1(0),usbmon2(0),wlp0s20f3(0),usbmon3(0),usbmon4(0),ciscodump(0),dpauxmon(0),sdjournal(0),sshdump(0),udpdump(0)
 
 # Capture in promiscuous mode?
 # TRUE or FALSE (case-insensitive)
-#capture.prom_mode: TRUE
+capture.prom_mode: FALSE
 
 # Interface capture filter (Ex: en0(tcp),en1(udp),...)
 # A string
@@ -426,7 +430,7 @@ gui.layout_type: 2
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f00:e458:79af:7c45:67bb:982d any eq 0, deny tcp any eq 0 host 2003:d4:6f00:e458:79af:7c45:67bb:982d, deny tcp host fe80::200:10ff:fe10:1001 any eq 0, deny tcp any eq 0 host fe80::200:10ff:fe10:1001, deny tcp host fe80::200:92ff:fe68:3001 any eq 0, deny tcp any eq 0 host fe80::200:92ff:fe68:3001, deny tcp host 10.10.10.1 any eq 0, deny tcp any eq 0 host 10.10.10.1, deny tcp host 192.168.2.101 any eq 0, deny tcp any eq 0 host 192.168.2.101, deny tcp host 192.168.50.1 any eq 0, deny tcp any eq 0 host 192.168.50.1, deny tcp host 10.10.10.1 any eq 0, deny tcp any eq 0 host 10.10.10.1, deny tcp host 192.168.30.1 any eq 0, deny tcp any eq 0 host 192.168.30.1, permit ip any any
+#extcap.ciscodump.remotefilter: deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e any eq 0, deny tcp any eq 0 host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e, deny tcp host 192.168.2.100 any eq 0, deny tcp any eq 0 host 192.168.2.100, deny tcp host 11.11.11.1 any eq 0, deny tcp any eq 0 host 11.11.11.1, permit ip any any
 
 # Packets to capture
 # A string
@@ -506,7 +510,7 @@ gui.layout_type: 2
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not ((host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f00:e458:79af:7c45:67bb:982d or host fe80::200:10ff:fe10:1001 or host fe80::200:92ff:fe68:3001 or host 10.10.10.1 or host 192.168.2.101 or host 192.168.50.1 or host 10.10.10.1 or host 192.168.30.1) and port 22)
+#extcap.sshdump.remotefilter: not ((host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e or host 192.168.2.100 or host 11.11.11.1) and port 22)
 
 # Packets to capture
 # A string

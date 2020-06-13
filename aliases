@@ -1,3 +1,4 @@
+# vim: se ft=sh:
 UNAME=$(uname)
 
 LS_COMMAND=ls
@@ -28,6 +29,8 @@ source ~/.dotfiles/z/z.sh
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
+alias adkl=adbk
+alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
@@ -154,6 +157,7 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
+alias lS='ls -ahlrS'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
@@ -161,6 +165,7 @@ alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark -lt a -r - --color'
 alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+alias tmH='tmux rename-session $(hostname)'
 alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
 # alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
 alias tsc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
@@ -185,7 +190,7 @@ alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
 alias zs=zstyle
 alias zz='echo exec $SHELL; exec $SHELL'
 alias zzz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
-alias msf='./msfconsole --real-readline --quiet -r /home/dsf/.dotfiles/msfc.rc'
+alias msf='./msfconsole --real-readline --quiet -r $HOME/.dotfiles/msfc.rc'
 alias ms=msf
 alias mkd='mkdir -p'
 mkt() { TMP=tmp-$(nn); [[ -n $* ]] && TMP+=-${(q)*}; mkd $TMP; cd $TMP; }
@@ -218,7 +223,8 @@ alias wan_name='dig +short -x $(wanip)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
-alias va=vagrant
+# alias va=vagrant
+alias va=variety
 alias doc=docker
 alias docc=docker-compose
 alias dock=docker
@@ -230,7 +236,7 @@ gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 # vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
-vimman() { vim -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
@@ -296,7 +302,7 @@ RUN() {
 }
 
 # Miscellaneous
-# alias a=aws
+alias a=aws
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -305,7 +311,8 @@ alias aeA='aws ec2 describe-instances --filter Name=instance-state-name,Values=r
 alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionName" --output text); do aws --region $region ec2 describe-instances  | jq -r ".Reservations[].Instances[] | [.LaunchTime, .InstanceId, .ImageId, .InstanceType, .PublicIpAddress, .State.Name, [[.Tags[]?] | map(.Key + \"=\" + .Value) | .[] ] ] | flatten | @csv" | sed "s:^:$region,:"& done; wait ) | sort -k 2,1 | column -tns, | tr \" \ '
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
 alias aed="aws ec2 describe-instances --instance-ids"
-alias ac='aws cloudformation'
+# alias ac='aws cloudformation'
+alias ac='aws cognito-idp'
 alias ax=autorandr
 alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
@@ -359,7 +366,7 @@ alias makev='make SHELL="PS4=__[MAKE]__\  \$\$SHELL -x"'
 alias ndd=ndk-build
 alias tss=typeset
 alias rh=rehash
-alias ipp='ipython3 -- '
+alias ipp='ipython3 -i -- '
 alias iz=ipython3
 alias pz=python
 alias p2=python2.7
@@ -387,6 +394,7 @@ alias d2u=dos2unix
 alias bd=bindkey
 alias bdl='bindkey -L'
 alias kc='source ~/.keychain/*-sh(.om[1])'
+alias G='gdb -q -ex "b main" -ex run --args '
 alias Gdb='gdb -q -ex "b main" -ex run --args '
 alias Gdbr='gdb -q -ex "target remote localhost:1234"'
 alias Ga='gdb -q -ex "set verbose" -ex "set sysroot /" -ex "set remote interrupt-sequence Ctrl-C" -ex "target remote :2000"'
@@ -416,7 +424,6 @@ alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias nd='nmcli dev'
 alias ncnc='nmcli con'
-alias hx='hexdump -C'
 alias vv=voltron
 alias k=kill
 alias kk='kill -STOP '
@@ -453,17 +460,26 @@ mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
 alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
-alias shk='ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@'
-alias sshl="ssh -p 22222 $USER@localhost"
+alias shk='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
+alias skg='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
+# alias sshl="ssh -p 22222 $USER@localhost"
+alias sshl='ssh -o PermitLocalCommand=yes'
+alias ssha=ssh-add
+alias sshx='ssh -O exit'
+alias xssh='ssh -O exit'
+alias cssh='ssh -O check'
+alias sshc='ssh -O check'
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
-alias sskg'echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
+alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
+alias sa='eval export SSH_AUTH_SOCK=$(echo /tmp/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias dd='dd status=progress'
-alias hc=herbstclient
+# alias hc=herbstclient
+alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
 alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; print_variables DISPLAY'
@@ -526,13 +542,16 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H=hostname
-alias 1='ping 1.1.1.1'
+alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
+alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
+alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 89='paste <(8 -c 50) <(9 -c 50)'
+alias 89n='paste <(8n -c 50) <(9n -c 50)'
 # alias 0='ping $(\ip route show default | head -1 | sed -nE "s:^.* via ([.:0-9]*) .*$:\1:p") # ping next hop'
 alias rf='rfkill block all'
 alias rff=rfkill
@@ -566,6 +585,7 @@ alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
 alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
+alias lsofi='sudo lsof +c0 -P -n -i :'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
@@ -583,14 +603,17 @@ sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnec
 alias zzzz='while :; do print -n .; sleep 0.2; done'
 alias Z=zzzz
 alias b=bridge
-alias p3='python3.8' 
+# alias p3='python3.8' 
+alias p3='python3.7' 
 alias tsh=tshark
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum }
 alias ki=kitty
-TT() {nvim +'norm i' term://"$*" }
-T() {nvim term://"$*" }
+alias K=kitty
+alias dnp='noglob dnf provides */'
+TT() { nvim +'norm i' term://"$*" }
+T() { nvim term://"$*" }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
 alias gvv='nvim +GV\ --all'
@@ -600,4 +623,48 @@ alias ns=netsniff-ng
 alias i=ip
 alias pst=pstree
 alias ne=neomutt
-# vim: se ft=sh:
+alias V=v4l2ctrl
+alias zat=zathura
+alias dm='sudo dmsetup'
+alias cr=cryptsetup
+alias pv=print_variables
+alias PI='pip install --user -vvv'
+alias ju=jupyter
+alias ptp=ptpython
+alias rzsh='sudo HOME=$HOME zsh'
+alias rz='sudo HOME=$HOME zsh'
+alias xdft='xdg-mime query filetype '
+alias xdft='xdg-mime query filetype '
+alias sup=supermin
+alias chx='sudo chmod a+x'
+alias chmer='sudo chown -c -R $(id -u):$(id -g) '
+alias chme='sudo chown -c $(id -u):$(id -g)'
+alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
+alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
+
+alias lo='losetup --find --show'
+SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a }
+xdD() { 
+	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
+	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
+}
+
+
+alias sq=seq
+alias ca=cat
+pad() { patool create $1.tgz $1 }
+# TODO: find base85/91 implementation
+padd() { tar czf - $* | base64 | $=XC }
+paxx() { $=XP | base64 -d -i | tar xkzvf - }
+paxp() { cat | base64 -d -i | tar xkzvf - }
+alias PA="$XP"
+cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || echo "$funcstack[1] aborted..." }
+alias cvc=cvv
+alias xi=xinput
+alias xin=xinput
+alias os=openssl
+alias xq='xset q'
+alias blc=bluetoothctl
+alias cm=command
+alias cmd=command
+alias un=unset

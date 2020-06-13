@@ -10,10 +10,10 @@ if [[ $RUNNING_SHELL != $SHELL ]]; then
     SHELL=$RUNNING_SHELL
 fi
 
-zsh_source() 
+zsh_source()
 {
 	# TODO: check if writeable for others than us
-	local quiet 
+	local quiet
 	[[ $1 = -q ]] && { quiet=1; shift; }
 	[[ ! -r $@ ]] && { (( quiet )) || "zsh_source: "$@" not found. "; return 1; }
 	source $@
@@ -31,6 +31,11 @@ bash_source() {
 }
 # bash_source ~/lib/azure-cli/az.completion
 # bash_source ~/.dotfiles/zsh/uftrace-completion.sh
+# export pip_zsh_cache="~/.pip.zsh"
+# [[ -r $pip_zsh_cache ]] || pip completion --zsh > $pip_zsh_cache
+# TODO: What is wrong with redirection to filename coming from variables
+[[ -r ~/.pip.zsh ]] || pip completion --zsh > ~/.pip.zsh
+eval "$(cat ~/.pip.zsh)"
 
 in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
@@ -57,7 +62,10 @@ add-zsh-hook precmd vcs_info
 LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
-PS1=$LINE_SEPARATOR					# Add horizontal separator line
+
+PS1=''
+# PS1+='​'
+PS1+=$LINE_SEPARATOR					# Add horizontal separator line
 # PS1+=$'\r'$'\f'
 PS1+=$'\n'
 PS1+='%F{240}%(1j.[%{$fg_no_bold[red]%}J=%j%F{240}].)'	# Add number of jobs - if any
@@ -66,13 +74,13 @@ psvar[1]=$SSH_TTY
 PS1+='%F{255}[%F{244}'
 PS1+='%(!.$fg_no_bold[red]ROOT%F{255}.%n)'		# Add user name
 PS1+='%(1V.%{$fg_no_bold[red]%}@%m.)'			# Add host name for ssh connections
-PS1+='%F{255}] '	
+PS1+='%F{255}] '
 PS1+='%F{136}%~ '					# Add current directory
 PS1+='${vcs_info_msg_0_}'				# Add vcs info
 
-zle_check_send_break() { 
+zle_check_send_break() {
   # psvar[2]=$(( $zsh_preexec ? "" : "break" ))
-  if (($zsh_preexec)); then 
+  if (($zsh_preexec)); then
     psvar[2]=
     zsh_preexec=0
   else
@@ -88,11 +96,13 @@ PS1+='%(0?..%(2V..%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}] ))'	# Add ex
 [[ -n $ns ]] && psvar[3]=$ns
 
 PS1+='%(3V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}] .)'  # Add netns
-PS1+='😎 '						    # Add user status
+# PS1+='😎 '						    # Add user status
 # PS1+='💙 '						    # Add user status
 # PS1+='❤️ '						    # Add user status
 # PS1+='🤮 '						    # Add user status
-
+# PS1+=' '
+# PS1+='​'
+      
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -163,7 +173,7 @@ setopt share_history
 zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
 zshaddhistory() {
 	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
-	# TODO: try to understand why the following regexp matches 
+	# TODO: try to understand why the following regexp matches
 	# when the empty string ended in c-m, but NOT c-c! BUG?
 	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
 		# echo zshaddhistory: line skipped
@@ -175,7 +185,7 @@ zshaddhistory() {
 	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
 		if [[ $PWD != $HOME ]]; then
 			# print "zshaddhistory: adding to local history in PWD = $PWD"
-			if [[ ! -f $PWD/.zsh_local_history ]]; then  
+			if [[ ! -f $PWD/.zsh_local_history ]]; then
 			    print "Creating new .zsh_local_history in \"$PWD\"."
 			fi
 			fc -p .zsh_local_history
@@ -187,7 +197,7 @@ zshaddhistory() {
 		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
 		if [[ ! -d $dir ]]; then
 		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
-		    mkdir -p $dir 
+		    mkdir -p $dir
 		fi
 		fc -p $dir/history
 	fi
@@ -196,11 +206,13 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs
-} 
+    curl --data-binary @${file} https://paste.rs | tr -d \\n |  $=XC
+}
+
+alias PPd='curl -X DELETE '
 
 # ZLE {{{
-zle_highlight=( 
+zle_highlight=(
     default:fg=default,bg=default
     special:fg=black,bg=red
     region:standout,fg=green
@@ -290,13 +302,22 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' 
+WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
 }
 bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
+
+XP=${XP:-cat}
+if pidof copyqq >/dev/null; then
+	XP="copyq read 0"
+elif type xclip >/dev/null; then
+	XP="xclip -selection clipboard -out"
+elif type powershell.exe > /dev/null; then
+	XP="powershell.exe -command Get-Clipboard"
+fi
 
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
@@ -305,7 +326,7 @@ if [[ -n $DISPLAY ]]; then
 	elif type xsel >/dev/null; then
 		XC="xsel --clipboard --input"
 	fi
-else 
+else
 	if type clip.exe > /dev/null; then
 		XC="clip.exe"
 	elif [[ -n $TMUX ]]; then
@@ -315,7 +336,7 @@ fi
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
-		filter_last_output 
+		filter_last_output
 	else
 		zle kill-line
 		echo -n $CUTBUFFER | $=XC 2> /dev/null
@@ -362,11 +383,11 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
-# vimp='vim -c AnsiEsc -c "s/\%xd//" -c go1'
-vimp='vim +AnsiEsc'
+# vimp='vimx -c AnsiEsc -c "s/\%xd//" -c go1'
+vimp='vimx +AnsiEsc'
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window $=vimp $tmux_log_file
+	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
 }
 bindkey_func '^xx' page_last_output_fullscreen
 
@@ -376,7 +397,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 $=vimp $tmux_log_file 
+	tmux split -vbp 60 $=vimp $tmux_log_file
 }
 bindkey_func '^x^x' page_last_output
 
@@ -396,7 +417,7 @@ function check_output {
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
 	check_output vp || return
-	RBUFFER=$( cat $tmux_log_file  | 
+	RBUFFER=$( cat $tmux_log_file |
 		# Print bogus LINE_SEPARATOR to prevent screen line skip
 	fzf --tac --multi --no-sort \
 		--margin 0,0,1,0 \
@@ -415,8 +436,8 @@ function diff_last_two_outputs {
 	# TODO: better derive event numbers from internal shell history
 	local o1=~/.tmux-log/$(($(print -P '%!')-2))
 	local o2=~/.tmux-log/$(($(print -P '%!')-1))
-	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found." 
-	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found." 
+	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found."
+	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found."
 	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
 	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
 	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
@@ -443,10 +464,10 @@ function run_prepend {
 	if [[ -z $ZSH_PREPEND ]]; then
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
 			ZSH_PREPEND="ssh ${match[1]%%/*}"
-		else 
+		else
 			zle -M -- 'ZSH_PREPEND is not set.'
-			return 
-		fi 
+			return
+		fi
 	fi
 	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
 	BUFFER="$ZSH_PREPEND $BUFFER"
@@ -469,7 +490,7 @@ function run_subshell {
 	else
 		zle up-history
 		BUFFER=" \$($BUFFER)"
-		CURSOR=0 
+		CURSOR=0
 	fi
 }
 bindkey_func '^x^b' run_subshell
@@ -535,8 +556,8 @@ if [ -z "$TMUX" ]; then
     bindkey '^[H' run-help
 else
     run-help-tmux() {
-	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do 
-	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then 
+	for command in ${(Oaz)LBUFFER} ${(Oaz)RBUFFER}; do
+	    if [[ ! $command =~ ([-~|][[:alpha:]]*) ]]; then
 		tmux split -vbp 80 $SHELL -ic "vimman $command"
 		break
 	    fi
@@ -557,7 +578,7 @@ function tmux_pane_words() {
 		tmux_word_valid $word || continue
 		compl_curr_pane+=$word
 	done
-	_wanted tmux_words expl 'words from current tmux pane' compadd -Qa compl_curr_pane 
+	_wanted tmux_words expl 'words from current tmux pane' compadd -Qa compl_curr_pane
 
 	local -a compl_other_panes
 	local current_pane_id=$(tmux display-message -pF '#{pane_id}')
@@ -584,9 +605,8 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
-bindkey -s clq\  'c $tmux_log_file\t | jq .'
-bindkey -s cql\  'c $tmux_log_file\t | jq .'
-bindkey -s clj\  'c $tmux_log_file\t | jq .'
+bindkey -s clq\  'c $tmux_log_file\t | jq '
+bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
@@ -598,8 +618,8 @@ bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
-function start_tmux_logging() 
-{ 
+function start_tmux_logging()
+{
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
 	# TODO: Add colors to output
 	# export ZSH_DEBUG=1
@@ -634,7 +654,7 @@ function start_tmux_logging()
 	fi
 }
 
-function stop_tmux_logging() 
+function stop_tmux_logging()
 {
 	[ -z $tmux_log_file ] && return
 	tmux pipe-pane
@@ -645,9 +665,9 @@ function stop_tmux_logging()
 	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
 }
 
-function set_terminal_title() 
+function set_terminal_title()
 {
-    # TODO: 
+    # TODO:
     # -check esc sequences instead of wmctrl
     # -make this more portable
     # -check for ssh_tty
@@ -658,7 +678,7 @@ function set_terminal_title()
 	fi
 }
 
-function zsh_terminal_title() 
+function zsh_terminal_title()
 {
     # set -x
     # (( $ZSH_TERMINAL_TITLE_WORKER )) && kill $ZSH_TERMINAL_TITLE_WORKER
@@ -668,14 +688,14 @@ function zsh_terminal_title()
     # ZSH_TERMINAL_TITLE_WORKER=$$
 }
 
-function zsh_terminal_title_prompt() 
-{ 
+function zsh_terminal_title_prompt()
+{
     # TODO: add more sensible stuff here
     zsh_terminal_title "[zsh-ps] $(pwd) [$USER@${HOST}]"
 }
 
-function zsh_terminal_title_running() 
-{ 
+function zsh_terminal_title_running()
+{
     # TODO: add more sensible stuff here
 
     zsh_terminal_title "[zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
@@ -691,7 +711,7 @@ if whence tmux > /dev/null \
 then
     add-zsh-hook preexec start_tmux_logging
     add-zsh-hook precmd stop_tmux_logging
-fi 
+fi
 
 function showbuffers()
 {
@@ -710,19 +730,22 @@ function showbuffers()
 bindkey_func "^[o" showbuffers
 
 # Change cursor when switching to vicmd
-zle-keymap-select() { 
+zle-keymap-select() {
     case $KEYMAP in
 	vicmd) echo -ne "\e]12;darkgreen\a";;
 	vioop) echo -ne "\e]12;yellow\a";;
 	visual) echo -ne "\e]12;darkyellow\a";;
-	*) echo -ne "\e]12;darkred\a";;
-    esac 
+	# *) echo -ne "\e]12;darkred\a";;
+	*) echo -ne "\e]12;yellow\a";;
+    esac
 }
 echo -ne "\e]12;darkred\a"
 zle -N zle-keymap-select
 
 zle-line-init() { [[ $zle_keymap = vi ]] && zle -K vicmd || zle -K emacs }
 zle -N zle-line-init
+KEYTIMEOUT=23 # prevent delay when entering vi-mode
+# Check: https://www.reddit.com/r/vim/comments/60jl7h/zsh_vimode_no_delay_entering_normal_mode/
 
 zle-toggle-keymap() { [[ $zle_keymap = vi ]] && zle_keymap=emacs || zle_keymap=vi ; zle-line-init }
 bindkey_func '^]^]' zle-toggle-keymap
@@ -734,6 +757,7 @@ zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
 fpath+=~/src/radare2/doc/zsh
+fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 
 zmodload zsh/complist
 autoload -U compinit && compinit
@@ -743,6 +767,7 @@ autoload -U zed
 zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
 compdef _t t
 zsh_source -q /usr/share/zsh/vendor-completions/_awscli
+zsh_source -q /usr/share/zsh/site-functions/_awscli
 zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
@@ -757,7 +782,7 @@ bindkey -M menuselect '^o' accept-and-infer-next-history
 # TODO: Add infer-next-history-or-accept
 # bindkey -M menuselect '^m' accept-and-infer-next-history
 bindkey -M menuselect '^n' vi-forward-blank-word
-# TODO: 
+# TODO:
 # -patch zsh to support custom widgets
 # -patch zsh to support vi-backward-blank-word-first natively
 # vi-backward-blank-word-first() {
@@ -770,12 +795,12 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
 zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _prefix _approximate tmux_pane_words
-# zstyle ':completion:*' completer _complete 
+# zstyle ':completion:*' completer _complete
 zstyle ':completion:*:approximate:::' max-errors 6 numeric
 zstyle ':completion:*:matches' group yes
 zstyle ':completion:*' group-name '' # Show each type of match in its own group
@@ -808,7 +833,7 @@ zstyle ':completion:*:descriptions' format $'\e[01;32m -- %d --\e[0m'
 
 setopt menu_complete
 # }}}
- 
+
 # Shell options {{{
 autoload zmv
 autoload run-help
@@ -819,7 +844,7 @@ set push
 setopt cdablevars
 # setopt autonamedirs
 setopt histsubstpattern
-setopt noclobber
+# setopt noclobber
 stty -ixon
 
 # TODO: Think about if this is a really a safe setup
@@ -860,7 +885,7 @@ fi
 (( $TMOUT )) && print -n $ZSH_LOCK_STATUS
 # set +x
 
-# # Try to save tmux from OOM 
+# # Try to save tmux from OOM
 # if [[ -n $TMUX && ! $(uname -a) =~ Microsoft ]]; then
 #     local tmux_pid=${$(ps -o pid,cmd --ppid 1 | command grep tmux)[1]}
 #     if [[ -n $tmux_pid ]]; then
@@ -883,7 +908,7 @@ if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting
 	ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
 	ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
 elif zsh_source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
-	# fast-theme default 
+	# fast-theme default
 	FAST_HIGHLIGHT[use_async]=1
 fi
 # }}}
@@ -921,12 +946,12 @@ nsee() {
 	[[ -f /var/run/netns/$1 ]] || { print usage: $0 netns; ls -1 /var/run/netns/; return; }
 	ns=$1 sudo -E ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- zsh
 }
-pp() { 
-    if [[ -z $* ]]; then 
-	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree 
-    else 
-	sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*" 
-    fi
+pp() {
+	if [[ -z $* ]]; then
+		sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree
+	else
+		sudo --preserve-env=HOME,TMUX $EDITOR +ProcessTree "+/${*:s, ,.\*,}" "+FzfLines $*"
+	fi
 }
 ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
@@ -1071,36 +1096,44 @@ zloc() {
 	fc -p $(zloc_file)
 }
 
-alias -g 00='0.0.0.0'
-alias -g 000='0.0.0.0/0'
-alias -g 0s='::1'
-alias -g 0s0='::1/0'
-alias -g 0m='| tr \\0 \\n'
 alias -g 0,="| perl -pe 's:\0:, :g'"
-alias -g C="| column -t"
-alias -g Ct="| column -nts $'\t'"
+alias -g 000='0.0.0.0/0'
+alias -g 00='0.0.0.0'
+alias -g 0m='| tr \\0 \\n'
+alias -g 0s0='::1/0'
+alias -g 0s='::1'
+alias -g BB=' | base64'
+alias -g BBD='| base64 -d -i | hexdump -C | less'
 alias -g C,="| column -nts,"
+alias -g C="| column -t"
 alias -g Cc="| column -nts,"
 alias -g Cs="| column -n"
+alias -g Ct="| column -nts $'\t'"
 alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete ANSI (mostly)
 alias -g DH="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g DN2="2> /dev/null"
+alias -g 2dn="2> /dev/null"
 alias -g DN="> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: ' -e 's: $::' " # Delete and squeeze whitespace, i.e. make one-liners
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
-alias -g JS=' | '$EDITOR' -c "nmap Q :q!<cr>" "+se ft=json" "+syntax on" "+se foldenable" "+se fdl=2" -'
-alias -g LV=' |& lnav'
+alias -g E2='2>&1 '
+alias -g E@='2>&1 '
+alias -g GE="| grep -i -E '^'"
+alias -g J="| jq '.[]'"
 alias -g LQ=' |& lnav -q'
+alias -g LV=' |& lnav'
 alias -g LVT=' |& lnav -t'
+alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
+alias -g S='| sort'
 alias -g SD2T="|sed -re 's/ - /\t/'"
 alias -g SE="2>&1"
-alias -g S='| sort'
 alias -g SN='| sort -n'
 alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
+alias -g SS='| strings -t x -e S | less'
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
@@ -1108,18 +1141,16 @@ alias -g UU='| sort | uniq'
 alias -g WL=' | wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
-alias -g X='| xargs'
 alias -g X0='| xargs -0'
-# TODO: use rg with rust regex instead
-alias -g gg='| grep -i -- '
-alias -g GE="| grep -i -E '^'"
+alias -g X='| xargs'
+alias -g gg='| grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
-alias -g J="| jq '.[]'"
-alias -g hs="|hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-alias -g xr='|xxd -r -p'
-alias -g E2='2>&1 '
-alias -g E@='2>&1 '
+alias -g hh='| hexdump -C | less'
+alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
+alias -g hx='| hexdump -C | less'
+alias -g lqq=' |& lnav -q'
+alias -g xr='| xxd -r -p'
 
 has() {
   local verbose=false
@@ -1144,7 +1175,11 @@ min_version() {
 if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
 	export VISUAL=nvim
 else
-	export VISUAL=vim
+	if has vimx; then
+		export VISUAL=vimx
+	else
+		export VISUAL=vim
+	fi
 fi
 
 err() {
@@ -1230,8 +1265,8 @@ fi
 c() {
 	[[ $# = 0 ]] && { die "usage: c files_and_directories"; return }
 	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
-	[[ $1 = 1 ]] && { cc $1; return }
-	for f in $@; do 
+	[[ $# = 1 ]] && { cc $1; return }
+	for f in $@; do
 		cc $f | sed "s|^|$f:\t|"
 	done
 }
@@ -1241,7 +1276,7 @@ expand_ealias_skip=(l ls)
 expand_ealias() {
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
-	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias 
+	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias
 	# zle expand-word
 	zle magic-space
 }
@@ -1275,27 +1310,27 @@ bindkey_func '^x^e' env_vars
 # }}}
 
 print_variables() {
-    zparseopts -D -A opts h
-    show_hidden=$+opts[-h]
-    vars=(${*:-${(ko)parameters}})
-    for var in $vars; do
+	zparseopts -D -A opts h
+	show_hidden=$+opts[-h]
+	vars=(${*:-${(ko)parameters}})
+	for var in $vars; do
 	type=${(tP)var}
 	print -n -- $var \($type, ${(P)#var}\)
 	if [[ $type = *hideval* && $show_hidden = 0 ]]; then
-	    print  \ = VALUE HIDDEN
-	    continue
+		print  \ = VALUE HIDDEN
+		continue
 	fi
 	if [[ $type = *assoc* ]]; then
 	    print -n : \(
 	    for k v in ${(kvP)var}; do
-			print -n -- $k: $v,\ 
+			print -n -- "$k: $v, "
 	    done
 	    print \)
 	else
 		print -- \ = ${(P)var} | tr \\n\\t ' ' | tr -s ' '; print
-	    # print -- \ = "${(P)var}" 
+	    # print -- \ = "${(P)var}"
 	fi
-    done 
+    done
 }
 compdef _parameter print_variables
 
@@ -1315,20 +1350,24 @@ zsh_source ~/.fzfrc
 nmn() {
 	targets=()
 	excludes=()
-	for if in $(command ls -1 /sys/class/net); do 
-		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then 
+	for if in $(command ls -1 /sys/class/net); do
+		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then
 			targets+=$(ifdata -pN $if)/24
 			excludes+=$(ifdata -pa $if)
 		fi
-	done 
+	done
 	print_variables targets excludes
 	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
 }
 
-at() {
-	# print "at $*" | socat - /dev/modem,crnl
-	print "at $*" | sudo socat - /dev/modem,crnl
+_at() {
+	cmd=$*
+	[[ ${cmd:0:2} = "at" ]] && cmd=${cmd:2}
+	print at $cmd | sudo socat - /dev/modem,crnl
 }
+alias AT='noglob _at'
+alias at='noglob _at'
+alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 type keychain > /dev/null && eval $(keychain --eval --quiet)
@@ -1338,7 +1377,7 @@ type keychain > /dev/null && eval $(keychain --eval --quiet)
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
-[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)." 
+[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)."
 rnd() {(($[RANDOM%${1:-2}]>${2:-0}))}
 # fz() { [ -f $1 -a -r $1 ] && mkdir -p $1.DIR && fuse-zip $1 $1.DIR && cd $1.DIR }
 fz() { [ -f $1 -a -r $1 ] && mkdir -p $1:t.DIR && archivemount $1 $1:t.DIR && cd $1:t.DIR && $EDITOR . }
@@ -1346,7 +1385,7 @@ fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
 
-gcdd() { 
+gcdd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
 		cd $(git rev-parse --git-dir)
 	else
@@ -1354,12 +1393,41 @@ gcdd() {
 	fi
 }
 
-gcd() { 
+gcd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
-		cd $(git rev-parse --show-toplevel) 
+		cd $(git rev-parse --show-toplevel)
 	else
 		echo "Not in git work tree."
 	fi
 }
 
-[ -e ~/.environment.local ] && source ~/.environment.local 
+mount_dev() {
+	[[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
+	sudo sfdisk -J $1  |
+		jq -r '.partitiontable.partitions[].node' |
+		while read dev; do 
+			mnt=mnt/${dev#/dev/}
+			mkdir -p $mnt && sudo mount -v $dev $mnt
+		done
+}
+compdef _mount mount_dev
+alias uma='sudo umount mnt/*'
+
+mount_img() {
+	[[ -r $1 ]] || { echo "usage: $0 image"; return; }
+	img=$1
+	sfdisk -J $img |
+		jq -r '.partitiontable.partitions[] | ["mnt/"+.node, .start * 512] | @tsv' |
+		while read node offset; do
+			dev=$(sudo losetup --show -J --verbose --find --offset $offset $img) &&
+			mkdir -p $node &&
+			sudo mount $dev $node &&
+			echo "Mounted $node ($dev)"
+		done
+}
+	
+mvA() {
+    mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
+}
+zsh_source -q ~/.android-serial
+[ -e ~/.environment.local ] && source ~/.environment.local

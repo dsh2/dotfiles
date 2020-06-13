@@ -694,7 +694,6 @@ Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 Plug 'frioux/vim-regedit'
 " }}}
-Plug 'idanarye/vim-unstack'
 call plug#end()
 " }}}
 " Global options {{{
@@ -775,7 +774,9 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 " Mappings {{{
 " nmap Q :qall<cr>
 nmap Q :cq<cr>
-nmap <leader>J :set ft=json<cr>:Autoformat<cr>
+nmap <leader>J :StripAnsi<cr>:set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
+nmap <leader>X :StripAnsi<cr>:set ft=xml<cr>:Autoformat<cr>
+nmap <leader>Y :StripAnsi<cr>:set ft=yaml<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
 map  
 nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>

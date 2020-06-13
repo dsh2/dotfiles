@@ -10,7 +10,7 @@ let vim_plug_available = 0
 let vim_plug_path='~/.local/share/nvim/site/autoload/plug.vim'
 let vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let vim_plug_getters = [
-			\ { 'name': 'curl', 'command': '!curl --fail --location --create-dirs --output ' . vim_plug_path .  " " . vim_plug_url }, 
+			\ { 'name': 'curl', 'command': '!curl --fail --location --create-dirs --output ' . vim_plug_path .  " " . vim_plug_url },
 			\ { 'name': 'wget', 'command': '!wget' },
 			\]
 
@@ -28,9 +28,9 @@ else
 	let vim_plug_available = 1
 endif
 
+" Plugins {{{
 if vim_plug_available
 	call plug#begin('~/.local/share/nvim/vim-plug')
-	" Plugins {{{
 	Plug 'junegunn/fzf' "{{{
 	Plug 'junegunn/fzf.vim'
 	let g:fzf_prefer_tmux = 0
@@ -107,6 +107,7 @@ if vim_plug_available
 	Plug 'tpope/vim-fugitive' "{{{
 	Plug 'tpope/vim-rhubarb'
 	Plug 'tommcdo/vim-fubitive'
+	" }}}
 	" TODO: Find out why on-load tag does not work
 	" Plug 'idanarye/vim-merginal', {'on': 'MerginalToggle'} "{{{
 	Plug 'idanarye/vim-merginal' "{{{
@@ -122,7 +123,7 @@ if vim_plug_available
 	nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
 	nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
 	nmap <leader>gb :Gblame<cr>
-	nmap <leader>gB :Gbrowse<cr>
+	nmap <leader>gB vap:Gbrowse<cr>
 	vmap <leader>gB :Gbrowse<cr>
 	nmap <leader>gp :Gpush<cr>
 	nmap <leader>gw :Gwrite<cr>
@@ -188,7 +189,7 @@ if vim_plug_available
 	highlight GitGutterAdd ctermbg=black
 	map <leader>gG :GitGutterToggle<cr>
 	" }}}
-	Plug 'junegunn/vim-github-dashboard', {'on': 'GHActivity'} "{{{
+	Plug 'junegunn/vim-github-dashboard' "{{{
 	let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
 	" }}}
 	Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
@@ -306,7 +307,7 @@ if vim_plug_available
 	nmap <leader>tc :tabclose<cr>
 	" }}}
 	Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
-	map <leader>F :Ranger<cr>
+	map <leader>ff :Ranger<cr>
 	"}}}
 	Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
 	nnoremap <F4> :MundoToggle<cr>
@@ -438,8 +439,8 @@ if vim_plug_available
 	"         \    'args': ['start', '{browser}', '{uri}']}
 	"         \]
 	"}}}
-	Plug 'dsh2/tagbar' " ", {'on': 'TagbarToggle'}  " {{{
-	Plug 'hushicai/tagbar-javascript.vim'
+	Plug 'dsh2/tagbar' " ", {'on': 'TagbarToggle'}  
+	Plug 'hushicai/tagbar-javascript.vim' " {{{
 	let g:tagbar_autoclose = 0
 	" TODO: Add support for percent instead of number of characters
 	let g:tagbar_width = 40
@@ -547,6 +548,7 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
+	autocmd vimrc FileType asn setlocal commentstring=--\ %s
 	autocmd vimrc FileType config,expect,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	nmap gcC yygccp
 	"}}}
@@ -562,6 +564,7 @@ if vim_plug_available
 	" TODO: Add more preview text, squece as much content as possible?
 	let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
 	"}}}
+	Plug 't9md/vim-quickhl'
 	Plug 'dsh2/HiCursorWords' "{{{
 	let g:HiCursorWords_delay = 10
 	let g:HiCursorWords_hiGroupRegexp = ''
@@ -584,7 +587,7 @@ if vim_plug_available
 	Plug 'vim-scripts/LargeFile'"{{{
 	let g:LargeFile = 50
 	set synmaxcol=2048"}}}
-	Plug 'w0rp/ale', {'for': 'cpp'} "{{{
+	Plug 'w0rp/ale'  "{{{
 	autocmd vimrc FileType cpp nmap <leader><leader> :ALEGoToDefinitionInVSplit<cr>
 	autocmd vimrc FileType cpp nmap <leader> :ALEGoToDefinitionInSplit<cr>
 	autocmd vimrc FileType cpp nmap  :ALEGoToDefinition<cr>
@@ -597,9 +600,10 @@ if vim_plug_available
 	let g:ale_keep_list_window_open = 1
 	let g:ale_fix_on_save = 1
 	let g:ale_lint_on_enter = 1
-	let g:ale_lint_on_text_changed = "never"
-	let g:ale_open_list = "never"
-	let g:ale_go_gopls_executable="/home/dsf/src/GO/bin/gopls"
+	" let g:ale_lint_on_text_changed = "never"
+	let g:ale_lint_on_text_changed = "always"
+	" let g:ale_open_list = "never"
+	let g:ale_open_list = "always"
 	" }}}
 	Plug 'machakann/vim-highlightedyank'"{{{
 	let g:highlightedyank_highlight_duration = 333
@@ -607,8 +611,13 @@ if vim_plug_available
 	    map y <Plug>(highlightedyank)
 	endif
 	"}}}
-	Plug 'szw/vim-g'"{{{
-	map <leader>G :Google<cr>"}}}
+	Plug 'derekwyatt/vim-fswitch'"{{{
+	autocmd vimrc BufEnter *.h let b:fswitchdst = 'cc' | let b:fswitchlocs = '../inc'
+	autocmd vimrc BufEnter *.cc let b:fswitchdst = 'h' | let b:fswitchlocs = '../inc'
+	let g:fsnonewfiles="off"
+	nmap <silent> <Leader>of :FSHere<cr>
+	nmap <silent> cof :FSHere<cr>
+	"}}}
 	" Plug tmux {{{
 	Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 	autocmd vimrc BufRead tmux.conf set filetype=tmux
@@ -636,63 +645,20 @@ if vim_plug_available
 	Plug 'reedes/vim-colors-pencil'
 	Plug 'tomasr/molokai'
 	Plug 'xolox/vim-colorscheme-switcher'
-	" Plug 'govindkrjoshi/CSApprox'
-	" Plug 'KevinGoodsell/vim-csexact'
-	" Plug 'AlessandroYorba/Monrovia'
 	" }}}
-	" Plug rest... {{{
-	Plug 'derekwyatt/vim-fswitch'"{{{
-	autocmd vimrc BufEnter *.h let b:fswitchdst = 'cc' | let b:fswitchlocs = '../inc'
-	autocmd vimrc BufEnter *.cc let b:fswitchdst = 'h' | let b:fswitchlocs = '../inc'
-	let g:fsnonewfiles="off"
-	nmap <silent> <Leader>of :FSHere<cr>
-	nmap <silent> cof :FSHere<cr>
-	"}}}
-	Plug 'tommcdo/vim-exchange'
-	Plug 'robbles/logstash.vim'
-	Plug 'junegunn/vim-easy-align'
-	Plug 'actionshrimp/vim-xpath'
-	Plug 'tpope/vim-abolish'
-	Plug 'nfnty/vim-nftables'
-	Plug 'jremmen/vim-ripgrep'
 	Plug 'mogelbrod/vim-jsonpath'" {{{
 	let g:jsonpath_register = '+'
 	"}}}
-	Plug 'pedrohdz/vim-yaml-folds'
 	Plug 'matze/vim-ini-fold' "{{{
 	autocmd vimrc BufNewFile,BufReadPost wg*\.conf,*.nmconnection,*/NetworkManager/system-connections/* setfiletype dosini"
 	"}}}
-	Plug 'tpope/vim-bundler'
-	Plug 'machakann/vim-highlightedundo'"{{{
+	Plug 'machakann/vim-highlightedundo' "{{{
 	let g:highlightedundo#highlight_mode=2
 	nmap u <Plug>(highlightedundo-undo)
 	nmap U <Plug>(highlightedundo-redo)
 	nmap g- <Plug>(highlightedundo-gminus)
 	nmap g+ <Plug>(highlightedundo-gplus)
 	"}}}
-	Plug 'tpope/vim-endwise'
-	Plug 'tpope/vim-rails'
-	" Plug 'tpope/vim-sleuth'
-	Plug 'Shougo/echodoc.vim'
-	let g:echodoc_enable_at_startup = 1
-	" let g:echodoc#type = 'virtual'
-	" let g:echodoc#type = 'echo'
-	let g:echodoc#type = 'signature'
-	Plug 'Quramy/tsuquyomi'
-	Plug 'tommcdo/vim-exchange'
-	Plug 'szw/vim-dict'
-	Plug 'google/vim-searchindex'
-	Plug 'tpope/vim-surround'
-	Plug 'tpope/vim-repeat'
-	Plug 'dsh2/vim-CtrlXA'
-	Plug 'Valloric/vim-operator-highlight'
-	Plug 'tmhedberg/matchit'
-	Plug 'chrisbra/Colorizer'
-	Plug 'chrisbra/Recover.vim'
-	Plug 'StanAngeloff/php.vim'
-	Plug 'rayburgemeestre/phpfolding.vim'
-	Plug 'christoomey/vim-sort-motion'
-	Plug 'christoomey/vim-system-copy'
 	Plug 'fatih/vim-go'"{{{
 	let g:go_def_mode='gopls'
 	let g:go_info_mode='gopls'
@@ -728,8 +694,24 @@ if vim_plug_available
 	let g:go_info_mode = 'guru'
 	let g:go_fmt_command = "goimports"
 	" }}}
-	" Plug 'dkprice/vim-easygrep'
-	Plug 'dsh2/vim-unimpaired'
+	Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
+
+	let g:jedi#goto_stubs_command = ''
+	let g:jedi#auto_close_doc = 0
+	let g:jedi#completions_command = "<C-space>"
+	let g:jedi#goto_command = "<c-]>"
+	let g:jedi#show_call_signatures = 2
+	let g:jedi#show_call_signatures_delay = 0
+	let g:jedi#smart_auto_mappings = 1
+	let g:jedi#squelch_py_warning = 1
+	let g:jedi#use_splits_not_buffers = ""
+	let g:jedi#use_tabs_not_buffers = 1
+
+	" let g:jedi#force_py_version = 3.4
+	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
+	" Plug 'nvie/vim-flake8'
+	" Plug 'xolox/vim-pyref'
+	" }}}
 	" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' } " {{{
 	" augroup manlaunchtoc
 	"     autocmd!
@@ -744,9 +726,44 @@ if vim_plug_available
 	"     endif
 	" augroup end
 	" }}}
-
+	Plug 'Shougo/echodoc.vim'"{{{
+	let g:echodoc_enable_at_startup = 1
+	" let g:echodoc#type = 'virtual'
+	" let g:echodoc#type = 'echo'
+	let g:echodoc#type = 'signature'"}}}
+	" Plug rest... {{{
+	Plug 'terryma/vim-expand-region'
+	Plug 'mhinz/vim-rfc'
+	Plug 'nakal/vim-smarttabs'
+	Plug 'bfrg/vim-cpp-modern'
+	Plug 'tommcdo/vim-exchange'
+	Plug 'robbles/logstash.vim'
+	Plug 'junegunn/vim-easy-align'
+	Plug 'actionshrimp/vim-xpath'
+	Plug 'tpope/vim-abolish'
+	Plug 'nfnty/vim-nftables'
+	Plug 'jremmen/vim-ripgrep'
+	Plug 'tpope/vim-endwise'
+	Plug 'tpope/vim-rails'
+	Plug 'pedrohdz/vim-yaml-folds'
+	Plug 'tpope/vim-bundler'
+	Plug 'Quramy/tsuquyomi'
+	Plug 'tommcdo/vim-exchange'
+	Plug 'szw/vim-dict'
+	Plug 'google/vim-searchindex'
+	Plug 'tpope/vim-surround'
+	Plug 'tpope/vim-repeat'
+	Plug 'dsh2/vim-CtrlXA'
+	Plug 'Valloric/vim-operator-highlight'
+	Plug 'tmhedberg/matchit'
+	Plug 'chrisbra/Colorizer'
+	Plug 'chrisbra/Recover.vim'
+	Plug 'StanAngeloff/php.vim'
+	Plug 'rayburgemeestre/phpfolding.vim'
+	Plug 'dsh2/vim-unimpaired'
+	Plug 'christoomey/vim-sort-motion'
+	Plug 'christoomey/vim-system-copy'
 	Plug 'embear/vim-foldsearch'
-	Plug 'ervandew/matchem'
 	Plug 'ervandew/matchem'
 	Plug 'junegunn/rainbow_parentheses.vim'
 	Plug 'lzap/vim-selinux', {'for': 'te'}
@@ -758,6 +775,7 @@ if vim_plug_available
 	Plug 'tpope/vim-eunuch'
 	Plug 'tpope/vim-rsi'
 	Plug 'tpope/vim-tbone'
+	Plug 'tpope/vim-abolish'
 	Plug 'vim-scripts/ReplaceWithRegister'
 	Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
 	Plug 'vim-scripts/info.vim', {'on': 'Info'}
@@ -765,20 +783,8 @@ if vim_plug_available
 	Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 	Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 	Plug 'frioux/vim-regedit'
-	Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
-	let g:jedi#completions_command = "<C-space>"
-	let g:jedi#goto_command = "<c-]>"
-	let g:jedi#auto_close_doc = 0
-	let g:jedi#show_call_signatures = 2
-	let g:jedi#show_call_signatures_delay = 0
-	let g:jedi#use_tabs_not_buffers = 0
-	let g:jedi#use_splits_not_buffers = ""
-	let g:jedi#squelch_py_warning = 1
-	" let g:jedi#force_py_version = 3.4
-	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
-	" Plug 'nvie/vim-flake8'
-	" Plug 'xolox/vim-pyref'
-	" }}}
+	"}}}
+	Plug 'Shougo/deoplete.nvim' " {{{
 	let g:deoplete#enable_at_startup = 0
 	autocmd vimrc InsertEnter * call deoplete#enable()
 	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -812,6 +818,7 @@ if vim_plug_available
 	Plug 'ujihisa/neco-look'
 	Plug 'deoplete-plugins/deoplete-jedi'
 	call plug#end()
+
 	call deoplete#custom#option({
 		\ 'auto_refresh_delay': 100,
 		\ 'camel_case': v:true,
@@ -844,7 +851,9 @@ if vim_plug_available
 	call deoplete#custom#source('emoji', 'filetypes', [])
 	call deoplete#custom#source('emoji', 'converters', ['converter_emoji'])
 	call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
+	"}}}
 endif
+"}}}
 " Global options {{{
 set autoindent
 set autowrite
@@ -918,7 +927,7 @@ set undodir=~/.vim/undodir/
 set nofoldenable
 set undofile
 set updatetime=500
-set virtualedit=all
+" set virtualedit=all
 set wildignore=*~,*.o,*.obj,*.aux
 set wildmenu
 set wildmode=list:longest,full
@@ -926,19 +935,39 @@ autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 autocmd vimrc BufNewFile,BufReadPost *.run setfiletype expect
 " }}}
+" Mappings {{{
+nnoremap <leader>D :set spelllang=de<cr>
+map <leader><c-r> :update<cr>:source %<cr>
+" gdb helper {{{
 
+nmap <m-8> :bot split term://$SHELL<cr>i
+" nmapemap <cr> i
+" tnoremap <leader><c-k> ?@(gdb)
+" tnoremap <c-k> ?@(gdb)
+
+tnoremap <expr> <c-s-v> '<c-\><c-n>"'.nr2char(getchar()).'pi'
+tnoremap <c-[> <c-\><c-n>
+
+nnoremap ,w :call TermDebugSendCommand('where')<CR>
+nnoremap <m-s-r> :Stop<cr>
+nnoremap <f9> :Break<cr>
+nnoremap <leader>B :Break<cr>
+nnoremap <s-f10> :Over<cr>
+nnoremap <s-f11> :Step<cr>
+nnoremap <c-s-f11> :Finish<cr>
+" }}}
 cabbr BB <buffer>
 nmap <nowait> <leader>s :update<cr>
 " nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
 map <a-s> <c-o>:update<cr><esc>
 
-" Mappings {{{
-map <c-s> :Redir let<cr>gsae:se ft=conf<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
+map <c-s> :Redir let<cr>gsae:se ft=conf buftype=nofile<cr>:se ts=43<cr>:%s/^\S*\zs\s\+/\t/<cr>gg:setl nohlsearch<cr>:FzfBLines<cr>
 nmap Q :cq<cr>
 map <leader>S :syn off \| syn on \| se foldenable foldlevel=2<cr>
-nmap <leader>J :set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
-nmap <leader>X :set ft=xml<cr>:Autoformat<cr>
+nmap <leader>J :StripAnsi<cr>:set ft=json<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
+nmap <leader>X :StripAnsi<cr>:set ft=xml<cr>:Autoformat<cr>
+nmap <leader>Y :StripAnsi<cr>:set ft=yaml<cr>:Autoformat<cr>:syn off \| syn on \| se foldenable foldlevel=2<cr>
 map  
 map  :bnext<cr>
 map <c-.> :bprev<cr>
@@ -948,7 +977,7 @@ nmap <nowait> <leader>s :update<cr>
 " TODO: PWD vs. CWD
 " TODO: merge witih neovim rc files
 " map <silent><leader>R :source ~/.config/nvim/init.vim \| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
-" TODO: source scriptname instead 
+" TODO: source scriptname instead
 map <silent><leader>R :update<cr>:source ~/.config/nvim/init.vim<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
 " prepend space on <c-space>?
@@ -1031,28 +1060,48 @@ endfunction
 command! YankUp :call YankUp(@")
 nmap YY :YankUp<cr>
 
-map Ypa :call YankUp(expand("%:p"))<cr>
+
+" Yank path 
+" File path absolute
 map YP :call YankUp(expand("%:p"))<cr>
+map Ypa :call YankUp(expand("%:p"))<cr>
 map Ypp :call YankUp(expand("%:p"))<cr>
+
+" File name
+map Ypt :call YankUp(expand("%:t"))<cr>
+
+" File name + line number
 map Ypl :call YankUp(expand("%:t") . ":" . line("."))<cr>
 map Ypn :call YankUp(expand("%:t") . ":" . line("."))<cr>
+
+" File path absolute + line number
 map YpL :call YankUp(expand("%:p") . ":" . line("."))<cr>
 map YpN :call YankUp(expand("%:p") . ":" . line("."))<cr>
-map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
-map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
-map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
-map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+
+" File path relative to cwd
 map Ypr :call YankUp(expand("%:."))<cr>
-map Ypt :call YankUp(expand("%:t"))<cr>
 map Yp. :call YankUp(expand("%:."))<cr>
-map Yph :call YankUp(expand("%:h"))<cr>
-" map YpH :echo("set path+=" . expand("%:h"))<cr>set path?<cr>
-map YpH :execute("set path+=" . expand("%:h"))<cr>:set path?<cr>
-map Ypc :execute("set path+=" . expand("%:h"))
-" TODO: add current function (c, cpp, py, etc.)
+
+" File directory path absolut
+map Ypd :call YankUp(expand("%:p:h"))<cr>
+map Yph :call YankUp(expand("%:p:h"))<cr>
+
+" File name + current tag
+map Ypf :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+" File path absolute + current tag
+map YpF :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s', 'f'))<cr>
+" File name + current tag + relative line number
+map Yps :call YankUp(expand("%:t") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+" File path + current tag + relative line number
+map YpS :call YankUp(expand("%:p") . ":" . tagbar#currenttag('%s:%l', 'f'))<cr>
+
+" Add file path to search path
+map YpH :execute("set path+=" . expand("%:p:h"))<cr>:set path?<cr>
+" Remove file path to search path
+map Ypx :execute("set path-=" . expand("%:p:h"))<cr>:set path?<cr>
 " }}}
 " Special operations {{{
-" Setup colorschema{{{
+" Setup colorschema {{{
 " au BufEnter,BufNew,OptionSet * if &diff | let g:solarized_diffmode="normal" | colorscheme solarized | set diffopt= | else | colorscheme Tomorrow-Night | endif
 " TODO:
 " -output name of schema
@@ -1086,13 +1135,13 @@ function! FoldExprSpace(lnum)
 endfunction
 set foldexpr=FoldExprSpace(v:lnum)
 "}}}
-" Open log files at the bottom of the file{{{
+" Open log files at the bottom of the file {{{
 " TODO: autocmd.txt is not so clear about the the interpretation of slashes in face of multiple comma-separated {pat}s
 autocmd vimrc BufReadPost *.log normal G
 autocmd vimrc BufReadPost */log/* normal G
 autocmd vimrc BufReadPost *.log :set filetype=messages
 "}}}
-" Restore last position in file upon opening a file{{{
+" Restore last position in file upon opening a file {{{
 autocmd BufReadPost * call RestorePosition()
 function! RestorePosition()
     if !exists("b:_goto_pos") || b:_goto_po
@@ -1110,7 +1159,7 @@ endfunction
 "}}}
 " Configure help system {{{
 runtime! ftplugin/man.vim
-nmap K :exe "Vman " . expand("<cword>") <CR>
+nmap K :exe "Man " . expand("<cword>") <CR>
 autocmd vimrc FileType man set sidescrolloff=0
 autocmd vimrc FileType man wincmd L
 let g:ft_man_open_mode = 'vert'
@@ -1152,13 +1201,8 @@ nmap <leader>zz ]seas
 nmap zZ :spellr<cr>
 set lazyredraw
 au BufRead *.md set filetype=markdown | if expand("%:p") =~ '.*/Notizen/.*' | echo "spell german" | setl spelllang="de_20" | else | echo "NO german" | endif
+autocmd vimrc BufReadPost *.mk :set filetype=make
 " }}}
-" Function: removes trailing spaces {{{
-command! RemoveTrailingSpaces call RemoveTrailingSpaces()
-function! RemoveTrailingSpaces()
-    %s/\s*$//
-endfunction
-"}}}
 " Function: page output of vim commands {{{
 command! -nargs=1 -complete=command Redir call <SID>Redir(<f-args>)
 function! s:Redir(cmd) abort
@@ -1203,6 +1247,7 @@ endfunction
 call s:create_toggle_map('t', 'match(&colorcolumn, "+1")>=0', 'set colorcolumn-=+1', 'set colorcolumn+=+1')
 
 autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
+autocmd vimrc BufRead,BufNewFile *.ipy set filetype=python
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
@@ -1370,17 +1415,16 @@ function! ProcessTree(...)
     if bufname("") == "HEADER" | bdelete! | endif
     " Move header into separate window
     1new HEADER | set nobuflisted noswapfile | wincmd k | norm "aP0
-    set buftype=nofile nonumber norelativenumber nowrap 
+    set buftype=nofile nonumber norelativenumber nowrap
     let &foldcolumn=g:pst_fold_columns
     wincmd j
     execute "norm " . l:current_line_num . "G"
-    set nowrap 
+    set nowrap
     let &foldcolumn=g:pst_fold_columns
-    return 
     set foldexpr=PsFoldExpression(v:lnum)
     set foldmethod=expr
     let &foldlevel=l:current_fold_level
-    set foldenable
+    " set foldenable
     " norm zv
     " call PsEnableCsvVim()
 endfunction
@@ -1388,25 +1432,25 @@ command! -nargs=* ProcessTree call ProcessTree(<f-args>)
 
 let s:StatusbarHidden = 0
 function! StatusbarToggle()
-    if s:StatusbarHidden  == 0
-	let s:StatusbarHidden = 1
-	set noshowmode
-	set noruler
-	set laststatus=0
-	set noshowcmd
-    else
-	let s:StatusbarHidden = 0
-	set showmode
-	set ruler
-	set laststatus=2
-	set showcmd
-    endif
+	if s:StatusbarHidden  == 0
+		let s:StatusbarHidden = 1
+		set noshowmode
+		set noruler
+		set laststatus=0
+		set noshowcmd
+	else
+		let s:StatusbarHidden = 0
+		set showmode
+		set ruler
+		set laststatus=2
+		set showcmd
+	endif
 endfunction
 command! -nargs=0 StatusbarToggle call StatusbarToggle()
 function! KeepView(cmd)
-    let w = winsaveview()
+	let w = winsaveview()
 	exec a:cmd
-    call winrestview(w)
+	call winrestview(w)
 endfunction
 cabbr BB <buffer>
 map <leader>00 :call KeepView('silent! %s/\%x0/\r/')<cr>
@@ -1422,12 +1466,12 @@ map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 map <c-w>k :close<cr>
 map <c-w><c-k> :close<cr>
 
-let cmd_prefix='ssh esim sudo qmicli -d /dev/cdc-wdm1'
+let cmd_prefix='ssh quec sudo qmicli -d /dev/cdc-wdm0'
 " let cmd_prefix='qmicli -d /dev/cdc-wdm0'
 " let cmd_prefix='sudo mbimcli -d /dev/cdc-wdm0'
 " map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>:echo s<cr>:let cmd="!tmux send -t 2 \"echo " . shellescape(cmd_prefix . " " . s) . "\" Enter"<cr>:echo cmd<cr>:execute(cmd)<cr>
 map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>
-	    \ :let @0=system(cmd_prefix . " " . s)<cr>
+	    \ :let @0=system(cmd_prefix . " " . s . " --device=/dev/cdc-wdm0")<cr>
 	    \ "0p<}
 " }}}
 " Prevent vim from moving cursor after leaving insert mode
@@ -1435,27 +1479,8 @@ map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>
 " au InsertLeave * call cursor([getpos('.')[1], getpos('.')[2]+1])
 " }}}
 " }}}
-
-tnoremap <expr> <c-s-v> '<c-\><c-n>"'.nr2char(getchar()).'pi'
-tnoremap <c-[> <c-\><c-n>
-
-nnoremap ,w :call TermDebugSendCommand('where')<CR>
-nnoremap <m-s-r> :Stop<cr>
-nnoremap <f9> :Break<cr>
-nnoremap <leader>B :Break<cr>
-nnoremap <s-f10> :Over<cr>
-nnoremap <s-f11> :Step<cr>
-nnoremap <c-s-f11> :Finish<cr>
-
-nnoremap <leader>D :set spelllang=de<cr>
-
-" nmapemap <cr> i
-" tnoremap <leader><c-k> ?@(gdb)
-" tnoremap <c-k> ?@(gdb)
-
+" Miscellaneous {{{
 autocmd vimrc BufReadPost *-strace*,strace\.* setfiletype strace
-
-map <leader><c-r> :update<cr>:source %<cr>
 
 function! ALEInformation()
     " TODO: Make this work
@@ -1479,24 +1504,6 @@ function! QFixToggle(forced)
 endfunction
 nmap <leader>q :QFixToggle<cr>
 
-nmap <m-8> :bot split term://$SHELL<cr>i
-
-" Using floating windows of Neovim to start fzf
-
-" function! FloatingFZF()
-"     let width = float2nr(&columns * 0.9)
-"     let height = float2nr(&lines * 0.6)
-"     let opts = { 'relative': 'editor',
-" 		\ 'row': (&lines - height) / 2,
-" 		\ 'col': (&columns - width) / 2,
-" 		\ 'width': width,
-" 		\ 'height': height }
-
-"     let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-"     call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
-" endfunction
-" let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-
 autocmd! FileType fzf
 autocmd  FileType fzf set laststatus=0 noshowmode noruler nonumber norelativenumber cmdheight=1
 	    \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
@@ -1512,10 +1519,6 @@ function! TweakQf(minheight, maxheight)
 	set nowrap
 endfunction
 
-" cabbr g Git
-" cabbr gco Git checkout
-" nmap g<space> :Git 
-" map <space><space><cr> :s/\s\+/\r/<cr>
 map <leader>_ :s/\s\+/\r/<cr>
 map <leader>_ :s/\s\+/\r/<cr>
 vmap <leader>_ :'<,'>s/\s\+/\r/<cr>
@@ -1527,8 +1530,8 @@ map <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
 
 function! ToggleOption(name)
-    silent execute "set " . a:name . "!"
-    execute "set " . a:name . "?"
+	silent execute "set " . a:name . "!"
+	execute "set " . a:name . "?"
 endfunction
 
 nmap <silent> com :call ToggleOption("modifiable")<cr>
@@ -1536,21 +1539,29 @@ nmap <silent> coR :call ToggleOption("readonly")<cr>
 nmap <silent> coe :call ToggleOption("eol")<cr>
 
 function! StripHtml()
-    if executable("w3m")
-	execute "%!w3m -s -dump -T text/html"
-    else
-	echoerr "TODO: Add some regex helper"
-    endif
+	if executable("w3m")
+		execute "%!w3m -s -dump -T text/html"
+	else
+		echoerr "TODO: Add some regex helper"
+	endif
 endfunction
 command! StripHtml call StripHtml()
 
-function ToggleTabsize()
-	if &ts == 8 
-		let &ts = 4 
-		let &sw = 4 
-	else 
-		let &ts = 8 
+function! ToggleTabsize()
+	if &ts == 8
+		let &ts = 4
+		let &sw = 4
+	else
+		let &ts = 8
 		let &sw = 8
 	endif
 endfunction
 nmap co8 :call ToggleTabsize()<cr>
+
+function! TrimWhitespace()
+	let l:save = winsaveview()
+	keeppatterns %s/\s\+$//e
+	call winrestview(l:save)
+endfunction
+command! TrimWhitespace call TrimWhitespace()
+"}}}
