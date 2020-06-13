@@ -1,0 +1,12 @@
+# vim: se ft=sshconfig:
+
+Host me
+HostName localhost
+Port 2299
+User dsh2
+
+IdentitiesOnly yes 
+IdentityFile ~/.ssh/hosts/me/id.pub
+
+# ControlPersist yes
+ControlPersist no
