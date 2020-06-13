@@ -32,6 +32,7 @@ alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON
 alias adkl=adbk
 alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
+alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
 alias add='adb devices -l'
@@ -90,7 +91,7 @@ alias glg='noglob git log'
 gcr() {
 	set -x
 	git clone --recursive --jobs=8 --verbose $1 &&
-		cd ${1:t} &&
+		cd ${${1:t}%%.git} &&
 		$EDITOR .
 	}
 
@@ -218,7 +219,7 @@ alias d='diff -u'
 alias vf=vimdiff.nvim
 alias vd=vimdiff.nvim
 alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
-alias wanip2='curl https://checkip.amazonaws.com'
+alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wan_name='dig +short -x $(wanip)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias pvv=print_variables
@@ -242,7 +243,7 @@ alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
 alias qq=qemu-system-x86_64
 alias qqi=qemu-system-i386
-alias qm=qmicli
+alias qm='sudo qmicli -p -d /dev/cdc-wdm0'
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
 alias qi=qemu-img
@@ -467,6 +468,7 @@ alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
+alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
 alias sshc='ssh -O check'
 alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
@@ -648,7 +650,7 @@ xdD() {
 	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
 	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
 }
-
+alias cdz=fzc
 
 alias sq=seq
 alias ca=cat
@@ -668,3 +670,6 @@ alias blc=bluetoothctl
 alias cm=command
 alias cmd=command
 alias un=unset
+alias psc='ps -O ppid,cgroup, '
+alias torr=torsocks
+alias um='sudo umount'
