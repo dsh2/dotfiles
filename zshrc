@@ -1429,3 +1429,4 @@ mvA() {
 }
 zsh_source -q ~/.android-serial
 [ -e ~/.environment.local ] && source ~/.environment.local
+p2x() { plistutil -i $1 -o $1.xml }
