@@ -117,7 +117,9 @@ bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
 # }}}
 # Start a browser {{{
 bindsym $ctrl+Return exec $browser
-bindsym $meta+n workspace new, exec i3-ws-enum, exec $browser
+bindsym $meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec i3-ws-enum,
+# TODO: Add delay such that new terminal show up on new workspace
+# bindsym $shift+$meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $terminal_tmux, exec i3-ws-enum,
 # }}}
 # }}}
 # Move focused container to workspace {{{
