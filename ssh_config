@@ -7,12 +7,8 @@ IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
 UpdateHostKeys ask
-# TODO: try to figure out if calling sshfs LocalCommand constitutes some kind of race condition or other bad idea
-PermitLocalCommand no
-LocalCommand (sleep 1; ssh -qO check %r@%n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p %r@%n: %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
 
 ControlMaster auto
-ControlPersist yes
 ControlPath ~/.ssh/control_master/%n-%p-%r
 
 # EscapeChar ^^
@@ -20,5 +16,5 @@ HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
 VisualHostKey yes
 
-Include ~/.ssh/config.local
-Include ~/.ssh/hosts/*/config
+Match exec "[ $(hostname) = p3-01964l ]"
+ControlPersist yes
