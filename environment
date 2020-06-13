@@ -74,7 +74,7 @@ export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache/
 
 # Editor
-export VISUAL=${VISUAL:-vim}
+export VISUAL=${VISUAL:-vimx}
 export EDITOR=$VISUAL
 export SUDO_EDITOR=$VISUAL
 
@@ -102,3 +102,4 @@ export WIRESHARK=/usr/bin/wireshark
 export XENVIRONMENT=$HOME/.Xresources
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
 export RIPGREP_CONFIG_PATH=~/.ripgreprc 
+export TSOCKS_CONF_FILE=~/.tsocks.conf 
