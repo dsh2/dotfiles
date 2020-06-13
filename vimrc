@@ -81,6 +81,7 @@ map <leader>lt :FzfFiletypes<cr>
 map <leader>w :FzfWindows<cr>
 " }}}
 Plug 'tpope/vim-fugitive' "{{{
+"}}}
 Plug 'tpope/vim-rhubarb'
 " HELP: Find out why the screwed up map works and the other one NOT!
 " nmap <leader>gd :Gvdiff<cr><c-w>l
@@ -647,6 +648,10 @@ Plug 'tomasr/molokai'
 " }}}
 " Plug rest... {{{
 Plug 'actionshrimp/vim-xpath'
+Plug 'christianrondeau/vim-base64' "{{{
+map [2 <leader>atob
+map ]2 <leader>btoa
+" }}}
 Plug 'tpope/vim-abolish'
 Plug 'jremmen/vim-ripgrep'
 Plug 'mogelbrod/vim-jsonpath'
