@@ -1,3 +1,6 @@
+Include ~/.ssh/hosts/*/config
+Include ~/.ssh/config.local
+
 AddKeysToAgent confirm
 StrictHostKeyChecking ask 
 IdentitiesOnly yes
