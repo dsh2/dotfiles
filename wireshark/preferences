@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 3.2.0.
+# Configuration file for Wireshark 3.2.4.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -66,11 +66,11 @@ gui.find_wrap: FALSE
 # (case-insensitive).
 gui.toolbar_main_style: TEXT
 
-# Check for updates (Windows only)
+# Check for updates (Windows and macOS only)
 # TRUE or FALSE (case-insensitive)
 #gui.update.enabled: TRUE
 
-# The type of update to fetch. You should probably leave this set to UPDATE_CHANNEL_STABLE.
+# The type of update to fetch. You should probably leave this set to STABLE.
 # One of: DEVELOPMENT, STABLE
 # (case-insensitive).
 #gui.update.channel: STABLE
@@ -238,6 +238,7 @@ gui.column.format:
 	"Encrypted Packet", "%Cus:wg.encrypted_packet:0:R",
 	"Has Private Key", "%Cus:wg.static.known_privkey:0:R",
 	"Sender", "%Cus:wg.sender:0:R",
+	"Random", "%Cus:tls.handshake.random:0:R",
 	"Info", "%i"
 
 ####### User Interface: Font ########
@@ -270,6 +271,10 @@ gui.layout_type: 2
 # Enable Packet List Separator
 # TRUE or FALSE (case-insensitive)
 gui.packet_list_separator.enabled: TRUE
+
+# Show column definition in packet list header
+# TRUE or FALSE (case-insensitive)
+#gui.packet_header_column_definition.enabled: TRUE
 
 # Show selected packet in the Status Bar
 # TRUE or FALSE (case-insensitive)
@@ -424,7 +429,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: deny tcp host fe80::ff:feca:fe13 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe13, deny tcp host fe80::ff:feca:fe12 any eq 0, deny tcp any eq 0 host fe80::ff:feca:fe12, deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70 any eq 0, deny tcp any eq 0 host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70, deny tcp host fe80::a89c:9c2c:d434:4c3d any eq 0, deny tcp any eq 0 host fe80::a89c:9c2c:d434:4c3d, deny tcp host 2003:d4:6f01:4180:10c:44eb:39f8:b88c any eq 0, deny tcp any eq 0 host 2003:d4:6f01:4180:10c:44eb:39f8:b88c, deny tcp host 11.11.11.1 any eq 0, deny tcp any eq 0 host 11.11.11.1, deny tcp host 13.13.13.1 any eq 0, deny tcp any eq 0 host 13.13.13.1, deny tcp host 13.13.13.1 any eq 0, deny tcp any eq 0 host 13.13.13.1, deny tcp host 12.12.12.1 any eq 0, deny tcp any eq 0 host 12.12.12.1, deny tcp host 12.12.12.1 any eq 0, deny tcp any eq 0 host 12.12.12.1, deny tcp host 192.168.2.101 any eq 0, deny tcp any eq 0 host 192.168.2.101, deny tcp host 192.168.2.111 any eq 0, deny tcp any eq 0 host 192.168.2.111, deny tcp host 192.168.2.2 any eq 0, deny tcp any eq 0 host 192.168.2.2, permit ip any any
+#extcap.ciscodump.remotefilter: 
 
 # Packets to capture
 # A string
@@ -504,7 +509,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not ((host fe80::ff:feca:fe13 or host fe80::ff:feca:fe12 or host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f01:4180:4b21:98f6:b4ea:6d70 or host fe80::a89c:9c2c:d434:4c3d or host 2003:d4:6f01:4180:10c:44eb:39f8:b88c or host 11.11.11.1 or host 13.13.13.1 or host 13.13.13.1 or host 12.12.12.1 or host 12.12.12.1 or host 192.168.2.101 or host 192.168.2.111 or host 192.168.2.2) and port 22)
+#extcap.sshdump.remotefilter: not port 22
 
 # Packets to capture
 # A string
@@ -4665,7 +4670,7 @@ ip.check_checksum: TRUE
 
 # Whether out-of-order segments should be buffered and reordered before passing it to a subdissector. To use this option you must also enable "Allow subdissector to reassemble TCP streams".
 # TRUE or FALSE (case-insensitive)
-#tcp.reassemble_out_of_order: FALSE
+tcp.reassemble_out_of_order: TRUE
 
 # Make the TCP dissector analyze TCP sequence numbers to find and flag segment retransmissions, missing segments and RTT
 # TRUE or FALSE (case-insensitive)
@@ -4818,7 +4823,7 @@ ip.check_checksum: TRUE
 
 # Redirect TLS debug to the file specified. Leave empty to disable debugging or use "-" to redirect output to stderr.
 # A path to a file
-#tls.debug_file: 
+tls.debug_file: /home/dsh2/.ssl/debug
 
 # Whether the TLS dissector should reassemble TLS records spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)

@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 3.2.3.
+# Configuration file for Wireshark 3.2.4.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -240,6 +240,7 @@ gui.column.format:
 	"Protocols in frame", "%Cus:frame.protocols:0:R",
 	"Static Public Key", "%Cus:wg.static:0:R",
 	"Receiver Static Public Key", "%Cus:wg.receiver_pubkey:0:R",
+	"Stream index", "%Cus:tcp.stream || udp.stream:0:R",
 	"Info", "%i"
 
 ####### User Interface: Font ########
@@ -430,7 +431,7 @@ capture.prom_mode: FALSE
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e any eq 0, deny tcp any eq 0 host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e, deny tcp host 192.168.2.100 any eq 0, deny tcp any eq 0 host 192.168.2.100, deny tcp host 11.11.11.1 any eq 0, deny tcp any eq 0 host 11.11.11.1, permit ip any any
+#extcap.ciscodump.remotefilter: deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f15:fbd3:843b:ed16:6d9:1f40 any eq 0, deny tcp any eq 0 host 2003:d4:6f15:fbd3:843b:ed16:6d9:1f40, deny tcp host 192.168.2.101 any eq 0, deny tcp any eq 0 host 192.168.2.101, permit ip any any
 
 # Packets to capture
 # A string
@@ -510,7 +511,7 @@ capture.prom_mode: FALSE
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not ((host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f12:f7e6:195d:72d1:42be:ec9e or host 192.168.2.100 or host 11.11.11.1) and port 22)
+#extcap.sshdump.remotefilter: not ((host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f15:fbd3:843b:ed16:6d9:1f40 or host 192.168.2.101) and port 22)
 
 # Packets to capture
 # A string
@@ -1158,7 +1159,7 @@ capture.prom_mode: FALSE
 
 # Whether the dissector should also display internal ASN.1 BER details such as Identifier and Length fields
 # TRUE or FALSE (case-insensitive)
-#ber.show_internals: FALSE
+ber.show_internals: TRUE
 
 # Whether the dissector should decode unexpected tags as ASN.1 BER encoded data
 # TRUE or FALSE (case-insensitive)
@@ -1166,15 +1167,15 @@ capture.prom_mode: FALSE
 
 # Whether the dissector should try decoding OCTET STRINGs as constructed ASN.1 BER encoded data
 # TRUE or FALSE (case-insensitive)
-#ber.decode_octetstring: FALSE
+ber.decode_octetstring: TRUE
 
 # Whether the dissector should try decoding unknown primitive as constructed ASN.1 BER encoded data
 # TRUE or FALSE (case-insensitive)
-#ber.decode_primitive: FALSE
+ber.decode_primitive: TRUE
 
 # Whether the dissector should warn if excessive leading zero (0) bits
 # TRUE or FALSE (case-insensitive)
-#ber.warn_too_many_bytes: FALSE
+ber.warn_too_many_bytes: TRUE
 
 # Whether the BGP dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
@@ -4859,7 +4860,7 @@ capture.prom_mode: FALSE
 # 
 # (All fields are in hex notation)
 # A path to a file
-#tls.keylog_file: 
+tls.keylog_file: ~/.ssl/keys
 
 # Whether the TNS dissector should reassemble messages spanning multiple TCP segments. To use this option, you must also enable "Allow subdissectors to reassemble TCP streams" in the TCP protocol settings.
 # TRUE or FALSE (case-insensitive)
