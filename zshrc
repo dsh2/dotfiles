@@ -605,6 +605,7 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
+bindkey -s cj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
 bindkey -s sd\  'systemd-'
@@ -1433,3 +1434,4 @@ mvA() {
 zsh_source -q ~/.android-serial
 [ -e ~/.environment.local ] && source ~/.environment.local
 p2x() { plistutil -i $1 -o $1.xml }
+ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
