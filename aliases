@@ -216,8 +216,8 @@ alias jk='kill ${${(v)jobstates##*:*:}%=*}'
 alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
-alias vf=vimdiff.nvim
-alias vd=vimdiff.nvim
+alias vf=vimdiff
+alias vd=vimdiff
 alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wan_name='dig +short -x $(wanip)'
@@ -326,7 +326,7 @@ alias psme='pstree -ahups $$'
 alias p_s='port search --line'
 alias tm=tmux
 alias tmda='tmux detach-client -a'
-alias tma='if tmux has-session; then tmux attach; else tmux new-session -s root -n dott "cd ~/.dotfiles; vim vimrc"; fi'
+alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT -n top "sudo top"; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
@@ -353,6 +353,8 @@ alias pg=pgrep
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
+alias pA='patool create'
+alias pc='patool create'
 alias px='patool extract'
 alias pd='patool diff'
 alias o=xdg-open
@@ -419,6 +421,7 @@ alias dp=dpkg
 alias dpq=dpkg-query
 alias n="date '+%F %T'"
 alias nn="date '+%F__%T'"
+alias nnn="date '+%F__%T' --date=@"
 alias tgi=telegram-cli
 alias ncn=nmcli
 alias ncc=nmcli
@@ -639,6 +642,7 @@ alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
 alias chx='sudo chmod a+x'
+alias chnx='sudo chmod a-x'
 alias chmer='sudo chown -c -R $(id -u):$(id -g) '
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
@@ -673,3 +677,5 @@ alias un=unset
 alias psc='ps -O ppid,cgroup, '
 alias torr=torsocks
 alias um='sudo umount'
+alias F=frida
+alias ic=icomera_scraper
