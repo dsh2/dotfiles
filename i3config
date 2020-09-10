@@ -175,6 +175,8 @@ bindsym $meta+$ctrl+$left move left
 bindsym $meta+$ctrl+$right move right
 bindsym $meta+$ctrl+$up move up
 bindsym $meta+$ctrl+$down move down
+bindsym $meta+$ctrl+u focus left; split vertical; focus right; move left; layout stacking
+bindsym $meta+$ctrl+i focus right; split vertical; focus left; move right; layout stacking
 
 bindsym $meta+e layout toggle split
 bindsym $meta+s layout stacking
