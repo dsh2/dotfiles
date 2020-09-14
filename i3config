@@ -96,7 +96,9 @@ bindsym $meta+$right focus right
 bindsym $meta+$up focus up
 bindsym $meta+$down focus down
 bindsym $meta+$shift+a focus parent
+bindsym $meta+$ctrl+a focus parent
 bindsym $meta+$shift+d focus child
+bindsym $meta+$ctrl+d focus child
 bindsym $meta+$shift+p focus output primary
 bindsym $meta+$shift+s sticky toggle
 # }}}
@@ -252,7 +254,7 @@ bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute
 bindsym $meta+$alt+$ctrl+m $pa_toggle_mute 
 # }}}
 # Rofi {{{
-bindsym $alt+Tab exec rofi -show window
+bindsym $alt+Tab exec rofi -fullscreen -show window
 # TODO: make it toggle-cycle through windows (...and move binding)
 # bindsym $alt+Tab workspace back_and_forth
 bindsym $alt+space exec rofi -mesg ok -fullscreen -show combi
