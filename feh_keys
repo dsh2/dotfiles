@@ -1,43 +1,41 @@
-# key definition: <action name> <key1> [<key2> [<key3>]]
+action_9          y 
+
+menu_child        l
+menu_down         j
 menu_parent h
-menu_child  l
-menu_down   j
-menu_up     k
-menu_select space Return
+menu_select       space Return
+menu_up           k
 
-# Same for image navigation ...
-next_img n 0x2e
-prev_img p 0x2c
+jump_first        g
+jump_last         G
+next_img          n 0x2e space
+prev_img          p 0x2c b
 
-# and image movement
-scroll_up    k
+scroll_up         k
 scroll_up_page    K
-scroll_down  j
+scroll_down       j
 scroll_down_page  J
-scroll_left  h
+scroll_left       h
 scroll_left_page  H
-scroll_right l
+scroll_right      l
 scroll_right_page L
 
-# File deletion
-remove     D
-delete   C-d
+delete            D
 
-# remove now conflicts with toggle_filenames, so change that
-toggle_filenames f
+toggle_filenames  f
 
 # zooming
-zoom_in  i
-zoom_out o
-zoom_default 0
-zoom_fit s
+zoom_fill         w 0x21
+zoom_in           i
+zoom_out          o
+zoom_default      0
+zoom_fit          s
 
-# I only hit these accidentaly
 save_image
 save_filelist
 
-toggle_exif I
-close Q
-reload_image R
-orient_1 r
+toggle_exif       I
+close             Q
+reload_image      R
+orient_1          r
 toggle_fullscreen e
