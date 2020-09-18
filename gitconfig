@@ -24,11 +24,16 @@
 [init]
 	templatedir = ~/.git_template
 [alias]
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	g = grep --break --heading --line-number
-    rl = reflog --pretty=reflog
-	cp = cherry-pick
 	co = checkout
+	cp = cherry-pick
+	d = diff
+	df = diff
+	g = grep --break --heading --line-number
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	p = pull
+	pp = push
+	reauthor = !bash -c 'git rebase --onto $1 --exec \"git commit --amend --author=\\"$2\\"\" $1' --
+    rl = reflog --pretty=reflog
 [pretty]
     reflog = %C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs (%s)
 [gc]
