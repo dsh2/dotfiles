@@ -14,6 +14,7 @@ cscope.files
 cscope.out
 tags
 TAGS
+ipython.log
 
 # Mac OS
 *.DS_Store
