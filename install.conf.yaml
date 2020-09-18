@@ -3,8 +3,8 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
-  - [mkdir -p ~/.ssh/hosts ~/.ssh/control_master, Setting up directories for ssh]
+  - [mkdir -p ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
+  - [mkdir -p ~/.ssh/hosts ~/.ssh/cm, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
   - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
@@ -28,6 +28,7 @@
     ~/.config/i3/config: i3config
     ~/.config/i3status/config: i3status
     ~/.config/feh/keys: feh_keys
+    ~/.config/feh/themes: feh_themes
     ~/.config/herbstluftwm: herbstluftwm/
     ~/.config/ranger/scope.sh: ranger/scope.sh
     ~/.config/ranger/rifle.conf: ranger/rifle.conf
