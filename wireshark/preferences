@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 3.2.4.
+# Configuration file for Wireshark 3.2.5.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -239,6 +239,8 @@ gui.column.format:
 	"Has Private Key", "%Cus:wg.static.known_privkey:0:R",
 	"Sender", "%Cus:wg.sender:0:R",
 	"Random", "%Cus:tls.handshake.random:0:R",
+	"Full request URI", "%Cus:http.request.full_uri:0:R",
+	"ID", "%Cus:vlan.id:0:R",
 	"Info", "%i"
 
 ####### User Interface: Font ########
@@ -300,7 +302,7 @@ gui.show_file_load_time.enabled: TRUE
 
 # Interface link-layer header types (Ex: en0(1),en1(143),...)
 # A string
-capture.devices_linktypes: lo(1),any(113),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-monitor(254),nflog(239),nfqueue(228)
+capture.devices_linktypes: enp0s31f6(1),lo(1),any(113),wlp0s20f3(1),virbr0(1),bluetooth-monitor(254),nflog(239),nfqueue(228)
 
 # Interface descriptions (Ex: eth0(eth0 descr),eth1(eth1 descr),...)
 # A string
@@ -316,15 +318,15 @@ capture.devices_linktypes: lo(1),any(113),wlp4s0(1),virbr0(1),enp0s31f6(1),bluet
 
 # Interface buffer size (Ex: en0(1),en1(143),...)
 # A string
-capture.devices_buffersize: lo(2),any(2),wlp4s0(2),virbr0(2),enp0s31f6(2),bluetooth-monitor(2),nflog(2),nfqueue(2),usbmon0(2),usbmon1(2),usbmon2(2),virbr0-nic(2),wwp0s20f0u2c3(2),ciscodump(2),dpauxmon(2),sdjournal(2),sshdump(2),udpdump(2)
+capture.devices_buffersize: enp0s31f6(2),lo(2),any(2),wlp0s20f3(2),virbr0(2),bluetooth-monitor(2),nflog(2),nfqueue(2),usbmon0(2),usbmon1(2),usbmon2(2),usbmon3(2),usbmon4(2),usbmon5(2),usbmon6(2),virbr0-nic(2),ciscodump(2),dpauxmon(2),sdjournal(2),sshdump(2),udpdump(2)
 
 # Interface snap length (Ex: en0(65535),en1(1430),...)
 # A string
-capture.devices_snaplen: lo:0(262144),any:0(262144),wlp4s0:0(262144),virbr0:0(262144),enp0s31f6:0(262144),bluetooth-monitor:0(262144),nflog:0(262144),nfqueue:0(262144),usbmon0:0(262144),usbmon1:0(262144),usbmon2:0(262144),virbr0-nic:0(262144),wwp0s20f0u2c3:0(262144),ciscodump:0(262144),dpauxmon:0(262144),sdjournal:0(262144),sshdump:0(262144),udpdump:0(262144)
+capture.devices_snaplen: enp0s31f6:0(262144),lo:0(262144),any:0(262144),wlp0s20f3:0(262144),virbr0:0(262144),bluetooth-monitor:0(262144),nflog:0(262144),nfqueue:0(262144),usbmon0:0(262144),usbmon1:0(262144),usbmon2:0(262144),usbmon3:0(262144),usbmon4:0(262144),usbmon5:0(262144),usbmon6:0(262144),virbr0-nic:0(262144),ciscodump:0(262144),dpauxmon:0(262144),sdjournal:0(262144),sshdump:0(262144),udpdump:0(262144)
 
 # Interface promiscuous mode (Ex: en0(0),en1(1),...)
 # A string
-capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-monitor(1),nflog(1),nfqueue(1),usbmon0(1),usbmon1(1),usbmon2(1),virbr0-nic(1),wwp0s20f0u2c3(1),ciscodump(1),dpauxmon(1),sdjournal(1),sshdump(1),udpdump(1)
+capture.devices_pmode: enp0s31f6(1),lo(1),any(1),wlp0s20f3(1),virbr0(1),bluetooth-monitor(1),nflog(1),nfqueue(1),usbmon0(1),usbmon1(1),usbmon2(1),usbmon3(1),usbmon4(1),usbmon5(1),usbmon6(1),virbr0-nic(1),ciscodump(1),dpauxmon(1),sdjournal(1),sshdump(1),udpdump(1)
 
 # Capture in promiscuous mode?
 # TRUE or FALSE (case-insensitive)
@@ -429,7 +431,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: 
+#extcap.ciscodump.remotefilter: deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::46c1:9214:73:a189 any eq 0, deny tcp any eq 0 host fe80::46c1:9214:73:a189, deny tcp host fe80::f3c5:8e8b:6c1b:8840 any eq 0, deny tcp any eq 0 host fe80::f3c5:8e8b:6c1b:8840, deny tcp host fe80::5bb:1105:c099:cbec any eq 0, deny tcp any eq 0 host fe80::5bb:1105:c099:cbec, deny tcp host 172.18.109.22 any eq 0, deny tcp any eq 0 host 172.18.109.22, deny tcp host 192.168.122.1 any eq 0, deny tcp any eq 0 host 192.168.122.1, deny tcp host 10.13.37.116 any eq 0, deny tcp any eq 0 host 10.13.37.116, deny tcp host 172.17.4.193 any eq 0, deny tcp any eq 0 host 172.17.4.193, permit ip any any
 
 # Packets to capture
 # A string
@@ -509,7 +511,7 @@ capture.devices_pmode: lo(1),any(1),wlp4s0(1),virbr0(1),enp0s31f6(1),bluetooth-m
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not port 22
+#extcap.sshdump.remotefilter: not ((host fe80::9afa:9bff:fee9:511d or host fe80::9afa:9bff:fee9:511d or host fe80::9afa:9bff:fee9:511d or host fe80::46c1:9214:73:a189 or host fe80::f3c5:8e8b:6c1b:8840 or host fe80::5bb:1105:c099:cbec or host 172.18.109.22 or host 192.168.122.1 or host 10.13.37.116 or host 172.17.4.193) and port 22)
 
 # Packets to capture
 # A string
@@ -4970,7 +4972,7 @@ tls.debug_file: /home/dsh2/.ssl/debug
 
 # Whether to validate the UDP checksum
 # TRUE or FALSE (case-insensitive)
-udp.check_checksum: TRUE
+#udp.check_checksum: FALSE
 
 # Collect process flow information from IPFIX
 # TRUE or FALSE (case-insensitive)
