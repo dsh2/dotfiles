@@ -1,6 +1,7 @@
 # :vim: set ft=conf
 e cfg.fortunes = true
 e scr.pager = less -R
+# e scr.pager = fzf
 # e scr.pager = ..
 e scr.prompt = true
 e scr.prompt.flag = true
@@ -10,7 +11,8 @@ e scr.utf8.curvy = true
 e time.fmt = %Y-%m-%d %H:%M:%S %z
 e cfg.newtab =1
 e scr.prompt.popup =1
-eco solarized
+# eco solarized
+eco default
 ?e Sourced radare2rc
 $r=. $HOME/.config/radare2/radare2rc
 $R=. $HOME/.config/radare2/radare2rc
