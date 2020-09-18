@@ -43,9 +43,11 @@ setopt prompt_subst
 setopt prompt_cr
 # TODO: try to understand why SP outputs term seqs even when no partial line is present
 setopt noprompt_sp
+# setopt prompt_sp
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< \n missing'
 # export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line (\n missing)'
-# export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
+# incomplete line
+export PROMPT_EOL_MARK='%{$fg_no_bold[red]%}<< partial line'
 unset PROMPT_EOL_MARK
 autoload -Uz vcs_info
 autoload -U colors && colors
@@ -598,7 +600,7 @@ bindkey '^v^v' tmux-pane-words-anywhere
 zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
-bindkey -s rq\  'r2 -Nqc '' -'
+bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s AD\  "adbk ''"
 bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
@@ -606,6 +608,7 @@ bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s cj\  'c $tmux_log_file\t | jq '
+bindkey -s clj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
 bindkey -s sd\  'systemd-'
@@ -619,6 +622,8 @@ bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
+bindkey -s Pp\  'postgresql'
+bindkey -s PJ\  'postgres'
 
 function start_tmux_logging()
 {
@@ -797,7 +802,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -1105,9 +1110,11 @@ alias -g 0m='| tr \\0 \\n'
 alias -g 0s0='::1/0'
 alias -g 0s='::1'
 alias -g BB=' | base64'
-alias -g BBD='| base64 -d -i | hexdump -C | less'
+alias -g BBD='| base64 -d -i | hexdump -C | LESS= less'
 alias -g C,="| column -nts,"
 alias -g C="| column -t"
+alias -g CD="| column -t | vd -f fixed "
+alias -g Cv="| vd -f fixed "
 alias -g Cc="| column -nts,"
 alias -g Cs="| column -n"
 alias -g Ct="| column -nts $'\t'"
@@ -1135,7 +1142,7 @@ alias -g SS2C="|sed -re 's/[[:space:]]+/,/g'"
 alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
-alias -g SS='| strings -t x -e S | less'
+alias -g SS='| strings -t x -e S | LESS= less'
 alias -g SUU='| sort | uniq'
 alias -g TS="| ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
@@ -1150,8 +1157,12 @@ alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
 alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-alias -g hx='| hexdump -C | less'
+# alias -g hx='| hexdump -C | LESS= less'
+alias -g hx='| heksa -f hex,asc -o dec,hex -w $[ COLUMNS / 5 ] | less'
 alias -g lqq=' |& lnav -q'
+alias -g lqt=' |& lnav -qt'
+alias -g ll=' |& less'
+alias -g LL=' |& less'
 alias -g xr='| xxd -r -p'
 
 has() {
