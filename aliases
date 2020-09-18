@@ -72,7 +72,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 alias g=git
 alias gc='git commit --verbose'
 alias gC='git cherry --verbose'
-alias gcn='git clean -n'
+alias gcn='git clean --dry-run'
 alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
 alias gdf='noglob git diff --ignore-space-change --ignore-blank-lines'
@@ -217,7 +217,7 @@ alias jkk='kill -9 ${${(v)jobstates##*:*:}%=*}'
 alias jk9=jkk
 alias d='diff -u'
 alias vf=vimdiff
-alias vd=vimdiff
+alias vimd=vimdiff
 alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wan_name='dig +short -x $(wanip)'
@@ -482,7 +482,7 @@ alias sa='eval export SSH_AUTH_SOCK=$(echo /tmp/ssh-*/agent.*(om[1])); printenv 
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
-alias dd='dd status=progress'
+alias dd='dd status=progress conv=fdatasync'
 # alias hc=herbstclient
 alias hc=hcitool
 alias cts=curl-tesseract
@@ -608,6 +608,7 @@ alias ssl=openssl
 sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
 alias zzzz='while :; do print -n .; sleep 0.2; done'
 alias Z=zzzz
+alias ZZ=zzzz
 alias b=bridge
 # alias p3='python3.8' 
 alias p3='python3.7' 
@@ -638,7 +639,7 @@ alias PI='pip install --user -vvv'
 alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
-alias rz='sudo HOME=$HOME zsh'
+alias rz='sudo -E HOME=$HOME zsh'
 alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
@@ -680,3 +681,8 @@ alias torr=torsocks
 alias um='sudo umount'
 alias F=frida
 alias ic=icomera_scraper
+alias mo=mount
+alias mt=mount
+alias exp=export
+alias ep=export
+alias po=podman
