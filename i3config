@@ -239,22 +239,36 @@ bindsym $meta+$ctrl+$alt+b exec rfkill block all
 bindsym $meta+$ctrl+$alt+$shift+b exec rfkill block all
 # }}}
 # Pulse audio volume control {{{
-set $pa_toggle_mute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+set $pa_toggle_mute_sink exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  '-4%'
 set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  '+6%'
 
-bindsym $alt+F9 $pa_toggle_mute
+bindsym $alt+F9 $pa_toggle_mute_sink
 bindsym $alt+F10 $pa_volume_down 
 bindsym $alt+F11 $pa_volume_up 
-bindsym $alt+F12 $pa_toggle_mute
+bindsym $alt+F12 $pa_toggle_mute_sink
 
-bindsym XF86AudioMute $pa_toggle_mute
+bindsym XF86AudioMute $pa_toggle_mute_sink
 bindsym XF86AudioLowerVolume $pa_volume_down 
 bindsym XF86AudioRaiseVolume $pa_volume_up 
 bindsym $meta+$alt+$ctrl+0x2c $pa_volume_down 
 bindsym $meta+$alt+$ctrl+0x2e $pa_volume_up 
-bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute 
-bindsym $meta+$alt+$ctrl+m $pa_toggle_mute 
+bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute_sink 
+bindsym $meta+$alt+$ctrl+m $pa_toggle_mute_sink 
+
+set $pa_toggle_mute_source exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+set $pa_volume_down_source exec pactl set-source-volume @DEFAULT_SOURCE@  '-4%'
+set $pa_volume_up_source exec pactl set-source-volume @DEFAULT_SOURCE@  '+6%'
+
+bindsym $alt+$shift+F9 $pa_toggle_mute_source
+bindsym $alt+$shift+F10 $pa_volume_down_source
+bindsym $alt+$shift+F11 $pa_volume_up_source
+bindsym $alt+$shift+F12 $pa_toggle_mute_source
+
+bindsym $meta+$alt+$ctrl+$shift+0x2c $pa_volume_down_source
+bindsym $meta+$alt+$ctrl+$shift+0x2e $pa_volume_up_source
+bindsym $meta+$alt+$ctrl+$shift+0x2f $pa_toggle_mute_source 
+bindsym $meta+$alt+$ctrl+$shift+m $pa_toggle_mute_source 
 # }}}
 # Rofi {{{
 bindsym $alt+Tab exec rofi -fullscreen -show window
