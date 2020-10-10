@@ -205,9 +205,10 @@ bindsym $meta+$alt+$shift+$left move workspace to output left; focus output left
 bindsym $meta+$alt+$shift+$right move workspace to output right; focus output right
 # }}}
 # Fullscreen {{{
-bindsym $meta+f layout toggle
-bindsym $meta+$shift+f fullscreen
-# bindsym $meta+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+bindsym $meta+f layout toggle tabbed splith
+# bindsym $meta+$shift+f fullscreen
+bindsym $meta+$shift+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
+# bindsym $meta+$ctrl+$shift+f fullscreen global
 bindsym $meta+$ctrl+$shift+f fullscreen global
 bindsym $meta+z fullscreen
 bindsym $meta+$alt+$shift+z fullscreen global
