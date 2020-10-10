@@ -1,0 +1,8 @@
+#!env zsh
+
+i3 workspace $(
+	i3-msg -s $(
+		echo /var/run/user/$(id -u)/i3/ipc-socket*(om[1])
+	) -t get_workspaces |
+		jq -r '.[-1].name'
+)
