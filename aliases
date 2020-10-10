@@ -31,7 +31,7 @@ alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON
 # alias adbk='adb shell input keyboard text \"\"'
 alias adkl=adbk
 alias adk=adbk
-adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER }
+adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
@@ -616,12 +616,12 @@ alias p3='python3.7'
 alias tsh=tshark
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
-i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum }
+i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
 alias ki=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
-TT() { nvim +'norm i' term://"$*" }
-T() { nvim term://"$*" }
+TT() { nvim +'norm i' term://"$*" ; }
+T() { nvim term://"$*" ; }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
 alias gvv='nvim +GV\ --all'
@@ -652,8 +652,8 @@ alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
 alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
 
 alias lo='losetup --find --show'
-SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a }
-xdD() { 
+SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a ; }
+xdD() {
 	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
 	xdg-mime default ${2##*/} $(xdg-mime query filetype $1)
 }
@@ -661,13 +661,13 @@ alias cdz=fzc
 
 alias sq=seq
 alias ca=cat
-pad() { patool create $1.tgz $1 }
+pad() { patool create $1.tgz $1 ; }
 # TODO: find base85/91 implementation
-padd() { tar czf - $* | base64 | $=XC }
-paxx() { $=XP | base64 -d -i | tar xkzvf - }
-paxp() { cat | base64 -d -i | tar xkzvf - }
+padd() { tar czf - $* | base64 | $=XC ; }
+paxx() { $=XP | base64 -d -i | tar xkzvf - ; }
+paxp() { cat | base64 -d -i | tar xkzvf - ; }
 alias PA="$XP"
-cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || echo "$funcstack[1] aborted..." }
+cvv() { setopt pipefail; dir=$(dirs -l -p -v | fzf | cut -f 2) && cd $dir || echo "$funcstack[1] aborted..." ; }
 alias cvc=cvv
 alias xi=xinput
 alias xin=xinput
