@@ -471,6 +471,7 @@ alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
+Rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
 alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
 alias sshc='ssh -O check'
