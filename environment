@@ -1,6 +1,7 @@
 # Path
 pathprepend /sbin
 pathprepend /usr/sbin
+pathprepend /usr/local/go/bin
 pathprepend /usr/local/bin
 pathprepend /usr/local/sbin
 pathprepend /opt/local/bin
