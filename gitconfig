@@ -33,6 +33,7 @@
 	p = pull
 	pp = push
 	reauthor = !bash -c 'git rebase --onto $1 --exec \"git commit --amend --author=\\"$2\\"\" $1' --
+	r = remote
     rl = reflog --pretty=reflog
 [pretty]
     reflog = %C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs (%s)
