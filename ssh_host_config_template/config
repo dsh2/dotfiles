@@ -13,11 +13,19 @@ IdentityFile ~/.ssh/hosts/HOSTNAME/id
 ForwardAgent no
 ForwardX11 no
 
+# ExitOnForwardFailure yes
 RemoteForward 2299 localhost:22
+
+# usbip
+# LocalForward localhost:3240 localhost:3240 
 
 # DynamicForward 1080
 # RemoteForward 1080
 
+# # dev=tun99 ; sudo ip tuntap add dev $dev mode tun user $USER && sudo ip address add 10.0.2.1/24 dev $dev && sudo ip link set dev $dev up
+# Tunnel point-to-point
+# TunnelDevice 99:99
+ 
 # PermitLocalCommand yes
 # ControlPersist yes
 # LocalCommand (sleep 1; ssh -qO check %r@%n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p %r@%n: %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
