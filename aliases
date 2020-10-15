@@ -606,7 +606,20 @@ alias pe=printenv
 alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
-sssh() { while :; do ssh -t $1 tmux attach; sleep 8.4; print "Trying to reconnect \"$1\" ... "| ts ; done; }
+
+sssh() {
+	host=$1
+	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
+	while :; do 
+		if ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg colour22; $SHELL\" ; fi "; then
+			break
+		fi
+		notify-send -u critical "Lost connection to \"$host\"."
+		sleep 8.4
+		print "Trying to reconnect to \"$host\" ... " | ts -m '[%F %T]'  
+	done;
+}
+
 alias zzzz='while :; do print -n .; sleep 0.2; done'
 alias Z=zzzz
 alias ZZ=zzzz
