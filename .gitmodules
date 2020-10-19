@@ -68,3 +68,6 @@
 [submodule "gdbinit"]
 	path = gdbinit
 	url = https://github.com/dsh2/gdbinit
+[submodule "notify-send.py"]
+	path = notify-send.py
+	url = https://github.com/phuhl/notify-send.py
