@@ -2,23 +2,39 @@
 
 Host HOSTNAME
 # HostName NAME
-# HostKeyAlias HOSTNAME2
-User USERNAME
+# HostKeyAlias HOSTNAME
+# User USERNAME
+# Password PASSWORD
 
+# VisualHostKey no
 # IdentityAgent none 
 IdentitiesOnly yes 
+# TODO: Try to understand why IdentityFile does not support %n
 IdentityFile ~/.ssh/hosts/HOSTNAME/id
-# IdentityAgent none
+# AddKeysToAgent ask
+# AddKeysToAgent confirm
+AddKeysToAgent yes
+
+# ControlPersist yes
 
 ForwardAgent no
 ForwardX11 no
 
+# PermitLocalCommand yes
+LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
+
+# ClearAllForwardings yes
 # ExitOnForwardFailure yes
-RemoteForward 2299 localhost:22
+
+# tinyproxy 
+# RemoteForward localhost:8888 localhost:8888
 
 # usbip
 # LocalForward localhost:3240 localhost:3240 
 
+# ssh me
+# RemoteForward 2299 localhost:22
+ 
 # DynamicForward 1080
 # RemoteForward 1080
 
@@ -26,11 +42,6 @@ RemoteForward 2299 localhost:22
 # Tunnel point-to-point
 # TunnelDevice 99:99
  
-# PermitLocalCommand yes
-# ControlPersist yes
-# LocalCommand (sleep 1; ssh -qO check %r@%n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p %r@%n: %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
-# LocalCommand (sleep 1; ssh -qO check %r@%n 2>/dev/null && mkdir -p %d/mnt/%n && sshfs -p %p root@%n:/ %d/mnt/%n && logger -it ssh -- "[%u@%l] Mounted sshfs for %r@%n to ~/mnt/%n." || logger -ist ssh -- "[%u@%l] Failed to mount sshfs for %r@%n to ~/mnt/%n." ) &
-
 # Match host = HOSTNAME exec "nmcli con show --active | grep -q NETWORK"
 # Match host = HOSTNAME exec "timeout 0.5 avahi-resolve --name HOSTNAME.local 2> /dev/null"
 # HostName HOSTNAME.local
