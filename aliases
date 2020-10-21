@@ -716,3 +716,5 @@ alias rax=rax2
 alias sqll=sqlite3
 alias scr=scrcpy
 alias dme='dmesg -e'
+alias R=rclone
+alias rk=rclone
