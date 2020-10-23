@@ -51,20 +51,26 @@ _logdog() {
 }
 complete -o default -o nospace -F _logdog logdog
 
-# Setup prompt
-if [ "$MYHOSTNAME" != "P3-01882" -a "$MYHOSTNAME" != "P3-01910" ]; then
-    if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
-	source ~/.dotfiles/liquidprompt/liquidprompt
-    fi
-fi
-
-if ! grep -q history <<< $PROMPT_COMMAND; then
-		export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
-fi
-
 if type dircolors > /dev/null 2>&1 ; then
-    eval $(dircolors ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
+	eval $(dircolors ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
 fi
 export LS_COLORS
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Setup (debug) prompt
+if ((D)); then 
+	msource ~/.dotfiles/colors/colors.sh
+	export PS4="\t\000$white[\$$:$green\${BASH_SOURCE/*\//}$lightyellow:$white\${LINENO}$lightyellow:$purple\${FUNCNAME[0]:+\${FUNCNAME[0]}()}$lightyellow=$red${?/0/${lightyellow}0}$white]$fixed_col | $reset"
+	set -x
+else
+	if [ "$MYHOSTNAME" != "P3-01882" -a "$MYHOSTNAME" != "P3-01910" ]; then
+		if ! grep -q __lp_set_prompt <<< $PROMPT_COMMAND; then
+		source ~/.dotfiles/liquidprompt/liquidprompt
+		fi
+	fi
+
+	if ! grep -q history <<< $PROMPT_COMMAND; then
+			export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+	fi
+fi
