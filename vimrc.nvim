@@ -201,6 +201,10 @@ if vim_plug_available
 	let g:neomru#time_format='%F %T '
 	let g:neomru#update_interval=60
 	"}}}
+	Plug 'AndrewRadev/linediff.vim' "{{{
+	nmap <leader>ld :Linediff<cr>
+	nmap <leader>lD :LinediffReset<cr>
+	" }}}
 	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 	" Plug 'rickhowe/diffchar.vim'
