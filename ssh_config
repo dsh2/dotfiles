@@ -10,6 +10,8 @@ ServerAliveInterval 10
 ServerAliveCountMax 2
 UpdateHostKeys ask
 
+LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
+
 ControlMaster auto
 
 # EscapeChar ^^

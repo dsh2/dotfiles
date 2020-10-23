@@ -20,7 +20,7 @@ ssh_notify() {
 
 # notify-send -a ssh -c ssh "LocalCommand $* ($#)"
 
-sleep 0.1
+sleep 1.1
 if ! ssh -qO check $remote_username@$remote_hostname_cmd; then
 	ssh_notify "[$local_username@$local_hostname] Connection for $remote_username@$remote_hostname_cmd failed to multiplex."
 	exit 1

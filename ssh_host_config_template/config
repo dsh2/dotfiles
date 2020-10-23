@@ -7,13 +7,14 @@ Host HOSTNAME
 # Password PASSWORD
 
 # VisualHostKey no
+# HashKnownHosts yes
 # IdentityAgent none 
 IdentitiesOnly yes 
 # TODO: Try to understand why IdentityFile does not support %n
 IdentityFile ~/.ssh/hosts/HOSTNAME/id
 # AddKeysToAgent ask
 # AddKeysToAgent confirm
-AddKeysToAgent yes
+# AddKeysToAgent yes
 
 # ControlPersist yes
 
@@ -21,7 +22,7 @@ ForwardAgent no
 ForwardX11 no
 
 # PermitLocalCommand yes
-LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
+# LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
 
 # ClearAllForwardings yes
 # ExitOnForwardFailure yes
