@@ -304,7 +304,7 @@ function focus_backgroud {
 }
 bindkey_func '^z' focus_backgroud
 
-WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>|'
+WORDCHARS=':*?_-.[]~=/&;!#$%^(){}<>|'
 function backward_kill_default_word() {
     WORDCHARS='*?-.[]~&!#$%^(){}<>|'
     zle backward-kill-word
@@ -601,6 +601,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s rq\  "r2 -Nqc ''  -"
+bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
 bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
@@ -1115,6 +1116,7 @@ alias -g C,="| column -nts,"
 alias -g C="| column -t"
 alias -g CD="| column -t | vd -f fixed "
 alias -g Cv="| vd -f fixed "
+alias -g VD="| vd -f json "
 alias -g Cc="| column -nts,"
 alias -g Cs="| column -n"
 alias -g Ct="| column -nts $'\t'"
@@ -1122,6 +1124,7 @@ alias -g DA='| sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"' # Delete AN
 alias -g DH="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g DN2="2> /dev/null"
 alias -g 2dn="2> /dev/null"
+alias -g dnn="2> /dev/null"
 alias -g DN="> /dev/null"
 alias -g DNN="> /dev/null 2>&1"
 alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: ' -e 's: $::' " # Delete and squeeze whitespace, i.e. make one-liners
@@ -1164,6 +1167,9 @@ alias -g lqt=' |& lnav -qt'
 alias -g ll=' |& less'
 alias -g LL=' |& less'
 alias -g xr='| xxd -r -p'
+alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
+alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
+PRE='echo $RANDOM'
 
 has() {
   local verbose=false
@@ -1445,4 +1451,6 @@ mvA() {
 zsh_source -q ~/.android-serial
 [ -e ~/.environment.local ] && source ~/.environment.local
 p2x() { plistutil -i $1 -o $1.xml }
+cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
+autoload zargs
