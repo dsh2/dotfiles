@@ -223,6 +223,8 @@ alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wan_name='dig +short -x $(wanip)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
+alias PV=print_variables
+alias PVV=print_variables
 alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 # alias va=vagrant
@@ -712,9 +714,14 @@ alias osl=openssl
 alias r22='rax2 -s'
 alias yy=yarn
 alias zx=zargs
+alias zxx='zargs -P $(nproc)'
 alias rax=rax2
 alias sqll=sqlite3
 alias scr=scrcpy
 alias dme='dmesg -e'
 alias R=rclone
 alias rk=rclone
+alias rcl=rclone
+alias da=date
+alias tailf='tail -fc+0'
+alias L=leg
