@@ -558,6 +558,7 @@ if vim_plug_available
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn setlocal commentstring=--\ %s
 	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
@@ -656,6 +657,8 @@ if vim_plug_available
 	" }}}
 	Plug 'mogelbrod/vim-jsonpath'" {{{
 	let g:jsonpath_register = '+'
+	autocmd vimrc FileType json noremap <buffer> <silent> <leader>p :call jsonpath#echo()<CR>
+	autocmd vimrc FileType json noremap <buffer> <silent> <leader>g :call jsonpath#goto()<CR>
 	"}}}
 	Plug 'matze/vim-ini-fold' "{{{
 	autocmd vimrc BufNewFile,BufReadPost wg*\.conf,*.nmconnection,*/NetworkManager/system-connections/* setfiletype dosini"
@@ -944,7 +947,7 @@ autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 autocmd vimrc BufNewFile,BufReadPost *.run setfiletype expect
 " }}}
 " Mappings {{{
-nnoremap <leader>D :set spelllang=de<cr>
+map <leader>Dd :set spelllang=de<cr>
 map <leader><c-r> :update<cr>:source %<cr>
 " gdb helper {{{
 
