@@ -19,6 +19,20 @@ zsh_source()
 	source $@
 }
 
+has() {
+  local verbose=false
+  if [[ $1 == '-v' ]]; then
+	verbose=true
+	shift
+  fi
+  for c in "$@"; do c="${c%% *}"
+	if ! command -v "$c" &> /dev/null; then
+	  [[ "$verbose" == true ]] && err "$c not found"
+	  return 1
+	fi
+  done
+}
+
 bash_source() {
   alias shopt=':'
   alias _expand=_bash_expand
@@ -1160,8 +1174,12 @@ alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
 alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
-# alias -g hx='| hexdump -C | LESS= less'
-alias -g hx='| heksa -f hex,asc -o dec,hex -w $[ COLUMNS / 5 ] | less'
+if has hexa; then
+	alias -g hx='| heksa -f hex,asc -o dec,hex -w $[ COLUMNS / 5 ] | less'
+else
+	alias -g hx='| hexdump -C | LESS= less'
+	alias -g hx='| heksa -f hex,asc -o dec,hex -w $[ COLUMNS / 5 ] | less'
+fi
 alias -g lqq='|& lnav -q'
 alias -g lqt='|& lnav -qt'
 alias -g ll='|& less'
@@ -1171,20 +1189,6 @@ alias -g xr='| xxd -r -p'
 alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
-
-has() {
-  local verbose=false
-  if [[ $1 == '-v' ]]; then
-	verbose=true
-	shift
-  fi
-  for c in "$@"; do c="${c%% *}"
-	if ! command -v "$c" &> /dev/null; then
-	  [[ "$verbose" == true ]] && err "$c not found"
-	  return 1
-	fi
-  done
-}
 
 min_version() {
 	local current_version=$1
