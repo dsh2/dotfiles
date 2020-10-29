@@ -995,6 +995,7 @@ nnoremap gf gF
 " nnoremap gF :tabedit <cfile><cr>
 nnoremap gF :split <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
+map <leader>DU :diffupdate<cr>
 vmap DP :diffput<cr>
 vmap DG :diffget<cr>
 nmap <leader>DD :diffthis<CR>
