@@ -449,18 +449,18 @@ alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
-rl() { file "$*" && readlink -f "$*"; }
-mvO() { 
-	for f in $*; do 
-		if [ -e $f-OFF ]; then 
+rl() { for f in $@; do file $f && readlink -f $f; done }
+mvO() {
+	for f in $*; do
+		if [ -e $f-OFF ]; then
 			mv -v -- $f-OFF $f
-		elif [ -e $f ]; then 
+		elif [ -e $f ]; then
 			if [ $f != ${f%-OFF} ]; then
 				mv -v -- $f ${f%-OFF}
 			else
 				mv -v -- $f $f-OFF
 			fi
-		else 
+		else
 			echo \"$f\" not found.
 		fi
 	done
@@ -725,3 +725,7 @@ alias rcl=rclone
 alias da=date
 alias tailf='tail -fc+0'
 alias L=leg
+alias xo=xdotool
+alias xdo=xdotool
+alias p0='print -N'
+alias p0v='print -N **/*(/l2) | xargs -0 -P $(nproc)'
