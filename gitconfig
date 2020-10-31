@@ -21,8 +21,6 @@
 	pager = cat
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
-[init]
-	templatedir = ~/.git_template
 [alias]
 	co = checkout
 	cp = cherry-pick
