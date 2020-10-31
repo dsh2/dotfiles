@@ -444,7 +444,7 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:s:# :::fs:  : :}
+    BUFFER=${BUFFER:fs:  : ::s:# ::}
 }
 bindkey_func '^x^ ' unify_whitespace
 
