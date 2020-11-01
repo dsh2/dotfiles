@@ -730,3 +730,5 @@ alias xdo=xdotool
 alias p0='print -N'
 alias p0v='print -N **/*(/l2) | xargs -0 -P $(nproc)'
 alias ct=crontab
+alias ud=udevadm
+alias ude=udevadm
