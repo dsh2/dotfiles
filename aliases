@@ -183,6 +183,7 @@ alias nmz='nmapfe ~/.logs/nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
 alias lv='lnav -q'
 alias lnn='lnav -q'
+alias lna='lnav -q'
 alias lvv='lnav -q'
 alias lqq='lnav -q'
 alias r=ranger
