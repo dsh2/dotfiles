@@ -75,6 +75,7 @@
     ~/.config/procps/toprc: toprc
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
+    ~/.visidatarc: visidatarc
     ~/.zshrc: 
       path: zshrc
       force: true 
