@@ -168,10 +168,14 @@ bindsym $meta+v split toggle
 bindsym $meta+shift+v layout toggle 
 # }}}
 # Resize focused window {{{
-bindsym $meta+shift+$right resize grow width $step_size
-bindsym $meta+shift+$left resize shrink width $step_size
-bindsym $meta+shift+$up resize shrink height $step_size
-bindsym $meta+shift+$down resize grow height $step_size
+bindsym $meta+$ctrl+$shift+$right resize grow   width  $step_size
+bindsym $meta+$ctrl+$shift+$left  resize shrink width  $step_size
+bindsym $meta+$ctrl+$shift+$up    resize shrink height $step_size
+bindsym $meta+$ctrl+$shift+$down  resize grow   height $step_size
+bindsym $meta+shift+$right        resize grow   width  $step_size; resize grow   width  $step_size; resize grow   width  $step_size
+bindsym $meta+shift+$left         resize shrink width  $step_size; resize shrink width  $step_size; resize shrink width  $step_size
+bindsym $meta+shift+$up           resize shrink height $step_size; resize grow   height $step_size; resize grow   height $step_size
+bindsym $meta+shift+$down         resize grow   height $step_size; resize shrink height $step_size; resize shrink height $step_size
 # }}}
 # Change container layout {{{
 bindsym $meta+$ctrl+$left move left
