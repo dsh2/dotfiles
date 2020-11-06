@@ -303,7 +303,7 @@ set $mode_manipulate "[manipulate: hjkl+shift/ctrl]"
 set $mode_system "[system: l:lock, s:suspend, S:lock&suspend, h:hibernate]"
 set $mode_wallpaper "[walpaper: n:next, p:previous, d:disable, e:enable, f:favorite]"
 set $mode_return mode "default"
-set $step_size 15 px
+set $step_size 20 px
 
 # Mode "i3" {{{
 set $mode_i3_key u
@@ -378,10 +378,10 @@ mode $mode_resize {
 	bindsym $up resize shrink height $step_size
 	bindsym $down resize grow height $step_size
 
-	bindsym $ctrl+$left resize shrink width $step_sizze; resize shrink height $step_size
-	bindsym $ctrl+$right resize grow width $step_sizze; resize grow height $step_size
-	bindsym $ctrl+$up resize shrink width $step_sizze; resize shrink height $step_size
-	bindsym $ctrl+$down resize grow height $step_sizze; resize grow width $step_size
+	bindsym $ctrl+$left resize shrink width $step_size; resize shrink height $step_size
+	bindsym $ctrl+$right resize grow width $step_size; resize grow height $step_size
+	bindsym $ctrl+$up resize shrink width $step_size; resize shrink height $step_size
+	bindsym $ctrl+$down resize grow height $step_size; resize grow width $step_size
 
 	bindsym shift+$left move left $step_size
 	bindsym shift+$up move up $step_size
