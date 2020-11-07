@@ -5,13 +5,17 @@ local -r n=/dev/null
 
 ssh_notify() 
 {
-	level=$1; shift # low, normal, critical
-	msg="$*"
+	local -r level=$1; shift # low, normal, critical
+	local -r msg="$*"
+	local app="ssh $R"
+	[ -z $SSH_GROUP ] || app="$app ($SSH_GROUP)"
+	
 	# TODO: Map level to systemd prio
-	logger -it ssh -- "$R: $msg"
+	logger -it ssh -- "$app: $msg"
+	
 	# TODO: Update to notify-send.py
 	# TODO: Add icon
-	notify-send -u $level -a "ssh $R" "$msg"
+	notify-send -u $level -a $app "$msg"
 }
 
 check_remote_clock() 
@@ -53,7 +57,6 @@ connect_tun()
 	local -r nw=${tun#tun}
 	local -r l_ip=10.0.$nw.1
 	local -r r_ip=10.0.$nw.2
-	ssh_notify normal "Hello! $l_ip $r_ip"
 	
 	# Check if remote tun is availble
 	if ! ssh $R test -e /sys/class/net/$tun; then
@@ -78,8 +81,7 @@ connect_tun()
 
 main() 
 {
-	
-	(( $#@ >= 11 )) ||  return 
+	(( $#@ >= 11 )) || return 
 	C_hash=$1
 	local_home=$2
 	remote_hostname=$3
@@ -97,8 +99,8 @@ main()
 
 	sleep 0.1
 	ssh -qO check $R || { ssh_notify critical "Connection failed to multiplex." ; return 1 ; }
-	# check_remote_clock
-	# mount_remote_fs
+	check_remote_clock
+	mount_remote_fs
 	connect_tun
 }
 
