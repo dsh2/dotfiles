@@ -371,7 +371,7 @@ alias XS='xset -b -c r rate 200 140 dpms 0 0 3600 s off; setxkbmap -layout us,de
 alias M='make -j $(nproc)'
 alias makev='make SHELL="PS4=__[MAKE]__\  \$\$SHELL -x"'
 alias ndd=ndk-build
-alias tss=typeset
+alias tss='typeset -p'
 alias rh=rehash
 alias ipp='ipython3 -i -- '
 alias iz=ipython3
@@ -450,7 +450,8 @@ alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
-rl() { for f in $@; do file $f && readlink -f $f; done }
+rl() { a=${@:-.}; for f in ${=a}; do file $f && readlink -f $f; done }
+
 mvO() {
 	for f in $*; do
 		if [ -e $f-OFF ]; then
@@ -600,6 +601,7 @@ alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p"
 alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
 alias lsofi='sudo lsof +c0 -P -n -i :'
+alias lsofp='sudo lsof +c0 -P -n -p'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
