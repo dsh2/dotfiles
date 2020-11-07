@@ -6,8 +6,9 @@ Host HOSTNAME
 # User USERNAME
 # Password PASSWORD
 
-# VisualHostKey no
+# VisualHostKey Yes
 # HashKnownHosts yes
+
 # IdentityAgent none 
 IdentitiesOnly yes 
 # TODO: Try to understand why IdentityFile does not support %n
@@ -22,7 +23,6 @@ ForwardAgent no
 ForwardX11 no
 
 # PermitLocalCommand yes
-# LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
 
 # ClearAllForwardings yes
 # ExitOnForwardFailure yes
@@ -39,9 +39,10 @@ ForwardX11 no
 # DynamicForward 1080
 # RemoteForward 1080
 
-# # dev=tun99 ; sudo ip tuntap add dev $dev mode tun user $USER && sudo ip address add 10.0.2.1/24 dev $dev && sudo ip link set dev $dev up
-# Tunnel point-to-point
+# n=99; dev=tun$n ; sudo sh -c "ip link del $dev &>/dev/null; ip tuntap add dev $dev mode tun user $USER && sudo ip address add 10.0.$n.1/30 dev $dev && sudo ip link set dev $dev up"
 # TunnelDevice 99:99
+# Tunnel point-to-point
+# Tunnel ethernet
  
 # Match host = HOSTNAME exec "nmcli con show --active | grep -q NETWORK"
 # Match host = HOSTNAME exec "timeout 0.5 avahi-resolve --name HOSTNAME.local 2> /dev/null"

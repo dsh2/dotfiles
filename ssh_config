@@ -1,4 +1,5 @@
-ControlPath ~/.ssh/cm/%r@%h:%p%%%n
+# ControlPath ~/.ssh/cm/%r@%h:%p%%%n
+ControlPath ~/.ssh/cm/%h-%C
 
 Include ~/.ssh/hosts/*/config
 Include ~/.ssh/config.local
@@ -17,7 +18,6 @@ ControlMaster auto
 # EscapeChar ^^
 HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
-VisualHostKey yes
 
 Match exec "[ $(hostname) = p3-01964l ]"
 ControlPersist yes
