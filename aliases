@@ -623,10 +623,12 @@ sssh() {
 		if ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg colour22; $SHELL\" ; fi "; then
 			break
 		fi
+		# Update to notify-send.py
 		notify-send -u critical "Lost connection to \"$host\"."
 		sleep 8.4
-		print "Trying to reconnect to \"$host\" ... " | ts -m '[%F %T]'  
-	done;
+		echo -n "Trying to reconnect to \"$host\": " | ts -m '[%F %T]'  
+	done
+}
 
 mssh=(localhost)
 mssh() {
