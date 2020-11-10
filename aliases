@@ -632,15 +632,19 @@ sssh() {
 
 mssh=(localhost)
 mssh() {
+	while [[ $1 = -* ]]; do ssh_opt+=$1; shift; done
 	mssh_cmd=$*
 	[[ -z $mssh_cmd ]] && { echo "usage: mssh CMD (for hosts from env mssh)"; return 1; }
 	setopt nomonitor
 	local o=$(mktemp -dp . tmp-mssh-$(nn)-XXXXX)
 	typeset -p mssh_cmd > $o/cmd
 	# Dynamic tabs skrew up the output of fzf on tmux-log
-	local y=( /(e'{reply=("$mssh[@]")}'nOe'{REPLY=$#REPLY}') ); tabs $(( $#y[1] + 1 ))
+	# local y=( /(e'{reply=("$mssh[@]")}'nOe'{REPLY=$#REPLY}') ); tabs $(( $#y[1] + 1 ))
 	local h; for h in $mssh; do 
-		ssh -o ConnectionAttempts=3 -o ConnectTimeout=1 -o BatchMode=yes $h $@ |& tee $o/$h | sed "s:^:$h\t:" &
+		ssh -o ConnectionAttempts=3 \
+			-o ConnectTimeout=1 \
+			-o BatchMode=yes \
+			$ssh_opt $h $@ |& tee $o/$h | sed "s:^:$h\t:" &
 		# Try to archive mostly sorted output but still 
 		# allow laggy host to not delay overall execution
 		sleep 0.1 
