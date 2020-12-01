@@ -187,6 +187,8 @@ alias lna='lnav -q'
 alias lvv='lnav -q'
 alias lqq='lnav -q'
 alias r=ranger
+alias ra=ranger
+alias ran=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
@@ -256,7 +258,6 @@ RUN() {
 	# -Add option to run through watch to show diffs in output
 	# -Measure runtime
 	# -Log output in tmux-log or similar
-	# -Option to clear -x or not
 	# -Press any key for manual run
 	# o:=output_dir -output-dir:=output_dir \
 	# t:=meassure_runtime -meassure-runtime:=meassure_runtime \
@@ -275,32 +276,25 @@ RUN() {
 	fi
 	watch_objs=(${watch_objs:gs:--watch:::gs:-w::}) # HELP: This cannot be - by no means - zsh-idiomatics
 	[[ $#watch_objs = 0 || -n $watch_run_objs ]] && watch_objs+=$1
+	[[ -f $watch_objs[1] ]] || watch_objs[1]=$(whence $watch_objs[1])
 	run_obj=$*
-	[ -z $run_obj ] && { echo Nothing to run.; return; }
-	[ $#watch_objs = 0 ] && { echo Nothing to watch.; return; }
+	[ -z $run_obj ] && { echo "Nothing to run."; return; }
+	[ $#watch_objs = 0 ] && { echo "Nothing to watch."; return; }
 	# TODO: Resolve target executable
 	# [ ! -e $WATCH ] && WATCH=$(whence $WATCH)
-	while true; do
+	while :; do
 		if [[ -z $skip_first_run ]]; then
-			[[ -n $clear_screen ]] && clear -x
-			if [[ -n $verbose ]]; then
-				print "Watching: $watch_objs"
-				print "Running: $run_obj"
-			fi
-			[[ -n $print_time ]] && print "Start: $(n)"
+			[[ -z $clear_screen ]] || clear -x
+			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj"
+			[[ -z $print_time ]] || print "Start: $(n)"
 			print -P $LINE_SEPARATOR
-			$=run_obj
-			err=$?
+			eval $run_obj ; err=$?
 			print -P $LINE_SEPARATOR
 			(( err )) && err "err = $err"
-			[[ -n $print_time ]] && print "Stop: $(n)"
+			[[ -z $print_time ]] || print "Stop: $(n)"
 		fi
 		unset skip_first_run
-		# if ! inotifywait -q -e move_self -e modify $=watch_objs > /dev/null ; then
-		if ! inotifywait -q -e attrib -e move_self -e modify $=watch_objs > /dev/null ; then
-			echo inotifywait failed!
-			return
-		fi
+		inotifywait -qqe attrib,move_self,modify $=watch_objs || { echo "inotifywait failed!" ; return ; }
 		# TODO: check if run failed. Add options for sleep, ignore, abort, etc.
 		sleep 0.1
 	done
