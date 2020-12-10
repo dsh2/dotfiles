@@ -1,0 +1,8 @@
+#!/bin/sh
+
+(
+	echo "cmd_line: \"$*\""
+	echo "id: $(id)"
+	pstree -ps $$
+) | 
+	logger --tag "caller_log"
