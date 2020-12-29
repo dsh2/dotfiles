@@ -1,4 +1,4 @@
-# Configuration file for Wireshark 3.2.5.
+# Configuration file for Wireshark 3.2.7.
 #
 # This file is regenerated each time preferences are saved within
 # Wireshark. Making manual changes should be safe, however.
@@ -216,7 +216,7 @@ gui.inactive_frame.style: GRADIENT
 
 # Packet list hidden columns
 # List all columns to hide in the packet list.
-gui.column.hidden: 
+gui.column.hidden: %Cus:eth.src:0:R,%Cus:eth.dst:0:R,%Cus:http.response.code:0:R,%Cus:wg.encrypted_packet:0:R,%Cus:wg.static.known_privkey:0:R,%Cus:wg.sender:0:R,%Cus:tls.handshake.random:0:R,%Cus:http.request.full_uri:0:R,%Cus:vlan.id:0:R
 
 # Packet list column format
 # Each pair of strings consists of a column title and its format
@@ -241,6 +241,7 @@ gui.column.format:
 	"Random", "%Cus:tls.handshake.random:0:R",
 	"Full request URI", "%Cus:http.request.full_uri:0:R",
 	"ID", "%Cus:vlan.id:0:R",
+	"Packet comments", "%Cus:pkt_comment:0:R",
 	"Info", "%i"
 
 ####### User Interface: Font ########
@@ -431,7 +432,7 @@ capture.devices_pmode: enp0s31f6(1),lo(1),any(1),wlp0s20f3(1),virbr0(1),bluetoot
 
 # Remote capture filter
 # A string
-#extcap.ciscodump.remotefilter: deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::9afa:9bff:fee9:511d any eq 0, deny tcp any eq 0 host fe80::9afa:9bff:fee9:511d, deny tcp host fe80::46c1:9214:73:a189 any eq 0, deny tcp any eq 0 host fe80::46c1:9214:73:a189, deny tcp host fe80::f3c5:8e8b:6c1b:8840 any eq 0, deny tcp any eq 0 host fe80::f3c5:8e8b:6c1b:8840, deny tcp host fe80::5bb:1105:c099:cbec any eq 0, deny tcp any eq 0 host fe80::5bb:1105:c099:cbec, deny tcp host 172.18.109.22 any eq 0, deny tcp any eq 0 host 172.18.109.22, deny tcp host 192.168.122.1 any eq 0, deny tcp any eq 0 host 192.168.122.1, deny tcp host 10.13.37.116 any eq 0, deny tcp any eq 0 host 10.13.37.116, deny tcp host 172.17.4.193 any eq 0, deny tcp any eq 0 host 172.17.4.193, permit ip any any
+#extcap.ciscodump.remotefilter: deny tcp host fe80::2e4d:1be5:2893:3d30 any eq 0, deny tcp any eq 0 host fe80::2e4d:1be5:2893:3d30, deny tcp host 2003:d4:6f19:2b93:c2fb:907f:9356:f371 any eq 0, deny tcp any eq 0 host 2003:d4:6f19:2b93:c2fb:907f:9356:f371, deny tcp host fe80::692:26ff:fe88:405f any eq 0, deny tcp any eq 0 host fe80::692:26ff:fe88:405f, deny tcp host fe80::b886:f1f6:f2e9:d2bb any eq 0, deny tcp any eq 0 host fe80::b886:f1f6:f2e9:d2bb, deny tcp host fe80::baec:de61:bcab:dfa4 any eq 0, deny tcp any eq 0 host fe80::baec:de61:bcab:dfa4, deny tcp host fe80::f590:7604:1402:38fe any eq 0, deny tcp any eq 0 host fe80::f590:7604:1402:38fe, deny tcp host 2a02:8109:b6bf:5c14:ce80:7aae:71e9:6b22 any eq 0, deny tcp any eq 0 host 2a02:8109:b6bf:5c14:ce80:7aae:71e9:6b22, deny tcp host 2a02:8109:b6bf:5c14::1cdc any eq 0, deny tcp any eq 0 host 2a02:8109:b6bf:5c14::1cdc, deny tcp host 192.168.2.105 any eq 0, deny tcp any eq 0 host 192.168.2.105, deny tcp host 10.42.0.1 any eq 0, deny tcp any eq 0 host 10.42.0.1, deny tcp host 10.0.25.1 any eq 0, deny tcp any eq 0 host 10.0.25.1, deny tcp host 10.0.19.1 any eq 0, deny tcp any eq 0 host 10.0.19.1, deny tcp host 192.168.0.21 any eq 0, deny tcp any eq 0 host 192.168.0.21, permit ip any any
 
 # Packets to capture
 # A string
@@ -511,7 +512,7 @@ capture.devices_pmode: enp0s31f6(1),lo(1),any(1),wlp0s20f3(1),virbr0(1),bluetoot
 
 # Remote capture filter
 # A string
-#extcap.sshdump.remotefilter: not ((host fe80::9afa:9bff:fee9:511d or host fe80::9afa:9bff:fee9:511d or host fe80::9afa:9bff:fee9:511d or host fe80::46c1:9214:73:a189 or host fe80::f3c5:8e8b:6c1b:8840 or host fe80::5bb:1105:c099:cbec or host 172.18.109.22 or host 192.168.122.1 or host 10.13.37.116 or host 172.17.4.193) and port 22)
+#extcap.sshdump.remotefilter: not ((host fe80::2e4d:1be5:2893:3d30 or host 2003:d4:6f19:2b93:c2fb:907f:9356:f371 or host fe80::692:26ff:fe88:405f or host fe80::b886:f1f6:f2e9:d2bb or host fe80::baec:de61:bcab:dfa4 or host fe80::f590:7604:1402:38fe or host 2a02:8109:b6bf:5c14:ce80:7aae:71e9:6b22 or host 2a02:8109:b6bf:5c14::1cdc or host 192.168.2.105 or host 10.42.0.1 or host 10.0.25.1 or host 10.0.19.1 or host 192.168.0.21) and port 22)
 
 # Packets to capture
 # A string
@@ -537,7 +538,7 @@ capture.devices_pmode: enp0s31f6(1),lo(1),any(1),wlp0s20f3(1),virbr0(1),bluetoot
 
 # Resolve IPv4, IPv6, and IPX addresses into host names. The next set of check boxes determines how name resolution should be performed. If no other options are checked name resolution is made from Wireshark's host file and capture file name resolution blocks.
 # TRUE or FALSE (case-insensitive)
-#nameres.network_name: FALSE
+nameres.network_name: TRUE
 
 # Whether address/name pairs found in captured DNS packets should be used by Wireshark for name resolution.
 # TRUE or FALSE (case-insensitive)
@@ -1197,6 +1198,10 @@ capture.devices_pmode: enp0s31f6(1),lo(1),any(1),wlp0s20f3(1),virbr0(1),bluetoot
 # Enabling this will tell which BitTorrent client that produced the handshake message
 # TRUE or FALSE (case-insensitive)
 #bittorrent.decode_client: FALSE
+
+# The maximum size of the buffer for uncompressed messages. If a message is larger than this, then the packet containing the message, as well as subsequent packets, will fail to decompress
+# A decimal number
+#blip.max_uncompressed_size: 64
 
 # Force decoding stream as A2DP with Content Protection SCMS-T 
 # TRUE or FALSE (case-insensitive)
