@@ -407,6 +407,12 @@ function page_last_output_fullscreen {
 }
 bindkey_func '^xx' page_last_output_fullscreen
 
+function page_last_output_split {
+	check_output vp || return
+	tmux split -hp 50 $=vimp $tmux_log_file
+}
+bindkey_func '^xl' page_last_output_split
+
 function page_last_output {
 	check_output vp || return
 	# TODO: Remove hook after select-layout. Add single-shot hooks to tmux?
