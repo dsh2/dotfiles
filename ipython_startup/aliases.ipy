@@ -1,9 +1,11 @@
-%alias_magic --line -p "_oh" ho page
 %alias_magic --line -p "-p" ep edit
 %alias_magic --line -p "-u -n -g" h history
 %alias_magic --line -p "0/" E edit
+%alias_magic --line -p "_oh" ho page
 %alias_magic --line A alias_magic
 %alias_magic --line P page
+%alias_magic --line R run
+%alias_magic --line T type
 %alias_magic --line d debug
 %alias_magic --line e edit
 %alias_magic --line p page
