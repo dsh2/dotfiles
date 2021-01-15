@@ -4,18 +4,16 @@ readonly N="/dev/null"
 readonly DNS="9.9.9.9"
 readonly curl="curl --connect-timeout 1 --silent"
 
+# Debug settings
 # readonly curl="curl --connect-timeout 1 --trace -"
 # set -x
 
-# set -e
-# set -u
-
 has() { for f in $@; do type $f > /dev/null || return 1 ; done }
 log() { logger -s -t wifi-on-ice -- ${@:-No message.}; }
-# TODO: Check if exit screws dhcpcd 
+# TODO: Check if exit screws with sourcing from dhcpcd 
 die() { log "Error: $* Exiting..."; exit 244; }
-connected() { ping -W 1 -i 0.2 -c 2 $DNS >$N; return 1; }
-# connected() { ping -W 1 -i 0.2 -c 2 $DNS >$N; }
+# connected() { ping -W 1 -i 0.2 -c 2 $DNS >$N; return 1; }
+connected() { ping -W 1 -i 0.2 -c 2 $DNS >$N; }
 
 install_me() {
 	src="$0"
@@ -47,17 +45,17 @@ install() {
 ssid() {
 	iface=$1
 	ssid=$(iwgetid $iface -r)
+	log "ssid = $ssid"
 	[ -z $ssid ] && ssid=$(iw dev $iface info | sed -nE 's:^.*ssid (.*)$:\1:p')
 	[ -z $ssid ] && die "Failed to acquire SSID."
 	echo $ssid
 }
 
-
 nm_dispatch() {
 	iface=$1
 	event=$2
 	case $event in
-		(.*-change$|^up$) 
+		(*-change$|up) 
 			connect $iface
 			;;
 	esac
@@ -73,14 +71,14 @@ dhcpcd_hook() {
 }
 
 direct_connect() {
-	[ $# != 1 ] && die "Expected interface name as only parameter. (\"$@\")."
-	iface=$1
+	[ $# -gt 1 ] && die "Too many parameters. Expected at most interface name as parameter. (\"$@\")."
+	[ $# -eq 0 ] && iface=$(ip -j route get $DNS | jq -r 'first|.dev') || iface=$1
 	[ -h /sys/class/net/$iface ] || die "Interface \"$iface\" not found."
-	connect $iface
+	connect $iface {
 }
 
 connect() {
-	connected && { log "DNS $DNS already available."; return 0; }
+	connected && { log "DNS $DNS already available. Not curling wifi-on-ice."; return 0; }
 	iface=$1
 	ssid=$(ssid $iface)
 	[ "$ssid" = "WIFIonICE" ] || { log "Ignoring wifi \"$ssid\"."; return 0; }
@@ -103,7 +101,7 @@ main() {
 	has iw iwgetid || die "Please install iw (https://mirrors.edge.kernel.org/pub/software/network/iw/)"
 	has xmllint || die "Please install libxml2-utils (http://xmlsoft.org/)"
 
-	[ $# = 1 -a $1 = "install" ] && { shift; install $@; }  # no return
+	[ $# = 1 -a "$1" = "install" ] && { shift; install $@; }  # no return
 
 	caller=$(basename -- "$(ps -o cmd= $(ps -o ppid= $$))")
 	# log "caller = $caller"
