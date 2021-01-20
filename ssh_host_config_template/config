@@ -1,13 +1,9 @@
 # vim: se ft=sshconfig:
 
-Host HOSTNAME
-# HostName NAME
-# HostKeyAlias HOSTNAME
+Host HOSTNAME HOSTNAME.local HOSTNAME.jump HOSTNAME.tor
+HostKeyAlias HOSTNAME
 # User USERNAME
 # Password PASSWORD
-
-# VisualHostKey Yes
-# HashKnownHosts yes
 
 # IdentityAgent none 
 IdentitiesOnly yes 
@@ -17,7 +13,8 @@ IdentityFile ~/.ssh/hosts/HOSTNAME/id
 # AddKeysToAgent confirm
 # AddKeysToAgent yes
 
-# ControlPersist yes
+# VisualHostKey Yes
+# HashKnownHosts yes
 
 ForwardAgent no
 ForwardX11 no
@@ -29,6 +26,9 @@ ForwardX11 no
 
 # tinyproxy 
 # RemoteForward localhost:8888 localhost:8888
+
+# cups
+# LocalForward localhost:631 localhost:631 
 
 # usbip
 # LocalForward localhost:3240 localhost:3240 
@@ -43,12 +43,14 @@ ForwardX11 no
 # TunnelDevice 99:99
 # Tunnel point-to-point
 # Tunnel ethernet
- 
-# Match host = HOSTNAME exec "nmcli con show --active | grep -q NETWORK"
-# Match host = HOSTNAME exec "timeout 0.5 avahi-resolve --name HOSTNAME.local 2> /dev/null"
-# HostName HOSTNAME.local
-# Port 22
 
-# Match host = HOSTNAME all
-# HostName HOSTNAME
-# Port 9022 
+Match host = HOSTNAME.jump all
+# ProxyJump aws-gw
+ProxyJump b3.dsh2.de
+# TODO: Make jump client register its hostname at jumphost
+Hostname localhost
+Port 20980
+
+Match host = HOSTNAME.tor all
+Port 22
+ProxyCommand sh -c 'TSOCKS_DEBUG=0 tsocks ssh -i ~/.ssh/hosts/HOSTNAME/id %r@%h'

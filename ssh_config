@@ -1,5 +1,7 @@
+ControlPath ~/.ssh/cm/%r@%n-%p-%C
 # ControlPath ~/.ssh/cm/%r@%h:%p%%%n
-ControlPath ~/.ssh/cm/%h-%C
+ControlMaster auto
+ControlPersist yes
 
 Include ~/.ssh/hosts/*/config
 Include ~/.ssh/config.local
@@ -9,15 +11,15 @@ StrictHostKeyChecking ask
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
-UpdateHostKeys ask
+# UpdateHostKeys ask
+UpdateHostKeys no
 
-LocalCommand  ~/.ssh/hosts/%n/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
+LocalCommand  ~/.ssh/hosts/_host_config_template/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
 
-ControlMaster auto
+PasswordAuthentication no
 
+ConnectTimeout 1
+ 
 # EscapeChar ^^
 HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
-
-Match exec "[ $(hostname) = p3-01964l ]"
-ControlPersist yes

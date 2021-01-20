@@ -37,7 +37,7 @@ mount_remote_fs()
 	ssh_notify low "Successfully mounted sshfs."
 
 	# Create second mount point with root access - if possible
-	[[ $( ssh $R sudo id -u ) = 0 ]] || return 
+	[[ $remote_username != "root" || $( ssh $R sudo id -u ) = 0 ]] || return 
 	mnt_point=$mnt_point-ROOT
 	fusermount -u $mnt_point >&$n || true
 	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
@@ -89,21 +89,21 @@ main()
 	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\""
 	(( $#@ >= 11 )) || return 
 
-	C_hash=$1
-	local_home=$2
-	remote_hostname=$3
-	local_user_id=$4
-	local_hostname=$5
-	local_hostname_full=$6
-	remote_hostname_cmd=$7
-	remote_port=$8
-	remote_username=$9; shift
-	local_tuntap=$9; shift
-	local_username=$9
+	C_hash=$1                 # %C
+	local_home=$2             # %d
+	remote_hostname=$3        # %h
+	local_user_id=$4          # %i
+	local_hostname=$5         # %L
+	local_hostname_full=$6    # %l
+	remote_hostname_cmd=$7    # %n
+	remote_port=$8            # %p
+	remote_username=$9; shift # %r
+	local_tuntap=$9; shift    # %T
+	local_username=$9         # %u
 
 	# TODO: Check if adding '-p $remote_port' makes sense...
 	R="$remote_username@$remote_hostname_cmd"
-	( umask 077; echo $R > /tmp/ssh )
+	( umask 077; echo $R > /tmp/ssh; ssh_notify low "Updated ssh host history (/tmp/ssh)" )
 
 	sleep 0.3
 	o=$( ssh -o BatchMode=yes -O check $R 2>&1 ) || 
