@@ -769,4 +769,8 @@ alias WHY='2>$N find / -xdev -type f -mtime -10 -size +1M -print0 | xargs -0 -r 
 alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
+<<<<<<< HEAD
 alias dms=dmsg
+=======
+alias dms='dmesg -Tw | lnav -q'
+>>>>>>> d5187c25aa0f524f5aa1d181efc67b58e1a25c96
