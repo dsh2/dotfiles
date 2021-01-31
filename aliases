@@ -71,7 +71,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # git
 alias g=git
 alias gi=git
-alias gc='git commit --verbose'
+alias gcm='git commit --verbose -m ""'
 alias gC='git cherry --verbose'
 alias gcn='git clean --dry-run'
 alias gca='git commit --verbose --amend'
@@ -83,6 +83,7 @@ alias grp='git reset --patch'
 alias gst='noglob git status -sb -- '
 alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
+alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
 alias glg='noglob git log'
 # gst() {
@@ -127,7 +128,6 @@ alias gkk='v +"GV --all"'
 alias gss='GIT_MODIFIED_FILES=$(git ls-files --modified) && [ -n $GIT_MODIFIED_FILES ] && $EDITOR $=GIT_MODIFIED_FILES +Gstatus +only'
 alias gcp='git cherry-pick -x'
 alias gcpa='git cherry-pick --abort'
-alias gs='git stash'
 alias gsl='git stash list -p'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
 alias gppp='gpp && git push'
@@ -145,7 +145,6 @@ alias gsmp='git submodule foreach git pull'
 alias gsmcm='git submodule foreach git checkout master'
 alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
-alias gl='git lg | less'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 
 # ls
@@ -617,7 +616,7 @@ sssh() {
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do 
-		if ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg colour22; $SHELL\" ; fi "; then
+		if ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi "; then
 			break
 		fi
 		# Update to notify-send.py
@@ -770,3 +769,4 @@ alias WHY='2>$N find / -xdev -type f -mtime -10 -size +1M -print0 | xargs -0 -r 
 alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
+alias dms='dmesg -Tw | lnav -q'
