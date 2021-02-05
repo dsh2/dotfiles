@@ -2,11 +2,11 @@
 
 Host me
 HostName localhost
+HostKeyAlias me
 Port 2299
-User dsh2
+User jump
 
 IdentitiesOnly yes 
 IdentityFile ~/.ssh/hosts/me/id.pub
 
-# ControlPersist yes
-ControlPersist no
+ControlPersist yes
