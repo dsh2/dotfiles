@@ -18,7 +18,7 @@ LocalCommand  ~/.ssh/hosts/_host_config_template/local_command.sh %C %d %h %i %L
 
 PasswordAuthentication no
 
-ConnectTimeout 1
+ConnectTimeout 4
  
 # EscapeChar ^^
 HashKnownHosts no
