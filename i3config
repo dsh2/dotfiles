@@ -40,9 +40,8 @@ set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 
 # Default applications {{{
 set $browser google-chrome-stable
-set $terminal kitty
-set $terminal_control kitty -o allow_remote_control=yes 
-set $terminal_tmux kitty zsh -ic 'tmm'
+set $terminal kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance
+set $terminal_tmux kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance zsh -ic 'tmm'
 set $lock_now ~/bin/i3lock-wrapper.sh
 # }}}
 
@@ -112,7 +111,6 @@ bindsym $meta+shift+3 [window_role="(?i)browser"] focus
 # Start a terminal {{{
 bindsym $meta+Return exec $terminal_tmux
 bindsym $meta+$shift+Return exec $terminal
-bindsym $meta+$alt+Return exec $terminal_control
 bindsym $meta+7 split horizontal, exec $terminal
 bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
 bindsym $meta+8 split vertical, exec $terminal
