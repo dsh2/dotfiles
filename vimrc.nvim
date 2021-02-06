@@ -681,6 +681,7 @@ if vim_plug_available
 	nmap g+ <Plug>(highlightedundo-gplus)
 	"}}}
 	Plug 'fatih/vim-go'"{{{
+	let g:go_version_warning = 0
 	let g:go_def_mode='gopls'
 	let g:go_info_mode='gopls'
 	" run :GoBuild or :GoTestCompile based on the go file
