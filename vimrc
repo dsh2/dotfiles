@@ -510,7 +510,8 @@ let g:peekaboo_compact = 0
 "}}}
 Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 let g:formatters_json = ['my_custom_json']
-let g:formatdef_my_custom_json = '"jq -s"'
+" let g:formatdef_my_custom_json = '"jq -s"'
+let g:formatdef_my_custom_json = '"jq ."'
 let g:autoformat_verbosemode=1
 " TODO: try to understand why resetting syn is necessary
 map <leader>A :Autoformat \| syn off \| syn on \" set foldlevel=1<cr>
@@ -656,7 +657,9 @@ map ]2 <leader>btoa
 " }}}
 Plug 'tpope/vim-abolish'
 Plug 'jremmen/vim-ripgrep'
-Plug 'mogelbrod/vim-jsonpath'
+Plug 'mogelbrod/vim-jsonpath'" {{{
+let g:jsonpath_register = '+'
+"}}}
 Plug 'pedrohdz/vim-yaml-folds'
 Plug 'matze/vim-ini-fold'
 autocmd vimrc BufNewFile,BufReadPost *.nmconnection setfiletype dosini
