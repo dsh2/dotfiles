@@ -1,2 +1,10 @@
+# vim: ft=python
 options.default_width = 33
-options.quitguard = True
+# options.quitguard = True
+options.disp_date_fmt = '%F %T'
+options.min_memory_mb = 100  # stop processing without 100MB free
+
+# bindkey('0', 'go-leftmost')   # alias '0' to go to first column, like vim
+bindkey('0', 'go-leftmost')   # alias '0' to go to first column, like vim
+bindkey('Q', 'go-leftmost')   # 
+pppp = pathlib.Path('/home/dsh2/.visidatarc')
