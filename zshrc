@@ -327,7 +327,7 @@ bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
 XP=${XP:-cat}
-if pidof copyqq >/dev/null; then
+if pidof copyq >/dev/null; then
 	XP="copyq read 0"
 elif type xclip >/dev/null; then
 	XP="xclip -selection clipboard -out"
@@ -368,7 +368,9 @@ function copy_last_command {
 		&& zle -M "Copied last command line." \
 		|| zle -M "FAILED to copy last command line. (XC=$XC)"
 }
-bindkey_func '^x^k' copy_last_command
+# bindkey_func '^x^k' copy_last_command
+bindkey '^x^k' up-line
+bindkey '^x^j' down-line
 
 # Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
@@ -450,7 +452,7 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:fs:  : ::s:# ::}
+    BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
 }
 bindkey_func '^x^ ' unify_whitespace
 
