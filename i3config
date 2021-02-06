@@ -40,9 +40,8 @@ set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 
 # Default applications {{{
 set $browser google-chrome-stable
-set $terminal kitty
-set $terminal_control kitty -o allow_remote_control=yes 
-set $terminal_tmux kitty zsh -ic 'tmm'
+set $terminal kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance
+set $terminal_tmux kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance zsh -ic 'tmm'
 set $lock_now ~/bin/i3lock-wrapper.sh
 # }}}
 
@@ -112,7 +111,6 @@ bindsym $meta+shift+3 [window_role="(?i)browser"] focus
 # Start a terminal {{{
 bindsym $meta+Return exec $terminal_tmux
 bindsym $meta+$shift+Return exec $terminal
-bindsym $meta+$alt+Return exec $terminal_control
 bindsym $meta+7 split horizontal, exec $terminal
 bindsym $meta+$shift+7 split horizontal, exec $terminal_tmux
 bindsym $meta+8 split vertical, exec $terminal
@@ -236,8 +234,8 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
 bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && systemctl suspend || notify-send -u critical "WARNING: i3lock failed." 
-bindsym $meta+$shift+w exec systemctl hibernate || notify-send -u critical "WARNING: hibernate failed." 
-bindsym $meta+$ctrl+$shift+w exec systemctl suspend || notify-send -u critical "WARNING: suspend failed." 
+bindsym $meta+$shift+w exec systemctl suspend || notify-send -u critical "WARNING: suspend failed." 
+bindsym $meta+$ctrl+$shift+w exec systemctl hibernate || notify-send -u critical "WARNING: hibernate failed." 
 bindsym $meta+$ctrl+$alt+w exec rfkill list wifi | grep -q -- "Soft blocked: yes" && rfkill unblock wifi || rfkill block wifi 
 bindsym $meta+$ctrl+$alt+b exec rfkill block all
 bindsym $meta+$ctrl+$alt+$shift+b exec rfkill block all

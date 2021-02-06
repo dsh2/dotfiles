@@ -327,7 +327,7 @@ bindkey_func '\e=' backward_kill_default_word   # = is next to backspace
 bindkey_func '\e-' backward_kill_default_word   # - is next to =
 
 XP=${XP:-cat}
-if pidof copyqq >/dev/null; then
+if pidof copyq >/dev/null; then
 	XP="copyq read 0"
 elif type xclip >/dev/null; then
 	XP="xclip -selection clipboard -out"
@@ -368,7 +368,9 @@ function copy_last_command {
 		&& zle -M "Copied last command line." \
 		|| zle -M "FAILED to copy last command line. (XC=$XC)"
 }
-bindkey_func '^x^k' copy_last_command
+# bindkey_func '^x^k' copy_last_command
+bindkey '^x^k' up-line
+bindkey '^x^j' down-line
 
 # Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
@@ -450,7 +452,7 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:fs:  : ::s:# ::}
+    BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
 }
 bindkey_func '^x^ ' unify_whitespace
 
@@ -547,7 +549,7 @@ zle_die() {
 # TODO: Instead split vim with new script containing current line and RUN-split
 function edit_command_line() {
 	[[ -z $BUFFER ]] && zle up-history
-	local old_buffer=$BUFFER
+	local old_buffer="$BUFFER"
 	zle kill-whole-line
 	zle -M "Enter script suffix for \"$old_buffer\"."
 	zle recursive-edit || { zle -M "Aborted." ; return; }
@@ -556,7 +558,8 @@ function edit_command_line() {
 	run_file=${(q)run_file}
 	zle kill-whole-line
 	local editor=${${VISUAL:-${EDITOR:-vi}}}
-	print -l -- '#!'$SHELL $'' $old_buffer > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
+	print -l -- '#!'$SHELL $'' "$old_buffer" | tee /tmp/some_file > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
+	echo $old_buffer | tee /tmp/some_file >> $run_file
 	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
 		tmux split -vbp 80 $SHELL -ic "$editor $run_file; $SHELL -i "
@@ -620,6 +623,8 @@ bindkey '^v^v' tmux-pane-words-anywhere
 zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
+bindkey -s pslc\  "psl -c ''"
+bindkey -s psll\  'psl -c "select * from"'
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
@@ -636,7 +641,10 @@ bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dh\  '~/*(.om[1])\t'
+bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
+bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
+bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t'
 bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
@@ -788,7 +796,7 @@ fpath+=~/src/radare2/doc/zsh
 fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 
 zmodload zsh/complist
-autoload -U compinit && compinit
+autoload -U compinit && compinit -i
 autoload -U zed
 
 # TODO: check fpath vs. source
@@ -823,7 +831,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi legd
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -1154,8 +1162,9 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g E2='2>&1 '
 alias -g E@='2>&1 '
-alias -g GE="| grep -i -E '^'"
+alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
+alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -q'
 alias -g LV='|& lnav'
 alias -g LVT='|& lnav -t'
@@ -1176,14 +1185,14 @@ alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
-alias -g X='| xargs'
-# alias -g X0='| xargs -0'
-alias -g XP='| xargs -P $(nproc)'
-alias -g XZ='| xargs -P $(nproc) -0'
-alias -g XP0='| xargs -P $(nproc) -0'
-alias -g gg='| grep -i -- ' # TODO: use rg with rust regex instead
+alias -g X='| xargs -r'
+# alias -g X0='| xargs -r0'
+alias -g XP='| xargs -rP $(nproc)'
+alias -g XZ='| xargs -rP $(nproc) -0'
+alias -g XP0='| xargs -rP $(nproc) -0'
+alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
-alias -g ggv='| grep -v -- '
+alias -g ggv='|& grep -v -- '
 alias -g hh='| hexdump -C | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 if has hexa; then
@@ -1197,10 +1206,13 @@ alias -g lqtt='|& lnav -qt'
 alias -g ll='|& less'
 alias -g LL='|& less'
 alias -g Ll='| leg '
+alias -g LLL='| leg --processDataTime --lifesign'
 alias -g xr='| xxd -r -p'
 alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
+alias SP="| sponge $f"
+alias SPP="| sponge -a $f"
 
 min_version() {
 	local current_version=$1
@@ -1470,4 +1482,14 @@ zsh_source -q ~/.android-serial
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
+proc_loaded() { (( $#jobtexts > ${1:-$(nproc)} )) }
+sigint() { trap 'done=1' INT; }
 autoload zargs
+
+zmodload zsh/mathfunc
+# TODO: Is this a good idea? How do sparse files relate to ulimit?
+limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
+
+
+# leg_db query
+# tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
