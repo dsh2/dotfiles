@@ -622,6 +622,8 @@ bindkey '^v^v' tmux-pane-words-anywhere
 zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
+bindkey -s pslc\  "psl -c ''"
+bindkey -s psll\  'psl -c "select * from"'
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
@@ -638,7 +640,10 @@ bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dh\  '~/*(.om[1])\t'
+bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
+bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
+bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t'
 bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
