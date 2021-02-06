@@ -549,7 +549,7 @@ zle_die() {
 # TODO: Instead split vim with new script containing current line and RUN-split
 function edit_command_line() {
 	[[ -z $BUFFER ]] && zle up-history
-	local old_buffer=$BUFFER
+	local old_buffer="$BUFFER"
 	zle kill-whole-line
 	zle -M "Enter script suffix for \"$old_buffer\"."
 	zle recursive-edit || { zle -M "Aborted." ; return; }
@@ -558,7 +558,8 @@ function edit_command_line() {
 	run_file=${(q)run_file}
 	zle kill-whole-line
 	local editor=${${VISUAL:-${EDITOR:-vi}}}
-	print -l -- '#!'$SHELL $'' $old_buffer > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
+	print -l -- '#!'$SHELL $'' "$old_buffer" | tee /tmp/some_file > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
+	echo $old_buffer | tee /tmp/some_file >> $run_file
 	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
 		tmux split -vbp 80 $SHELL -ic "$editor $run_file; $SHELL -i "
@@ -1481,4 +1482,14 @@ zsh_source -q ~/.android-serial
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
+proc_loaded() { (( $#jobtexts > ${1:-$(nproc)} )) }
+sigint() { trap 'done=1' INT; }
 autoload zargs
+
+zmodload zsh/mathfunc
+# TODO: Is this a good idea? How do sparse files relate to ulimit?
+limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
+
+
+# leg_db query
+# tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
