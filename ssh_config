@@ -1,5 +1,5 @@
-ControlPath ~/.ssh/cm/%r@%n-%p-%C
-# ControlPath ~/.ssh/cm/%r@%h:%p%%%n
+# ControlPath ~/.ssh/cm/%r@%n-%p-%C
+ControlPath ~/.ssh/cm/%n
 ControlMaster auto
 ControlPersist yes
 
