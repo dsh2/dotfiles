@@ -1161,7 +1161,7 @@ alias -g DW="| tr '\a\b\f\n\r\t\v[:cntrl:]' ' ' | sed -e 's:  +: :' -e 's:^ :: '
 alias -g DX="| sed -e 's/<[^>]*>//g'" # Delete XML/HTML - very basic
 alias -g E2='2>&1 '
 alias -g E@='2>&1 '
-alias -g GE="| grep -i -E '^'"
+alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -q'
@@ -1205,10 +1205,13 @@ alias -g lqtt='|& lnav -qt'
 alias -g ll='|& less'
 alias -g LL='|& less'
 alias -g Ll='| leg '
+alias -g LLL='| leg --processDataTime --lifesign'
 alias -g xr='| xxd -r -p'
 alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
+alias SP="| sponge $f"
+alias SPP="| sponge -a $f"
 
 min_version() {
 	local current_version=$1
