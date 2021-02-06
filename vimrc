@@ -361,8 +361,8 @@ let g:vim_json_syntax_concealcursor = 0
 " }}}
 Plug 'scrooloose/nerdtree' "{{{
 Plug 'Xuyuanp/nerdtree-git-plugin'
-let g:NERDTreeShowIgnoredStatus = 1
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusShowIgnored = 1
+let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ "Modified"  : "M",
     \ "Staged"    : "+",
     \ "Untracked" : "N",
