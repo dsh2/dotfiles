@@ -790,7 +790,7 @@ fpath+=~/src/radare2/doc/zsh
 fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 
 zmodload zsh/complist
-autoload -U compinit && compinit
+autoload -U compinit && compinit -i
 autoload -U zed
 
 # TODO: check fpath vs. source
