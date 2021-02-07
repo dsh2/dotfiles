@@ -1,4 +1,4 @@
-ControlPath ~/.ssh/cm/%n
+ControlPath ~/.ssh/cp_hashed/%C
 ControlMaster auto
 ControlPersist yes
 
@@ -14,6 +14,7 @@ ServerAliveCountMax 2
 UpdateHostKeys no
 
 LocalCommand  ~/.ssh/hosts/_host_config_template/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
+PermitLocalCommand yes
 
 PasswordAuthentication no
 

@@ -115,7 +115,7 @@ main()
 
 	# TODO: Check if adding '-p $remote_port' makes sense...
 	R="$remote_username@$remote_hostname_cmd"
-	( umask 077; echo $R > /tmp/ssh; ssh_notify low "Updated ssh host history (/tmp/ssh)" )
+	echo "$(date '+%F %T') $R:$remote_port" >> ~/.ssh/host_history; ssh_notify low "Updated ssh host history." 
 
 	sleep 0.3
 	o=$( ssh -o BatchMode=yes -O check $R 2>&1 ) || 
