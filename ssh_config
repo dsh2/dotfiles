@@ -1,4 +1,3 @@
-# ControlPath ~/.ssh/cm/%r@%n-%p-%C
 ControlPath ~/.ssh/cm/%n
 ControlMaster auto
 ControlPersist yes

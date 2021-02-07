@@ -84,7 +84,19 @@ connect_tun()
 	ssh_notify low "Successfully connected tunnel."
 }
 
-main() 
+uncloak_control_path()
+{
+	local -r cp="$local_home/.ssh/cp"
+	local -r cph="$local_home/.ssh/cp_hashed"
+	mkdir -p $cp $cph
+	local -r cph_host=$cph/$C_hash
+	[ -S $cph_host ] || 
+	    { ssh_notify critical "Control path not found. (\"$cph_host\")"; return ; }
+	ln -sf $cph_host $cp/$local_username@$local_hostname---$R:$remote_port || 
+	    { ssh_notify critical "Failed to link hashed control path."; return ; }
+}
+
+main()
 {
 	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\""
 	(( $#@ >= 11 )) || return 
