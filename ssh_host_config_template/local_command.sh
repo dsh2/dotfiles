@@ -21,10 +21,15 @@ ssh_notify()
 
 check_remote_clock() 
 {
-	time_diff_ok=2 # seconds
-	integer -r time_diff=$[ $(ssh $R date -u '+%s') - $(date -u '+%s') ]
+	time_diff_ok=2  # seconds
+	
+	integer -r remote_time=$(ssh $R date -u '+%s')
+	(( !$? && remote_time )) ||
+		{ ssh_notify critical "Failed to acquire remote time."; return ; }
+
+	integer -r time_diff=$[ $remote_time - $(date -u '+%s') ]
 	(( $time_diff > $time_diff_ok || $time_diff < -$time_diff_ok )) &&
-		ssh_notify critical "Remote clock deviates more than $time_diff_ok seconds (diff = $time_diff)."
+		ssh_notify critical "$remote_time Remote clock deviates more than $time_diff_ok seconds (diff = $time_diff)."
 }
 
 mount_remote_fs() 
