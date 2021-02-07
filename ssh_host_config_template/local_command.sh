@@ -45,21 +45,21 @@ mount_remote_fs()
 	ssh_notify low "Successfully mounted sshfs."
 
 	# Create second mount point with root access - if possible
-	[[ $remote_username != "root" || $( ssh $R sudo id -u ) = 0 ]] || return 
+	[[ $remote_username != "root" || $( ssh $R sudo id -u ) = 0 ]] || return  # Already mounted as root or no sudo
 	mnt_point=$mnt_point-ROOT
 	fusermount -u $mnt_point >&$n || true
 	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
 
-	# Login via localhost over control connection to ensure graceful shutdown of 
+	# Login via localhost over control connection to ensure graceful shutdown of
 	# root-connection when disconnecting from host
 	local ssh_cmd="ssh -J $R"  # XXX: Remote port might become ambiguous here
 	ssh_cmd+=" -i $local_home/.ssh/hosts/$remote_hostname_cmd/id"
 	ssh_cmd+=" -o HostKeyAlias=ROOT-$R-$remote_port"
 	ssh_cmd+=" -o StrictHostKeyChecking=accept-new"
 
-	sshfs $=sshfs_opts -o ssh_command=$ssh_cmd root@localhost:/ $mnt_point || 
+	sshfs $=sshfs_opts -o ssh_command="$ssh_cmd" root@localhost:/ $mnt_point ||
 		{ ssh_notify critical "sshfs failed for root." ; return ; }
-	
+
 	ssh_notify low "Successfully mounted sshfs as root."
 }
 
