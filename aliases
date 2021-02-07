@@ -621,8 +621,9 @@ sssh() {
 		fi
 		# Update to notify-send.py
 		notify-send -u critical "Lost connection to \"$host\"."
-		sleep 8.4
-		echo -n "Trying to reconnect to \"$host\": " | ts -m '[%F %T]'  
+		slp=$(( (2 + $RANDOM % 19) / 3.4 )) 
+		printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'  
+		sleep $slp
 	done
 }
 
@@ -770,3 +771,4 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
+alias zc='zcalc -e'
