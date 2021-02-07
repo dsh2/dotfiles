@@ -38,7 +38,7 @@ mount_remote_fs()
 	local mnt_point=$local_home/mnt/$remote_hostname_cmd
 	fusermount -u $mnt_point >&$n || true
 	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
-	sshfs $=sshfs_opts $R:/ $mnt_point || { ssh_notify critical "sshfs failed." ; return ; }
+	sshfs $=sshfs_opts -p $remote_port $R:/ $mnt_point || { ssh_notify critical "sshfs failed to mount." ; return ; }
 	ssh_notify low "Successfully mounted sshfs."
 
 	# Create second mount point with root access - if possible
@@ -49,9 +49,9 @@ mount_remote_fs()
 
 	# Login via localhost over control connection to ensure graceful shutdown of 
 	# root-connection when disconnecting from host
-	local ssh_cmd="ssh -J $R"
+	local ssh_cmd="ssh -J $R"  # XXX: Remote port might become ambiguous here
 	ssh_cmd+=" -i $local_home/.ssh/hosts/$remote_hostname_cmd/id"
-	ssh_cmd+=" -o HostKeyAlias=ROOT-$R"
+	ssh_cmd+=" -o HostKeyAlias=ROOT-$R-$remote_port"
 	ssh_cmd+=" -o StrictHostKeyChecking=accept-new"
 
 	sshfs $=sshfs_opts -o ssh_command=$ssh_cmd root@localhost:/ $mnt_point || 
@@ -123,7 +123,7 @@ main()
 	echo "$(date '+%F %T') $R:$remote_port" >> ~/.ssh/host_history; ssh_notify low "Updated ssh host history." 
 
 	sleep 0.3
-	o=$( ssh -o BatchMode=yes -O check $R 2>&1 ) || 
+	o=$( ssh -o BatchMode=yes -O check $R -p $remote_port 2>&1 ) ||
 		{ ssh_notify critical "Connection failed to multiplex: \"${o//[[:cntrl:]]/}\"" ; return 1 ; }
 
 	check_remote_clock
