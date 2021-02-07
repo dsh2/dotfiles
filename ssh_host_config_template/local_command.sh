@@ -34,8 +34,11 @@ check_remote_clock()
 
 mount_remote_fs()
 {
-	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks" 
-	local mnt_point=$local_home/mnt/$remote_hostname_cmd
+	type sshfs >$n || { ssh_notify low "sshfs not available."; return ; }
+	# TODO: Add list for hosts to not mount sshfs
+
+	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks"
+	local mnt_point="$local_home/mnt/$remote_hostname_cmd"
 	fusermount -u $mnt_point >&$n || true
 	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
 	sshfs $=sshfs_opts -p $remote_port $R:/ $mnt_point || { ssh_notify critical "sshfs failed to mount." ; return ; }
