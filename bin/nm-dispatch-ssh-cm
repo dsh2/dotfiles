@@ -3,3 +3,4 @@
 for host in aws-carmesh-gw quec dsn0; do 
 	sudo su dsh2 -c "ssh  -o BatchMode=yes $host id"
 done
+
