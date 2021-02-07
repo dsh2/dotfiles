@@ -1,25 +1,25 @@
 #!/bin/zsh
 
 # TODO: Set alarm to detect run-anway scripts
- 
-local -r n=/dev/null
 
-ssh_notify() 
+readonly n="/dev/null"
+
+ssh_notify()
 {
 	local -r level=${SSH_DEBUG:-$1}; shift # low, normal, critical
 	local -r msg="$*"
 	local app="ssh $R"
 	[ -z $SSH_GROUP ] || app="$app ($SSH_GROUP)"
-	
+
 	# TODO: Map level to systemd prio
 	logger -it ssh -- "$app: $msg"
-	
+
 	# TODO: Update to notify-send.py
 	# TODO: Add icon
 	notify-send -u $level -a $app -- "$msg"
 }
 
-check_remote_clock() 
+check_remote_clock()
 {
 	time_diff_ok=2  # seconds
 	
@@ -32,7 +32,7 @@ check_remote_clock()
 		ssh_notify critical "$remote_time Remote clock deviates more than $time_diff_ok seconds (diff = $time_diff)."
 }
 
-mount_remote_fs() 
+mount_remote_fs()
 {
 	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks" 
 	local mnt_point=$local_home/mnt/$remote_hostname_cmd
@@ -60,31 +60,31 @@ mount_remote_fs()
 	ssh_notify low "Successfully mounted sshfs as root."
 }
 
-connect_tun() 
+connect_tun()
 {
 	[[ $local_tuntap = tun* ]] || return
 	local -r tun=$local_tuntap
 	local -r nw=${tun#tun}
 	local -r l_ip=10.0.$nw.1
 	local -r r_ip=10.0.$nw.2
-	
+
 	# Check if remote tun is available
 	if ! ssh $R test -e /sys/class/net/$tun; then
 		if ssh $R sudo sh <<< "
-			ip tuntap add dev $tun mode tun user $remote_username && 
+			ip tuntap add dev $tun mode tun user $remote_username &&
 			ip address add $r_ip/24 dev $tun &&
 			ip link set dev $tun up";
 		then
-			 ssh_notify critical "Successfully created remote tun \"$tun\". Please restart ssh." 
+			 ssh_notify critical "Successfully created remote tun \"$tun\". Please restart ssh."
 		else
-			 ssh_notify critical "Failed to create remote tun \"$tun\"" 
+			 ssh_notify critical "Failed to create remote tun \"$tun\""
 		fi
 		return
 	fi
-	
+
 	&>$n ping -W 1 -c 2 -i 0.2 $r_ip         || { ssh_notify critical "Outbound ping failed."; return ; }
 	&>$n ssh $R ping -W 1 -c 2 -i 0.2 $l_ip  || { ssh_notify critical "Inbound ping failed."; return ; }
-	
+
 	# TODO: Sysctl forward for tun, e.a.
 	ssh_notify low "Successfully connected tunnel."
 }
@@ -104,7 +104,7 @@ uncloak_control_path()
 main()
 {
 	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\""
-	(( $#@ >= 11 )) || return 
+	(( $#@ >= 11 )) || return
 
 	C_hash=$1                 # %C
 	local_home=$2             # %d
