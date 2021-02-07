@@ -489,8 +489,11 @@ function run_prepend {
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
 			ZSH_PREPEND="ssh ${match[1]%%/*}"
 		else
-			zle -M -- 'ZSH_PREPEND is not set.'
-			return
+			local -r ssh_history="$HOME/.ssh/host_history"
+			[ -e $ssh_history ] && ZSH_PREPEND="ssh $(
+				sed -nE '$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p' ~/.ssh/host_history
+			)"
+			[ -n $ZSH_PREPEND ] || { zle -M -- 'ZSH_PREPEND is not set.';  return; }
 		fi
 	fi
 	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
