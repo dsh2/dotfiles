@@ -126,6 +126,7 @@ main()
 	o=$( ssh -o BatchMode=yes -O check $R -p $remote_port 2>&1 ) ||
 		{ ssh_notify critical "Connection failed to multiplex: \"${o//[[:cntrl:]]/}\"" ; return 1 ; }
 
+	uncloak_control_path
 	check_remote_clock
 	mount_remote_fs
 	connect_tun
