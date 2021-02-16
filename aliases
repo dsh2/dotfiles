@@ -327,13 +327,13 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
-    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
-    TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
-    if tmux has-session -t $TAG_NAME >/dev/null; then
-	tmux attach-session -t $TAG_NAME
-    else tmux new-session -s $TAG_NAME
+	TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null)
+	TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
+	if tmux has-session -t $TAG_NAME >/dev/null; then
+		tmux attach-session -t $TAG_NAME
+	else tmux new-session -s $TAG_NAME
 	fi
-    }
+}
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
 alias tmss='tcmd="tmux set -g status-style fg=colour$((RANDOM%255)),bg=colour$((RANDOM%255)); tmux set -g window-status-style fg=colour$((RANDOM%255))"; echo $tcmd; eval $tcmd'
@@ -516,8 +516,8 @@ src_index() {
 	# \) > cscope.files 
 	setopt clobber
 	# TODO: Does not work?
-	# git ls-files -x '*.tff' 
-	git ls-files | grep -v 'tff$' > cscope.files 
+	# git ls-files -x '*.tff'
+	git ls-files | grep -v 'tff$' > cscope.files
 	cscope -bi cscope.files
 }
 
@@ -623,8 +623,9 @@ sssh() {
 		fi
 		# Update to notify-send.py
 		notify-send -u critical "Lost connection to \"$host\"."
-		sleep 8.4
-		echo -n "Trying to reconnect to \"$host\": " | ts -m '[%F %T]'  
+		slp=$(( (2 + $RANDOM % 19) / 3.4 )) 
+		printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'  
+		sleep $slp
 	done
 }
 
@@ -773,3 +774,4 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
+alias zc='zcalc -e'

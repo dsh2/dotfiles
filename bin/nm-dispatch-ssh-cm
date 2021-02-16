@@ -1,5 +1,15 @@
 #!/bin/sh
 
-for host in aws-carmesh-gw quec dsn0; do 
-	sudo su dsh2 -c "ssh  -o BatchMode=yes $host id"
-done
+readonly ssh_user="dsh2"
+# set -x
+
+case "$2" in
+	up|vpn-up)
+		for host in aws-carmesh-gw quec dsn0; do 
+			echo $host
+			sudo -bnu $ssh_user ssh -o BatchMode=yes $host id &
+		done
+		;;
+esac
+
+wait

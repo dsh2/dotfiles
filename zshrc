@@ -1493,6 +1493,6 @@ zmodload zsh/mathfunc
 # TODO: Is this a good idea? How do sparse files relate to ulimit?
 limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
 
-
+autoload zcalc
 # leg_db query
 # tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
