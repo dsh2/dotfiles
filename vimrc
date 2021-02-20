@@ -521,6 +521,7 @@ autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig
 autocmd vimrc FileType autohotkey setlocal commentstring=;\ %s
 nmap gcC yygccp
 "}}}
+let g:go_version_warning = 0
 Plug 'fatih/vim-go', {'for': 'go'} "{{{
 map gD :GoDocBrowser<cr>
 "}}}
