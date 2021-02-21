@@ -1,0 +1,22 @@
+#!/usr/bin/zsh
+# (( $mm[(I)a] )) && echo "IN" || echo "OUT"
+# (( $#mm )) && echo "NOT empty" || echo "EMPTY"
+
+cd /sys/module
+
+deps=($@)
+new_deps=($deps)
+while (( $#new_deps )); do 
+	deps=()
+	for n in $new_deps; do 
+		(( $trans_deps[(I)$n] )) || trans_deps+=($n)
+		deps+=(*/holders/$n(N:s:/holders/$n::))
+	done
+	new_deps=()
+	for d in $deps; do
+		(( $trans_deps[(I)$d] )) || new_deps+=($d)
+	done
+done
+
+print -l ${trans_deps}
+
