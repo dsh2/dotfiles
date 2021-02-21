@@ -45,8 +45,8 @@ PAGER=less
 export GIT_PAGER=less
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
-# export LESS=cRMiWSJ
-export LESS=RF
+export LESS=cRMiWSJ
+# export LESS=RF
 lesskey - <<EOF
 #command
 ^w toggle-option S

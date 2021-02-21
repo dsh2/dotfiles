@@ -1,0 +1,14 @@
+#!/usr/bin/zsh
+
+set -e
+
+image=$1
+[[ -z $image ]] && { echo "$0 docker_image [mnt_target]"; return 1; }
+
+mnt=${2:-$(basename $image)}
+[ -e $mnt ] && mnt=$mnt-$(mktemp -u XXXX)
+mkdir -p $mnt
+
+data_defs=($(docker image inspect $image | jq -r '.[0].GraphDriver.Data | .LowerDir, .UpperDir, .WorkDir'))
+
+sudo fuse-overlayfs -o lowerdir=$data_defs[1] -o upperdir=$data_defs[2] -o workdir=$data_defs[3] $mnt

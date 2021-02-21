@@ -66,7 +66,8 @@ locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; 
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
-alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
+# alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
+alias df='findmnt -D'
 
 # git
 alias g=git
@@ -327,16 +328,16 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
-    TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null) 
-    TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
-    if tmux has-session -t $TAG_NAME >/dev/null; then
-	tmux attach-session -t $TAG_NAME
-    else tmux new-session -s $TAG_NAME
+	TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null)
+	TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
+	if tmux has-session -t $TAG_NAME >/dev/null; then
+		tmux attach-session -t $TAG_NAME
+	else tmux new-session -s $TAG_NAME
 	fi
-    }
+}
 alias tmk='for s in $(tmux list-sessions -F "#{session_name}"); do if [[ $s =~ "-[0-9]*$" ]]; then echo Killing session "$s"; tmux kill-session -t $s; fi; done'
 alias tms='tmux source-file ~/.tmux.conf'
-alias tmss='color=colour$(($RANDOM%255)); echo tmux set-option -g status-bg $color; tmux set-option -g status-bg $color'
+alias tmss='tcmd="tmux set -g status-style fg=colour$((RANDOM%255)),bg=colour$((RANDOM%255)); tmux set -g window-status-style fg=colour$((RANDOM%255))"; echo $tcmd; eval $tcmd'
 alias tmo='for scope in server global window; do tmux show -${scope:0:1} | sed "s:^:$scope\: :"; done'
 alias tmO='old_clients=$(tmux list-clients -F "#{client_activity},#{client_tty}" | sort | tail -n+2 | cut -d, -f2); if [ -n $old_clients ]; then for old_client in $old_clients; do tmux detach-client -t $old_client; done; else echo "No other tmux clients."; fi'
 alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
@@ -351,7 +352,9 @@ alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
 alias pA='find . -name .zsh_local_history -exec rm {} \; ; patool --verbose create'
-alias pc='find . -name .zsh_local_history -exec rm {} \; ; patool --verbose create'
+# alias pc='find . -name .zsh_local_history -exec rm {} \; ; patool --verbose create'
+alias pc='psql -c ""'
+alias pC="psql -c ''"
 alias px='patool extract'
 alias pd='patool diff'
 alias o=xdg-open
@@ -514,8 +517,8 @@ src_index() {
 	# \) > cscope.files 
 	setopt clobber
 	# TODO: Does not work?
-	# git ls-files -x '*.tff' 
-	git ls-files | grep -v 'tff$' > cscope.files 
+	# git ls-files -x '*.tff'
+	git ls-files | grep -v 'tff$' > cscope.files
 	cscope -bi cscope.files
 }
 
@@ -612,6 +615,7 @@ alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
 
+alias sss=sssh
 sssh() {
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
@@ -621,8 +625,9 @@ sssh() {
 		fi
 		# Update to notify-send.py
 		notify-send -u critical "Lost connection to \"$host\"."
-		sleep 8.4
-		echo -n "Trying to reconnect to \"$host\": " | ts -m '[%F %T]'  
+		slp=$(( (2 + $RANDOM % 19) / 3.4 )) 
+		printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'  
+		sleep $slp
 	done
 }
 
@@ -719,6 +724,7 @@ alias cm=command
 alias cmd=command
 alias un=unset
 alias uns=unset
+alias unse=unset
 alias psc='ps -O ppid,cgroup, '
 alias torr=torsocks
 alias um='sudo umount'
@@ -769,8 +775,10 @@ alias WHY='2>$N find / -xdev -type f -mtime -10 -size +1M -print0 | xargs -0 -r 
 alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
-<<<<<<< HEAD
-alias dms=dmsg
-=======
 alias dms='dmesg -Tw | lnav -q'
->>>>>>> d5187c25aa0f524f5aa1d181efc67b58e1a25c96
+alias zc='noglob zcalc -e'
+PX() { 
+	[[ -z $http_proxy ]] && 
+		{ export http_proxy=http://127.0.0.1:8888; export https_proxy=$http_proxy; echo "Proxy ON: $http_proxy"; } || 
+		{ unset http_proxy https_proxy; echo "Proxy OFF"; } 
+}

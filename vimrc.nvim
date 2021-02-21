@@ -1,5 +1,8 @@
 " vim: foldmethod=marker path=~/.local/share/nvim/vim-plug/ isf-=/ foldcolumn=3 tw=0 ts=8
 
+let g:loaded_sql_completion = 160
+let g:ftplugin_sql_omni_key = '<C-S-Q>'
+
 let mapleader = "\<Space>"
 
 augroup vimrc
@@ -91,6 +94,7 @@ if vim_plug_available
 	map <leader>lC :FzfBCommits<cr>
 	map <leader>CA :FzfCommands<cr>
 	nmap <leader>ca :FzfCommands<cr>
+	nmap <leader><Space> :FzfCommands<cr>
 	map <leader>ff :FzfFiles<cr>
 	" nmap <tab> :FzfCommands<cr>
 	map <leader>lf :FzfFiles<cr>
@@ -403,7 +407,7 @@ if vim_plug_available
 	Plug 'xolox/vim-misc'
 	" }}}
 	Plug 'elzr/vim-json', {'for': 'json'}  "{{{
-	" autocmd vimrc FileType json set conceallevel=0
+	autocmd vimrc FileType json set conceallevel=0
 	let g:vim_json_syntax_concealcursor = 0
 	" }}}
 	Plug 'scrooloose/nerdtree' "{{{
@@ -434,7 +438,7 @@ if vim_plug_available
 	nnoremap <F2> :NERDTreeFind<cr>
 	" }}}
 	Plug 'tyru/open-browser.vim' "{{{
-	let g:netrw_nogx = 1 " disable netrw's gx mapping.
+	" let g:netrw_nogx = 1 " disable netrw's gx mapping.
 	nmap gx <Plug>(openbrowser-smart-search)
 	vmap gx <Plug>(openbrowser-smart-search)
 	command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
@@ -479,7 +483,9 @@ if vim_plug_available
 	" }}}
 	Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
 	" map <leader>a :Ag! \\b<cword\\b><CR>
-	map <leader>a :Ag! <cword><CR>
+	" map <leader>a :Ag! <cword><CR>
+	map <leader>a :Rg <cword><CR>
+	map <leader><leader>a :Rg --no-ignore <cword><CR>
 	vnoremap <leader>a :<c-u>execute("Ag -- ") . GetSelected()<cr>
 	" }}}
 	Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
@@ -503,13 +509,14 @@ if vim_plug_available
 	let g:airline_detect_spelllang=1
 	let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 	" }}}
+	Plug 'tpope/vim-jdaddy'
 	Plug 'tpope/vim-dispatch' "{{{
 	" map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n
 	map <leader>m :update<cr>:Make<cr>:checktime<cr>
 	" }}}
 	Plug 'sickill/vim-pasta' "{{{
 	" let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
-	let g:pasta_disabled_filetypes = ['qf', 'tagbar']
+	let g:pasta_disabled_filetypes = ['qf', 'tagbar', 'netrw']
 	"}}}
 	Plug 'powerman/vim-plugin-AnsiEsc', {'on': 'AnsiEsc'} "{{{
 	map <leader>W :AnsiEsc<cr>
@@ -547,6 +554,8 @@ if vim_plug_available
 	Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 	" let g:formatdef_my_custom_json = '"jq -s"'
 	let g:formatdef_my_custom_json = '"jq"'
+	let g:formatdef_my_custom_sh = '"shfmt -i 0 -bn -ci -sr"'
+	let g:formatters_sh = ['my_custom_sh']
 	let g:formatters_json = ['my_custom_json']
 	let g:formatdef_my_custom_sql = '"sqlformat -k lower -i lower  --indent_width 4  -"'
 	let g:formatters_sql = ['my_custom_sql']
@@ -556,11 +565,12 @@ if vim_plug_available
 	"}}}
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
-	autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
+	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
+	Plug 'pseewald/vim-anyfold'
 	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
 	autocmd vimrc FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
 	"}}}
@@ -599,7 +609,7 @@ if vim_plug_available
 	Plug 'w0rp/ale'  "{{{
 	autocmd vimrc FileType cpp nmap <leader><leader> :ALEGoToDefinitionInVSplit<cr>
 	autocmd vimrc FileType cpp nmap <leader> :ALEGoToDefinitionInSplit<cr>
-	autocmd vimrc FileType cpp nmap  :ALEGoToDefinition<cr>
+	" autocmd vimrc FileType cpp nmap  :ALEGoToDefinition<cr>
 	autocmd vimrc FileType cpp nmap x :ALEFindReferences<cr>
 	autocmd vimrc FileType cpp nmap <leader>~ :ALEHover<cr>
 	let g:airline#extensions#ale#enabled = 1
@@ -670,7 +680,9 @@ if vim_plug_available
 	nmap g- <Plug>(highlightedundo-gminus)
 	nmap g+ <Plug>(highlightedundo-gplus)
 	"}}}
+	let g:go_version_warning = 0
 	Plug 'fatih/vim-go'"{{{
+	let g:go_version_warning = 0
 	let g:go_def_mode='gopls'
 	let g:go_info_mode='gopls'
 	" run :GoBuild or :GoTestCompile based on the go file
@@ -715,8 +727,11 @@ if vim_plug_available
 	let g:jedi#show_call_signatures_delay = 0
 	let g:jedi#smart_auto_mappings = 1
 	let g:jedi#squelch_py_warning = 1
-	let g:jedi#use_splits_not_buffers = ""
-	let g:jedi#use_tabs_not_buffers = 1
+	" let g:jedi#use_splits_not_buffers = ""
+	" let g:jedi#use_tabs_not_buffers = 1
+	let g:jedi#use_splits_not_buffers = "left"
+	let g:jedi#use_tabs_not_buffers = 0
+	let g:jedi#completions_enabled = 0  " favor deoplete-jedi
 
 	" let g:jedi#force_py_version = 3.4
 	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
@@ -742,20 +757,26 @@ if vim_plug_available
 	" let g:echodoc#type = 'virtual'
 	" let g:echodoc#type = 'echo'
 	let g:echodoc#type = 'signature'"}}}
+	Plug 'sakhnik/nvim-gdb'
 	" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
+	Plug 'christianrondeau/vim-base64'
 	Plug 'mhinz/vim-rfc'
 	Plug 'nakal/vim-smarttabs'
 	Plug 'bfrg/vim-cpp-modern'
 	Plug 'tommcdo/vim-exchange'
 	Plug 'robbles/logstash.vim'
-	Plug 'junegunn/vim-easy-align'
+	Plug 'junegunn/vim-easy-align' "{{{
+	map <leader>EA :EasyAlign
+	xmap ga <Plug>(EasyAlign)
+	nmap ga <Plug>(EasyAlign)" }}}
+	
 	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
 	Plug 'nfnty/vim-nftables'
 	Plug 'jremmen/vim-ripgrep'
 	Plug 'tpope/vim-endwise'
-	Plug 'tpope/vim-rails'
+	" Plug 'tpope/vim-rails'
 	Plug 'pedrohdz/vim-yaml-folds'
 	Plug 'tpope/vim-bundler'
 	Plug 'Quramy/tsuquyomi'
@@ -782,7 +803,7 @@ if vim_plug_available
 	Plug 'mboughaba/i3config.vim', {'for': 'i3config'}
 	Plug 'nelstrom/vim-visual-star-search'
 	Plug 'tpope/vim-afterimage'
-	Plug 'tpope/vim-dadbod'
+	" Plug 'tpope/vim-dadbod'
 	Plug 'tpope/vim-eunuch'
 	Plug 'tpope/vim-rsi'
 	Plug 'tpope/vim-tbone'
@@ -927,6 +948,8 @@ set smartcase
 set smartindent
 set smarttab
 set statusline=%<%f%h%m%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+" Maybe better add this to a local vimrc for c-projects
+" set tags+=$HOME/.usr.include.tags
 set tags+=$HOME/.usr.include.tags
 set title
 set titleold=''
@@ -959,7 +982,7 @@ nmap <m-8> :bot split term://$SHELL<cr>i
 tnoremap <expr> <c-s-v> '<c-\><c-n>"'.nr2char(getchar()).'pi'
 tnoremap <c-[> <c-\><c-n>
 
-nnoremap ,w :call TermDebugSendCommand('where')<CR>
+" nnoremap ,w :call TermDebugSendCommand('where')<CR>
 nnoremap <m-s-r> :Stop<cr>
 nnoremap <f9> :Break<cr>
 nnoremap <leader>B :Break<cr>
@@ -1016,6 +1039,7 @@ nmap <c-q> :cq<cr>
 nmap <leader>P :pwd<cr>
 nmap zx za
 nmap <leader>BD :bdelete!<cr>
+nmap <leader>DW :Delete<cr>:echo "FILE DELETED."<cr>
 " TODO: add toggle for this: coG?
 function! ToggleLineBreakMode()
 	if maparg("j", "n") == "gj"
@@ -1260,7 +1284,16 @@ call s:create_toggle_map('t', 'match(&colorcolumn, "+1")>=0', 'set colorcolumn-=
 
 autocmd vimrc BufRead *.jar,*.apk,*.war,*.ear,*.sar,*.rar set filetype=zip
 autocmd vimrc BufRead,BufNewFile *.ipy set filetype=python
+
+" Netrw
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
+let g:netrw_liststyle         = 3
+let g:netrw_banner            = 0
+" let g:Netrw_UserMaps= [
+"     \    ["l","execute('wincmd l')"]
+"     \    ["<c-l>","execute('wincmd l')"]
+"     \]
+
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
 endfunction
@@ -1473,12 +1506,15 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " map <leader><space><cr> :call KeepView("silent! '<,'>s/\s\+/\r/")<cr>
 " map <leader><space><cr> :s/\s\+/\r/<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
+map <leader><leader>,<cr> :s/,\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 
 map <c-w>k :close<cr>
 map <c-w><c-k> :close<cr>
 
-let cmd_prefix='ssh quec sudo qmicli -d /dev/cdc-wdm0'
+" let cmd_prefix='ssh quec sudo qmicli -d /dev/cdc-wdm0'
+" let cmd_prefix='sudo qmicli -d /dev/cdc-wdm0'
+let cmd_prefix='sudo mbimcli -d /dev/cdc-wdm0'
 " let cmd_prefix='qmicli -d /dev/cdc-wdm0'
 " let cmd_prefix='sudo mbimcli -d /dev/cdc-wdm0'
 " map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>:echo s<cr>:let cmd="!tmux send -t 2 \"echo " . shellescape(cmd_prefix . " " . s) . "\" Enter"<cr>:echo cmd<cr>:execute(cmd)<cr>
@@ -1576,4 +1612,14 @@ function! TrimWhitespace()
 	call winrestview(l:save)
 endfunction
 command! TrimWhitespace call TrimWhitespace()
+map <leader><S-S>e :%s:\(\<1\d\{9\}\>\):\=strftime("\"%F %T\"",submatch(0)):c<cr>
+" nmap <leader>e yq:new\<CR>P:%s:\\n::\<CR>:se ft=javascript\<CR>"
+" Edit string inline replacing \n
+" autocmd vimrc FileType dosini,json  nmap <buffer> <leader>e yq:new<CR>P:%s:\\n:\r:<cr>gg:se ft=javascript<cr>
+autocmd vimrc FileType json  nmap <buffer> <leader>e yq:new<CR>P:%s:\\n:\r:<cr>gg:se ft=sql<cr>
+" Re-paste string joined with \n
+" autocmd vimrc FileType javascript   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
+autocmd vimrc FileType sql   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
+vmap / /\%V
+nmap v/ /\V
 "}}}
