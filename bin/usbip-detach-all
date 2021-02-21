@@ -1,0 +1,10 @@
+#!/bin/sh
+logger "check"
+for port in $(sudo usbip port | sed -nE 's|^Port ([^:]*).*|\1|p'); do
+	if sudo usbip detach --port=$port; then
+		logger "Successfully detached USBIP port $port."
+	else
+		logger "Failed to detach USBIP port $port."
+	fi
+done
+
