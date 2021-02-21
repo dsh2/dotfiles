@@ -66,7 +66,8 @@ locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; 
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
-alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
+# alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
+alias df='findmnt -D'
 
 # git
 alias g=git
@@ -614,6 +615,7 @@ alias u="\units --verbose '"
 alias g2=grub2-
 alias ssl=openssl
 
+alias sss=sssh
 sssh() {
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
@@ -774,4 +776,9 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
-alias zc='zcalc -e'
+alias zc='noglob zcalc -e'
+PX() { 
+	[[ -z $http_proxy ]] && 
+		{ export http_proxy=http://127.0.0.1:8888; export https_proxy=$http_proxy; echo "Proxy ON: $http_proxy"; } || 
+		{ unset http_proxy https_proxy; echo "Proxy OFF"; } 
+}
