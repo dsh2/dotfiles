@@ -8,14 +8,19 @@ deps=($@)
 new_deps=($deps)
 while (( $#new_deps )); do 
 	deps=()
+	(( x )) && set -x
 	for n in $new_deps; do 
 		(( $trans_deps[(I)$n] )) || trans_deps+=($n)
 		deps+=(*/holders/$n(N:s:/holders/$n::))
 	done
+	print "Found deps: $new_deps"
 	new_deps=()
 	for d in $deps; do
-		(( $trans_deps[(I)$d] )) || new_deps+=($d)
+		(( $trans_deps[(I)$d] )) || new_deps+=($d) && echo oops $d
 	done
+	(( x )) && set +x
+	print "Found new deps: $new_deps"
+	print "Have deps: $trans_deps"
 done
 
 print -l ${trans_deps}
