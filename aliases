@@ -66,8 +66,8 @@ locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; 
 locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 alias lloc=locl
 alias cq=copyq
-# alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
-alias df='findmnt -D'
+alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
+# alias df='findmnt -D'
 
 # git
 alias g=git
@@ -223,8 +223,9 @@ alias d='diff -u'
 alias vf=vimdiff
 alias vimd=vimdiff
 alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
+alias wanipx='dig -x $(wanip)'
 alias wanip2='curl -s https://checkip.amazonaws.com'
-alias wan_name='dig +short -x $(wanip)'
+alias wanip2x='dig -x $(wanip2)'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias PV=print_variables
 alias PVV=print_variables
@@ -553,6 +554,7 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H=hostname
+alias 1='ping -A 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
@@ -782,3 +784,5 @@ PX() {
 		{ export http_proxy=http://127.0.0.1:8888; export https_proxy=$http_proxy; echo "Proxy ON: $http_proxy"; } || 
 		{ unset http_proxy https_proxy; echo "Proxy OFF"; } 
 }
+alias alsa=alsactl
+alias us='usermod -aG network $USER'
