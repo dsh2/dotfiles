@@ -329,7 +329,7 @@ alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT 
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
-	TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null)
+	TAG_NAME=$(has herbstclient && herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null)
 	TAG_NAME=$(echo $TAG_NAME | cut -d : -f 2-)
 	if tmux has-session -t $TAG_NAME >/dev/null; then
 		tmux attach-session -t $TAG_NAME
@@ -683,7 +683,7 @@ alias V=v4l2ctrl
 alias zat='zathura --fork'
 alias dm='sudo dmsetup'
 alias cr=cryptsetup
-alias PI='pip install --user -vvv'
+alias PI='pip3 install --user -vvv'
 alias ju=jupyter
 alias ptp=ptpython
 alias rzsh='sudo HOME=$HOME zsh'
@@ -786,3 +786,7 @@ PX() {
 }
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
+alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
+alias ffm=ffmpeg
+alias ltmp='l -dt tmp-*'
+alias yd=youtube-dl
