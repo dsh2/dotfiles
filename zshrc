@@ -627,7 +627,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' completer tmux_pane_words
 zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s pslc\  "psl -c ''"
-bindkey -s psll\  'psl -c "select * from"'
+bindkey -s psll\  'psl -c ""'
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
@@ -792,9 +792,11 @@ bindkey_func '^]^]' zle-toggle-keymap
 # }}}
 
 # Completion {{{
-zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
+# zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
+fpath+=~/.dotfiles/zsh/completion/zchee/src/zsh
+fpath+=~/.dotfiles/zsh/completion/zchee/src/go
 fpath+=~/src/radare2/doc/zsh
 fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 
@@ -1182,7 +1184,7 @@ alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SS='| strings -t x -e S | LESS= less'
 alias -g SUU='| sort | uniq'
-alias -g TS="| ts -m '[%F %T]'"
+alias -g TS="|& ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
