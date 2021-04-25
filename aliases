@@ -1,5 +1,7 @@
 # vim: se ft=sh:
 UNAME=$(uname)
+TMPDIR=
+: "${TMPDIR:=/tmp}"
 
 LS_COMMAND=ls
 if [ "$UNAME" = "Darwin" ]; then
@@ -485,7 +487,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='eval export SSH_AUTH_SOCK=$(echo /tmp/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
+alias sa='eval export SSH_AUTH_SOCK=$(echo /$TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
@@ -787,6 +789,13 @@ PX() {
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
 alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
+alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
 alias ltmp='l -dt tmp-*'
 alias yd=youtube-dl
+alias a1=asn1tools
+alias acc='asn1tools convert -i gser -o ber '
+alias acp='asn1tools parse '
+alias no_spaces='ff=(**/*(/) **/*(.)); for f in $ff; do fs=${f:gs. ._.}; [[ $fs != $f ]] && echo mv \"$f\" $fs; done'
+alias xss=xssh
+alias sou=source
