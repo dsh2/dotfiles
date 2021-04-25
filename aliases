@@ -1,6 +1,5 @@
 # vim: se ft=sh:
 UNAME=$(uname)
-TMPDIR=
 : "${TMPDIR:=/tmp}"
 
 LS_COMMAND=ls
