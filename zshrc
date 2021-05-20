@@ -1,4 +1,5 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
+# set -x
 
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
@@ -648,7 +649,8 @@ bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
-bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t'
+bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t .'
+bindkey -s mvl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
@@ -730,14 +732,14 @@ function zsh_terminal_title()
 function zsh_terminal_title_prompt()
 {
     # TODO: add more sensible stuff here
-    zsh_terminal_title "[zsh-ps] $(pwd) [$USER@${HOST}]"
+	zsh_terminal_title "[$(tty) zsh-ps] $(pwd) [$USER@${HOST}]"
 }
 
 function zsh_terminal_title_running()
 {
     # TODO: add more sensible stuff here
 
-    zsh_terminal_title "[zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
+	zsh_terminal_title "[$(tty) zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
 }
 
 add-zsh-hook precmd zsh_terminal_title_prompt
@@ -976,12 +978,11 @@ jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
-nsdo() { for ns in $(ip netns list | cut -d\  -f 1); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
-nsrm() { for ns in $(ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
-nsrm() { for ns in $(ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
-alias nsls='ip netns list'
-alias ipe='sudo ip netns exec'
-alias nse='sudo ip netns exec'
+nsdo() { for ns in $(sudo ip netns list | cut -d\  -f 1); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
+nsrm() { for ns in $(sudo ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
+alias nsls='sudo ip netns list'
+alias ipe='sudo ip netns exec $ns'
+alias nse='sudo ip netns exec $ns'
 # alias nsee='sudo ip netns exec $1 sudo -E -u \#${SUDO_UID:-$(id -u)} -g \#${SUDO_GID:-$(id -g)} -- $SHELL'
 nsee() {
 	[[ -f /var/run/netns/$1 ]] || { print usage: $0 netns; ls -1 /var/run/netns/; return; }
@@ -1188,6 +1189,7 @@ alias -g TS="|& ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
+alias -g WH='| tr -d "[:space:]" | tr "[:upper:]" "[:lower:]" ; echo'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs -r'
@@ -1245,11 +1247,12 @@ die() {
 
 if has trash; then
 	alias rm='trash --'
-	alias rmm='\rm -rf'
+	alias rmm='\rm -rf --'
 	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
 else
 	tl() { err "trash-cli NOT installed." }
 fi
+alias rm='\rm -rf --'
 
 visudo_append() {
 	has -v sudo || { die; return }
@@ -1483,7 +1486,6 @@ mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
 zsh_source -q ~/.android-serial
-[ -e ~/.environment.local ] && source ~/.environment.local
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
@@ -1493,8 +1495,15 @@ autoload zargs
 
 zmodload zsh/mathfunc
 # TODO: Is this a good idea? How do sparse files relate to ulimit?
-limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
+# limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
 
 autoload zcalc
 # leg_db query
 # tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
+ 
+[[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
+leafnode() { z=($REPLY/*(N/)) ; return $#z } 
+[ -e ~/.environment.local ] && source ~/.environment.local
+env_local=(~/.environment.d/*(N)) 2>/dev/null
+(( #env_local )) && source $env_local
+set +x
