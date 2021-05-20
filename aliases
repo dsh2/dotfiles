@@ -478,6 +478,7 @@ alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
+alias xs='ssh -O exit'
 Rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
 alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
@@ -486,7 +487,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='eval export SSH_AUTH_SOCK=$(echo /$TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
+alias sa='eval export SSH_AUTH_SOCK=$(echo $TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
@@ -781,9 +782,18 @@ alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
 alias zc='noglob zcalc -e'
 PX() { 
+	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
 	[[ -z $http_proxy ]] && 
-		{ export http_proxy=http://127.0.0.1:8888; export https_proxy=$http_proxy; echo "Proxy ON: $http_proxy"; } || 
-		{ unset http_proxy https_proxy; echo "Proxy OFF"; } 
+		{ 
+			local e
+			for p in $=pp; do 
+				e+="export $p=http://127.0.0.1:8888; "
+			done
+			echo $e; eval $e
+		} || { 
+			unset $pp
+			echo "Proxy OFF"; 
+		} 
 }
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
@@ -798,3 +808,8 @@ alias acp='asn1tools parse '
 alias no_spaces='ff=(**/*(/) **/*(.)); for f in $ff; do fs=${f:gs. ._.}; [[ $fs != $f ]] && echo mv \"$f\" $fs; done'
 alias xss=xssh
 alias sou=source
+alias sour=source
+alias snn=snmp
+alias ssn=snmp
+alias EE='command dd conv=swab <<<'
+alias zd=zstd
