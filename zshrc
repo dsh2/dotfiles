@@ -1506,4 +1506,6 @@ leafnode() { z=($REPLY/*(N/)) ; return $#z }
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
+pre() { sed "s|^|$*|"; }
+post() { sed "s|\$|$*|"; }
 set +x
