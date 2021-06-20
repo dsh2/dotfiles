@@ -56,7 +56,7 @@ alias fBB='find . \( -type d -exec chmod -c 755 {} \; \) -o \( -type f -exec chm
 alias fBBB='find . \( -type d -exec chmod -c 700 {} \; \) -o \( -type f -exec chmod -c 600 {} \; \)'
 alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable && chmod -c a+x $f; done || true'
 alias fdd='f . -type d'
-alias ff='f . -type f'
+# alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
@@ -479,7 +479,8 @@ alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
 alias xs='ssh -O exit'
-Rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
+rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
+alias Rssh=rssh
 alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
 alias sshc='ssh -O check'
@@ -749,6 +750,7 @@ alias zx=zargs
 alias zxx='zargs -P $(nproc)'
 alias rax='rax2 -s'
 alias sqll=sqlite3
+
 alias scr=scrcpy
 alias dme='dmesg -e'
 alias R=rclone
@@ -816,7 +818,12 @@ alias EE='command dd conv=swab <<<'
 alias zd=zstd
 alias s1=sha1sum
 alias s5=sha512sum
-alias zk=ykman
+alias zk='ykman -d $ykserial'
+alias yk='ykman -d $ykserial'
 alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
 alias dirdiff='v "+DirDiff '
 alias ddiff='v "+DirDiff '
+alias ff=fossil
+alias vd3='vd -f sqlite'
+alias rss=rssh
+alias fo=for
