@@ -331,7 +331,7 @@ XP=${XP:-cat}
 if pidof copyq >/dev/null; then
 	XP="copyq read 0"
 elif type xclip >/dev/null; then
-	XP="xclip -selection clipboard -out"
+	XP="xclip -rmlastnl -selection clipboard -out"
 elif type powershell.exe > /dev/null; then
 	XP="powershell.exe -command Get-Clipboard"
 fi
@@ -339,7 +339,7 @@ fi
 XC=${XC:-/bin/false}
 if [[ -n $DISPLAY ]]; then
 	if type xclip >/dev/null; then
-		XC="xclip -selection clipboard -in"
+		XC="xclip -rmlastnl -selection clipboard -in"
 	elif type xsel >/dev/null; then
 		XC="xsel --clipboard --input"
 	fi
@@ -453,7 +453,9 @@ function filter_last_output {
 bindkey_func '^o' filter_last_output
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
+    BUFFER=${BUFFER:s:	: ::fs:  : ::fs:# :::fs: %::}
+	# BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
+	# BUFFER=${BUFFER::s  : ::fs:  : ::s:# :::s: %::}
 }
 bindkey_func '^x^ ' unify_whitespace
 
@@ -650,6 +652,7 @@ bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t .'
+bindkey -s mvdl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s mvl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
@@ -1506,4 +1509,18 @@ leafnode() { z=($REPLY/*(N/)) ; return $#z }
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
+pre() { sed "s|^|$*|"; }
+post() { sed "s|\$|$*|"; }
+rsz() {
+	local IFS='[;' escape geometry x y
+	print -n '\e7\e[r\e[999;999H\e[6n\e8'
+	read -sd R escape geometry
+	x=${geometry##*;} y=${geometry%%;*}
+	if [[ ${COLUMNS} -eq ${x} && ${LINES} -eq ${y} ]];then
+		print "${TERM} ${x}x${y}"
+	else
+		print "${COLUMNS}x${LINES} -> ${x}x${y}"
+		stty cols ${x} rows ${y}
+	fi
+}
 set +x

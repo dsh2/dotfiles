@@ -694,8 +694,8 @@ alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
 alias chx='sudo chmod a+x'
-alias chnox='sudo chmod a-x'
-alias chnx='sudo chmod a-x'
+alias chnox='sudo chmod -Rc a-x'
+alias chnx='sudo chmod -Rc a-x'
 alias chmer='sudo chown -c -R $(id -u):$(id -g) .'
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
@@ -805,12 +805,19 @@ alias yd=youtube-dl
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
-alias no_spaces='ff=(**/*(/) **/*(.)); for f in $ff; do fs=${f:gs. ._.}; [[ $fs != $f ]] && echo mv \"$f\" $fs; done'
+alias no_spaces='mv_s() { for f in $@; do fs=${f:gs. ._.}; [[ $fs != $f ]] && mv -vi $f $fs; done }; mv_s **/*(/N); mv_s **/*(.);'
 alias xss=xssh
 alias sou=source
 alias sour=source
 alias snn=snmp
+alias snnt=snmptranslate
 alias ssn=snmp
 alias EE='command dd conv=swab <<<'
 alias zd=zstd
 alias bb=bitbake
+alias s1=sha1sum
+alias s5=sha512sum
+alias zk=ykman
+alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
+alias dirdiff='v "+DirDiff '
+alias ddiff='v "+DirDiff '
