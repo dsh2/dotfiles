@@ -86,4 +86,3 @@
   - [chmod -cR g-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
   - [chmod -cR o-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
   - [chmod 0700 wg, Restricting file permissions of wg]
-

@@ -38,7 +38,7 @@ check_remote_clock()
 
 mount_remote_fs()
 {
-	type sshfs >$n || { ssh_notify low "sshfs not available."; return ; }
+	type sshfs >$n || { ssh_notify normal "sshfs not available."; return ; }
 
 	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks"
 	local mnt_point="$local_home/mnt/$remote_hostname_cmd"
