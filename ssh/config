@@ -2,6 +2,7 @@ ControlPath ~/.ssh/control_paths/%C
 ControlMaster auto
 ControlPersist yes
 
+Include ~/.ssh/HOSTS/*
 Include ~/.ssh/HOSTS/*/*
 Include ~/.ssh/HOSTS/*/*/*
 Include ~/.ssh/hosts/*/config
