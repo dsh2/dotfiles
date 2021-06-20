@@ -3,8 +3,8 @@
 
 - shell:
   - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura, Creating config directories]
-  - [mkdir -p ~/.ssh/hosts ~/.ssh/cp_hashed, Setting up directories for ssh]
+  - [mkdir -p ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
+  - [mkdir -p ~/.ssh/hosts ~/.ssh/HOSTS ~/.ssh/keys ~/.ssh/control_paths, Setting up directories for ssh]
   - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
   - [mkdir -p ~/mnt/localhost-root, Creating mount points]
   - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
@@ -43,7 +43,6 @@
     ~/.fzfrc: fzfrc
     ~/.gitconfig: gitconfig
     ~/.gdbinit: gdbinit/gdbinit
-    ~/.git_template: git_template/
     ~/.gitignore_global: gitignore_global
     ~/.ipython/profile_default/ipython_config.py: ipython_config.py
     ~/.ipython/profile_default/startup: ipython_startup/
@@ -64,10 +63,12 @@
     ~/.vimrc: vimrc
     ~/.config/nvim/init.vim: vimrc.nvim
     ~/.nvimrc: ~/.config/nvim/init.vim
-    ~/.ssh/config: ssh_config
-    ~/.ssh/known_hosts_common: ssh_known_hosts_common
-    ~/.ssh/hosts/_host_config_template: ssh_host_config_template/
-    ~/.ssh/hosts/me: ssh_me
+    ~/.ssh/config: ssh/config
+    ~/.ssh/hosts/host_template: ssh/host_template
+    ~/.ssh/known_hosts_common: ssh/known_hosts_common
+    ~/.ssh/local_command: ssh/local_command
+    ~/.ssh/HOSTS/me: ssh/me
+    ~/.ssh/keys/me.pub: ssh/me.pub
     ~/.ripgreprc: ripgreprc
     ~/.tidy.conf: tidy.conf
     ~/.tsocks.conf: tsocks.conf
@@ -85,4 +86,3 @@
   - [chmod -cR g-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
   - [chmod -cR o-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
   - [chmod 0700 wg, Restricting file permissions of wg]
-  - [bin/vim-plug-install, Configuring vim]
