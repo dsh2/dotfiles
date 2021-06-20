@@ -2,6 +2,8 @@
 
 # TODO: Set alarm to detect run-anway scripts
 
+: "${ssh_history:=~/.ssh/host_history}"
+
 readonly n="/dev/null"
 
 has() { for f in $@; do type $f &> /dev/null || return 1 ; done }
@@ -31,13 +33,12 @@ check_remote_clock()
 
 	integer -r time_diff=$[ $remote_time - $(date -u '+%s') ]
 	(( $time_diff > $time_diff_ok || $time_diff < -$time_diff_ok )) &&
-		ssh_notify critical "$remote_time Remote clock deviates more than $time_diff_ok seconds (diff = $time_diff)."
+		ssh_notify critical "Remote clock deviates more than $time_diff_ok seconds (diff = $time_diff)."
 }
 
 mount_remote_fs()
 {
 	type sshfs >$n || { ssh_notify low "sshfs not available."; return ; }
-	# TODO: Add list for hosts to not mount sshfs
 
 	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks"
 	local mnt_point="$local_home/mnt/$remote_hostname_cmd"
@@ -59,8 +60,10 @@ mount_remote_fs()
 	ssh_cmd+=" -o HostKeyAlias=ROOT-$R-$remote_port"
 	ssh_cmd+=" -o StrictHostKeyChecking=accept-new"
 
-	sshfs $=sshfs_opts -o ssh_command="$ssh_cmd" root@localhost:/ $mnt_point ||
-		{ ssh_notify critical "sshfs failed for root." ; return ; }
+	ssh_notify low "ssh_cmd = $ssh_cmd"
+
+	o=$( sshfs $=sshfs_opts -o ssh_command="$ssh_cmd" root@localhost:/ $mnt_point ) ||
+		{ ssh_notify critical "sshfs failed for root: err = $?, output = \"$o\"" ; return ; }
 
 	ssh_notify low "Successfully mounted sshfs as root."
 }
@@ -96,8 +99,8 @@ connect_tun()
 
 uncloak_control_path()
 {
-	local -r cp="$local_home/.ssh/cp"
-	local -r cph="$local_home/.ssh/cp_hashed"
+	local -r cp="$local_home/.ssh/control_paths_uncloaked"
+	local -r cph="$local_home/.ssh/control_paths"
 	mkdir -p $cp $cph
 	local -r cph_host=$cph/$C_hash
 	[ -S $cph_host ] || 
@@ -134,9 +137,10 @@ main()
 
 	uncloak_control_path
 	check_remote_clock
-	mount_remote_fs
+	$ssh_no_mount || mount_remote_fs
 	connect_tun
+
+	sleep 2
 }
 
 main $@
-sleep 2

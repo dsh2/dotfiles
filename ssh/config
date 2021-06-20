@@ -1,25 +1,23 @@
-ControlPath ~/.ssh/cp_hashed/%C
+ControlPath ~/.ssh/control_paths/%C
 ControlMaster auto
 ControlPersist yes
 
+Include ~/.ssh/HOSTS/*/*
+Include ~/.ssh/HOSTS/*/*/*
 Include ~/.ssh/hosts/*/config
-Include ~/.ssh/config.local
 
-AddKeysToAgent confirm
+AddKeysToAgent yes
 StrictHostKeyChecking ask 
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
+ConnectTimeout 4
 # UpdateHostKeys ask
 UpdateHostKeys no
 
-LocalCommand  ~/.ssh/hosts/_host_config_template/local_command.sh %C %d %h %i %L %l %n %p %r %T %u &
-PermitLocalCommand yes
+LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
+PermitLocalCommand no
 
-PasswordAuthentication no
-
-ConnectTimeout 4
- 
 # EscapeChar ^^
 HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
