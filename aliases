@@ -791,7 +791,7 @@ PX() {
 			done
 			echo $e; eval $e
 		} || { 
-			unset $pp
+			unset $=pp
 			echo "Proxy OFF"; 
 		} 
 }
@@ -813,3 +813,4 @@ alias snn=snmp
 alias ssn=snmp
 alias EE='command dd conv=swab <<<'
 alias zd=zstd
+alias bb=bitbake
