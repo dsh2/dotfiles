@@ -775,3 +775,4 @@ alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
 alias zc='zcalc -e'
+alias pv=pvesh
