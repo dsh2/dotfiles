@@ -680,6 +680,7 @@ if vim_plug_available
 	nmap g- <Plug>(highlightedundo-gminus)
 	nmap g+ <Plug>(highlightedundo-gplus)
 	"}}}
+	let g:go_version_warning = 0
 	Plug 'fatih/vim-go'"{{{
 	let g:go_version_warning = 0
 	let g:go_def_mode='gopls'

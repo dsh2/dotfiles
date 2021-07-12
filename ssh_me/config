@@ -1,12 +1,13 @@
 # vim: se ft=sshconfig:
 
 Host me
-HostName localhost
+HostName 127.0.0.1
 HostKeyAlias me
 Port 2299
-User jump
+User me
 
 IdentitiesOnly yes 
 IdentityFile ~/.ssh/hosts/me/id.pub
 
-ControlPersist yes
+# ControlPersist yes
+ControlPersist no

@@ -4,6 +4,8 @@
 
 readonly n="/dev/null"
 
+has() { for f in $@; do type $f &> /dev/null || return 1 ; done }
+
 ssh_notify()
 {
 	local -r level=${SSH_DEBUG:-$1}; shift # low, normal, critical
@@ -16,7 +18,7 @@ ssh_notify()
 
 	# TODO: Update to notify-send.py
 	# TODO: Add icon
-	notify-send -u $level -a $app -- "$msg"
+	has notify-send && notify-send -u $level -a $app -- "$msg"
 }
 
 check_remote_clock()
@@ -127,7 +129,8 @@ main()
 
 	sleep 0.3
 	o=$( ssh -o BatchMode=yes -O check $R -p $remote_port 2>&1 ) ||
-		{ ssh_notify critical "Connection failed to multiplex: \"${o//[[:cntrl:]]/}\"" ; return 1 ; }
+		{ ssh_notify critical "Connection failed to multiplex: \"${(q)o//[[:cntrl:]]/}\"" ; return 1 ; }
+	ssh_notify normal "Connection multiplex: \"${o//[[:cntrl:]]/}\"" ; 
 
 	uncloak_control_path
 	check_remote_clock
@@ -136,3 +139,4 @@ main()
 }
 
 main $@
+sleep 2
