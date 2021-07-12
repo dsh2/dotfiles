@@ -1,41 +1,54 @@
-# vim: se ft=sshconfig:
+# vim: se ft=sshconfig:fdm=marker
 
 Host HOSTNAME HOSTNAME.local HOSTNAME.jump HOSTNAME.tor
 HostKeyAlias HOSTNAME
-# User USERNAME
-# Password PASSWORD
+# CheckHostIP no
+# AddressFamily inet
+# AddressFamily inet6
 
+# HostName HOSTNAME
+# Port 2288
+# ProxyCommand tsocks nc %h %p
+# User USER
+
+# ID {{{
 # IdentityAgent none 
 IdentitiesOnly yes 
-# TODO: Try to understand why IdentityFile does not support %n
-IdentityFile ~/.ssh/hosts/HOSTNAME/id
+IdentityFile ~/.ssh/keys/DEFAULT
 # AddKeysToAgent ask
 # AddKeysToAgent confirm
-# AddKeysToAgent yes
+# }}}
+
+# Match host = HOSTNAME.jump all
+# ProxyJump jump.aws
+# Hostname localhost
+# Port 20980
 
 # VisualHostKey Yes
 # HashKnownHosts yes
+# StrictHostKeyChecking accept-new 
 
 ForwardAgent no
 ForwardX11 no
 
-# PermitLocalCommand yes
+PermitLocalCommand yes
 
 # ClearAllForwardings yes
 # ExitOnForwardFailure yes
 
 # tinyproxy 
-# RemoteForward localhost:8888 localhost:8888
+RemoteForward localhost:8888 localhost:8888
 
+# ssh me
+RemoteForward 2299 localhost:22
+RemoteForward 2280 localhost:80
+ 
 # cups
 # LocalForward localhost:631 localhost:631 
 
 # usbip
 # LocalForward localhost:3240 localhost:3240 
 
-# ssh me
-# RemoteForward 2299 localhost:22
- 
 # DynamicForward 1080
 # RemoteForward 1080
 
@@ -43,14 +56,3 @@ ForwardX11 no
 # TunnelDevice 99:99
 # Tunnel point-to-point
 # Tunnel ethernet
-
-Match host = HOSTNAME.jump all
-# ProxyJump aws-gw
-ProxyJump b3.dsh2.de
-# TODO: Make jump client register its hostname at jumphost
-Hostname localhost
-Port 20980
-
-Match host = HOSTNAME.tor all
-Port 22
-ProxyCommand sh -c 'TSOCKS_DEBUG=0 tsocks ssh -i ~/.ssh/hosts/HOSTNAME/id %r@%h'

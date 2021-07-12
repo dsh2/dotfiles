@@ -1,0 +1,50 @@
+#!/bin/sh
+
+: "${host:=$1}"
+n="/dev/null"
+export LC_ALL=C
+
+[ -n "$host" ] || {
+	cat <<-EOF 
+		usage: ${0##*/} host
+		
+		Tries to deterrmine key for \$host from ssh config and installs it on \$host.
+	EOF
+	exit 1
+}
+
+identityfile=$(ssh -G $host | sed -ne 's|identityfile ||p')
+[ -n "$identityfile" ] || {
+	echo "No IdentityFile in ssh_config defined."
+	exit 1
+}
+
+identityfile=$(eval echo $identityfile)
+[ -r "$identityfile" ] || {
+	echo "IdentityFile \"$identityfile\" not found."
+	exit 1
+}
+
+public_key=$(ssh-keygen -yf "$identityfile")
+
+default_auth_keys_path=".ssh/authorized_key"
+
+ssh -T $host << EOF
+	umask 077
+	keys_paths=(\$(type sudo >$n && PATH=/sbin:/usr/sbin:\$PATH sudo sshd -T | sed -ne 's|authorizedkeysfile ||p')) || {
+		echo "Failed to determine path of authorized_keys file. Falling back to \"$default_auth_keys_path\"."
+		keys_paths=($default_auth_keys_path)
+	}
+	keys_paths=(\${keys_paths[@]//\\%u/\$USER})
+	keys_paths=(\${keys_paths[@]//\\%d/\$HOME})
+	keys_paths=(\${keys_paths[@]//\\%L/\$HOSTNAME})
+	for key_path in "\${keys_paths[@]}"; do 
+		grep -qF "$public_key" \$key_path && { echo "Key already installed in \"\$key_path\"."; exit; }
+		key_dir=\${key_path%%/*}
+		[ -z $key_dir ] || mkdir -p "\$key_dir" 2>$n || sudo mkdir -p "\$key_dir"
+		( echo $public_key | tee -a \$key_path 2>$n || echo $public_key | sudo tee -a \$key_path ) >$n || continue
+	done
+EOF
+
+echo "Testing key..."
+ssh -O exit $host && ssh $host id \; sudo id && echo "SUCCESS"
