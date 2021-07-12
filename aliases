@@ -556,7 +556,7 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 # TODO: make C a zle binding
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
-alias H=hostname
+alias H='cd ~/.ssh'
 alias 1='ping -A 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
