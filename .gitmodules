@@ -7,7 +7,7 @@
 	url = https://github.com/seebi/dircolors-solarized
 [submodule "dotbot"]
 	path = dotbot
-	url = https://github.com/anishathalye/dotbot
+	url = /home/me/src/dotbot
 [submodule "fzf"]
 	path = src/fzf
 	url = https://github.com/dsh2/fzf
@@ -19,7 +19,7 @@
 	url = https://github.com/jarun/googler/
 [submodule "liquidprompt"]
 	path = liquidprompt
-	url = https://github.com/nojhan/liquidprompt.git
+	url = /home/me/src/liquidprompt
 [submodule "mintty-colors-solarized"]
 	path = colors/mintty-colors-solarized
 	url = https://github.com/mavnn/mintty-colors-solarized
@@ -28,13 +28,13 @@
 	url = https://github.com/frost-nzcr4/find_forks
 [submodule "src/gitk"]
 	path = src/gitk
-	url = https://github.com/dsh2/gitk
+	url = /home/me/src/gitk
 [submodule "src/ranger"]
 	path = src/ranger
-	url = https://github.com/dsh2/ranger
+	url = /home/me/src/ranger
 [submodule "z"]
 	path = z
-	url = https://github.com/dsh2/z
+	url = /home/me/src/z
 [submodule "zsh/zsh-socat-completion"]
 	path = zsh/zsh-socat-completion
 	url = https://github.com/dsh2/zsh-socat-completion
@@ -55,19 +55,25 @@
 	url = https://github.com/anntzer/zsh-pandoc-completion/
 [submodule "zsh/syntax-highlighting"]
 	path = zsh/syntax-highlighting
-	url = https://github.com/zdharma/fast-syntax-highlighting
+	url = /home/me/src/syntax-highlighting
 [submodule "zsh/completion/zchee"]
 	path = zsh/completion/zchee
-	url = https://github.com/zchee/zsh-completions
+	url = /home/me/src/zchee
 [submodule "src/grc"]
 	path = src/grc
-	url = https://github.com/pengwynn/grc
+	url = /home/me/src/grc
 [submodule "zsh/completion/zsh-users"]
 	path = zsh/completion/zsh-users
-	url = https://github.com/zsh-users/zsh-completions
+	url = /home/me/src/zsh-users
 [submodule "gdbinit"]
 	path = gdbinit
-	url = https://github.com/dsh2/gdbinit
+	url = /home/me/src/gdbinit
 [submodule "notify-send.py"]
 	path = notify-send.py
-	url = https://github.com/phuhl/notify-send.py
+	url = /home/me/src/notify-send.py
+[submodule "colors/dircolors-solarized"]
+	url = /home/me/src/dircolors-solarized
+[submodule "colors/mintty-colors-solarized"]
+	url = /home/me/src/mintty-colors-solarized
+[submodule "src/fzf"]
+	url = /home/me/src/fzf
