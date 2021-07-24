@@ -251,7 +251,7 @@ alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
 alias qq=qemu-system-x86_64
 alias qqi=qemu-system-i386
-alias qm='sudo qmicli -p -d /dev/cdc-wdm0'
+# alias qm='sudo qmicli -p -d /dev/cdc-wdm0'
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
 alias qi=qemu-img
@@ -782,20 +782,22 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
+alias zc='zcalc -e'
+alias pv=pvesh
 alias zc='noglob zcalc -e'
 PX() { 
 	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
-	[[ -z $http_proxy ]] && 
-		{ 
-			local e
-			for p in $=pp; do 
-				e+="export $p=http://127.0.0.1:8888; "
-			done
-			echo $e; eval $e
-		} || { 
-			unset $=pp
-			echo "Proxy OFF"; 
-		} 
+	if [ -z $http_proxy ]; then 
+		local e
+		for p in $=pp; do 
+			e+="export $p=http://127.0.0.1:8888; "
+		done
+		echo $e
+		eval $e
+	else
+		eval unset $pp
+		echo "Proxy OFF"; 
+	fi
 }
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
