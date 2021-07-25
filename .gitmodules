@@ -7,10 +7,7 @@
 	url = https://github.com/seebi/dircolors-solarized
 [submodule "dotbot"]
 	path = dotbot
-	url = /home/me/src/dotbot
-[submodule "fzf"]
-	path = src/fzf
-	url = https://github.com/dsh2/fzf
+	url = http://localhost:2280/src/dotbot
 [submodule "fzf_browser"]
 	path = fzf_browser
 	url = https://github.com/ggVGc/fzf_browser
@@ -19,22 +16,22 @@
 	url = https://github.com/jarun/googler/
 [submodule "liquidprompt"]
 	path = liquidprompt
-	url = /home/me/src/liquidprompt
+	url = http://localhost:2280/src/liquidprompt
 [submodule "mintty-colors-solarized"]
 	path = colors/mintty-colors-solarized
 	url = https://github.com/mavnn/mintty-colors-solarized
 [submodule "src/find_forks"]
 	path = src/find_forks
-	url = https://github.com/frost-nzcr4/find_forks
+	url = http://localhost:2280/src/find_forks
 [submodule "src/gitk"]
 	path = src/gitk
-	url = /home/me/src/gitk
+	url = http://localhost:2280/src/gitk
 [submodule "src/ranger"]
 	path = src/ranger
-	url = /home/me/src/ranger
+	url = http://localhost:2280/src/ranger
 [submodule "z"]
 	path = z
-	url = /home/me/src/z
+	url = http://localhost:2280/src/z
 [submodule "zsh/zsh-socat-completion"]
 	path = zsh/zsh-socat-completion
 	url = https://github.com/dsh2/zsh-socat-completion
@@ -55,25 +52,25 @@
 	url = https://github.com/anntzer/zsh-pandoc-completion/
 [submodule "zsh/syntax-highlighting"]
 	path = zsh/syntax-highlighting
-	url = /home/me/src/syntax-highlighting
+	url = http://localhost:2280/src/syntax-highlighting
 [submodule "zsh/completion/zchee"]
 	path = zsh/completion/zchee
-	url = /home/me/src/zchee
+	url = http://localhost:2280/src/zchee
 [submodule "src/grc"]
 	path = src/grc
-	url = /home/me/src/grc
+	url = http://localhost:2280/src/grc
 [submodule "zsh/completion/zsh-users"]
 	path = zsh/completion/zsh-users
-	url = /home/me/src/zsh-users
+	url = http://localhost:2280/src/zsh-users
 [submodule "gdbinit"]
 	path = gdbinit
-	url = /home/me/src/gdbinit
+	url = http://localhost:2280/src/gdbinit
 [submodule "notify-send.py"]
 	path = notify-send.py
-	url = /home/me/src/notify-send.py
+	url = http://localhost:2280/src/notify-send.py
 [submodule "colors/dircolors-solarized"]
-	url = /home/me/src/dircolors-solarized
+	url = http://localhost:2280/src/dircolors-solarized
 [submodule "colors/mintty-colors-solarized"]
-	url = /home/me/src/mintty-colors-solarized
+	url = http://localhost:2280/src/mintty-colors-solarized
 [submodule "src/fzf"]
-	url = /home/me/src/fzf
+	url = http://localhost:2280/src/fzf
