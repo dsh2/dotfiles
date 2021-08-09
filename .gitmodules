@@ -38,18 +38,12 @@
 [submodule "zsh/zsh-vbox-completion"]
 	path = zsh/completion/vbox
 	url = https://github.com/alexandregz/VBoxManage-completion
-[submodule "zsh/zsh-completions-org"]
-	path = https://github.com/zsh-users/zsh-completions
-	url = https://github.com/srijanshetty/zsh-pandoc-completion
-[submodule "zsh/zsh-pandoc-completion"]
-	path = zsh/zsh-pandoc-completion
+[submodule "zsh/completion/pandoc"]
+	path = zsh/completion/pandoc
 	url = https://github.com/srijanshetty/zsh-pandoc-completion
 [submodule "zsh/zsh-completions"]
 	path = zsh/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions
-[submodule "zsh-completions/zsh-pandoc-completion"]
-	path = zsh-completions/zsh-pandoc-completion
-	url = https://github.com/anntzer/zsh-pandoc-completion/
 [submodule "zsh/syntax-highlighting"]
 	path = zsh/syntax-highlighting
 	url = http://localhost:2280/src/syntax-highlighting
@@ -73,4 +67,5 @@
 [submodule "colors/mintty-colors-solarized"]
 	url = http://localhost:2280/src/mintty-colors-solarized
 [submodule "src/fzf"]
+	path = src/fzf
 	url = http://localhost:2280/src/fzf
