@@ -553,7 +553,7 @@ if vim_plug_available
 	"}}}
 	Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 	" let g:formatdef_my_custom_json = '"jq -s"'
-	let g:formatdef_my_custom_json = '"jq"'
+	let g:formatdef_my_custom_json = '"jq ."'
 	let g:formatdef_my_custom_sh = '"shfmt -i 0 -bn -ci -sr"'
 	let g:formatters_sh = ['my_custom_sh']
 	let g:formatters_json = ['my_custom_json']
