@@ -499,7 +499,7 @@ function run_prepend {
 			[ -n $ZSH_PREPEND ] || { zle -M -- 'ZSH_PREPEND is not set.';  return; }
 		fi
 	fi
-	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=*  ]];  do zle up-history; done
+	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=* ]];  do zle up-history; done
 	BUFFER="$ZSH_PREPEND $BUFFER"
 	CURSOR=$[$#ZSH_PREPEND+1]
 }
