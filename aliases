@@ -1,6 +1,5 @@
 # vim: se ft=sh:
 UNAME=$(uname)
-TMPDIR=
 : "${TMPDIR:=/tmp}"
 
 LS_COMMAND=ls
@@ -241,11 +240,11 @@ alias dock=docker
 alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
 # Vim aliases
 # alias v=vim
-alias v=$VISUAL
+alias v=$EDITOR
 gv() { gvim "$*"; raiseX; }
 # alias vl='(cd ~/.tmux-log/; v *(.om[1]))'
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
-vimman() { $VISUAL -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 # vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
@@ -479,6 +478,7 @@ alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
+alias xs='ssh -O exit'
 Rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
 alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
@@ -487,7 +487,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='eval export SSH_AUTH_SOCK=$(echo /$TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
+alias sa='eval export SSH_AUTH_SOCK=$(echo $TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
@@ -694,8 +694,8 @@ alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
 alias chx='sudo chmod a+x'
-alias chnox='sudo chmod a-x'
-alias chnx='sudo chmod a-x'
+alias chnox='sudo chmod -Rc a-x'
+alias chnx='sudo chmod -Rc a-x'
 alias chmer='sudo chown -c -R $(id -u):$(id -g) .'
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
@@ -782,9 +782,18 @@ alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
 alias zc='noglob zcalc -e'
 PX() { 
+	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
 	[[ -z $http_proxy ]] && 
-		{ export http_proxy=http://127.0.0.1:8888; export https_proxy=$http_proxy; echo "Proxy ON: $http_proxy"; } || 
-		{ unset http_proxy https_proxy; echo "Proxy OFF"; } 
+		{ 
+			local e
+			for p in $=pp; do 
+				e+="export $p=http://127.0.0.1:8888; "
+			done
+			echo $e; eval $e
+		} || { 
+			unset $pp
+			echo "Proxy OFF"; 
+		} 
 }
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
@@ -796,7 +805,19 @@ alias yd=youtube-dl
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
-alias no_spaces='ff=(**/*(/) **/*(.)); for f in $ff; do fs=${f:gs. ._.}; [[ $fs != $f ]] && echo mv \"$f\" $fs; done'
+alias no_spaces='mv_s() { for f in $@; do fs=${f:gs. ._.}; [[ $fs != $f ]] && mv -vi $f $fs; done }; mv_s **/*(/N); mv_s **/*(.);'
 alias xss=xssh
 alias sou=source
 alias em=emerge
+alias sour=source
+alias snn=snmp
+alias snnt=snmptranslate
+alias ssn=snmp
+alias EE='command dd conv=swab <<<'
+alias zd=zstd
+alias s1=sha1sum
+alias s5=sha512sum
+alias zk=ykman
+alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
+alias dirdiff='v "+DirDiff '
+alias ddiff='v "+DirDiff '

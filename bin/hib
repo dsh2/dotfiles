@@ -1,0 +1,5 @@
+#!/bin/sh
+set -xu
+usbip-detach-all || true
+rfkill block bluetooth || true
+systemctl hibernate -i

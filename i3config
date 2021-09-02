@@ -233,9 +233,10 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && systemctl suspend || notify-send -u critical "WARNING: i3lock failed." 
-bindsym $meta+$shift+w exec systemctl suspend || notify-send -u critical "WARNING: suspend failed." 
-bindsym $meta+$ctrl+$shift+w exec systemctl hibernate || notify-send -u critical "WARNING: hibernate failed." 
+bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && sus || notify-send -u critical "WARNING: i3lock failed." 
+bindsym $meta+$shift+w exec sus || notify-send -u critical "WARNING: suspend failed." 
+bindsym $meta+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed." 
+bindsym $alt+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed." 
 bindsym $meta+$ctrl+$alt+w exec rfkill list wifi | grep -q -- "Soft blocked: yes" && rfkill unblock wifi || rfkill block wifi 
 bindsym $meta+$ctrl+$alt+b exec rfkill block all
 bindsym $meta+$ctrl+$alt+$shift+b exec rfkill block all
