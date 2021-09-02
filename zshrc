@@ -25,7 +25,8 @@ has() {
 	verbose=true
 	shift
   fi
-  for c in "$@"; do c="${c%% *}"
+  for c in "$@"; do 
+	c="${c%% *}"
 	if ! command -v "$c" &> /dev/null; then
 	  [[ "$verbose" == true ]] && err "$c not found"
 	  return 1
@@ -401,8 +402,8 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
-# vimp='vimx -c AnsiEsc -c "s/\%xd//" -c go1'
-vimp='vimx +AnsiEsc'
+# vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
+vimp="$VISUAL +AnsiEsc"
 function page_last_output_fullscreen {
 	check_output vp || return
 	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
@@ -968,7 +969,7 @@ pathprepend() {
 zsh_source ~/.environment
 
 # source aliases shared with bash
-zsh_source ~/.aliases
+# zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
 p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
@@ -1219,6 +1220,7 @@ PRE='echo $RANDOM'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
 
+# set -x
 min_version() {
 	local current_version=$1
 	local min_version=$2
@@ -1243,6 +1245,7 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
+# set +x
 if has trash; then
 	alias rm='trash --'
 	alias rmm='\rm -rf'
@@ -1498,3 +1501,4 @@ limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL 
 autoload zcalc
 # leg_db query
 # tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
+zsh_source ~/.aliases
