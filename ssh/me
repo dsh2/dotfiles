@@ -7,7 +7,7 @@ Port 2299
 User me
 
 IdentitiesOnly yes 
-IdentityFile ~/.ssh/hosts/me/id.pub
+IdentityFile ~/.ssh/keys/me
 
 # ControlPersist yes
 ControlPersist no

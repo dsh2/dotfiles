@@ -56,7 +56,7 @@ alias fBB='find . \( -type d -exec chmod -c 755 {} \; \) -o \( -type f -exec chm
 alias fBBB='find . \( -type d -exec chmod -c 700 {} \; \) -o \( -type f -exec chmod -c 600 {} \; \)'
 alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable && chmod -c a+x $f; done || true'
 alias fdd='f . -type d'
-alias ff='f . -type f'
+# alias ff='f . -type f'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
@@ -227,6 +227,7 @@ alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanipx='dig -x $(wanip)'
 alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wanip2x='dig -x $(wanip2)'
+alias wanip3='dig TXT +short o-o.myaddr.l.google.com @ns1.google.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias PV=print_variables
 alias PVV=print_variables
@@ -251,7 +252,7 @@ alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
 alias qq=qemu-system-x86_64
 alias qqi=qemu-system-i386
-alias qm='sudo qmicli -p -d /dev/cdc-wdm0'
+# alias qm='sudo qmicli -p -d /dev/cdc-wdm0'
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
 alias qi=qemu-img
@@ -479,7 +480,8 @@ alias ssha=ssh-add
 alias sshx='ssh -O exit'
 alias xssh='ssh -O exit'
 alias xs='ssh -O exit'
-Rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
+rssh() { ssh -O check $1; ssh -O exit $1; ssh $1 id; ssh -O check $1; }
+alias Rssh=rssh
 alias Cssh='ssh -o ControlMaster=yes'
 alias cssh='ssh -O check'
 alias sshc='ssh -O check'
@@ -555,7 +557,7 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 # TODO: make C a zle binding
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
-alias H=hostname
+alias H='cd ~/.ssh'
 alias 1='ping -A 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
@@ -595,6 +597,7 @@ alias jr=journalctl
 alias jc=journalctl
 alias sf=sshfs
 alias cu=curl
+alias cur=curl
 alias fj=frida
 alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
 alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
@@ -603,6 +606,7 @@ alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
 alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
+alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofp='sudo lsof +c0 -P -n -p'
 alias dpp=docker-packer
 alias pa=patool
@@ -749,6 +753,7 @@ alias zx=zargs
 alias zxx='zargs -P $(nproc)'
 alias rax='rax2 -s'
 alias sqll=sqlite3
+
 alias scr=scrcpy
 alias dme='dmesg -e'
 alias R=rclone
@@ -780,20 +785,21 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
+alias zc='zcalc -e'
 alias zc='noglob zcalc -e'
 PX() { 
 	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
-	[[ -z $http_proxy ]] && 
-		{ 
-			local e
-			for p in $=pp; do 
-				e+="export $p=http://127.0.0.1:8888; "
-			done
-			echo $e; eval $e
-		} || { 
-			unset $pp
-			echo "Proxy OFF"; 
-		} 
+	if [ -z $http_proxy ]; then 
+		local e
+		for p in $=pp; do 
+			e+="export $p=http://127.0.0.1:8888; "
+		done
+		echo $e
+		eval $e
+	else
+		eval unset $pp
+		echo "Proxy OFF"; 
+	fi
 }
 alias alsa=alsactl
 alias us='usermod -aG network $USER'
@@ -815,9 +821,22 @@ alias snnt=snmptranslate
 alias ssn=snmp
 alias EE='command dd conv=swab <<<'
 alias zd=zstd
+alias bb=bitbake
 alias s1=sha1sum
 alias s5=sha512sum
-alias zk=ykman
+alias zk='ykman -d $ykserial'
+alias yk='ykman -d $ykserial'
 alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
 alias dirdiff='v "+DirDiff '
 alias ddiff='v "+DirDiff '
+alias ff=fossil
+alias vd3='vd -f sqlite'
+alias rss=rssh
+alias fo=for
+alias m3=m365
+alias nb=nbdkit
+alias bri=bridge
+alias bi='bridge link show'
+alias mutt=neomutt
+alias i2='ip -4'
+alias i22='ip -6'
