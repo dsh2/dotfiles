@@ -840,3 +840,5 @@ alias bi='bridge link show'
 alias mutt=neomutt
 alias i2='ip -4'
 alias i22='ip -6'
+alias ems='emerge -S'
+alias bt=btrfs
