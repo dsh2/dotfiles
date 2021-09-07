@@ -1,6 +1,7 @@
 [user]
 	name = Daniel Schaffrath
-	email = Daniel.Schaffrath-extern@deutschebahn.com
+	# email = Daniel.Schaffrath-extern@deutschebahn.com
+	email = daniel.schaffrath@umlaut.com
 [push]
 	default = simple
 [hub]
