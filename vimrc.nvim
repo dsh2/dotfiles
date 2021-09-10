@@ -122,13 +122,13 @@ if vim_plug_available
 	" nmap <leader>gd :Gvdiff<cr><c-w>l
 	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
 	nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
-	nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
-	nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>:only<cr>
+	nmap <leader>gc :tabnew<cr>:Git commit --verbose<cr>:only<cr>
+	nmap <leader>gC :tabnew<cr>:Git commit --verbose --amend<cr>:only<cr>
 	nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
-	nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
-	nmap <leader>gb :Gblame<cr>
-	nmap <leader>gB vap:Gbrowse<cr>
-	vmap <leader>gB :Gbrowse<cr>
+	nmap <leader>gs :tabnew<cr>:Git<cr>o
+	nmap <leader>gb :Git blame<cr>
+	nmap <leader>gB vap:GBrowse<cr>
+	vmap <leader>gB :GBrowse<cr>
 	nmap <leader>gp :Gpush<cr>
 	nmap <leader>gw :Gwrite<cr>
 	nmap <leader>gg :Git
