@@ -1434,7 +1434,7 @@ alias atp='noglob _at +'
 type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
-# umask 027
+umask 002
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
