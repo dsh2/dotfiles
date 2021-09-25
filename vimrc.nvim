@@ -1,4 +1,4 @@
-" vim: foldmethod=marker path=~/.local/share/nvim/vim-plug/ isf-=/ foldcolumn=3 tw=0 ts=8
+"'parallel -i $SHELL -c "echo {} {} |& stdbuf -oL sed \"s|^|{}-\$$:\\t|\"" -- $(' vim: foldmethod=marker path=~/.local/share/nvim/vim-plug/ isf-=/ foldcolumn=3 tw=0 ts=8
 
 let g:loaded_sql_completion = 160
 let g:ftplugin_sql_omni_key = '<C-S-Q>'
@@ -566,7 +566,7 @@ if vim_plug_available
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig,te setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
@@ -1623,3 +1623,5 @@ autocmd vimrc FileType sql   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bde
 vmap / /\%V
 nmap v/ /\V
 "}}}
+
+packadd cfilter
