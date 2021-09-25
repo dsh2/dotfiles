@@ -19,7 +19,7 @@
 [http]
 	cookiefile = ~/.gitcookies
 [core]
-	pager = cat
+	pager = 
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
 [alias]
@@ -45,3 +45,9 @@
 	autoupdate = true
 [diff]
 	submodule = log
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[pager]
+	diff = false
