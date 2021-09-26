@@ -489,20 +489,20 @@ function run_ab {
 bindkey_func '^x^f' run_ab
 
 function run_prepend {
-	if [[ -z $ZSH_PREPEND ]]; then
+	if [[ -z $zsh_prepend ]]; then
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
-			ZSH_PREPEND="ssh ${match[1]%%/*}"
+			zsh_prepend="ssh ${match[1]%%/*}"
 		else
 			local -r ssh_history="$HOME/.ssh/host_history"
-			[ -e $ssh_history ] && ZSH_PREPEND="ssh $(
+			[ -e $ssh_history ] && zsh_prepend="ssh $(
 				sed -nE '$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p' ~/.ssh/host_history
 			)"
-			[ -n $ZSH_PREPEND ] || { zle -M -- 'ZSH_PREPEND is not set.';  return; }
+			[ -n $zsh_prepend ] || { zle -M -- 'zsh_prepend is not set.';  return; }
 		fi
 	fi
-	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=* ]];  do zle up-history; done
-	BUFFER="$ZSH_PREPEND $BUFFER"
-	CURSOR=$[$#ZSH_PREPEND+1]
+	while [[ -z $BUFFER || $BUFFER = zsh_prepend=* ]];  do zle up-history; done
+	BUFFER="$zsh_prepend $BUFFER"
+	CURSOR=$[$#zsh_prepend+1]
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
