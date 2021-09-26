@@ -93,6 +93,7 @@ if vim_plug_available
 	map <leader>lc :FzfCommits<cr>
 	map <leader>lC :FzfBCommits<cr>
 	map <leader>CA :FzfCommands<cr>
+	map <leader><leader>c :FzfCommands<cr>
 	nmap <leader>ca :FzfCommands<cr>
 	nmap <leader><Space> :FzfCommands<cr>
 	map <leader>ff :FzfFiles<cr>
@@ -122,13 +123,13 @@ if vim_plug_available
 	" nmap <leader>gd :Gvdiff<cr><c-w>l
 	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
 	nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
-	nmap <leader>gc :tabnew<cr>:Gcommit --verbose<cr>:only<cr>
-	nmap <leader>gC :tabnew<cr>:Gcommit --verbose --amend<cr>:only<cr>
+	nmap <leader>gc :tabnew<cr>:Git commit --verbose<cr>:only<cr>
+	nmap <leader>gC :tabnew<cr>:Git commit --verbose --amend<cr>:only<cr>
 	nmap <leader>gx dp:wincmd h<cr>:update<cr>:wincmd l<cr>
-	nmap <leader>gs :tabnew<cr>:Gstatus<cr>o
-	nmap <leader>gb :Gblame<cr>
-	nmap <leader>gB vap:Gbrowse<cr>
-	vmap <leader>gB :Gbrowse<cr>
+	nmap <leader>gs :tabnew<cr>:Git<cr>o
+	nmap <leader>gb :Git blame<cr>
+	nmap <leader>gB vap:GBrowse<cr>
+	vmap <leader>gB :GBrowse<cr>
 	nmap <leader>gp :Gpush<cr>
 	nmap <leader>gw :Gwrite<cr>
 	nmap <leader>gg :Git
@@ -518,6 +519,8 @@ if vim_plug_available
 	" let g:pasta_disabled_filetypes = ['python', 'coffee', 'yaml', 'tagbar']
 	let g:pasta_disabled_filetypes = ['qf', 'tagbar', 'netrw']
 	"}}}
+	let g:no_cecutil_maps=1
+
 	Plug 'powerman/vim-plugin-AnsiEsc', {'on': 'AnsiEsc'} "{{{
 	map <leader>W :AnsiEsc<cr>
 	" Remove ansi escape sequence
@@ -566,7 +569,7 @@ if vim_plug_available
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig,te setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
@@ -764,19 +767,28 @@ if vim_plug_available
 	Plug 'mhinz/vim-rfc'
 	Plug 'nakal/vim-smarttabs'
 	Plug 'bfrg/vim-cpp-modern'
+	Plug 'cespare/vim-toml'
 	Plug 'tommcdo/vim-exchange'
 	Plug 'robbles/logstash.vim'
 	Plug 'junegunn/vim-easy-align' "{{{
-	map <leader>EA :EasyAlign
+	map <leader>EA :EasyAlign<cr>
+	" 	let g:easy_align_delimiters = {
+	" " \ '>': { 'pattern': '>>\|=>\|>' },
+	" \ '-': {
+	" \     'pattern':         '\\+\|/\*\|\*/',
+	" \     'delimiter_align': 'l',
+	" \     'ignore_groups':   ['!Comment'] },
+	" \ }
 	xmap ga <Plug>(EasyAlign)
-	nmap ga <Plug>(EasyAlign)" }}}
+	nmap ga <Plug>(EasyAlign)
+	" }}}
 	
 	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
 	Plug 'nfnty/vim-nftables'
 	Plug 'jremmen/vim-ripgrep'
 	Plug 'tpope/vim-endwise'
-	" Plug 'tpope/vim-rails'
+	Plug 'vim-ruby/vim-ruby'
 	Plug 'pedrohdz/vim-yaml-folds'
 	Plug 'tpope/vim-bundler'
 	Plug 'Quramy/tsuquyomi'
@@ -968,6 +980,7 @@ set wildmode=list:longest,full
 autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
 autocmd vimrc BufNewFile,BufReadPost *.run setfiletype expect
+autocmd vimrc BufNewFile,BufReadPost *.jq setfiletype config
 " }}}
 " Mappings {{{
 map <leader>Dd :set spelllang=de<cr>
@@ -1175,7 +1188,7 @@ set foldexpr=FoldExprSpace(v:lnum)
 " TODO: autocmd.txt is not so clear about the the interpretation of slashes in face of multiple comma-separated {pat}s
 autocmd vimrc BufReadPost *.log normal G
 autocmd vimrc BufReadPost */log/* normal G
-autocmd vimrc BufReadPost *.log :set filetype=messages
+autocmd vimrc BufReadPost *.log :set filetype=strace
 "}}}
 " Restore last position in file upon opening a file {{{
 autocmd BufReadPost * call RestorePosition()
@@ -1508,6 +1521,7 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
 map <leader><leader>,<cr> :s/,\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
+map <leader>0: :call KeepView("silent! '<,'>s:\\s*:\\s*:\r")<cr>
 
 map <c-w>k :close<cr>
 map <c-w><c-k> :close<cr>
@@ -1623,3 +1637,5 @@ autocmd vimrc FileType sql   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bde
 vmap / /\%V
 nmap v/ /\V
 "}}}
+
+packadd cfilter

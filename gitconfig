@@ -1,6 +1,6 @@
 [user]
 	name = Daniel Schaffrath
-	email = Daniel.Schaffrath-extern@deutschebahn.com
+	email = dsh2@me.com
 [push]
 	default = simple
 [hub]
@@ -18,7 +18,7 @@
 [http]
 	cookiefile = ~/.gitcookies
 [core]
-	pager = cat
+	pager = 
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
 [alias]
@@ -44,3 +44,9 @@
 	autoupdate = true
 [diff]
 	submodule = log
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[pager]
+	diff = false
