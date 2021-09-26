@@ -53,6 +53,7 @@
         path: inputrc
         force: true
     ~/.minttyrc: minttyrc
+    ~/.muttrc: neomutt/neomuttrc
     ~/.config/radare2/radare2rc: radare2rc
     ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
@@ -62,6 +63,7 @@
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc
     ~/.config/nvim/init.vim: vimrc.nvim
+    ~/.config/mpv: mpv
     ~/.nvimrc: ~/.config/nvim/init.vim
     ~/.ssh/config: ssh/config
     ~/.ssh/hosts/host_template: ssh/host_template

@@ -1,4 +1,5 @@
 # vim: se ft=sh:
+
 UNAME=$(uname)
 : "${TMPDIR:=/tmp}"
 

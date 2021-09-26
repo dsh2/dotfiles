@@ -1527,3 +1527,5 @@ rsz() {
 }
 set +x
 zsh_source ~/.aliases
+
+test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

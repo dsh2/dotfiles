@@ -45,3 +45,4 @@
 /.vagrant
 /.vagrant.d
 /.wine
+/mnt

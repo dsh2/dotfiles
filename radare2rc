@@ -1,6 +1,7 @@
 # :vim: set ft=conf
 e cfg.fortunes = true
-e scr.pager = less -R
+# e scr.pager = less -R
+e scr.pager = vimpager
 # e scr.pager = fzf
 # e scr.pager = ..
 e scr.prompt = true
