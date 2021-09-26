@@ -304,7 +304,10 @@ RUN() {
 }
 
 # Miscellaneous
-alias a=aws
+# alias a=aws
+alias a=adb
+alias ad=adb
+alias afs=adbfs
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -844,3 +847,5 @@ alias ems='emerge -S'
 alias bt=btrfs
 alias gj=./gradlew
 alias f2='sudo fail2ban-client status'
+alias ok=openstack
+alias fb=fastboot
