@@ -44,3 +44,12 @@
 	autoupdate = true
 [diff]
 	submodule = log
+[init]
+	defaultBranch = main
+[diff "jsondiff"]
+	# command = /home/dsf/src/GO/bin/jd 
+	command = /home/dsf/.dotfiles/bin/json_diff 
+	# textconv = gron
+[difftool "jsondiff"]
+	# cmd = "/path/to/json-diff $LOCAL $REMOTE"
+	cmd = "/home/dsf/src/GO/bin/jd $LOCAL $REMOTE"
