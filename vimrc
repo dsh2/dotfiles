@@ -467,6 +467,9 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline_detect_modified=1
 let g:airline_detect_spelllang=1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+
+" let g:airline_section_z = '%p%% %#__accent_bold#%{g:airline_symbols.linenr}:%l%#__restore__#%#__accent_bold#/%L%{g:airline_symbols.maxlinenr} %#__restore__#%#__accent_bold# %{g:airline_symbols.colnr}:%v%#__restore__#'
+let g:airline_section_z = '%3p%%  %l %v %o'
 " }}}
 Plug 'tpope/vim-dispatch' "{{{
 " map <leader>M :update<cr>:Make<cr>:copen<cr>/error:<cr>n

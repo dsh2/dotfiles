@@ -1,4 +1,5 @@
 # vim: se ft=sh:
+
 UNAME=$(uname)
 : "${TMPDIR:=/tmp}"
 
@@ -60,12 +61,12 @@ alias fdd='f . -type d'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-alias lc='locate --ignore-case --existing --regex --basename'
+alias lc='locate --ignore-case --existing --regex '
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
+alias locl=lloc
+lloc() { lc "$*" | sed -ne "s|$PWD|.|p" | grep --color "$*" }
+lloc2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 loce() { loc \\.$1\$; }
-locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; }
-locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
-alias lloc=locl
 alias cq=copyq
 alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # alias df='findmnt -D'
@@ -304,7 +305,10 @@ RUN() {
 }
 
 # Miscellaneous
-alias a=aws
+# alias a=aws
+alias a=adb
+alias ad=adb
+alias afs=adbfs
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -327,7 +331,7 @@ alias psme='pstree -ahups $$'
 alias p_s='port search --line'
 alias tm=tmux
 alias tmda='tmux detach-client -a'
-alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT -n top "sudo top"; fi'
+alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT -n top ; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
@@ -814,6 +818,7 @@ alias acp='asn1tools parse '
 alias no_spaces='mv_s() { for f in $@; do fs=${f:gs. ._.}; [[ $fs != $f ]] && mv -vi $f $fs; done }; mv_s **/*(/N); mv_s **/*(.);'
 alias xss=xssh
 alias sou=source
+alias em=emerge
 alias sour=source
 alias snn=snmp
 alias snnt=snmptranslate
@@ -839,3 +844,11 @@ alias bi='bridge link show'
 alias mutt=neomutt
 alias i2='ip -4'
 alias i22='ip -6'
+alias ems='emerge -S'
+alias bt=btrfs
+alias gj=./gradlew
+alias f2='sudo fail2ban-client status'
+alias ok=openstack
+alias fb=fastboot
+alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
+alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"

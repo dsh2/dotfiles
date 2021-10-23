@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
+set -x
 : "${host:=$1}"
 n="/dev/null"
 export LC_ALL=C
@@ -29,7 +30,8 @@ public_key=$(ssh-keygen -yf "$identityfile")
 
 default_auth_keys_path=".ssh/authorized_key"
 
-ssh -T $host << EOF
+ssh -T $host /bin/bash << EOF
+	set -x
 	umask 077
 	keys_paths=(\$(type sudo >$n && PATH=/sbin:/usr/sbin:\$PATH sudo sshd -T | sed -ne 's|authorizedkeysfile ||p')) || {
 		echo "Failed to determine path of authorized_keys file. Falling back to \"$default_auth_keys_path\"."

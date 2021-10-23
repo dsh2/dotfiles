@@ -1,0 +1,33 @@
+#!/bin/sh
+
+pw=$1
+host=$2
+readonly n="/dev/null"
+
+die() { echo "$*"; exit 1; }
+
+[ -z "$pw" ] || [ -z "$host" ] && die "usage: sudo_me password host"
+
+ssh="ssh -T -o BatchMode=yes $host"
+
+$ssh true || die "ssh to \"$host\" failed."
+
+[ "$($ssh -T sudo id -u 2>$n)" != "0" ] || die "sudo on $host already works."
+
+expect <<EOF
+	spawn ssh -tt $host
+	expect "$"
+	send -- "orig_user=\\\$USER su\n"
+	expect "Password:"
+	send -- "$pw\n"
+	expect "#"
+	send -- "echo \\\$orig_user ALL=\\\(ALL\\\) NOPASSWD:ALL > /etc/sudoers.d/nopasswd_\\\$orig_user\n"
+	expect "#"
+	# send -- "ls -al /etc/sudoers.d\n"
+	puts \n
+EOF
+
+$ssh -O exit 2>$n
+[ "$($ssh sudo id -u 2>$n)" = "0" ] || die "Failed to make sudo work on $host."
+
+echo "Successfully enabled sudo on $host."

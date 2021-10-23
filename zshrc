@@ -26,7 +26,8 @@ has() {
 	verbose=true
 	shift
   fi
-  for c in "$@"; do c="${c%% *}"
+  for c in "$@"; do 
+	c="${c%% *}"
 	if ! command -v "$c" &> /dev/null; then
 	  [[ "$verbose" == true ]] && err "$c not found"
 	  return 1
@@ -75,8 +76,8 @@ add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-# LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
-LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
+LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
+# LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 
@@ -402,8 +403,8 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
-# vimp='vimx -c AnsiEsc -c "s/\%xd//" -c go1'
-vimp='vimx +AnsiEsc'
+# vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
+vimp="$VISUAL +AnsiEsc"
 function page_last_output_fullscreen {
 	check_output vp || return
 	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
@@ -488,20 +489,20 @@ function run_ab {
 bindkey_func '^x^f' run_ab
 
 function run_prepend {
-	if [[ -z $ZSH_PREPEND ]]; then
+	if [[ -z $zsh_prepend ]]; then
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
-			ZSH_PREPEND="ssh ${match[1]%%/*}"
+			zsh_prepend="ssh ${match[1]%%/*}"
 		else
 			local -r ssh_history="$HOME/.ssh/host_history"
-			[ -e $ssh_history ] && ZSH_PREPEND="ssh $(
+			[ -e $ssh_history ] && zsh_prepend="ssh $(
 				sed -nE '$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p' ~/.ssh/host_history
 			)"
-			[ -n $ZSH_PREPEND ] || { zle -M -- 'ZSH_PREPEND is not set.';  return; }
+			[ -n $zsh_prepend ] || { zle -M -- 'zsh_prepend is not set.';  return; }
 		fi
 	fi
-	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=* ]];  do zle up-history; done
-	BUFFER="$ZSH_PREPEND $BUFFER"
-	CURSOR=$[$#ZSH_PREPEND+1]
+	while [[ -z $BUFFER || $BUFFER = zsh_prepend=* ]];  do zle up-history; done
+	BUFFER="$zsh_prepend $BUFFER"
+	CURSOR=$[$#zsh_prepend+1]
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
@@ -974,7 +975,6 @@ pathprepend() {
 zsh_source ~/.environment
 
 # source aliases shared with bash
-zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
 p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
@@ -1225,6 +1225,7 @@ PRE='echo $RANDOM'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
 
+# set -x
 min_version() {
 	local current_version=$1
 	local min_version=$2
@@ -1249,6 +1250,7 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
+# set +x
 if has trash; then
 	alias rm='trash --'
 	alias rmm='\rm -rf --'
@@ -1433,7 +1435,7 @@ alias atp='noglob _at +'
 type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
-# umask 027
+umask 002
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
@@ -1525,3 +1527,6 @@ rsz() {
 	fi
 }
 set +x
+zsh_source ~/.aliases
+
+test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
