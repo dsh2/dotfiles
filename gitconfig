@@ -46,6 +46,9 @@
 	submodule = log
 [init]
 	defaultBranch = main
+[diff "jsondiff"]
+	command = $HOME/bin/json_diff 
+	# textconv = gron
 [pull]
 	rebase = false
 [pager]

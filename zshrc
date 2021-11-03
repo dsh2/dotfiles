@@ -76,8 +76,8 @@ add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-# LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
-LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
+LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
+# LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 
@@ -665,6 +665,7 @@ bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s cj\  'c $tmux_log_file\t | jq '
+bindkey -s cjq\  'c $tmux_log_file\t | jq '
 bindkey -s clj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
