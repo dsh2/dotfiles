@@ -4,7 +4,7 @@
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
-# TODO: think about run-away loops
+# TODO: Think about run-away loops
 while [ -L $SHELL ]; do SHELL=$(readlink $SHELL); done
 if [[ $RUNNING_SHELL != $SHELL ]]; then
     echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = \"$RUNNING_SHELL\", SHELL = \"$SHELL)\""
@@ -224,7 +224,7 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs | tr -d \\n |  $=XC
+    curl --data-binary @${file} https://paste.rs | tr -d \\n | $=XC
 }
 
 alias PPd='curl -X DELETE '
