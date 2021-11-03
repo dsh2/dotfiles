@@ -1505,7 +1505,14 @@ zmodload zsh/mathfunc
 autoload zcalc
 # leg_db query
 # tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
- 
+
+rand_int() { echo $(( $(od -v -An -tu -N 4 /dev/urandom ) % ${1:=10} )) }
+rand_geom() {
+	eval $(xdpyinfo | sed -nE '/dimensions/s|^.* ([0-9]+)x([0-9]+) pixels.*$|x=\1 y=\2|p')
+	echo "-geometry $(rand_int $x)x$(rand_int $y)+$(rand_int $x)+$(rand_int $y)"
+}
+rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
+
 [[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
 [ -e ~/.environment.local ] && source ~/.environment.local
