@@ -190,35 +190,59 @@ setopt share_history
 
 zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
 zshaddhistory() {
-	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
-	# TODO: try to understand why the following regexp matches
-	# when the empty string ended in c-m, but NOT c-c! BUG?
-	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
-		# echo zshaddhistory: line skipped
-		return 1
-	fi
-	# echo zshaddhistory: line NOT skipped
-	print -sr -- ${1%%$'\n'}
-	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
-		if [[ $PWD != $HOME ]]; then
-			# print "zshaddhistory: adding to local history in PWD = $PWD"
-			if [[ ! -f $PWD/.zsh_local_history ]]; then
-			    print "Creating new .zsh_local_history in \"$PWD\"."
+	# Skip empty lines
+	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
+
+	# Save line in global history
+	local history_line=${1%$'\n'}
+	print -sr -- $history_line
+
+	# Save line in local history
+	local local_history_dir=~/.zsh_local_history_dir${(q)PWD}
+	local local_history=$local_history_dir/history
+	[[ -d $local_history_dir ]] || {
+		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
+		mkdir -p $local_history_dir
+	}
+	fc -p $local_history
+
+	# set -x
+	# Make local history visible in local directory
+	# [[ -w $PWD ]]
+	local local_history_link=$PWD/.zsh_local_history 
+	if [[ -f $local_history_link ]]; then
+		if [[ -h $local_history_link ]]; then
+			# Check if directory was renamed after last update
+			local target=$(stat +link $local_history_link)
+			if [[ $target != $local_history ]]; then
+				print "zshaddhistory: Updating symlink to local history \"$local_history\"."
+				ln -vsfT $local_history $local_history_link
+				ln -vsfT $PWD $local_history_dir/current_target
+				ls -al $target
+				print "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
 			fi
-			fc -p .zsh_local_history
+			# print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 		else
-			# print "zshaddhistory: no local history for HOME = $HOME"
+			# TODO: Add case for regular files to move them into zsh_local_history_dir
+			# print "zshaddhistory: WARNING: Local history is NOT a symlink."
+			# ls -l $local_history_link
 		fi
 	else
-		local dir=~/.zsh_local_history_dir${(q)PWD}
-		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
-		if [[ ! -d $dir ]]; then
-		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
-		    mkdir -p $dir
-		fi
-		fc -p $dir/history
+		if [[ $PWD =~ $zsh_local_history_blacklist ]]; then
+			print "zshaddhistory: Not creating link to local history because \"$PWD\" matches blacklist \"$zsh_local_history_blacklist\"."
+		else
+			print "zshaddhistory: Creating new link to local history \"$local_history\"."
+			ln -vsT $local_history $local_history_link
+			# Force link as link might point to a paste dir with the same name which was removed
+			ln -vsfT $PWD $local_history_dir/current_target
+			print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
+			ls -l $local_history_dir
+		fi 
 	fi
+	# TODO: Fossil commit
+
+	set +x
+
 }
 # }}}
 
@@ -665,15 +689,16 @@ bindkey -s PJ\  'postgres'
 
 function start_tmux_logging()
 {
-	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-	# TODO: Add colors to output
-	# export ZSH_DEBUG=1
+	# set -x
+	zsh_history_id=$(print -P '%!')
+	tmux_log_ts=$( date +%s%N )
+	tmux_log_file=$HOME/.tmux-log/$(print -P '%!')
+	# ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
-		# print -l params = \"$@\"
 		print literal = \"$1\"
-		# print compact: \"$2\"
-		# print full: \"$3\"
+		print compact: \"$2\"
+		print full: \"$3\"
 		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
 		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
 		print time: $(n)
@@ -697,17 +722,16 @@ function start_tmux_logging()
 	else
 	    tmux pipe-pane "cat> $tmux_log_file"
 	fi
+	set +x
 }
 
 function stop_tmux_logging()
 {
 	[ -z $tmux_log_file ] && return
-	tmux pipe-pane
-	# HACK: Convert tmux line endings TODO: Check tmux src why
-	#
-	# Wait for log file to appear - stop_tmux_logging may be faster than tmux pipe-pane
+	tmux pipe-pane  # close current shell-pipe
+	# TODO: Check if inotifywait is available
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
-	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+	# TODO: fossil commit
 }
 
 function set_terminal_title()
