@@ -765,6 +765,11 @@ if vim_plug_available
 	Plug 'terryma/vim-expand-region'
 	Plug 'christianrondeau/vim-base64'
 	Plug 'mhinz/vim-rfc'
+	if has('nvim') || has('patch-8.0.902')
+		Plug 'mhinz/vim-signify'
+	else
+		Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+	endif
 	Plug 'nakal/vim-smarttabs'
 	Plug 'bfrg/vim-cpp-modern'
 	Plug 'cespare/vim-toml'
@@ -823,6 +828,7 @@ if vim_plug_available
 	Plug 'vim-scripts/ReplaceWithRegister'
 	Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
 	Plug 'vim-scripts/info.vim', {'on': 'Info'}
+	Plug 'mhinz/vim-startify'
 	Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
 	Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 	Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
