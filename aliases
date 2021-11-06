@@ -167,8 +167,8 @@ alias tt=set_terminal_title
 alias vb=vboxmanage
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
-alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark -lt a -r - --color'
-alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
+alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -T tabs -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
 alias tmH='tmux rename-session $(hostname)'
 alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
 # alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
@@ -563,11 +563,13 @@ alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; c
 alias RR=reset
 alias H='cd ~/.ssh'
 alias 1='ping -A 1.1.1.1'
+alias 11='ping -A 2606:4700:4700::1111'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
+alias 88='ping -W 1 -c 5 -A 2001:4860:4860::8888'
 alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
@@ -583,7 +585,7 @@ alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set
-alias x='xeyes &'
+alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -e'
@@ -603,6 +605,7 @@ alias sf=sshfs
 alias cu=curl
 alias cur=curl
 alias fj=frida
+alias fr=frida
 alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
 alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
@@ -834,7 +837,15 @@ alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
 alias dirdiff='v "+DirDiff '
 alias ddiff='v "+DirDiff '
 alias ff=fossil
+alias ffo='fossil open'
+alias ffc='fossil close'
+alias ffh='fossil help'
+alias ffb='fossil branch'
+alias ffa='fossil add'
+alias ffc='fossil commit'
+alias fss='fossil'
 alias vd3='vd -f sqlite'
+alias vds='vd -f sqlite'
 alias rss=rssh
 alias fo=for
 alias m3=m365
@@ -850,6 +861,7 @@ alias gj=./gradlew
 alias f2='sudo fail2ban-client status'
 alias ok=openstack
 alias fb=fastboot
+alias re=resolvectl
 alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
 alias in='inotifywait -qm'
