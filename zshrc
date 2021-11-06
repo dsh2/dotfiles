@@ -198,7 +198,7 @@ zshaddhistory() {
 	print -sr -- $history_line
 
 	# Save line in local history
-	local local_history_dir=~/.zsh_local_history_dir${(q)PWD}
+	local local_history_dir=~/.zsh_local_history_dir/${(q)PWD}
 	local local_history=$local_history_dir/history
 	[[ -d $local_history_dir ]] || {
 		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
@@ -1544,7 +1544,7 @@ leafnode() { z=($REPLY/*(N/)) ; return $#z }
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
-pre() { sed "s|^|$*|"; }
+pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
 post() { sed "s|\$|$*|"; }
 rsz() {
 	local IFS='[;' escape geometry x y
