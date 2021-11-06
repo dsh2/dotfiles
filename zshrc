@@ -642,6 +642,7 @@ bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s cj\  'c $tmux_log_file\t | jq '
 bindkey -s cjq\  'c $tmux_log_file\t | jq '
+bindkey -s cvd\  'c $tmux_log_file\t | vd -t tsv '
 bindkey -s clj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
@@ -1528,5 +1529,24 @@ rsz() {
 }
 set +x
 zsh_source ~/.aliases
+
+sponge2() {
+	local dst=$1
+	[[ -n $dst ]] || { print -u2 "sponge: no dst"; return 1; }
+	local T=$(mktemp)
+	>$T
+	[[ $dst = *.json ]] && has jd && jd $dst $T
+	diff -u $dst $T || mv $T $dst
+	rm -f $T
+}
+
+seq_pairs() {
+	local a=($@)
+	local b=(${a:1})
+	# b+=${a[1]}
+	for a b in ${a:^b}; do
+		print $a $b
+	done
+}
 
 test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
