@@ -4,7 +4,7 @@
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
-# TODO: think about run-away loops
+# TODO: Think about run-away loops
 while [ -L $SHELL ]; do SHELL=$(readlink $SHELL); done
 if [[ $RUNNING_SHELL != $SHELL ]]; then
     echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = \"$RUNNING_SHELL\", SHELL = \"$SHELL)\""
@@ -26,7 +26,8 @@ has() {
 	verbose=true
 	shift
   fi
-  for c in "$@"; do c="${c%% *}"
+  for c in "$@"; do 
+	c="${c%% *}"
 	if ! command -v "$c" &> /dev/null; then
 	  [[ "$verbose" == true ]] && err "$c not found"
 	  return 1
@@ -75,8 +76,8 @@ add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u2500:)}'
-# LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
-LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
+LINE_SEPARATOR=%F{211}$'${(r:$((COLUMNS - 1))::-:)}%{$reset_color%}'
+# LINE_SEPARATOR=%F{179}$'${(r:$((COLUMNS - 1))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$((COLUMNS - 0))::\u2500:)}%{$reset_color%}'
 # LINE_SEPARATOR=%F{240}$'${(r:$COLUMNS::\u257c:)}%{$reset_color%}'
 
@@ -189,41 +190,65 @@ setopt share_history
 
 zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
 zshaddhistory() {
-	# echo zshaddhistory: checking line \"${1%%$'\n'}\"
-	# TODO: try to understand why the following regexp matches
-	# when the empty string ended in c-m, but NOT c-c! BUG?
-	if [[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]]; then
-		# echo zshaddhistory: line skipped
-		return 1
-	fi
-	# echo zshaddhistory: line NOT skipped
-	print -sr -- ${1%%$'\n'}
-	# TODO: Add white or blacklist which path to put or NOT to put zsh_local_history in (e.g. ~/src/*, SSH_FS)
-	if [[ -w $PWD && ! $PWD =~ $zsh_local_history_blacklist ]]; then
-		if [[ $PWD != $HOME ]]; then
-			# print "zshaddhistory: adding to local history in PWD = $PWD"
-			if [[ ! -f $PWD/.zsh_local_history ]]; then
-			    print "Creating new .zsh_local_history in \"$PWD\"."
+	# Skip empty lines
+	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
+
+	# Save line in global history
+	local history_line=${1%$'\n'}
+	print -sr -- $history_line
+
+	# Save line in local history
+	local local_history_dir=~/.zsh_local_history_dir/${(q)PWD}
+	local local_history=$local_history_dir/history
+	[[ -d $local_history_dir ]] || {
+		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
+		mkdir -p $local_history_dir
+	}
+	fc -p $local_history
+
+	# set -x
+	# Make local history visible in local directory
+	# [[ -w $PWD ]]
+	local local_history_link=$PWD/.zsh_local_history 
+	if [[ -f $local_history_link ]]; then
+		if [[ -h $local_history_link ]]; then
+			# Check if directory was renamed after last update
+			local target=$(stat +link $local_history_link)
+			if [[ $target != $local_history ]]; then
+				print "zshaddhistory: Updating symlink to local history \"$local_history\"."
+				ln -vsfT $local_history $local_history_link
+				ln -vsfT $PWD $local_history_dir/current_target
+				ls -al $target
+				print "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
 			fi
-			fc -p .zsh_local_history
+			# print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 		else
-			# print "zshaddhistory: no local history for HOME = $HOME"
+			# TODO: Add case for regular files to move them into zsh_local_history_dir
+			# print "zshaddhistory: WARNING: Local history is NOT a symlink."
+			# ls -l $local_history_link
 		fi
 	else
-		local dir=~/.zsh_local_history_dir${(q)PWD}
-		# echo zshaddhistory: Working directory NOT used for local history: fc -p $dir/history
-		if [[ ! -d $dir ]]; then
-		    print "Creating new .zsh_local_history in \"$dir\" for \"$PWD\"."
-		    mkdir -p $dir
-		fi
-		fc -p $dir/history
+		if [[ $PWD =~ $zsh_local_history_blacklist ]]; then
+			print "zshaddhistory: Not creating link to local history because \"$PWD\" matches blacklist \"$zsh_local_history_blacklist\"."
+		else
+			print "zshaddhistory: Creating new link to local history \"$local_history\"."
+			ln -vsT $local_history $local_history_link
+			# Force link as link might point to a paste dir with the same name which was removed
+			ln -vsfT $PWD $local_history_dir/current_target
+			print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
+			ls -l $local_history_dir
+		fi 
 	fi
+	# TODO: Fossil commit
+
+	set +x
+
 }
 # }}}
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs | tr -d \\n |  $=XC
+    curl --data-binary @${file} https://paste.rs | tr -d \\n | $=XC
 }
 
 alias PPd='curl -X DELETE '
@@ -402,8 +427,8 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
-# vimp='vimx -c AnsiEsc -c "s/\%xd//" -c go1'
-vimp='vimx +AnsiEsc'
+# vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
+vimp="$VISUAL +AnsiEsc"
 function page_last_output_fullscreen {
 	check_output vp || return
 	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
@@ -488,20 +513,20 @@ function run_ab {
 bindkey_func '^x^f' run_ab
 
 function run_prepend {
-	if [[ -z $ZSH_PREPEND ]]; then
+	if [[ -z $zsh_prepend ]]; then
 		if [[ $PWD/ = (#b)$HOME/mnt/(*)/* ]]; then
-			ZSH_PREPEND="ssh ${match[1]%%/*}"
+			zsh_prepend="ssh ${match[1]%%/*}"
 		else
 			local -r ssh_history="$HOME/.ssh/host_history"
-			[ -e $ssh_history ] && ZSH_PREPEND="ssh $(
+			[ -e $ssh_history ] && zsh_prepend="ssh $(
 				sed -nE '$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p' ~/.ssh/host_history
 			)"
-			[ -n $ZSH_PREPEND ] || { zle -M -- 'ZSH_PREPEND is not set.';  return; }
+			[ -n $zsh_prepend ] || { zle -M -- 'zsh_prepend is not set.';  return; }
 		fi
 	fi
-	while [[ -z $BUFFER || $BUFFER = ZSH_PREPEND=* ]];  do zle up-history; done
-	BUFFER="$ZSH_PREPEND $BUFFER"
-	CURSOR=$[$#ZSH_PREPEND+1]
+	while [[ -z $BUFFER || $BUFFER = zsh_prepend=* ]];  do zle up-history; done
+	BUFFER="$zsh_prepend $BUFFER"
+	CURSOR=$[$#zsh_prepend+1]
 }
 bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
@@ -640,6 +665,8 @@ bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s cj\  'c $tmux_log_file\t | jq '
+bindkey -s cjq\  'c $tmux_log_file\t | jq '
+bindkey -s cvd\  'c $tmux_log_file\t | vd -t tsv '
 bindkey -s clj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
@@ -664,15 +691,16 @@ bindkey -s PJ\  'postgres'
 
 function start_tmux_logging()
 {
-	tmux_log_file=$HOME/.tmux-log/$(print -P '%!') &&
-	# TODO: Add colors to output
-	# export ZSH_DEBUG=1
+	# set -x
+	zsh_history_id=$(print -P '%!')
+	tmux_log_ts=$( date +%s%N )
+	tmux_log_file=$HOME/.tmux-log/$(print -P '%!')
+	# ZSH_DEBUG=1
 	print -P $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
-		# print -l params = \"$@\"
 		print literal = \"$1\"
-		# print compact: \"$2\"
-		# print full: \"$3\"
+		print compact: \"$2\"
+		print full: \"$3\"
 		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
 		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
 		print time: $(n)
@@ -696,17 +724,16 @@ function start_tmux_logging()
 	else
 	    tmux pipe-pane "cat> $tmux_log_file"
 	fi
+	set +x
 }
 
 function stop_tmux_logging()
 {
 	[ -z $tmux_log_file ] && return
-	tmux pipe-pane
-	# HACK: Convert tmux line endings TODO: Check tmux src why
-	#
-	# Wait for log file to appear - stop_tmux_logging may be faster than tmux pipe-pane
+	tmux pipe-pane  # close current shell-pipe
+	# TODO: Check if inotifywait is available
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
-	# sed -i -e 's,$,,' -e '$ d' $tmux_log_file
+	# TODO: fossil commit
 }
 
 function set_terminal_title()
@@ -973,7 +1000,6 @@ pathprepend() {
 zsh_source ~/.environment
 
 # source aliases shared with bash
-zsh_source ~/.aliases
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
 p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
@@ -1224,6 +1250,7 @@ PRE='echo $RANDOM'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
 
+# set -x
 min_version() {
 	local current_version=$1
 	local min_version=$2
@@ -1248,6 +1275,7 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
+# set +x
 if has trash; then
 	alias rm='trash --'
 	alias rmm='\rm -rf --'
@@ -1432,7 +1460,7 @@ alias atp='noglob _at +'
 type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
-# umask 027
+umask 002
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
@@ -1503,13 +1531,20 @@ zmodload zsh/mathfunc
 autoload zcalc
 # leg_db query
 # tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
- 
+
+rand_int() { echo $(( $(od -v -An -tu -N 4 /dev/urandom ) % ${1:=10} )) }
+rand_geom() {
+	eval $(xdpyinfo | sed -nE '/dimensions/s|^.* ([0-9]+)x([0-9]+) pixels.*$|x=\1 y=\2|p')
+	echo "-geometry $(rand_int $x)x$(rand_int $y)+$(rand_int $x)+$(rand_int $y)"
+}
+rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
+
 [[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
-pre() { sed "s|^|$*|"; }
+pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
 post() { sed "s|\$|$*|"; }
 rsz() {
 	local IFS='[;' escape geometry x y
@@ -1524,3 +1559,25 @@ rsz() {
 	fi
 }
 set +x
+zsh_source ~/.aliases
+
+sponge2() {
+	local dst=$1
+	[[ -n $dst ]] || { print -u2 "sponge: no dst"; return 1; }
+	local T=$(mktemp)
+	>$T
+	[[ $dst = *.json ]] && has jd && jd $dst $T
+	diff -u $dst $T || mv $T $dst
+	rm -f $T
+}
+
+seq_pairs() {
+	local a=($@)
+	local b=(${a:1})
+	# b+=${a[1]}
+	for a b in ${a:^b}; do
+		print $a $b
+	done
+}
+
+test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

@@ -1,4 +1,5 @@
 # vim: se ft=sh:
+
 UNAME=$(uname)
 : "${TMPDIR:=/tmp}"
 
@@ -60,12 +61,12 @@ alias fdd='f . -type d'
 alias ffn='ff -name'
 gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
-alias lc='locate --ignore-case --existing --regex --basename'
+alias lc='locate --ignore-case --existing --regex '
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
+alias locl=lloc
+lloc() { lc "$*" | sed -ne "s|$PWD|.|p" | grep --color "$*" }
+lloc2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 loce() { loc \\.$1\$; }
-locl() { lc "$*" | sed -ne 's,^$'$PWD',.,pi' | grep --ignore-case --color "$*"; }
-locl2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
-alias lloc=locl
 alias cq=copyq
 alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # alias df='findmnt -D'
@@ -78,8 +79,8 @@ alias gC='git cherry --verbose'
 alias gcn='git clean --dry-run'
 alias gca='git commit --verbose --amend'
 alias gcop='git checkout --patch'
-alias gdf='noglob git diff --ignore-space-change --ignore-blank-lines'
-alias gdff='noglob git diff --ignore-space-change --ignore-blank-lines -- .'
+alias gdf='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines'
+alias gdff='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines -- .'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
 alias gst='noglob git status -sb -- '
@@ -166,8 +167,8 @@ alias tt=set_terminal_title
 alias vb=vboxmanage
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
-alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark -lt a -r - --color'
-alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
+alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -T tabs -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
 alias tmH='tmux rename-session $(hostname)'
 alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
 # alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
@@ -227,6 +228,7 @@ alias wanip='dig +short myip.opendns.com ANY @resolver1.opendns.com'
 alias wanipx='dig -x $(wanip)'
 alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wanip2x='dig -x $(wanip2)'
+alias wanip3='dig TXT +short o-o.myaddr.l.google.com @ns1.google.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
 alias PV=print_variables
 alias PVV=print_variables
@@ -303,7 +305,10 @@ RUN() {
 }
 
 # Miscellaneous
-alias a=aws
+# alias a=aws
+alias a=adb
+alias ad=adb
+alias afs=adbfs
 alias al='aws ec2'
 alias ae='aws ec2'
 alias e2='aws ec2'
@@ -326,7 +331,7 @@ alias psme='pstree -ahups $$'
 alias p_s='port search --line'
 alias tm=tmux
 alias tmda='tmux detach-client -a'
-alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT -n top "sudo top"; fi'
+alias tma='if tmux has-session; then tmux attach; else tmux new-session -s ROOT -n top ; fi'
 alias tmn='tmux new-session -t $(tmux list-sessions -F "#S"|head -1)'
 # alias tmm='TAG_NAME=$(herbstclient attr tags.focus.name 2> /dev/null || i3-msg -t get_workspaces | jq -r ".[] | select(.focused == true) | .name" 2> /dev/null ) && if tmux has-session -t $TAG_NAME >/dev/null; then tmux attach-session -t $TAG_NAME; else tmux new-session -s $TAG_NAME -n $TAG_NAME; fi'
 tmm() {
@@ -349,7 +354,7 @@ alias tag=prompt_tag
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
-alias pg=pgrep
+alias pg='pgrep -a'
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
@@ -558,11 +563,13 @@ alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; c
 alias RR=reset
 alias H='cd ~/.ssh'
 alias 1='ping -A 1.1.1.1'
+alias 11='ping -A 2606:4700:4700::1111'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
+alias 88='ping -W 1 -c 5 -A 2001:4860:4860::8888'
 alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
@@ -578,10 +585,10 @@ alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set
-alias x='xeyes &'
+alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
 alias vi=virsh
 alias vir=virsh
-alias pk=pkill
+alias pk='pkill -e'
 alias ka='killall'
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 alias mnt=mount
@@ -598,6 +605,7 @@ alias sf=sshfs
 alias cu=curl
 alias cur=curl
 alias fj=frida
+alias fr=frida
 alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
 alias AO='xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto'
 alias xk='wmctrl -ic $(xwininfo| sed -nE "s/^.*Window id: (0x[0-9a-d]*).*$/\1/p")'
@@ -605,6 +613,7 @@ alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
 alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
+alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofp='sudo lsof +c0 -P -n -p'
 alias dpp=docker-packer
 alias pa=patool
@@ -812,6 +821,7 @@ alias acp='asn1tools parse '
 alias no_spaces='mv_s() { for f in $@; do fs=${f:gs. ._.}; [[ $fs != $f ]] && mv -vi $f $fs; done }; mv_s **/*(/N); mv_s **/*(.);'
 alias xss=xssh
 alias sou=source
+alias em=emerge
 alias sour=source
 alias snn=snmp
 alias snnt=snmptranslate
@@ -827,8 +837,32 @@ alias rmDS='ls -al -- **/._* **/.DS_Store(N)'
 alias dirdiff='v "+DirDiff '
 alias ddiff='v "+DirDiff '
 alias ff=fossil
+alias ffo='fossil open'
+alias ffc='fossil close'
+alias ffh='fossil help'
+alias ffb='fossil branch'
+alias ffa='fossil add'
+alias ffc='fossil commit'
+alias fss='fossil'
 alias vd3='vd -f sqlite'
+alias vds='vd -f sqlite'
 alias rss=rssh
 alias fo=for
 alias m3=m365
 alias nb=nbdkit
+alias bri=bridge
+alias bi='bridge link show'
+alias mutt=neomutt
+alias i2='ip -4'
+alias i22='ip -6'
+alias ems='emerge -S'
+alias bt=btrfs
+alias gj=./gradlew
+alias f2='sudo fail2ban-client status'
+alias ok=openstack
+alias fb=fastboot
+alias re=resolvectl
+alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
+alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
+alias in='inotifywait -qm'
+alias pid='pgrep -a -u $(id -u)'
