@@ -566,7 +566,7 @@ if vim_plug_available
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,crontab,expect,exports,fstab,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
