@@ -292,7 +292,7 @@ RUN() {
 			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj"
 			[[ -z $print_time ]] || print "Start: $(n)"
 			print -P $LINE_SEPARATOR
-			eval $run_obj ; err=$?
+			eval $run_obj |& tee /tmp/RUN-$$; err=$?
 			print -P $LINE_SEPARATOR
 			(( err )) && err "err = $err"
 			[[ -z $print_time ]] || print "Stop: $(n)"
