@@ -354,7 +354,7 @@ alias tag=prompt_tag
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
-alias pg=pgrep
+alias pg='pgrep -a'
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
@@ -588,7 +588,7 @@ alias se=set
 alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
 alias vi=virsh
 alias vir=virsh
-alias pk=pkill
+alias pk='pkill -e'
 alias ka='killall'
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 alias mnt=mount
@@ -622,7 +622,25 @@ alias psl=psql
 alias py3=python3
 alias pod=podman
 alias podd=podman-compose
-alias setd='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
+
+settime() {
+	set -e
+	local url="https://1.1.1.1"
+	local diff_ok=2
+	local curl_time="$( curl --silent --output /dev/null --dump-header - $url | sed -n 's.^[Dd]ate: ..p' )"
+	[ -z "$curl_time" ] && { echo "Failed to curl time from $url"; return 1; }
+	local curl_time_seconds=$( date --date "$curl_time" '+%s' )
+	local local_time=$( date -u '+%s' )
+	local diff=$(( local_time - curl_time_seconds ))
+	[ $diff -lt 0 ] && diff=$(( diff * -1 ))
+	[ $diff -lt $diff_ok ] && { echo "Local time is ok (diff to $url is less than $diff_ok seconds)."; return 0; }
+	echo "Local time has offset to $url of $diff seconds."
+	[ "$update" != "yes" ] && { echo "Only dry-run. Set update=yes to update localtime."; return 0; }
+	sudo date -u --set="$curl_time"
+	echo "Successfully set local time."
+}
+
+alias setd='update=yes settime'
 alias U=usbip
 alias pe=printenv
 # alias units="\units --verbose '"
@@ -864,3 +882,6 @@ alias fb=fastboot
 alias re=resolvectl
 alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
+alias in='inotifywait -qm'
+alias pid='pgrep -a -u $(id -u)'
+alias wpa=wpa_cli

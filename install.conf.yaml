@@ -79,12 +79,13 @@
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
     ~/.visidatarc: visidatarc
+    ~/.psqlrc: psqlrc
     ~/.zshrc: 
       path: zshrc
       force: true 
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod -cR g-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
-  - [chmod -cR o-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
+  - [chmod -cR g-rwx ssh, Restricting file permissions for ssh]
+  - [chmod -cR o-rwx ssh, Restricting file permissions for ssh]
   - [chmod 0700 wg, Restricting file permissions of wg]

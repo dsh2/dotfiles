@@ -213,7 +213,7 @@ if vim_plug_available
 	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 	" Plug 'rickhowe/diffchar.vim'
-	" let g:DiffUnit = 'Word1'
+	let g:DiffUnit = 'Word1'
 	" let g:DiffColors = 0 " fixed color
 	" " let g:DiffColors = 1 " 4 colors in fixed order
 	" Plug 'rickhowe/spotdiff.vim'
@@ -569,7 +569,7 @@ if vim_plug_available
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,dosini,sshconfig,sshdconfig,sh,systemd,i3config,jq,resolv,gitconfig,te setlocal commentstring=#\ %s
+	autocmd vimrc FileType config,crontab,expect,exports,fstab,dosini,sshconfig,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
@@ -1004,7 +1004,7 @@ nnoremap <s-f11> :Step<cr>
 nnoremap <c-s-f11> :Finish<cr>
 " }}}
 cabbr BB <buffer>
-nmap <nowait> <leader>s :update<cr>
+nmap <nowait> <leader>s :update<cr>\|:touch %<cr>
 " nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
 map <a-s> <c-o>:update<cr><esc>
@@ -1039,6 +1039,7 @@ nnoremap gF :split <cfile><cr>
 map <c-w>v <c-w>v<c-w>l
 map <leader>DU :diffupdate<cr>
 vmap DP :diffput<cr>
+vmap <leader>dp :diffput<cr>
 vmap DG :diffget<cr>
 nmap <leader>DD :diffthis<CR>
 nmap <leader>DO :diffoff<CR>

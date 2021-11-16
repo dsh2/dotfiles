@@ -198,7 +198,7 @@ zshaddhistory() {
 	print -sr -- $history_line
 
 	# Save line in local history
-	local local_history_dir=~/.zsh_local_history_dir${(q)PWD}
+	local local_history_dir=~/.zsh_local_history_dir/${(q)PWD}
 	local local_history=$local_history_dir/history
 	[[ -d $local_history_dir ]] || {
 		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
@@ -666,6 +666,7 @@ bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'c $tmux_log_file\t '
 bindkey -s cj\  'c $tmux_log_file\t | jq '
 bindkey -s cjq\  'c $tmux_log_file\t | jq '
+bindkey -s cvd\  'c $tmux_log_file\t | vd -t tsv '
 bindkey -s clj\  'c $tmux_log_file\t | jq '
 bindkey -s clq\  'c $tmux_log_file\t | jq '
 bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
@@ -1543,7 +1544,7 @@ leafnode() { z=($REPLY/*(N/)) ; return $#z }
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
-pre() { sed "s|^|$*|"; }
+pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
 post() { sed "s|\$|$*|"; }
 rsz() {
 	local IFS='[;' escape geometry x y
@@ -1559,5 +1560,24 @@ rsz() {
 }
 set +x
 zsh_source ~/.aliases
+
+sponge2() {
+	local dst=$1
+	[[ -n $dst ]] || { print -u2 "sponge: no dst"; return 1; }
+	local T=$(mktemp)
+	>$T
+	[[ $dst = *.json ]] && has jd && jd $dst $T
+	diff -u $dst $T || mv $T $dst
+	rm -f $T
+}
+
+seq_pairs() {
+	local a=($@)
+	local b=(${a:1})
+	# b+=${a[1]}
+	for a b in ${a:^b}; do
+		print $a $b
+	done
+}
 
 test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
