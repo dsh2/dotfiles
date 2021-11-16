@@ -614,7 +614,25 @@ alias psl=psql
 alias py3=python3
 alias pod=podman
 alias podd=podman-compose
-alias setd='sudo date -u --set="$(curl -H "Cache-Control: no-cache" -sD - http://google.com |\grep --color "^Date:" |cut -d\  -f3-6)"'
+
+settime() {
+	set -e
+	local url="https://1.1.1.1"
+	local diff_ok=2
+	local curl_time="$( curl --silent --output /dev/null --dump-header - $url | sed -n 's.^[Dd]ate: ..p' )"
+	[ -z "$curl_time" ] && { echo "Failed to curl time from $url"; return 1; }
+	local curl_time_seconds=$( date --date "$curl_time" '+%s' )
+	local local_time=$( date -u '+%s' )
+	local diff=$(( local_time - curl_time_seconds ))
+	[ $diff -lt 0 ] && diff=$(( diff * -1 ))
+	[ $diff -lt $diff_ok ] && { echo "Local time is ok (diff to $url is less than $diff_ok seconds)."; return 0; }
+	echo "Local time has offset to $url of $diff seconds."
+	[ "$update" != "yes" ] && { echo "Only dry-run. Set update=yes to update localtime."; return 0; }
+	sudo date -u --set="$curl_time"
+	echo "Successfully set local time."
+}
+
+alias setd='update=yes settime'
 alias U=usbip
 alias pe=printenv
 # alias units="\units --verbose '"
@@ -838,3 +856,4 @@ alias bi='bridge link show'
 alias mutt=neomutt
 alias i2='ip -4'
 alias i22='ip -6'
+alias wpa=wpa_cli
