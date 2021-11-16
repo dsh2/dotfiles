@@ -17,25 +17,6 @@ pathprepend $HOME/.local/bin
 pathprepend $HOME/.cargo/bin
 # pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
 
-# Android
-export ANDROID_AVD_HOME="$HOME/.android/avd/"
-export ANDROID_SDK="$HOME/src/android-sdk"
-export ANDROID_SDK_ROOT=$ANDROID_SDK
-export ANDROID_PLATTFORM=$ANDROID_SDK_ROOT/platforms/android-24
-export ANDROID_HOME=$ANDROID_SDK
-export ANDROID_NDK=$ANDROID_SDK/ndk-bundle
-export ANDROID_NDK_ROOT=$ANDROID_NDK
-export NDK=$ANDROID_NDK
-export AOSP_HOME=$HOME/src/AOSP
-export GRADLE_HOME=/opt/local/share/java/gradle
-pathprepend $ANDROID_SDK/platform-tools
-pathprepend $ANDROID_SDK/tools
-pathprepend $NDK
-# export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
-# export JAVA_BINDIR=$JAVA_HOME/bin
-# export JDK_HOME=$JAVA_HOME
-# export JRE_HOME=$JAVA_HOME
-
 # Pager
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"
 # export PAGER=fzf
@@ -104,3 +85,5 @@ export XENVIRONMENT=$HOME/.Xresources
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
 export RIPGREP_CONFIG_PATH=~/.ripgreprc 
 export TSOCKS_CONF_FILE=~/.tsocks.conf 
+
+export TZ=CET

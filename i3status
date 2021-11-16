@@ -1,9 +1,18 @@
+# vim ft=i3config
 general {
-        colors = true
+        # output_format = "dzen2"
+        output_format = "i3bar"
+        # output_format = "none"
+		markup = pango
+		colors = false
+        # colors = true
         interval = 5
         # color_good = "#00FF00"
         # color_bad = "#00FF00"
         # color_degraded = "#00FF00"
+		color_good = '#2f343f'
+		color_degraded = '#ebcb8b'
+		color_bad = '#ba5e57'
 }
 
 # order += "ipv6"
@@ -27,6 +36,7 @@ ethernet _first_ {
 
 battery all {
         format = " %status %percentage %remaining (%emptytime %consumption)"
+		# format = "<span background='#b48ead'> %status %percentage %remaining</span>"
         format_down = "No battery"
         status_chr = "CHR"
         status_bat = "BAT"
@@ -39,21 +49,23 @@ battery all {
 }
 
 disk "/" {
-        format = "%avail"
+        format = "<span background='#ebcb8b'>%avail</span>"
 }
 
 load {
-        format = "L: %1min, %5min, %15min"
+        # format = "L: %1min, %5min, %15min"
+		format = "<span background='#f59335'>L: %1min, %5min, %15min</span>"
 }
 
 memory {
-        format = "%used | %available"
+        format = "<span background='#a1d569'>%used | %available</span>"
         threshold_degraded = "1G"
         format_degraded = "MEMORY < %available"
 }
 
 tztime local {
-        format = "%Y-%m-%d %H:%M:%S"
+		format = "%Y-%m-%d %H:%M:%S"
+		# format = "<span background='#a1d569'>%Y</span>"
 }
 
 order += "volume master"
@@ -64,4 +76,3 @@ volume master {
         mixer = "Master"
         mixer_idx = 0
 }
-

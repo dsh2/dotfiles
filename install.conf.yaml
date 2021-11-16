@@ -53,6 +53,7 @@
         path: inputrc
         force: true
     ~/.minttyrc: minttyrc
+    ~/.muttrc: neomutt/neomuttrc
     ~/.config/radare2/radare2rc: radare2rc
     ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
@@ -62,6 +63,7 @@
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc
     ~/.config/nvim/init.vim: vimrc.nvim
+    ~/.config/mpv: mpv
     ~/.nvimrc: ~/.config/nvim/init.vim
     ~/.ssh/config: ssh/config
     ~/.ssh/hosts/host_template: ssh/host_template
@@ -77,12 +79,13 @@
     ~/.config/wireshark: wireshark
     ~/.config/zathura/zathurarc: zathurarc
     ~/.visidatarc: visidatarc
+    ~/.psqlrc: psqlrc
     ~/.zshrc: 
       path: zshrc
       force: true 
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod -cR g-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
-  - [chmod -cR o-rwx ssh_config ssh_host_config_template ssh_me ~/.ssh, Restricting file permissions for ssh]
+  - [chmod -cR g-rwx ssh, Restricting file permissions for ssh]
+  - [chmod -cR o-rwx ssh, Restricting file permissions for ssh]
   - [chmod 0700 wg, Restricting file permissions of wg]
