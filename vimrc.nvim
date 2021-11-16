@@ -1542,7 +1542,7 @@ map M :let s=substitute(expand('<cWORD>'), ",$", "", "")<cr>
 " }}}
 " }}}
 " Miscellaneous {{{
-autocmd vimrc BufReadPost *-strace*,strace\.* setfiletype strace
+autocmd vimrc BufReadPost ~/.tmux-log/*,*-strace*,strace\.* setfiletype strace
 
 function! ALEInformation()
     " TODO: Make this work
