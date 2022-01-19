@@ -286,13 +286,14 @@ RUN() {
 	[ $#watch_objs = 0 ] && { echo "Nothing to watch."; return; }
 	# TODO: Resolve target executable
 	# [ ! -e $WATCH ] && WATCH=$(whence $WATCH)
+	local tmp_out=$(mktemp -t RUN-XXXXXX)
 	while :; do
 		if [[ -z $skip_first_run ]]; then
 			[[ -z $clear_screen ]] || clear -x
-			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj"
+			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj" "Output: $tmp_out"
 			[[ -z $print_time ]] || print "Start: $(n)"
 			print -P $LINE_SEPARATOR
-			eval $run_obj |& tee /tmp/RUN-$$; err=$?
+			eval $run_obj |& tee $tmp_out; err=$?
 			print -P $LINE_SEPARATOR
 			(( err )) && err "err = $err"
 			[[ -z $print_time ]] || print "Stop: $(n)"
