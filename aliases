@@ -571,6 +571,7 @@ alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
 alias 88='ping -W 1 -c 5 -A 2001:4860:4860::8888'
+alias 888='8;88'
 alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
