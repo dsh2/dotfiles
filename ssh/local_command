@@ -2,7 +2,7 @@
 
 # TODO: Set alarm to detect run-anway scripts
 
-: "${ssh_history:=~/.ssh/host_history}"
+: "${ssh_history:=$HOME/.ssh/host_history}"
 
 readonly n="/dev/null"
 
@@ -128,6 +128,10 @@ main()
 
 	# TODO: Check if adding '-p $remote_port' makes sense...
 	R="$remote_username@$remote_hostname_cmd"
+	tail -1 $ssh_history | read date time host 
+	[[ $host = $R:$remote_port ]] || {
+		echo "$(date '+%F %T') $R:$remote_port" >> $ssh_history
+		ssh_notify low "Updated ssh host history with $R:$remote_port." 
 	echo "$(date '+%F %T') $R:$remote_port" >> ~/.ssh/host_history; ssh_notify low "Updated ssh host history." 
 
 	sleep 0.3
