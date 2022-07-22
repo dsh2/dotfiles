@@ -120,6 +120,7 @@ ghssh() {
 }
 
 alias gcrs='git clone --recursive --jobs=8 --verbose --shallow-submodules --depth 1'
+alias gcrss='git clone --recursive --jobs=8 --verbose --shallow-submodules --no-single-branch --shallow-since="1 year ago"'
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
@@ -161,7 +162,7 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
-alias lS='ls -ahlrS'
+alias lS='ls -ahlrSs'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
@@ -286,7 +287,7 @@ RUN() {
 	[ $#watch_objs = 0 ] && { echo "Nothing to watch."; return; }
 	# TODO: Resolve target executable
 	# [ ! -e $WATCH ] && WATCH=$(whence $WATCH)
-	local tmp_out=$(mktemp -t RUN-XXXXXX)
+	local tmp_out=$(mktemp -t RUN_XXXXXX)
 	while :; do
 		if [[ -z $skip_first_run ]]; then
 			[[ -z $clear_screen ]] || clear -x
@@ -421,7 +422,7 @@ alias fcc=functions
 alias fcP=zloc
 alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
-alias sc='systemctl -l'
+alias sc=systemctl
 alias sca='sudo sysctl -A | fzf -m | tr -d " "'
 alias SC='sudo fdfind . /sys | fzf --multi'
 alias scc=sysctl
@@ -455,7 +456,7 @@ alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
-rl() { a=${@:-.}; for f in ${=a}; do file $f && readlink -f $f; done }
+rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done }
 
 mvO() {
 	for f in $*; do
@@ -524,7 +525,7 @@ src_index() {
 	    # -name '*.cpp' -o \
 	    # -name '*.h' -o \
 	    # -name '*.hpp' \
-	# \) > cscope.files 
+	# \) > cscope.files
 	setopt clobber
 	# TODO: Does not work?
 	# git ls-files -x '*.tff'
@@ -571,7 +572,7 @@ alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 5 -A 8.8.8.8'
 alias 88='ping -W 1 -c 5 -A 2001:4860:4860::8888'
-alias 888='8;88'
+alias 888='8 | pre "IPv4: " & 88 | pre "IPv6: "'
 alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 5 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
 alias 9n="nping --tcp-connect -p 80 -c 5 \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
@@ -593,7 +594,7 @@ alias vir=virsh
 alias pk='pkill -e'
 alias ka='killall'
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
-alias mnt=mount
+alias mnt='mount -o ro'
 # alias sdd=systemd
 # alias ssd=systemd
 # alias sy=systemd
@@ -620,7 +621,7 @@ alias lsofp='sudo lsof +c0 -P -n -p'
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
-alias psl=psql
+alias psl="psql -Aqtc"
 alias py3=python3
 alias pod=podman
 alias podd=podman-compose
@@ -654,15 +655,16 @@ alias sss=sssh
 sssh() {
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
-	while :; do 
-		if ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi "; then
-			break
-		fi
+	while :; do
+		connect_time=$(date '+%s')
+		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# Update to notify-send.py
 		notify-send -u critical "Lost connection to \"$host\"."
-		slp=$(( (2 + $RANDOM % 19) / 3.4 )) 
-		printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'  
-		sleep $slp
+		(( $(date '+%s') - connect_time > 5 )) || {
+			slp=$(( (2 + $RANDOM % 19) / 3.4 ))
+			printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'
+			sleep $slp
+		}
 	done
 }
 
@@ -676,14 +678,14 @@ mssh() {
 	typeset -p mssh_cmd > $o/cmd
 	# Dynamic tabs skrew up the output of fzf on tmux-log
 	# local y=( /(e'{reply=("$mssh[@]")}'nOe'{REPLY=$#REPLY}') ); tabs $(( $#y[1] + 1 ))
-	local h; for h in $mssh; do 
+	local h; for h in $mssh; do
 		ssh -o ConnectionAttempts=3 \
 			-o ConnectTimeout=1 \
 			-o BatchMode=yes \
 			$ssh_opt $h $@ |& tee $o/$h | sed "s:^:$h\t:" &
-		# Try to archive mostly sorted output but still 
+		# Try to archive mostly sorted output but still
 		# allow laggy host to not delay overall execution
-		sleep 0.1 
+		sleep 0.1
 	done
 	wait
 }
@@ -766,8 +768,8 @@ alias um='sudo umount'
 alias umt='sudo umount'
 alias F=frida
 alias ic=icomera_scraper
-alias mo=mount
-alias mt=mount
+alias mo='mount -o ro'
+alias mt='mount -o ro'
 alias exp=export
 alias ep=export
 alias po=podman
@@ -814,9 +816,9 @@ alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
 alias zc='zcalc -e'
 alias zc='noglob zcalc -e'
-PX() { 
+PX() {
 	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
-	if [ -z $http_proxy ]; then 
+	if [ -z $http_proxy ]; then
 		local e
 		for p in $=pp; do 
 			e+="export $p=http://127.0.0.1:8888; "
