@@ -152,7 +152,7 @@ alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 
 # ls
-alias ls="$LS_COMMAND --almost-all --escape --classify --color=always --time-style='+%F %T'"
+alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
 alias l='ls -lh'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
@@ -235,8 +235,8 @@ alias PV=print_variables
 alias PVV=print_variables
 alias pvv=print_variables
 envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
-# alias va=vagrant
-alias va=variety
+alias va=vagrant
+# alias va=variety
 alias doc=docker
 alias docc=docker-compose
 alias dock=docker
@@ -783,7 +783,7 @@ alias zxx='zargs -P $(nproc)'
 alias rax='rax2 -s'
 alias sqll=sqlite3
 
-alias scr=scrcpy
+alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off'
 alias dme='dmesg -e'
 alias R=rclone
 alias rk=rclone
@@ -820,14 +820,14 @@ PX() {
 	pp="http_proxy https_proxy ftp_proxy all_proxy HTTP_PROXY HTTPS_PROXY"
 	if [ -z $http_proxy ]; then
 		local e
-		for p in $=pp; do 
+		for p in $=pp; do
 			e+="export $p=http://127.0.0.1:8888; "
 		done
 		echo $e
 		eval $e
 	else
 		eval unset $pp
-		echo "Proxy OFF"; 
+		echo "Proxy OFF";
 	fi
 }
 alias alsa=alsactl
@@ -836,7 +836,7 @@ alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'
 alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
 alias ltmp='l -dt tmp-*'
-alias yd=youtube-dl
+alias yd='yt-dlp'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -889,3 +889,15 @@ alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE '
 alias in='inotifywait -qm'
 alias pid='pgrep -a -u $(id -u)'
 alias wpa=wpa_cli
+alias nbb=nbd-client
+alias res=resolvectl
+alias rr=resolvectl
+alias pgt='pgrep -a -t ${TTY#/dev/}'
+alias sk=ssh-keygen
+alias findm=findmnt
+alias dn=dnf
+alias xa='sudo getfattr -d -m .\* -R .'
+alias cal='cal -wm'
+alias ari=aria2c
+alias ans=ansible
+alias emu=emulator
