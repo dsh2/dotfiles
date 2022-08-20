@@ -658,9 +658,9 @@ sssh() {
 	while :; do
 		connect_time=$(date '+%s')
 		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
-		# Update to notify-send.py
-		notify-send -u critical "Lost connection to \"$host\"."
+		# TODO: Update to notify-send.py?
 		(( $(date '+%s') - connect_time > 5 )) || {
+			notify-send -u critical "Lost connection to \"$host\"."
 			slp=$(( (2 + $RANDOM % 19) / 3.4 ))
 			printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'
 			sleep $slp
@@ -836,7 +836,7 @@ alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'
 alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
 alias ltmp='l -dt tmp-*'
-alias yd='yt-dlp'
+alias yd='yt-dlp -v'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -901,3 +901,6 @@ alias cal='cal -wm'
 alias ari=aria2c
 alias ans=ansible
 alias emu=emulator
+alias mp=mpv
+alias btb=btrbk
+alias sem=semanage
