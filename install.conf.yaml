@@ -37,7 +37,7 @@
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
     ~/.config/i3/config: i3config
-    ~/.config/kitty/kitty.konf: kitty.conf
+    ~/.config/kitty/kitty.conf: kitty.conf
     ~/.clang-format: clang-format
     ~/.environment: environment
     ~/.fzfrc: fzfrc
