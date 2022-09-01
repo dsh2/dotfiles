@@ -382,6 +382,8 @@ function kill-line-copy {
 	else
 		zle kill-line
 		echo -n $CUTBUFFER | $=XC 2> /dev/null
+		zle -M "Copied content from (C-k): \"$CUTBUFFER\"" 
+		
 	fi
 }
 bindkey_func '^k' kill-line-copy
