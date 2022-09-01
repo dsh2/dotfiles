@@ -677,6 +677,8 @@ bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
 bindkey -s Dh\  '~/*(.om[1])\t'
 bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
+bindkey -s Sl\  '/SNAPSHOTS/h*(om[1])\t'
+bindkey -s Pw\  '$( pwd )\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
