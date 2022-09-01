@@ -26,24 +26,25 @@ PAGER=less
 export GIT_PAGER=less
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
-export LESS=cRMiWSJ
+export LESS=cRMWSJ-i
 # export LESS=RF
-lesskey - <<EOF
-#command
-^w toggle-option S
-h left-scroll
-l right-scroll
-#line-edit
-^P up
-^N down
-^B left
-^F right
-^D delete
-^w word-backspace
-\ed word-delete
-\ef word-right
-#
-EOF
+
+#lesskey - <<-EOF
+##command
+#	^w toggle-option S
+#	h left-scroll
+#	l right-scroll
+##line-edit
+#	^P up
+#	^N down
+#	^B left
+#	^F right
+#	^D delete
+#	^w word-backspace
+#	\ed word-delete
+#	\ef word-right
+##
+#EOF
 
 # L10n
 export LANG=en_US.UTF-8
