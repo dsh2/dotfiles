@@ -85,11 +85,12 @@ configuration {
 /*	kb-accept-custom: "Control+Return";*/
 /*	kb-accept-alt: "Shift+Return";*/
 /*	kb-delete-entry: "Shift+Delete";*/
-	kb-mode-next: "Shift+Right,Tab";
+	/* kb-mode-next: "Shift+Right,Tab"; */
 	kb-mode-previous: "Shift+Left";
 /*	kb-row-left: "Control+Page_Up";*/
 /*	kb-row-right: "Control+Page_Down";*/
-	kb-row-up: "Super+Shift+Tab,Up,Control+p,ISO_Left_Tab,Control+k";
+	/* kb-row-up: "Super+Shift+Tab,Up,Control+p,ISO_Left_Tab,Control+k"; */
+	kb-row-up: "Control+k,Up";
 	kb-row-down: "Super+Tab,Down,Control+n,Control+j";
 	kb-row-tab: "";
 /*	kb-page-prev: "Page_Up";*/
