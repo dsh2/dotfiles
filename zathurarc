@@ -55,6 +55,9 @@ map [normal] <C-i> jumplist forward
 map [fullscreen] <C-o> jumplist backward
 map [fullscreen] <C-i> jumplist forward
 
+map [normal] y copy_link
+map [fullscreen] y copy_link
+
 # settings
 set window-width 1980
 set window-height 1080
