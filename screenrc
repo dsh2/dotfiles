@@ -1,0 +1,97 @@
+# General settings
+activity "activity in %n (%t) [%w:%s]~"
+autodetach on
+bell "%C -> %n%f %t activity!"
+bufferfile $HOME/.screen/exchange
+#caption always "%-w%{+b}%n %t%{-b}%+w"
+#caption always "%3n %t%? @%u%?%? [%h]%?"
+hardstatus off
+caption always "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= rW}%50> %n%f %t %{-}%+Lw%<"
+defdynamictitle on
+
+crlf off
+defmonitor on
+defscrollback 65535
+defslowpaste 0
+escape ^uu
+hardcopydir $HOME/.screen/hardcopies/
+ignorecase on
+msgminwait 1
+msgwait 1
+multiuser off
+obuflimit 4096
+shell -$SHELL
+shelltitle '$ |N'
+silencewait 15
+startup_message off
+vbell off
+zmodem catch
+
+# Key bindings
+bind k
+bind ^k
+bind .
+bind ^\
+bind \\
+bind ^h
+bind h
+bind 'K' kill
+
+# Previous buffer - Meta-1
+bindkey "^[1" prev
+bindkey "^[2" next
+bindkey "^[3" other
+bindkey "^[4" eval "copy"
+# bindkey "^[~" prev
+# bindkey "^[`" next
+
+# Save in vim and relaunch in other window
+bindkey "^[0" eval "stuff :w^m" other "stuff ^p^m"
+
+# Multi-window setup
+bindkey "^[q" focus
+bindkey "^[j" focus down
+bindkey "^[k" focus up
+bindkey "^[h" focus left
+bindkey "^[l" focus right
+bindkey "^[W" remove
+# bindkey "^[w" windowlist -b -m -g
+bindkey "^[w" windowlist -b -m
+bindkey "^[J" resize -v +2
+bindkey "^[K" resize -v -2
+bindkey "^[L" resize -h +2
+bindkey "^[H" resize -h -2
+bindkey "^[s" resize =
+bindkey , title
+
+# New window - Meta-n
+bindkey "^[n" screen
+
+# New spilt window - Meta-m
+bindkey "^[m" eval "split" "focus" "screen"
+bindkey "^[8" eval "split" "focus" "screen"
+bindkey "^[7" eval "split -v" "focus" "screen"
+
+# Continue search backwards and forward copy modes
+bindkey -m "^[p" stuff ?^m
+bindkey -m "^[n" stuff /^m
+
+bindkey "^[P" paste .
+
+# To be determined
+bindkey "^[[5;2~" eval "copy" "stuff ^u"
+bindkey -m "^[[5;2~" stuff ^u
+bindkey -m "^[[6;2~" stuff ^d
+
+# Function keys
+bindkey -k k1 windowlist -b -m
+# bindkey -k k4 windowlist -b -m
+bindkey -k k5 eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
+bindkey R eval "echo 'Reloading .screenrc...'" "source $HOME/.screenrc" "echo 'Reloaded .screenrc.'"
+bindkey -k k6 title
+bindkey -k k8 remove
+bindkey -k k9 colon
+
+# Scroll back to beginning of output of the last command - Meta-p
+# bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?##^m" "msgminwait 1" "msgwait 1"
+bindkey "^[p" eval "copy" "msgwait 0" "msgminwait 0" "copy" "stuff 0?dsh0@^m0" "msgminwait 1"
