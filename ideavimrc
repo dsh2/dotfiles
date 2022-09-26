@@ -1,0 +1,11 @@
+set nowrapscan
+nmap <leader>cc :cd ..<cr>:pwd<cr>
+nmap <nowait> <leader>s :update<cr>\|:touch %<cr>
+let mapleader=" "
+
+set ideajoin
+set ideaput
+
+set scrolloff=20
+set incsearch
+echo "ideamvimrc loaded."

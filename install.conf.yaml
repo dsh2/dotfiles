@@ -62,6 +62,7 @@
     ~/.tmux.conf: tmux.conf
     ~/.vim/compiler/python.vim: vim/python.vim
     ~/.vimrc: vimrc
+    ~/.ideavimrc: ideavimrc
     ~/.config/nvim/init.vim: vimrc.nvim
     ~/.config/mpv: mpv
     ~/.nvimrc: ~/.config/nvim/init.vim
