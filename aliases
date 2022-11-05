@@ -662,7 +662,7 @@ sssh() {
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do
 		connect_time=$(date '+%s')
-		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session -s $host \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
+		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# TODO: Update to notify-send.py?
 		(( $(date '+%s') - connect_time > 5 )) || {
 			notify-send -u critical "Lost connection to \"$host\"."
@@ -888,6 +888,15 @@ alias bt=btrfs
 alias gj=./gradlew
 alias f2='sudo fail2ban-client status'
 alias ok=openstack
+
+alias oka='openstack availability zone list'
+alias okb='openstack backup list'
+alias okf='openstack floating ip list'
+alias okn='openstack network list'
+alias oksg='openstack security group list'
+alias oks='openstack server list'
+alias okv='openstack volume list'
+
 alias fb=fastboot
 alias re=resolvectl
 alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
@@ -917,7 +926,12 @@ alias gr=grubby
 alias sys=systool
 alias lp=lpa
 alias la=lpa
-alias cpr='cp --reflink'
+alias cpr='cp --reflink=always'
 alias dif=diff
 alias iper=iperf
 alias mtr='command mtr --displaymode 2'
+alias rep='repo --no-pager --trace'
+alias cdr='cd $REPO_ROOT'
+alias rp=rpm
+alias ssf=sshfs
+alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh .'
