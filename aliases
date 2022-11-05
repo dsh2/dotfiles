@@ -924,3 +924,4 @@ alias iper=iperf
 alias mtr='command mtr --displaymode 2'
 alias re='repo --trace --no-pager'
 alias rep='repo --trace --no-pager'
+alias nj=ninja
