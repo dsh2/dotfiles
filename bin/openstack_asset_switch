@@ -1,0 +1,87 @@
+#!/bin/zsh -e
+
+# TODO: Merge "volume" and "label"?
+volume=psg-dsf-lineage-build-machine-volume-0002
+label=peeq
+
+server1=psg-dsf-lineage-build-machine
+server2=psg-dsf-build-asset-hoster
+
+server_id() { openstack server show -f value -c id $1 }
+volume_id() { openstack volume show -f value -c id $1 }
+server_name() { openstack server show -f value -c name $1 }
+server_status() { openstack server show -f value -c status $1 }
+volume_status() { openstack volume show -f value -c status $1 }
+volume_attached_id() { openstack volume show -f json $1 | jq -r '.attachments[].server_id' }
+
+die() { echo "[-] $* Exiting..."; exit 1 ; }
+progress() { echo "[+] $*" >&2; }
+
+try() {
+	local -r message=$1
+	shift
+	local -i tries=0
+	while ! eval_result=$( eval $@ ); do
+		output="($tries) $message"
+		[[ -n $eval_result ]] && output+=" (eval_result=\"$eval_result\")"
+		echo $output
+		sleep 0.35
+		(( tries++ < 99 )) || { echo "Giving up!"; exit 1; }
+	done
+}
+
+main() {
+	set -e
+	progress "Looking up server IDs."
+	server_id1=$( server_id $server1 )
+	server_id2=$( server_id $server2 )
+	[[ $server_id1 != $server_id2 ]] || die "Server \"$server1\" and \"$server2\" are the same machine."
+
+	progress "Searching current mount target of volume \"$label\"."
+	volume_status=$( openstack volume show -f json $volume )
+	[[ $( jq -r .multiattach <<< $volume_status ) != "false" ]] && die "Don't know how to handle multi-attached volumes."
+	volume_id=$( jq -r .id <<< $volume_status )
+	volume_attached_id=$( jq -r '.attachments[].server_id' <<< $volume_status )
+	case $volume_attached_id in
+		($server_id1|"") hostA=$server1; hostB=$server2;;
+		($server_id2) hostA=$server2; hostB=$server1;;
+		(*) die "Volume \"$label\" is attached to unknown server $(server_name $volume_attached_id) (id=$volume_attached_id)."
+	esac
+
+	progress "Switching volume \"$label\" from \"$hostA\" to \"$hostB\"."
+
+	if [[ $( server_status $hostA ) == "ACTIVE" ]]; then
+		ssh -T $hostA <<-EOF
+			# set -x
+			if mnt_target=\$( findmnt --source LABEL=$label -no target ); then
+				if ! sudo umount \$mnt_target; then
+					sudo fuser -afuv \$mnt_target
+					exit 1
+				fi
+			fi
+		EOF
+		[ $? ] || die "Failed to ensure that volume \"$label\" is unmounted."
+	fi
+
+	openstack server remove volume $hostA $volume_id
+	try "Waiting for volume \"$label\" to become available..." "[[ \$( volume_status $volume ) == "available" ]]"
+
+	openstack server add volume $hostB $volume_id
+	try "Waiting for volume \"$label\" to become in-use by \"$hostB\"..." "[[ \$( volume_status $volume ) == "in-use" ]]"
+
+	ssh $hostB mount LABEL=$label || die "Failed to mount \"$label\" at host \"$hostB\"."
+	progress "Done."
+}
+
+sourced() {
+	if [ -n "$ZSH_EVAL_CONTEXT" ]; then
+		case $ZSH_EVAL_CONTEXT in *:file:*) return 0 ;; esac
+	elif [ -n "$BASH_VERSION" ] ; then
+		[ "$BASH_SOURCE" = "$0" ] || return 0
+	else
+		case ${0##*/} in sh | dash) return 0 ;; esac
+	fi
+	return 1
+}
+
+sourced || main $@
