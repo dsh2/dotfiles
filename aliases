@@ -399,7 +399,8 @@ alias ipl='\ip -c -o -d -s link show | column -t'
 alias ipj='\ip -d -s -j -p'
 alias ipln="\ip -j link show | jq -r '.[].ifname'"
 alias nf=nft
-alias P='parallel -i $SHELL -c "echo {} {} |& stdbuf -oL sed \"s|^|{}-\$$:\\t|\"" -- $('
+# alias P='parallel -i $SHELL -c "echo {} {} |& stdbuf -oL sed \"s|^|{}-\$$:\\t|\"" -- $('
+alias P='cd /peeq/lineage/LINEAGE_18_1/'
 alias par=parallel
 alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
@@ -930,8 +931,10 @@ alias cpr='cp --reflink=always'
 alias dif=diff
 alias iper=iperf
 alias mtr='command mtr --displaymode 2'
-alias rep='repo --no-pager --trace'
 alias cdr='cd $REPO_ROOT'
 alias rp=rpm
 alias ssf=sshfs
 alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh .'
+alias re='repo --trace --no-pager'
+alias rep='repo --trace --no-pager'
+alias nj=ninja
