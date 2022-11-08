@@ -7,10 +7,16 @@
 
 warn() { echo "[*] $*" >&2; }
 now_epoch() { date '+%s'; }
-sleep_time=2
-unloaded_duration=$(( 60 * 60 ))  # in seconds
 
+trap 'echo "Stopped auto-hibernation." > >(wall) > >(logger -s); loaded_timestamp=$( now_epoch );' TERM
+trap 'logger "Stopped monitoring system for excess idle time.";' INT QUIT
+
+unloaded_duration=$(( 60 * 60 ))  # in seconds
+warn_duration=$(( 15 * 50 ))  # in seconds
+sleep_time=30  # in seconds
+minimum_load=$(( $(nproc) / 2 ))
 loaded_timestamp=$( now_epoch )
+
 logger -s "Monitoring system for excess idle time ($unloaded_duration seconds)."
 
 while :; do
@@ -18,13 +24,16 @@ while :; do
 	if [ -z "$load" ]; then
 		logger -s "Failed to acquire load measure."
 	else
-		(( $load > 1.1 )) && {
+		(( $load > $minimum_load )) && {
 			(( idle_time > 0 )) && logger -s "System becomes loaded."
 			loaded_timestamp=$( now_epoch )
 		}
 	fi
 	idle_time=$(( $( now_epoch ) - loaded_timestamp ))
 	(( idle_time > 0 && idle_time <= sleep_time )) && logger -s "System is idle."
+	(( idle_time > unloaded_duration - warn_duration )) && {
+		echo "System is going to hibernate in $(( unloaded_duration - idle_time )) seconds. To stop: kill $$" > >(wall) > >(logger -s)
+	}
 	(( idle_time > unloaded_duration )) && {
 		logger -s "Hibernating system due to excess idle time."
 		systemctl hibernate
