@@ -27,7 +27,7 @@ client.background       #ffffff
 # }}}
 
 # Font {{{
-set $font "pango:DejaVu Sans Mono 10"
+set $font "pango:DejaVu Sans Mono 9"
 # set $font "pango:DejaVu Sans Mono 11"
 # set $font pango:monospace 10
 # set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -49,15 +49,20 @@ set $lock_now ~/bin/i3lock-wrapper.sh
 # bindsym $meta+x exec i3-msg for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
 # for_window [class=".*"] title_format "%title"
 # for_window [class=".*"] title_format "<b>%title</b> (%class - %instance)"
-bindsym $meta+$alt+$ctrl+a exec arandr
-bindsym $meta+$alt+$ctrl+c exec arandr
-for_window [class="Arandr"] floating enable, resize set 400 400
-bindsym $meta+$alt+$ctrl+e exec xeyes
-bindsym $meta+$alt+$ctrl+n exec xeyes
-for_window [class="XEyes"] floating enable, resize set 350 200, border none
-bindsym $meta+$alt+$ctrl+p exec pavucontrol
-for_window [class="Pavucontrol"] floating enable, resize set 600 550
-for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
+bindsym $meta+$alt+$ctrl+a exec /usr/bin/arandr
+bindsym $meta+$alt+$ctrl+c exec /usr/bin/arandr
+# for_window [class="Arandr"] floating enable, resize set 400 400
+bindsym $meta+$alt+$ctrl+e exec /usr/bin/xeyes
+bindsym $meta+$alt+$ctrl+n exec /usr/bin/xeyes
+for_window [class="XEyes"] floating enable, border none
+# for_window [class="XEyes"] floating enable, resize set 350 200, border none
+# bindsym $meta+$alt+$ctrl+p exec pavucontrol
+bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol-qt
+for_window [class="Pavucontrol"] floating enable, resize set 600 750
+# for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
+for_window [window_role="GtkFileChooserDialog" floating] floating disable
+for_window [class="copyq" floating] floating disable
+# assign [class="copyq"] $WS_LOG
 # for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
 hide_edge_borders none
 floating_minimum_size 200 x 200
@@ -117,7 +122,7 @@ bindsym $meta+8 split vertical, exec $terminal
 bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
 # }}}
 # Start a browser {{{
-bindsym $ctrl+Return exec $browser
+# bindsym $ctrl+Return exec $browser
 bindsym $meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec i3-ws-enum,
 # TODO: Add delay such that new terminal show up on new workspace
 # bindsym $shift+$meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $terminal_tmux, exec i3-ws-enum,
@@ -137,6 +142,7 @@ bindsym $meta+$alt+$shift+0 move container to workspace number 0
 # }}}
 # Switch active workspace {{{
 bindsym $meta+3 workspace back_and_forth
+# bindsym $meta+3 focus right
 bindsym $meta+x [urgent=latest] focus
 
 bindsym $meta+BackSpace focus output left
@@ -163,7 +169,7 @@ bindsym $alt+F4 kill
 # }}}
 # Change split {{{
 bindsym $meta+v split toggle
-bindsym $meta+shift+v layout toggle 
+bindsym $meta+shift+v layout toggle
 # }}}
 # Resize focused window {{{
 bindsym $meta+$ctrl+$shift+$right resize grow   width  $step_size
@@ -233,11 +239,11 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && sus || notify-send -u critical "WARNING: i3lock failed." 
-bindsym $meta+$shift+w exec sus || notify-send -u critical "WARNING: suspend failed." 
-bindsym $meta+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed." 
-bindsym $alt+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed." 
-bindsym $meta+$ctrl+$alt+w exec rfkill list wifi | grep -q -- "Soft blocked: yes" && rfkill unblock wifi || rfkill block wifi 
+bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && sus || notify-send -u critical "WARNING: i3lock failed."
+bindsym $meta+$shift+w exec sus || notify-send -u critical "WARNING: suspend failed."
+bindsym $meta+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed."
+bindsym $alt+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed."
+bindsym $meta+$ctrl+$alt+w exec rfkill list wifi | grep -q -- "Soft blocked: yes" && rfkill unblock wifi || rfkill block wifi
 bindsym $meta+$ctrl+$alt+b exec rfkill block all
 bindsym $meta+$ctrl+$alt+$shift+b exec rfkill block all
 # }}}
@@ -247,17 +253,17 @@ set $pa_volume_down exec pactl set-sink-volume @DEFAULT_SINK@  '-4%'
 set $pa_volume_up exec pactl set-sink-volume @DEFAULT_SINK@  '+6%'
 
 bindsym $alt+F9 $pa_toggle_mute_sink
-bindsym $alt+F10 $pa_volume_down 
-bindsym $alt+F11 $pa_volume_up 
+bindsym $alt+F10 $pa_volume_down
+bindsym $alt+F11 $pa_volume_up
 bindsym $alt+F12 $pa_toggle_mute_sink
 
 bindsym XF86AudioMute $pa_toggle_mute_sink
-bindsym XF86AudioLowerVolume $pa_volume_down 
-bindsym XF86AudioRaiseVolume $pa_volume_up 
-bindsym $meta+$alt+$ctrl+0x2c $pa_volume_down 
-bindsym $meta+$alt+$ctrl+0x2e $pa_volume_up 
-bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute_sink 
-bindsym $meta+$alt+$ctrl+m $pa_toggle_mute_sink 
+bindsym XF86AudioLowerVolume $pa_volume_down
+bindsym XF86AudioRaiseVolume $pa_volume_up
+bindsym $meta+$alt+$ctrl+0x2c $pa_volume_down
+bindsym $meta+$alt+$ctrl+0x2e $pa_volume_up
+bindsym $meta+$alt+$ctrl+0x2f $pa_toggle_mute_sink
+bindsym $meta+$alt+$ctrl+m $pa_toggle_mute_sink
 
 set $pa_toggle_mute_source exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 set $pa_volume_down_source exec pactl set-source-volume @DEFAULT_SOURCE@  '-4%'
@@ -270,8 +276,8 @@ bindsym $alt+$shift+F12 $pa_toggle_mute_source
 
 bindsym $meta+$alt+$ctrl+$shift+0x2c $pa_volume_down_source
 bindsym $meta+$alt+$ctrl+$shift+0x2e $pa_volume_up_source
-bindsym $meta+$alt+$ctrl+$shift+0x2f $pa_toggle_mute_source 
-bindsym $meta+$alt+$ctrl+$shift+m $pa_toggle_mute_source 
+bindsym $meta+$alt+$ctrl+$shift+0x2f $pa_toggle_mute_source
+bindsym $meta+$alt+$ctrl+$shift+m $pa_toggle_mute_source
 # }}}
 # Rofi {{{
 bindsym $alt+Tab exec rofi -fullscreen -show window
@@ -310,9 +316,10 @@ bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
 	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
-	bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
+	# bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return
+	bindsym x exec xrandr --output eDP-1 --off --output DP-2-1 --auto --primary --right-of eDP-1, $mode_return
 	bindsym c exec autorandr --change, $mode_return
-	bindsym $shift+x exec i3-ws-primary, $mode_return 
+	bindsym $shift+x exec i3-ws-primary, $mode_return
 	bindsym b border toggle
 	bindsym h move scratchpad, $mode_return
 	bindsym i floating toggle, $mode_return
@@ -331,7 +338,7 @@ mode $mode_i3 {
 	# bindsym n exec $i3input -F 'move container to workspace %s' -P 'Move container to new workspace: ', $mode_return
 	bindsym n exec i3-ws-move, $mode_return
 	bindsym $shift+n exec i3-ws-move -f, $mode_return
- 
+
 	# Exit mode
 	bindsym $ctrl+c $mode_return
 	bindsym $ctrl+0x5b $mode_return
@@ -422,7 +429,7 @@ mode $mode_manipulate {
 	bindsym 2 resize set 350 200
 	bindsym 3 resize set 200 600
 	bindsym i floating toggle
-	
+
 	# Exit mode
 	bindsym $ctrl+c $mode_return
 	bindsym $ctrl+0x5b $mode_return
@@ -440,12 +447,12 @@ mode $mode_manipulate {
 bindsym $meta+o mode $mode_system
 mode $mode_system {
 	bindsym l exec $lock_now, $mode_return
-	bindsym s exec systemctl suspend, $mode_return
-	bindsym $shift+l exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
-	bindsym o exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
-	bindsym $shift+s exec $lock_now && sleep 0.1 && systemctl suspend, $mode_return
-	bindsym h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
-	bindsym $shift+h exec $lock_now && sleep 0.1 && systemctl hibernate, $mode_return
+	bindsym s exec sus, $mode_return
+	bindsym $shift+l exec $lock_now && sleep 0.1 && sus, $mode_return
+	bindsym o exec $lock_now && sleep 0.1 && sus, $mode_return
+	bindsym $shift+s exec $lock_now && sleep 0.1 && sus, $mode_return
+	bindsym h exec $lock_now && sleep 0.1 && hib, $mode_return
+	bindsym $shift+h exec $lock_now && sleep 0.1 && hib, $mode_return
 
 	# Exit mode
 	bindsym $ctrl+c $mode_return
@@ -467,7 +474,7 @@ mode $mode_wallpaper {
 	bindsym d exec variety --quit, exec xsetroot -solid black, exec rm -f /tmp/i3lock.png, $mode_return
 	bindsym e exec variety, exec xsetroot -solid black, $mode_return
 	bindsym c exec variety --current | tr -d \n | xclip, $mode_return
-                  
+
 	# Exit mode
 	bindsym $ctrl+c $mode_return
 	bindsym $ctrl+0x5b $mode_return
@@ -483,7 +490,7 @@ mode $mode_wallpaper {
 
 # Mouse bindings {{{
 bindsym --release --whole-window $meta+button1 floating toggle
-bindsym --release --whole-window $meta+button2 kill 
+bindsym --release --whole-window $meta+button2 kill
 bindsym --release button2 kill
 bindsym button3 floating toggle
 bindsym button4 resize shrink width $step_size
@@ -492,7 +499,7 @@ bindsym $shift+button4 resize shrink height $step_size
 bindsym $shift+button5 resize grow height $step_size
 # bindsym $alt+$shift+button4 resize shrinkg height $step_size, resize shrink height $step_size
 # bindsym $alt+$shift+button5 resize grow height $step_size, resize grow height $step_size
- 
+
 bindsym --whole-window $alt+button4 resize shrink height $step_size, resize shrink width $step_size
 bindsym --whole-window $ctrl+$alt+button4 resize shrink height $step_size
 bindsym --whole-window $shift+$alt+button4 resize shrink width $step_size
@@ -513,7 +520,7 @@ bar {
 	font $font
 	status_command ~/bin/i3status_wrapper
 	tray_output primary
-	tray_padding 3 px 
+	tray_padding 3 px
 	separator_symbol "|"
 	strip_workspace_numbers no
 	strip_workspace_name no
@@ -524,7 +531,7 @@ bar {
 	colors {
 		background #000000
 		statusline #ffffff
-		separator #007000
+		separator #709099
 
 		focused_workspace  #4c7899 #007000 #ffffff
 		active_workspace   #555555 #5f676a #ffffff
@@ -537,14 +544,15 @@ bar {
 
 # Default workspaces {{{
 
-# WS_ROOT {{{
+# WS_LOG {{{
 set $WS_LOG "0:log"
-# exec_always --no-startup-id i3-msg 'workspace $WS_LOG; exec $terminal_tmux'
+# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
 # }}}
 
 # WS_COMS {{{
 set $WS_COMS "1:coms"
 assign [class="Google-chrome" title="Telegram Web - Google Chrome"] $WS_COMS
+assign [class="Signal" ] $WS_COMS
 assign [instance="crx_nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
 assign [class="Pidgin"] $WS_COMS
 # }}}
@@ -556,24 +564,31 @@ set $WS_ROOT "2:root"
 # }}}
 
 # WS_QEMU {{{
-set $WS_QEMU "8:log"
-assign [class="qemu-system-x86_64"] 8:qemu
+set $WS_QEMU "qemu"
+assign [class="qemu-system-x86_64"] $WS_QEMU
+assign [title="Emulator"] $WS_QEMU
+# for_window [title="Emulator"] floating enable 
+for_window [title="Emulator"] floating disable 
 # }}}
 # }}}
 
 # Autostart {{{
 exec_always --no-startup-id xset -b -c r rate 200 140 dpms 0 0 2400 s off
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_caps_toggle
-exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
+exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde"
 exec_always --no-startup-id dunst
+bindsym $ctrl+$shift+space exec dunstctl close
+bindsym $ctrl+$shift+1 exec dunstctl history-pop
 # xautolock's hotcorner seem to get confused when switching monitor setup
 # exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
 exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5
 exec_always --no-startup-id copyq
+# exec_always --no-startup-id firewall-applet
 exec_always --no-startup-id xsetroot -solid black
-exec_always --no-startup-id variety --next
-exec_always --no-startup-id blueman-tray
+# exec_always --no-startup-id variety --next
+# exec_always --no-startup-id blueman-tray
+exec_always --no-startup-id blueman-applet
 exec_always --no-startup-id notify-send "i3config loaded."
 # }}}
