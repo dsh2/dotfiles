@@ -1,6 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 # set -x
 
+autoload -Uz add-zsh-hook
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
@@ -71,7 +72,7 @@ zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%
 zstyle ':vcs_info:*' formats '%F{136}[%F{166}%b%F{136}]%f '
 zstyle ':vcs_info:*' branchformat '%b%F{1}:%F{3}%r'
 zstyle ':vcs_info:*' disable bzr tla
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
@@ -679,6 +680,7 @@ bindkey -s Dh\  '~/*(.om[1])\t'
 bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Sl\  '/SNAPSHOTS/h*(om[1])\t'
 bindkey -s Pw\  '$( pwd )\t'
+bindkey -s Ts\  'torsocks\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
@@ -1172,8 +1174,8 @@ zloc() {
 }
 
 alias -g 0,="| perl -pe 's:\0:, :g'"
-alias -g 000='0.0.0.0/0'
-alias -g 00='0.0.0.0'
+# alias -g 000='0.0.0.0/0'
+# alias -g 00='0.0.0.0'
 alias -g 0m='| tr \\0 \\n'
 alias -g 0s0='::1/0'
 alias -g 0s='::1'
@@ -1287,7 +1289,7 @@ if has trash; then
 else
 	tl() { err "trash-cli NOT installed." }
 fi
-alias rm='\rm -rf --'
+alias rm='\rm -rf -v --'
 
 visudo_append() {
 	has -v sudo || { die; return }
@@ -1325,6 +1327,7 @@ elif has yum; then
 	alias pi='sudo -E yum -y install '
 	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias pii='sudo -E yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias agr='sudo dnf remove $( dnf list --installed | fzf -m | cut -f1 -d" " )'
 	alias dps='rpm -qf'
 	alias dpl='rpm -qvli'
 	alias dnp='noglob dnf provides */'
