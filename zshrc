@@ -189,7 +189,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
+zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/)"
 zshaddhistory() {
 	# Skip empty lines
 	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
