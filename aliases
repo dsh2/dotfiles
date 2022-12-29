@@ -938,3 +938,4 @@ alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh .'
 alias re='repo --trace --no-pager'
 alias rep='repo --trace --no-pager'
 alias nj=ninja
+alias mn=mount
