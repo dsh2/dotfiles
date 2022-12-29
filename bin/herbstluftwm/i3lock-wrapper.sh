@@ -29,7 +29,7 @@ pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
 i3-msg workspace desktop
 xset +dpms dpms 10 10 10 
 pstree -ps $$ | logger
-rfkill block all
+# rfkill block all
 msg "Locking screen... (no fork)"
 [ -r /tmp/i3lock.png ] && show_image="-i /tmp/i3lock.png"
 i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password $show_image

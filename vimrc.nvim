@@ -212,8 +212,8 @@ if vim_plug_available
 	" }}}
 	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-	" Plug 'rickhowe/diffchar.vim'
-	let g:DiffUnit = 'Word1'
+	Plug 'rickhowe/diffchar.vim'
+	" let g:DiffUnit = 'Word1'
 	" let g:DiffColors = 0 " fixed color
 	" " let g:DiffColors = 1 " 4 colors in fixed order
 	" Plug 'rickhowe/spotdiff.vim'
@@ -358,21 +358,21 @@ if vim_plug_available
 	" nnoremap <F4> :UndotreeToggle<cr>
 	" autocmd vimrc FileType undotree nmap <buffer> ; <cr>
 	" " }}}
-	Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
-	Plug 'vim-pandoc/vim-pandoc-syntax'
-	autocmd vimrc FileType markdown set wrap
-	let g:pandoc#folding#level = 9
+	" Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
+	" Plug 'vim-pandoc/vim-pandoc-syntax'
+	" autocmd vimrc FileType markdown set wrap
+	" let g:pandoc#folding#level = 9
 	" let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
-	let g:pandoc#formatting#mode = 'h' " soft wraps
+	" let g:pandoc#formatting#mode = 'h' " soft wraps
 	" let g:pandoc#formatting#mode = 's' " soft wraps
 	" let g:pandoc#formatting#mode = 'a' " autoformatting
 	" let g:pandoc#formatting#mode = 'A' " smart autoformatting (watch out for source code)
-	let g:pandoc#formatting#textwidth=79
-	let g:pandoc#modules#disabled = ["chdir"]
-	let g:pandoc#formatting#extra_equalprg="--atx-headers"
+	" let g:pandoc#formatting#textwidth=79
+	" let g:pandoc#modules#disabled = ["chdir"]
+	" let g:pandoc#formatting#extra_equalprg="--atx-headers"
 	" let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
-	let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
-	"}}}
+	" let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
+	" }}}
 	Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
 	" hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 	" hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
@@ -912,8 +912,8 @@ set completeopt=menuone
 set concealcursor=n
 set conceallevel=0
 set clipboard=unnamedplus
-set diffopt=iwhite
-" set diffopt=filler,context:4
+" set diffopt=iwhite
+set diffopt=filler,context:4
 " set dir=~/.vim/swo
 set encoding=utf8
 set exrc
@@ -969,7 +969,7 @@ set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servernam
 set notimeout
 set nottimeout
 set ttimeoutlen=50
-set undodir=~/.vim/undodir/
+set undodir=~/.local/share/nvim/undo
 set nofoldenable
 set undofile
 set updatetime=500
@@ -1302,11 +1302,9 @@ autocmd vimrc BufRead,BufNewFile *.ipy set filetype=python
 " Netrw
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 let g:netrw_liststyle         = 3
-let g:netrw_banner            = 0
-" let g:Netrw_UserMaps= [
-"     \    ["l","execute('wincmd l')"]
-"     \    ["<c-l>","execute('wincmd l')"]
-"     \]
+let g:netrw_banner            = 1
+
+" let g:Netrw_UserMaps= [["I","gh"]]
 
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
@@ -1520,6 +1518,7 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " map <leader><space><cr> :call KeepView("silent! '<,'>s/\s\+/\r/")<cr>
 " map <leader><space><cr> :s/\s\+/\r/<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
+map <leader>;<cr> :s/;\+/\r/<cr>
 map <leader><leader>,<cr> :s/,\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 map <leader>0: :call KeepView("silent! '<,'>s:\\s*:\\s*:\r")<cr>
