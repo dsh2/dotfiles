@@ -1,0 +1,43 @@
+#!/bin/zsh -e
+
+# This script hibernates a computer after some idle time
+
+# Install with:
+# sudo sh -c "( crontab -l ; echo @reboot /usr/sbin/load_hibernation; ) | crontab -"
+
+now_epoch() { date '+%s'; }
+
+trap 'echo "Stopped auto-hibernation." > >(wall -n) > >(logger -s); loaded_timestamp=$( now_epoch );' TERM
+trap 'logger "Stopped monitoring system for excess idle time.";' INT QUIT
+
+unloaded_duration=$(( 60 * 60 ))    # Number in seconds after which system hibernates unless it reached minimum_load inbetween
+warn_duration=$(( 15 * 50 ))        # Number in seconds before hibernation during which a system wide message anounces hibernation
+sleep_time=30                       # Number in seconds how often load is measured (align with load average 1m, 5m, 15m)
+minimum_load=$(( $(nproc) / 2 ))
+loaded_timestamp=$( now_epoch )
+
+logger -s "Monitoring system for excess idle time ($unloaded_duration seconds)."
+
+while :; do
+	set $(cat /proc/loadavg); load=$1
+	if [ -z "$load" ]; then
+		logger -s "Failed to acquire load measure."
+	else
+		(( $load > $minimum_load )) && {
+			(( idle_time > 0 )) && logger -s "System became loaded."
+			loaded_timestamp=$( now_epoch )
+		}
+	fi
+	idle_time=$(( $( now_epoch ) - loaded_timestamp ))
+	(( idle_time > 0 && idle_time <= sleep_time )) && logger -s "System became idle."
+	(( idle_time > unloaded_duration - warn_duration && idle_time < unloaded_duration )) && {
+		echo "System is going to hibernate in $(( unloaded_duration - idle_time )) seconds. To stop: kill $$" > >(wall -n) > >(logger -s)
+	}
+	(( idle_time >= unloaded_duration )) && {
+		logger -s "Hibernating system due to excess idle time."
+		systemctl hibernate || logger -s "Failed to hibernate. Resetting idle time."
+		sleep 5
+		loaded_timestamp=$( now_epoch )
+	}
+	sleep $sleep_time
+done

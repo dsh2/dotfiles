@@ -64,7 +64,7 @@ alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex '
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
 alias locl=lloc
-lloc() { lc "$*" | sed -ne "s|$PWD|.|p" | grep --color "$*" }
+lloc() { lc "$*" | sed -ne "s|$PWD|.|p" | grep --color "$*" ; }
 lloc2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 loce() { loc \\.$1\$; }
 alias cq=copyq
@@ -459,7 +459,7 @@ alias e=echo
 alias vis=sudoedit
 alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)):0.$(($RANDOM%8+2)); read; done'
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
-rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done }
+rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done ; }
 
 mvO() {
 	for f in $*; do
@@ -937,5 +937,6 @@ alias ssf=sshfs
 alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh .'
 alias re='repo --trace --no-pager'
 alias rep='repo --trace --no-pager'
-alias nj=ninja
 alias mn=mount
+alias ni=ninja
+alias nin=ninja
