@@ -60,7 +60,9 @@ for_window [class="XEyes"] floating enable, border none
 bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol-qt
 for_window [class="Pavucontrol"] floating enable, resize set 600 750
 # for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
-for_window [window_role="GtkFileChooserDialog" floating] floating disable
+for_window [class="jetbrains-studio" title="Breakpoints"] floating disable
+for_window [class="jetbrains-studio" title="Settings"] floating disable
+# WM_NAME(STRING) = "Breakpoints" WM_CLASS(STRING) = "jetbrains-studio", "jetbrains-studio" 
 for_window [class="copyq" floating] floating disable
 # assign [class="copyq"] $WS_LOG
 # for_window [con_mark=""] title_format "T: <b>%title</b> (%class - %instance)"
