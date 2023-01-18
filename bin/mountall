@@ -1,5 +1,4 @@
-#! /usr/bin/env bash
-#
+#!/bin/bash
 # mountall - mount all suitable block devices
 #
 # Author: Gerd v. Egidy
