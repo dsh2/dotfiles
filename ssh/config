@@ -7,12 +7,27 @@ ControlPath ~/.ssh/control_paths/%C
 ControlMaster auto
 ControlPersist yes
 
+# KexAlgorithms +diffie-hellman-group14-sha1
+# KexAlgorithms +diffie-hellman-group14-sha256
+# KexAlgorithms +diffie-hellman-group16-sha512
+# KexAlgorithms +diffie-hellman-group18-sha512
+# KexAlgorithms +diffie-hellman-group-exchange-sha1
+# KexAlgorithms +diffie-hellman-group-exchange-sha256
+# KexAlgorithms +ecdh-sha2-nistp256
+# KexAlgorithms +ecdh-sha2-nistp384
+# KexAlgorithms +ecdh-sha2-nistp521
+# KexAlgorithms +curve25519-sha256
+# KexAlgorithms +curve25519-sha256@libssh.org
+# KexAlgorithms +sntrup761x25519-sha512@openssh.com 
+
 AddKeysToAgent yes
 StrictHostKeyChecking ask 
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
-ConnectTimeout 4
+# ConnectTimeout 4
+ConnectTimeout 1
+ConnectionAttempts 1
 # UpdateHostKeys ask
 UpdateHostKeys no
 
@@ -22,3 +37,5 @@ PermitLocalCommand no
 # EscapeChar ^^
 HashKnownHosts no
 UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts_common
+# IdentityFile ~/.ssh/keys/%k
+

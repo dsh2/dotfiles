@@ -28,7 +28,7 @@ client.background       #ffffff
 
 # Font {{{
 set $font "pango:DejaVu Sans Mono 9"
-# set $font "pango:DejaVu Sans Mono 11"
+# set $font "pango:DejaVu Sans Mono 100"
 # set $font pango:monospace 10
 # set $font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # set $font pango:Noto Sans Mono 10
@@ -36,6 +36,7 @@ font $font
 # set $i3input i3-input -f "$font"
 # TODO: make eval on right side of set work
 set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
+# set $i3input i3-input -f "pango:DejaVu Sans Mono 50"
 # }}}
 
 # Default applications {{{
@@ -61,6 +62,7 @@ bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol-qt
 for_window [class="Pavucontrol"] floating enable, resize set 600 750
 # for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 for_window [class="jetbrains-studio" title="Breakpoints"] floating disable
+for_window [class="jetbrains-studio" title="Change Signature"] floating disable
 for_window [class="jetbrains-studio" title="Settings"] floating disable
 # WM_NAME(STRING) = "Breakpoints" WM_CLASS(STRING) = "jetbrains-studio", "jetbrains-studio" 
 for_window [class="copyq" floating] floating disable
@@ -317,10 +319,14 @@ set $mode_i3_key u
 bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
-	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
+	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-1-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
 	# bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return
+<<<<<<< Updated upstream
 	# bindsym x exec xrandr --output HDMI-2 --off --output HDMI-1 --off --output DP-2 --off --output DP-1 --off --verbose --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off --output eDP-1 --auto, exec xrandr --output eDP-1 --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-2 --off --output DP-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --auto --primary --right-of eDP-1, exec i3-ws-primary, $mode_return 
 	bindsym x exec xrandr --output eDP-1 --off --output DP-2-1 --auto --primary --right-of eDP-1, $mode_return
+=======
+	bindsym x exec xrandr --output eDP-1 --off --output DP-1-1 --auto --primary --right-of eDP-1, $mode_return
+>>>>>>> Stashed changes
 	bindsym c exec autorandr --change, $mode_return
 	bindsym $shift+x exec i3-ws-primary, $mode_return
 	bindsym b border toggle

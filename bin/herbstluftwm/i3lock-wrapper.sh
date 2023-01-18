@@ -20,7 +20,8 @@ if [ "$1" = "-b" ] && nmcli con show --active | grep -qE '(dsn3|dsn5)'; then
 fi
 
 trap revert HUP INT TERM
-pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
+# pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
+for s in $(pactl list short sinks | cut -f 1); do pactl set-sink-mute $s 0 ; done
 # In single screen setups chose innocuous screen after unlock
 [ $(herbstclient list_monitors | wc -l) = 1 ] && herbstclient use log
 # i3-msg workspace --no-auto-back-and-forth 0:log

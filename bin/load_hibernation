@@ -3,18 +3,18 @@
 # This script hibernates a computer after some idle time
 
 # Install with:
-# sudo sh -c "( crontab -l ; echo @reboot /usr/sbin/load_hibernation; ) | crontab -"
+# sudo sh -c "( crontab -l ; echo @reboot /usr/sbin/load_hibernation ) | crontab -"
+
+unloaded_duration=$(( 60 * 60 ))    # Number in seconds after which system hibernates unless it reached minimum_load in-between
+warn_duration=$(( 15 * 50 ))        # Number in seconds before hibernation during which a system wide message announces hibernation
+sleep_time=30                       # Number in seconds how often load is measured (align with load average 1m, 5m, 15m)
+minimum_load=$(( $(nproc) / 2 ))    # https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
 
 now_epoch() { date '+%s'; }
-
+loaded_timestamp=$( now_epoch )
+loag_broadcast() { cat > >(wall -n) > >(logger --stderr --id load_hibernation)
 trap 'echo "Stopped auto-hibernation." > >(wall -n) > >(logger -s); loaded_timestamp=$( now_epoch );' TERM
 trap 'logger "Stopped monitoring system for excess idle time.";' INT QUIT
-
-unloaded_duration=$(( 60 * 60 ))    # Number in seconds after which system hibernates unless it reached minimum_load inbetween
-warn_duration=$(( 15 * 50 ))        # Number in seconds before hibernation during which a system wide message anounces hibernation
-sleep_time=30                       # Number in seconds how often load is measured (align with load average 1m, 5m, 15m)
-minimum_load=$(( $(nproc) / 2 ))
-loaded_timestamp=$( now_epoch )
 
 logger -s "Monitoring system for excess idle time ($unloaded_duration seconds)."
 

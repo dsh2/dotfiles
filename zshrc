@@ -156,6 +156,7 @@ PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
 # Reset color
 # PS4+='%f'
 PS4+=' | '
+export PS4
 # }}}
 # }}}
 
@@ -202,7 +203,7 @@ zshaddhistory() {
 	local local_history_dir=~/.zsh_local_history_dir/${(q)PWD}
 	local local_history=$local_history_dir/history
 	[[ -d $local_history_dir ]] || {
-		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
+		print -- "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
 		mkdir -p $local_history_dir
 	}
 	fc -p $local_history
@@ -216,11 +217,11 @@ zshaddhistory() {
 			# Check if directory was renamed after last update
 			local target=$(stat +link $local_history_link)
 			if [[ $target != $local_history ]]; then
-				print "zshaddhistory: Updating symlink to local history \"$local_history\"."
+				print -- "zshaddhistory: Updating symlink to local history \"$local_history\"."
 				ln -vsfT $local_history $local_history_link
 				ln -vsfT $PWD $local_history_dir/current_target
 				ls -al $target
-				print "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
+				print -- "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
 			fi
 			# print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 		else
@@ -382,7 +383,7 @@ function kill-line-copy {
 		filter_last_output
 	else
 		zle kill-line
-		echo -n $CUTBUFFER | $=XC 2> /dev/null
+		print -r -n -- $CUTBUFFER | $=XC 2> /dev/null
 		zle -M "Copied content from (C-k): \"$CUTBUFFER\"" 
 		
 	fi
@@ -393,7 +394,7 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	echo -n $CUTBUFFER | $=XC \
+	print -r -n -- $CUTBUFFER | $=XC \
 		&& zle -M "Copied last command line." \
 		|| zle -M "FAILED to copy last command line. (XC=$XC)"
 }
@@ -702,7 +703,7 @@ function start_tmux_logging()
 	tmux_log_ts=$( date +%s%N )
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!')
 	# ZSH_DEBUG=1
-	print -P $LINE_SEPARATOR
+	print -P -- $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
 		print literal = \"$1\"
 		print compact: \"$2\"
@@ -961,7 +962,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
-(( $TMOUT )) && print -n $ZSH_LOCK_STATUS
+(( $TMOUT )) && print -n -- $ZSH_LOCK_STATUS
 # set +x
 
 # # Try to save tmux from OOM
@@ -1301,7 +1302,7 @@ visudo_append() {
 	trap 'sudo \rm -rf $visudo_tmp; unset visudo_tmp' EXIT
 	sudo cp -a /etc/sudoers $visudo_tmp
 	sudo grep -q $line $visudo_tmp && { die "Line \"$line\" already contained in sudoers"; return }
-	print $line | sudo tee --append $visudo_tmp > /dev/null
+	print -- $line | sudo tee --append $visudo_tmp > /dev/null
 	sudo visudo --check --file=$visudo_tmp > /dev/null && sudo mv $visudo_tmp /etc/sudoers
 	chown 0:0 /etc/sudoers
 }
@@ -1464,7 +1465,7 @@ alias at='noglob _at'
 alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
-type keychain > /dev/null && eval $(keychain --eval --quiet)
+# type keychain > /dev/null && eval $(keychain --eval --quiet)
 
 # TODO: Think about a way how to select umask for sudo
 umask 002
@@ -1499,7 +1500,8 @@ gcd() {
 }
 
 mount_dev() {
-	[[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
+	set -x
+	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	sudo sfdisk -J $1  |
 		jq -r '.partitiontable.partitions[].node' |
 		while read dev; do 
@@ -1512,13 +1514,14 @@ alias uma='sudo umount mnt/*'
 
 mount_img() {
 	[[ -r $1 ]] || { echo "usage: $0 image"; return; }
+	set -x
 	img=$1
 	sfdisk -J $img |
 		jq -r '.partitiontable.partitions[] | ["mnt/"+.node, .start * 512] | @tsv' |
 		while read node offset; do
 			dev=$(sudo losetup --show -J --verbose --find --offset $offset $img) &&
 			mkdir -p $node &&
-			sudo mount $dev $node &&
+			sudo mount -o ro $dev $node &&
 			echo "Mounted $node ($dev)"
 		done
 }
