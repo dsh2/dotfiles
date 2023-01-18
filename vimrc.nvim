@@ -135,7 +135,7 @@ if vim_plug_available
 	nmap <leader>gg :Git
 	nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 	" TODO: Find out why this end up in the left window
-	autocmd vimrc FileType gitcommit,fugitive map <buffer> ; odvlzi
+	autocmd vimrc FileType gitcommit,fugitive map <buffer> ; dv
 	autocmd vimrc FileType fugitive map <buffer> D =
 	autocmd vimrc FileType fugitive map <buffer> e =
 	autocmd vimrc FileType fugitive map <buffer> dd =
@@ -212,7 +212,7 @@ if vim_plug_available
 	" }}}
 	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-	Plug 'rickhowe/diffchar.vim'
+	" Plug 'rickhowe/diffchar.vim'
 	" let g:DiffUnit = 'Word1'
 	" let g:DiffColors = 0 " fixed color
 	" " let g:DiffColors = 1 " 4 colors in fixed order
@@ -412,7 +412,7 @@ if vim_plug_available
 	let g:vim_json_syntax_concealcursor = 0
 	" }}}
 	Plug 'scrooloose/nerdtree' "{{{
-	Plug 'Xuyuanp/nerdtree-git-plugin'
+	" Plug 'Xuyuanp/nerdtree-git-plugin'
 	" let g:NERDTreeShowIgnoredStatus = 1
 	let g:NERDTreeGitStatusShowIgnored = 1
 	let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -432,6 +432,7 @@ if vim_plug_available
 	let NERDTreeWinSize = 46
 	let NERDTreeMinimalUI = 1
 	autocmd vimrc FileType nerdtree map <buffer> l oj^
+	autocmd vimrc FileType nerdtree map <buffer> c o
 	"autocmd vimrc FileType nerdtree map <buffer> O mo
 	autocmd vimrc FileType nerdtree map <buffer> h x^
 	autocmd vimrc FileType nerdtree map <buffer> ; go
@@ -761,6 +762,7 @@ if vim_plug_available
 	" let g:echodoc#type = 'echo'
 	let g:echodoc#type = 'signature'"}}}
 	Plug 'sakhnik/nvim-gdb'
+	" Plug 'udalov/javap-vim'
 	" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
 	Plug 'christianrondeau/vim-base64'
@@ -861,6 +863,7 @@ if vim_plug_available
 	Plug 'Shougo/neco-vim'
 	Plug 'ujihisa/neco-look'
 	Plug 'deoplete-plugins/deoplete-jedi'
+	Plug 'udalov/kotlin-vim' 
 	call plug#end()
 
 	call deoplete#custom#option({
@@ -1520,6 +1523,7 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
 map <leader>;<cr> :s/;\+/\r/<cr>
 map <leader><leader>,<cr> :s/,\+/\r/<cr>
+" map <leader><leader>,<cr> :s/,\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 map <leader>0: :call KeepView("silent! '<,'>s:\\s*:\\s*:\r")<cr>
 
@@ -1588,7 +1592,9 @@ map <leader><leader><cr> :s/\s\+/\r/<cr>
 vmap <leader><leader><cr> :'<'>s/\s\+/\r/<cr>
 cmap <m-v> <c-r>"
 
-map <c-w><c-l> <c-w>v<c-w>l
+set splitright
+nnoremap <c-w>l :vertical new<cr>
+nnoremap <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
 
 function! ToggleOption(name)
@@ -1633,7 +1639,7 @@ map <leader><S-S>e :%s:\(\<1\d\{9\}\>\):\=strftime("\"%F %T\"",submatch(0)):c<cr
 autocmd vimrc FileType json  nmap <buffer> <leader>e yq:new<CR>P:%s:\\n:\r:<cr>gg:se ft=sql<cr>
 " Re-paste string joined with \n
 " autocmd vimrc FileType javascript   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
-autocmd vimrc FileType sql   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
+" autocmd vimrc FileType sql nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
 vmap / /\%V
 nmap v/ /\V
 "}}}

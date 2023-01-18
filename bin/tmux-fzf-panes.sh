@@ -14,14 +14,17 @@ me=$(tmux display-message -pF '#{pane_id}')
 
 selection=$(
 	foreach pane command in ${(kv)tmux_pane_commands}; do
-		[[ $command =~ "(sudo|nvim|vim|top|htop|r2|ranger)" ]] && {
-			print -u2 "\rSkipping pane $pane due to interactive content (\"$command\")"
-			continue
-		}
+
+		# [[ $command =~ "(sudo|nvim|vim|top|htop|r2|ranger)" ]] && {
+		# 	print -u2 "\rSkipping pane $pane due to interactive content (\"$command\")"
+		# 	continue
+		# }
+
 		[[ $pane = $me ]] && {
-			print -u2 "\rSkipping me..."
+			# print -u2 "\rSkipping me..."
 			continue
 		}
+
 		# TODO: tmux occassionally report about valid pane_ids not to be found.
 		print -u2 "\rCapturing pane $pane running \"$command\"..."
 		tmux capture-pane -pe $=all -t $pane 2> /dev/null |

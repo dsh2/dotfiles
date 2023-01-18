@@ -17,7 +17,7 @@ readonly timestamp=$( date '+%F %T' )
 
 nsend() {
 	print "msg: $*"
-	notify-send.py --replaces-id=104 --app-name=dunstctl --urgency=critical -- $*
+	notify-send.py --replaces-id=104 --app-name=dunstctl  -- $*
 }
 
 ([[ $paused == "true" ]] && {

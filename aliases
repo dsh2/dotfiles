@@ -31,15 +31,25 @@ source ~/.dotfiles/z/z.sh
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
+alias adf=adbfs
 alias adkl=adbk
 alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
-alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
-alias adll='adb logcat -v threadtime |& lnav -vw ~/.logs/adb/$(date "+%F-%T").log'
+# alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
+alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
+alias adll='noglob adb logcat | lnav'
+alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
-alias ads='adb shell '
-alias aps='adb shell ps '
+alias ads='adb shell'
+alias ada='adb shell am start'
+alias adp='adb shell dumpsys'
+alias adpp='adb shell dumpsys package'
+alias addd='adb shell dumpsys'
+alias aps='adb shell ps -Awf -T'
+alias adu='export ANDROID_SERIAL=$( adb -d get-serialno )'
+alias adm='export ANDROID_SERIAL=emulator-5554'
+alias adi="adb shell <<< ' getprop ro.product.model ; id '"
 ash() {
 	[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
 	[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
@@ -67,6 +77,8 @@ alias locl=lloc
 lloc() { lc "$*" | sed -ne "s|$PWD|.|p" | grep --color "$*" ; }
 lloc2() { locate --wholename --regexp="^$PWD"| sed -ne "s,^$PWD,.,p" | grep --color --fixed-strings "$*"; }
 loce() { loc \\.$1\$; }
+locE() { loc $1\$; }
+loCE() { loc $1\$; }
 alias cq=copyq
 alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # alias df='findmnt -D'
@@ -166,6 +178,7 @@ alias lS='ls -ahlrSs'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
+alias tcp=tcpdump
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
@@ -217,6 +230,7 @@ alias wh='whence -sv'
 alias whh=whence
 alias prr=print
 alias prl='print -rl -- '
+alias prn='print -rn -- '
 alias prv=printenv
 alias j='jobs -l'
 alias jk='kill ${${(v)jobstates##*:*:}%=*}'
@@ -422,7 +436,7 @@ alias fncc=functions
 alias funcc=functions
 alias fcc=functions
 alias fcP=zloc
-alias rmzl='find . -name .zsh_local_history -exec rm {} \;'
+alias rmzl='find . -name .zsh_local_history -print -exec rm {} \;'
 alias rmT='find . -name tmp-20\* -exec trash -v -- {} \; -prune'
 alias sc='systemctl -l'
 alias sca='sudo sysctl -A | fzf -m | tr -d " "'
@@ -513,6 +527,7 @@ alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNE
 alias x0p='print_variables DISPLAY'
 alias x00='export DISPLAY=:0'
 alias x000='export DISPLAY=localhost:10.0'
+alias digx='dig -x'
 alias digr='dig -x'
 alias y=yum
 alias ZS='sudo -E $SHELL'
@@ -540,6 +555,7 @@ src_index() {
 
 alias s3=sqlite3
 alias s3b='sqlitebrowser -R'
+alias s3q='sqlitebrowser -R'
 alias s3l='sqlitebrowser -R'
 alias file='file -z'
 alias d2='dnf-2'
@@ -548,6 +564,7 @@ alias sxt='sx title'
 alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias slp=sleep
 alias rs=rsync
+alias ry=rsync
 alias ws=wireshark
 alias wsl='wireshark -r ~/.pcaps/*.pcapng(om[1]) &'
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
@@ -571,12 +588,14 @@ alias RR=reset
 alias H='cd ~/.ssh'
 alias 1='ping -c 100 -A 1.1.1.1'
 alias 11='ping -c 100 -A 2606:4700:4700::1111'
+alias 111='ping -i0.2 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
 alias 4='dig one.one.one.one @127.0.0.1'
 alias 8='ping -W 1 -c 100 -A 8.8.8.8'
 alias 88='ping -W 1 -c 100 -A 2001:4860:4860::8888'
+alias 8888='ping -W 1 -i0.2 8.8.8.8'
 alias 888='8 | pre "IPv4: " & 88 | pre "IPv6: "'
 alias 8n='nping --tcp-connect -p 443 8.8.8.8'
 alias 9="ping -W 1 -c 1000 -A \$(ip -j route get 1.1.1.1 | jq -r \".[].gateway\")"
@@ -608,7 +627,7 @@ alias sr=systemd-resolve
 alias rc=systemd-resolve
 alias gp=gpg
 alias fm=findmnt
-alias jr=journalctl
+alias jr='journalctl -f -u'
 alias jc=journalctl
 alias sf=sshfs
 alias cu=curl
@@ -775,9 +794,12 @@ alias um='sudo umount'
 alias umt='sudo umount'
 alias F=frida
 alias ic=icomera_scraper
+alias mn=mount
 alias mo='mount -o ro'
 alias mt='mount -o ro'
+alias expo=export
 alias exp=export
+alias ex=export
 alias ep=export
 alias po=podman
 alias tso=tsocks
@@ -792,6 +814,7 @@ alias sqll=sqlite3
 
 # alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl'
 alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl&'
+alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
 alias dme='dmesg -e'
 alias R=rclone
 alias rk=rclone
@@ -900,6 +923,7 @@ alias oks='openstack server list'
 alias okv='openstack volume list'
 
 alias fb=fastboot
+alias fl=fastboot
 alias re=resolvectl
 alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
@@ -919,6 +943,7 @@ alias ari=aria2c
 alias ans=ansible
 alias emu=emulator
 alias mp='noglob mpv -v'
+alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
 alias sem=semanage
 alias gru=grubby
@@ -935,10 +960,14 @@ alias mtr='command mtr --displaymode 2'
 alias cdr='cd $REPO_ROOT'
 alias rp=rpm
 alias ssf=sshfs
-alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh .'
+alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh . |& ts -m "[%F %T]" '
 alias re='repo --trace --no-pager'
 alias rep='repo --trace --no-pager'
 alias mn=mount
 alias ni=ninja
 alias nin=ninja
 alias blk=blkid
+alias wa=watch
+alias grl=gradle
+alias dun='dunstctl is-paused'  
+alias no=notify-send

@@ -1,4 +1,4 @@
-action_9          y 
+action_9          y
 
 menu_child        l
 menu_down         j
@@ -23,7 +23,7 @@ scroll_right_page L
 delete            D
 
 toggle_filenames  f
-
+toggle_pointer    P
 # zooming
 zoom_fill         w 0x21
 zoom_in           i

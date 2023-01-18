@@ -31,11 +31,11 @@ try() {
 }
 
 main() {
-	set -e
+	setopt errexit
 	progress "Looking up server IDs."
 	server_id1=$( server_id $server1 )
 	server_id2=$( server_id $server2 )
-	[[ $server_id1 != $server_id2 ]] || die "Server \"$server1\" and \"$server2\" are the same machine."
+	[[ $server_id1 != $server_id2 ]] || die "Server \"$server1\" and \"$server2\" are the same machine with id $server_id1."
 
 	progress "Searching current mount target of volume \"$label\"."
 	volume_status=$( openstack volume show -f json $volume )
@@ -50,6 +50,7 @@ main() {
 
 	progress "Switching volume \"$label\" from \"$hostA\" to \"$hostB\"."
 
+	progress "Unmounting volume at \"$hostA\"."
 	if [[ $( server_status $hostA ) == "ACTIVE" ]]; then
 		ssh -T $hostA <<-EOF
 			# set -x
@@ -63,13 +64,22 @@ main() {
 		[ $? ] || die "Failed to ensure that volume \"$label\" is unmounted."
 	fi
 
+	progress "Detaching volume from \"$hostA\"."
 	openstack server remove volume $hostA $volume_id
 	try "Waiting for volume \"$label\" to become available..." "[[ \$( volume_status $volume ) == "available" ]]"
-
+  
+	progress "Attaching volume at \"$hostB\"."
 	openstack server add volume $hostB $volume_id
 	try "Waiting for volume \"$label\" to become in-use by \"$hostB\"..." "[[ \$( volume_status $volume ) == "in-use" ]]"
 
+	progress "Mounting volume at \"$hostB\"."
 	ssh $hostB mount LABEL=$label || die "Failed to mount \"$label\" at host \"$hostB\"."
+
+	if [[ $hostB == $server1 ]]; then
+		progress "Restoring volume at \"$hostA\" via internal NFS."
+		timeout 3 ssh $hostA mount 192.168.0.10:/peeq /peeq
+	fi
+	
 	progress "Done."
 }
 

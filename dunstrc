@@ -6,7 +6,7 @@ plain_text = no
 format = "[<b>%a</b>] %n\n<i>%s</i>\n%b"
 
 # Sort messages by urgency.
-sort = yes
+# sort = yes
 
 # Show how many messages are currently hidden (because of geometry).
 indicate_hidden = yes
