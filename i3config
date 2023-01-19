@@ -580,7 +580,7 @@ for_window [title="Emulator"] floating disable
 exec_always --no-startup-id xset -b -c r rate 200 140 dpms 0 0 2400 s off
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_caps_toggle
 exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde"
-exec_always --no-startup-id dunst
+exec_always --no-startup-id systemctl is-active --user --quiet dunst.service || dunst
 bindsym $ctrl+$shift+space exec dunstctl close
 bindsym $ctrl+$shift+1 exec dunstpaused
 bindsym $ctrl+$shift+2 exec dunstpause

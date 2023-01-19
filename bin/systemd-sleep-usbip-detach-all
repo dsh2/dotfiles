@@ -1,0 +1,31 @@
+#!/bin/sh
+# sudo ln -sf $0 /usr/lib/systemd/system-sleep/usbip-detach-all
+
+logger "Executing: \"$*\""
+
+stage=$1
+action=$2
+
+if [ -z $stage -o -z $action ]; then
+	logger "Missing action or stage."
+	exit 1
+fi
+
+if [ $stage != "pre" ]; then
+	logger "Detaching only pre-action."
+	exit 1
+fi
+
+ports=$(usbip port | sed -nE 's|^Port ([^:]*).*|\1|p')
+if [ -z "$ports" ]; then
+	logger "Nothing to detach."
+	exit 1
+fi
+
+for port in $ports; do
+	if usbip detach --port=$port; then
+		logger "Successfully detached USBIP port $port."
+	else
+		logger "Failed to detach USBIP port $port."
+	fi
+done

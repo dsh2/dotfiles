@@ -970,6 +970,7 @@ alias rep='repo --trace --no-pager'
 alias mn=mount
 alias ni=ninja
 alias nin=ninja
+alias nj=ninja
 alias blk=blkid
 alias wa=watch
 alias grl=gradle

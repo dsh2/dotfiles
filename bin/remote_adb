@@ -1,0 +1,50 @@
+# Skip adb version mismatch via adb port forwarding
+#
+# Example usage:
+# adb_host=some_host source remote_adb
+
+[[ -z $adb_host ]] && { echo "usage: adb_host=some_host source remote_adb"; return 9; }
+
+: ${sudo:=}
+
+null="/dev/null"
+ssh=( ssh -T $adb_host )
+$ssh true || { echo "Failed to ssh into $adb_host."; return 9; }
+
+# Determine remote adb serial
+[[ -z $remote_serial ]] && {
+	# Try first USB device
+	remote_serial=$( $ssh adb -d get-serialno 2>$null ) || {
+		echo "Set remote_serial to one of these:"
+		$ssh adb devices | sed -nE '2~1s:(\s+).*$:\1:p'
+		return
+	}
+}
+
+# Check if ADB is already running in TCP mode
+radb=( $ssh adb -s $remote_serial )
+$radb shell true || { echo "Remote ADB connection failed."; return 9; }
+port=$( $radb shell getprop service.adb.tcp.port )
+[[ -z $port ]] && {
+	port=$(shuf -i 62000-65000 -n 1)
+	$radb tcpip $port
+}
+sa=127.0.0.1:$port
+
+# Establish new forwardnings unless port is already in use
+lsof -i :$port >$null || $ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$remote_serial sh <<-EOF
+	# adb kill-server
+	set -x
+	test "\$( adb shell id -u )" -eq 0 || adb root
+	while ! adb forward --list | grep -q $port; do
+		adb forward tcp:$port tcp:$port 2>$null
+		sleep 0.2
+	done
+EOF
+
+echo "Connecting locally..."
+adb connect $sa && {
+	export ANDROID_SERIAL=$sa
+	# adb shell getprop | grep -F build.type &&
+	adb shell <<< ' getprop ro.product.model ; id '
+}
