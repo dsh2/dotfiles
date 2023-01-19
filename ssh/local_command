@@ -110,6 +110,66 @@ uncloak_control_path()
 	    { ssh_notify critical "Failed to link hashed control path."; return ; }
 }
 
+create_host_config()
+{
+	local host_dir="$local_home/.ssh/AUTO_HOSTS"
+	mkdir -p $host_dir
+	local host_conf="$host_dir/$remote_hostname_cmd.auto"
+	[[ -e $host_conf ]] && return
+	local host_key="$local_home/.ssh/keys/$remote_username@$remote_hostname_cmd"
+	touch $host_key
+
+	ssh_notify critical "Creating new auto-config for host \"$remote_hostname_cmd\""
+
+	<<-EOF > $host_dir/$remote_hostname_cmd
+		Host $remote_hostname_cmd $remote_hostname_cmd.local $remote_hostname_cmd.jump $remote_hostname
+
+		HostName $remote_hostname
+		Port $remote_port
+		# CheckHostIP no
+		# AddressFamily inet
+		# AddressFamily inet6
+		# ProxyCommand tsocks nc %h %p
+
+		User $remote_username
+		# IdentityFile $host_key
+
+		ForwardAgent no
+		ForwardX11 no
+		PermitLocalCommand yes
+
+		# ClearAllForwardings yes
+		# ExitOnForwardFailure yes
+
+		# tinyproxy 
+		RemoteForward localhost:8888 localhost:8888
+
+		# ssh me
+		RemoteForward 2299 localhost:22
+		RemoteForward 2280 localhost:80
+		 
+		# cups
+		# LocalForward localhost:631 localhost:631 
+
+		# usbip
+		# LocalForward localhost:3240 localhost:3240 
+
+		# DynamicForward 1080
+		# RemoteForward 1080
+
+		# TODO: Chisel
+		# n=99; dev=tun$n ; sudo sh -c "ip link del $dev &>/dev/null; ip tuntap add dev $dev mode tun user $USER && sudo ip address add 10.0.$n.1/30 dev $dev && sudo ip link set dev $dev up"
+		# TunnelDevice 99:99
+		# Tunnel point-to-point
+		# Tunnel ethernet
+
+		# Match host = $remote_hostname_cmd.jump all
+		# ProxyJump jump.b3
+		# Hostname localhost
+		# Port NNNNN
+	EOF
+}
+
 main()
 {
 	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\" $(pstree -ps $$)"
@@ -144,6 +204,7 @@ main()
 		{ ssh_notify critical "Connection failed to multiplex: \"${(q)o//[[:cntrl:]]/}\"" ; return 1 ; }
 	ssh_notify normal "Connection multiplex: \"${o//[[:cntrl:]]/}\"" ; 
 
+	create_host_config
 	uncloak_control_path
 	check_remote_clock
 	# $ssh_no_mount || mount_remote_fs
