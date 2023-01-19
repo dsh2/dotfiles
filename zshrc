@@ -1466,6 +1466,9 @@ alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 # type keychain > /dev/null && eval $(keychain --eval --quiet)
+export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+export GPG_TTY="$(tty)"
+gpg-connect-agent updatestartuptty /bye > /dev/null
 
 # TODO: Think about a way how to select umask for sudo
 umask 002
