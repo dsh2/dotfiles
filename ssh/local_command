@@ -119,6 +119,7 @@ create_host_config()
 	[[ -e $host_conf ]] || [[ -n ~/.local_home/.ssh/HOSTS/**/$remote_hostname_cmd(#qN) ]] && return
 	local host_key="$local_home/.ssh/keys/$remote_username@$remote_hostname_cmd"
 	touch $host_key
+	chmod 0600 $host_key
 
 	ssh_notify critical "Creating new auto-config for host \"$remote_hostname_cmd\""
 
