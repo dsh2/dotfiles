@@ -500,6 +500,8 @@ alias skg='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
 # alias sshl="ssh -p 22222 $USER@localhost"
 alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
+alias ssal='ssh-add -l'
+alias sal='ssh-add -l'
 alias ssa=ssh-add
 alias ssk=ssh-keygen
 alias sshx='ssh -O exit'
@@ -626,6 +628,8 @@ alias mnt='mount -o ro'
 alias sr=systemd-resolve
 alias rc=systemd-resolve
 alias gp=gpg
+alias gpc=gpgconf
+alias gpc=gpg-connect-agent
 alias fm=findmnt
 alias jr='journalctl -f -u'
 alias jc=journalctl
