@@ -817,7 +817,7 @@ alias rax='rax2 -s'
 alias sqll=sqlite3
 
 # alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl'
-alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl&'
+alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
 alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
 alias dme='dmesg -e'
 alias R=rclone
