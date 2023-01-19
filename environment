@@ -88,3 +88,5 @@ export RIPGREP_CONFIG_PATH=~/.ripgreprc
 export TSOCKS_CONF_FILE=~/.tsocks.conf 
 
 export TZ=CET
+
+ykserial=$(ykman list --serials | head -1) 
