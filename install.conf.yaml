@@ -26,6 +26,7 @@
     ~/.bcrc: bcrc
     ~/bin: bin
     ~/.gnupg/gpg-agent.conf: gpg/gpg-agent.conf
+    ~/.gnupg/scdaemon.conf: gpg/scdaemon.conf
     ~/.config/i3/config: i3config
     ~/.config/i3status/config: i3status
     ~/.config/feh/keys: feh_keys
