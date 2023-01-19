@@ -35,7 +35,7 @@ UpdateHostKeys no
 
 # LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
 LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
-PermitLocalCommand no
+PermitLocalCommand yes
 
 # EscapeChar ^^
 HashKnownHosts no
