@@ -939,3 +939,5 @@ alias re='repo --trace --no-pager'
 alias rep='repo --trace --no-pager'
 alias ni=ninja
 alias nin=ninja
+alias nj=ninja
+alias mn=mount
