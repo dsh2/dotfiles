@@ -1561,6 +1561,8 @@ leafnode() { z=($REPLY/*(N/)) ; return $#z }
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
+pree() { pre "$* " }
+# pret() { pre "$*'$\t'" }
 post() { sed "s|\$|$*|"; }
 rsz() {
 	local IFS='[;' escape geometry x y
