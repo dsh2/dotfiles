@@ -53,4 +53,6 @@ adb connect $sa && {
 	# ai = Android info
 	ai() { typeset -p ADB_PRODUCT_MODUL ADB_ID_U ADB_REMOTE_HOST ADB_REMOTE_PORT }
 	ai
+	current_tmux_pane=$(tmux list-pane -F '#{pane_id}' -f "#{m:$TTY,#{pane_tty}}" 2>$n)
+	[[ -n $current_tmux_pane ]] && tmux select-pane -t $current_tmux_pane -T "ADB: $ADB_PRODUCT_MODUL @ $ADB_REMOTE_HOST"
 }
