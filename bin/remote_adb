@@ -45,6 +45,12 @@ EOF
 echo "Connecting locally..."
 adb connect $sa && {
 	export ANDROID_SERIAL=$sa
-	# adb shell getprop | grep -F build.type &&
-	adb shell <<< ' getprop ro.product.model ; id '
+	ADB_ID=$( adb shell id )
+	ADB_ID_U=$( adb shell id -u )
+	ADB_PRODUCT_MODUL=$( adb shell getprop ro.product.model)
+	ADB_REMOTE_HOST=$adb_host
+	ADB_REMOTE_PORT=$port
+	# ai = Android info
+	ai() { typeset -p ADB_PRODUCT_MODUL ADB_ID_U ADB_REMOTE_HOST ADB_REMOTE_PORT }
+	ai
 }
