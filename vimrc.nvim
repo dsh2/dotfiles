@@ -1007,7 +1007,7 @@ nnoremap <s-f11> :Step<cr>
 nnoremap <c-s-f11> :Finish<cr>
 " }}}
 cabbr BB <buffer>
-nmap <nowait> <leader>s :update<cr>\|:touch %<cr>
+nmap <nowait> <leader>s :update<cr>\|:silent exec "!touch %"<cr>
 " nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
 map <a-s> <c-o>:update<cr><esc>
