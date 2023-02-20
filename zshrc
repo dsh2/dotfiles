@@ -660,6 +660,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
+bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
