@@ -502,17 +502,13 @@ function diff_last_two_outputs {
 bindkey_func '^x^m' diff_last_two_outputs
 
 function run_ab {
-	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- 'zsh_a and zsh_b are not set.'; return }
+	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are not set."; return }
+	[[ $zsh_a = $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are equal. (\"$zsh_a\")"; return }
 	[[ -z $BUFFER ]] && zle up-history
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
-	if echo $BUFFER | grep -q $zsh_a; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
-	elif echo $BUFFER | grep -q $zsh_b; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_b:$zsh_a:g")
-	else
-	    zle -M "[$zsh_a <> $zsh_b] Not found."
-	fi
+	local zsh_c=1_zsh_deadbeef  # TODO: zip zsh_a and zsh_b?
+	BUFFER=$(<<< $BUFFER sed -e "s:$zsh_a:$zsh_c:g" -e "s:$zsh_b:$zsh_a:g" -e "s:$zsh_c:$zsh_b:g")
 }
 bindkey_func '^x^f' run_ab
 
