@@ -319,8 +319,10 @@ set $mode_i3_key u
 bindsym $meta+$mode_i3_key mode $mode_i3
 mode $mode_i3 {
 	bindsym $shift+h move window to workspace "new", $mode_return
-	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-1-1 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
-	bindsym x exec xrandr --output eDP-1 --off --output DP-2-1 --auto --primary --right-of eDP-1, $mode_return
+	bindsym a exec xrandr --output eDP-1 --primary --auto --output HDMI-1 --off --output HDMI-2 --off --output DP-1-1 --off --output DP-1-2 --off --output DP-1-3 --off --output DP-2-1 --off --output DP-2-2 --off --output DP-2-3 --off, exec i3-ws-primary, $mode_return
+	# bindsym x exec xrandr --output eDP-1 --off --output DP-2-1 --auto --primary --right-of eDP-1, $mode_return
+	bindsym x exec xrandr --output eDP-1 --off --output DP-1-1 --auto --primary, $mode_return
+	bindsym x exec xrandr --output eDP-1 --auto --output DP-1-1 --auto --primary --right-of eDP-1, $mode_return
 	bindsym c exec autorandr --change, $mode_return
 	bindsym $shift+x exec i3-ws-primary, $mode_return
 	bindsym b border toggle
@@ -580,7 +582,7 @@ for_window [title="Emulator"] floating disable
 exec_always --no-startup-id xset -b -c r rate 200 140 dpms 0 0 2400 s off
 exec_always --no-startup-id setxkbmap -layout us,de -option grp:alt_caps_toggle
 exec_always --no-startup-id xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde"
-exec_always --no-startup-id systemctl is-active --user --quiet dunst.service || dunst
+# exec_always --no-startup-id systemctl is-active --user --quiet dunst.service || dunst
 bindsym $ctrl+$shift+space exec dunstctl close
 bindsym $ctrl+$shift+1 exec dunstpaused
 bindsym $ctrl+$shift+2 exec dunstpause
