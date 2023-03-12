@@ -3,7 +3,7 @@ Include ~/.ssh/HOSTS/*
 Include ~/.ssh/HOSTS/*/*
 Include ~/.ssh/HOSTS/*/*/*
 Include ~/.ssh/hosts/*/config
-Include ~/.ssh/AUTO_HOSTS/*
+Include ~/.ssh/AUTO_HOSTS/*.auto
 
 ControlPath ~/.ssh/control_paths/%C
 ControlMaster auto
@@ -27,8 +27,8 @@ StrictHostKeyChecking ask
 IdentitiesOnly yes
 ServerAliveInterval 10
 ServerAliveCountMax 2
-# ConnectTimeout 4
-ConnectTimeout 1
+ConnectTimeout 4
+# ConnectTimeout 1
 ConnectionAttempts 1
 # UpdateHostKeys ask
 UpdateHostKeys no
@@ -36,6 +36,7 @@ UpdateHostKeys no
 # LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
 LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
 PermitLocalCommand yes
+# PermitLocalCommand no
 
 # EscapeChar ^^
 HashKnownHosts no
