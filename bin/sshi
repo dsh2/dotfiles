@@ -1,52 +1,79 @@
 #!/bin/bash
 
-set -x
+# Install $key (filename/raw-key) for $host (similar to ssh-copy-id)
+# If $key is not set, try to derive it from ssh config
+
+unset PS4
+# set -x
+# set -v
+# set -e
+
 : "${host:=$1}"
-n="/dev/null"
+: "${key:=$2}"
+
+set -u
+
+null="/dev/null"
 export LC_ALL=C
 
-[ -n "$host" ] || {
-	cat <<-EOF 
-		usage: ${0##*/} host
-		
-		Tries to deterrmine key for \$host from ssh config and installs it on \$host.
-	EOF
+[ -z "$host" ] && { echo "[host=HOST] usage: ${0##*/} [HOST]" ; exit 1 ; }
+
+# Determine key config
+identityfiles=( $( ssh -G $host | sed -ne 's|identityfile ||p' ) )
+# typeset -p identityfiles
+[ -z "$key" ] && {
+	case ${#identityfiles[@]} in
+		(0) echo "Neither IdentityFile nor $key defined." ; exit 1 ;;
+		(1) echo "Copying $identityfiles to host $host" ; identityfile=$identityfiles ;;
+		(*) echo "Found more than one identity. Please select \$key from ${identityfiles[@]}" ; exit 1 ;;
+		# TODO: Copy all identityfiles instead?
+	esac
+} || {
+	for file in ${identityfiles[@]}; do
+		[ -s $file ] || { identityfile=$file; break; }
+		[ -r $file ] || echo "Warning: identityfile $file is not readable."
+	done
+
+	[ -z "$identityfile" ] && {
+		echo "No (empty) identityfile available to install $key."
+		exit 1
+	}
+	echo "Installing $key to $identityfile."
+	[ -r "$key" ] && cat "$key" || echo "$key" > $identityfile
+}
+public_key=$( ssh-keygen -yf $identityfile 2>$null ) || public_key=$(<$identityfile)
+key_fp=$( ssh-keygen -lf <( echo $public_key ) ) || {
+	echo "Failed to fingerprint $key."
 	exit 1
 }
+ssh-add -l | grep -q "$key_fp" || echo "Note: Secret key for $identityfile is not available in agent."
 
-identityfile=$(ssh -G $host | sed -ne 's|identityfile ||p')
-[ -n "$identityfile" ] || {
-	echo "No IdentityFile in ssh_config defined."
-	exit 1
-}
-
-identityfile=$(eval echo $identityfile)
-[ -r "$identityfile" ] || {
-	echo "IdentityFile \"$identityfile\" not found."
-	exit 1
-}
-
-public_key=$(ssh-keygen -yf "$identityfile")
-
+# Determine authorized_key setup on $host
 default_auth_keys_path=".ssh/authorized_key"
 
-ssh -T $host /bin/bash << EOF
-	set -x
-	umask 077
-	keys_paths=(\$(type sudo >$n && PATH=/sbin:/usr/sbin:\$PATH sudo sshd -T | sed -ne 's|authorizedkeysfile ||p')) || {
+ssh -T -o PermitLocalCommand=no -T $host /bin/bash <<-EOF
+	# set -x
+	# set -v
+	set -e
+	keys_paths=(\$(type sudo >$null && PATH=/sbin:/usr/sbin:\$PATH sudo sshd -T | sed -ne 's|authorizedkeysfile ||p')) || {
 		echo "Failed to determine path of authorized_keys file. Falling back to \"$default_auth_keys_path\"."
 		keys_paths=($default_auth_keys_path)
 	}
+	# Replace (some) TOKENs in authorizedkeysfile
 	keys_paths=(\${keys_paths[@]//\\%u/\$USER})
 	keys_paths=(\${keys_paths[@]//\\%d/\$HOME})
 	keys_paths=(\${keys_paths[@]//\\%L/\$HOSTNAME})
-	for key_path in "\${keys_paths[@]}"; do 
-		grep -qF "$public_key" \$key_path && { echo "Key already installed in \"\$key_path\"."; exit; }
+	echo "Trying to install \$key to \$keys_paths"
+	for key_path in \${keys_paths[@]}; do
+		chmod go-rwx \$key_path
+		# ls -al \$key_path
+		grep -qF "$public_key" \$key_path && { echo "Key already installed in \"\$key_path\"." ; continue ; }
 		key_dir=\${key_path%%/*}
-		[ -z $key_dir ] || mkdir -p "\$key_dir" 2>$n || sudo mkdir -p "\$key_dir"
-		( echo $public_key | tee -a \$key_path 2>$n || echo $public_key | sudo tee -a \$key_path ) >$n || continue
+		[ -d \$key_dir ] || mkdir -p "\$key_dir" 2>$null || sudo mkdir -p "\$key_dir" || { echo "Failed to create \$key_dir" ; continue ; }
+		( echo $public_key | tee -a \$key_path 2>$null || echo $public_key | sudo tee -a \$key_path ) >$null && installed+=(\$key_path)
 	done
+	[ \${#installed} == 0 ] && echo "No key installed" || echo "Installed $key to \$installed"
 EOF
 
 echo "Testing key..."
-ssh -O exit $host && ssh $host id \; sudo id && echo "SUCCESS"
+ssh -T -o ControlMaster=yes $host <<< ' id ; sudo id ' && echo "Successfully authenticated to host $host."
