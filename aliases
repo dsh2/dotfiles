@@ -308,10 +308,11 @@ RUN() {
 			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj" "Output: $tmp_out"
 			[[ -z $print_time ]] || print "Start: $(n)"
 			print -P $LINE_SEPARATOR
-			eval $run_obj |& tee $tmp_out; err=$?
+			$=run_obj |& tee $tmp_out 
+			err=$pipestatus[1]
 			print -P $LINE_SEPARATOR
 			(( err )) && err "err = $err"
-			[[ -z $print_time ]] || print "Stop: $(n)"
+			[[ -z $print_time ]] || print "Stop: $(n) err = $err"
 		fi
 		unset skip_first_run
 		inotifywait -qqe attrib,move_self,modify $=watch_objs || { echo "inotifywait failed!" ; return ; }
@@ -445,8 +446,12 @@ alias scc=sysctl
 alias sct=sysctl
 alias dp=dpkg
 alias dpq=dpkg-query
-alias n="date '+%F %T'"
-alias nn="date '+%F__%T'"
+alias n="date '+%F %H.%M.%S'"
+alias N="date '+%F %H.%M.%S.%N'"
+alias nn="date '+%F__%H.%M.%S'"
+alias NN="date '+%F__%H.%M.%S.%N'"
+# alias nn="date '+%F__%T'"
+ # %H.%M.%S.%N
 alias nnn="date '+%F__%T' --date=@"
 alias tgi=telegram-cli
 alias ncn=nmcli
@@ -502,6 +507,9 @@ alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias ssal='ssh-add -l'
 alias sal='ssh-add -l'
+alias sall='ssh-add -L'
+alias salL='ssh-add -L'
+alias saL='ssh-add -L'
 alias ssa=ssh-add
 alias ssk=ssh-keygen
 alias sshx='ssh -O exit'
@@ -517,6 +525,7 @@ alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
 alias sa='eval export SSH_AUTH_SOCK=$(echo $TMPDIR/ssh-*/agent.*(om[1])); printenv SSH_AUTH_SOCK'
+alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
@@ -525,10 +534,9 @@ alias dd='dd status=progress conv=fdatasync'
 alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; print_variables DISPLAY'
-alias x0p='print_variables DISPLAY'
-alias x00='export DISPLAY=:0'
-alias x000='export DISPLAY=localhost:10.0'
+alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY'
+alias x00='export DISPLAY=:0; printenv DISPLAY'
+alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY'
 alias digx='dig -x'
 alias digr='dig -x'
 alias y=yum
@@ -615,7 +623,8 @@ alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set
-alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
+# alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
+alias x=xeyes
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -e'
@@ -630,6 +639,7 @@ alias rc=systemd-resolve
 alias gp=gpg
 alias gpc=gpgconf
 alias gpc=gpg-connect-agent
+alias gpa=gpg-connect-agent
 alias fm=findmnt
 alias jr='journalctl -f -u'
 alias jc=journalctl
@@ -972,7 +982,10 @@ alias ni=ninja
 alias nin=ninja
 alias nj=ninja
 alias blk=blkid
-alias wa=watch
+alias wa='watch -d -n 0.6'
 alias grl=gradle
-alias dun='dunstctl is-paused'  
+alias dun='dunstctl is-paused'
 alias no=notify-send
+alias p1=p11tool
+alias p11=p11tool
+alias oc=oscap
