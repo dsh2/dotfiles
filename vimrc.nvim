@@ -499,6 +499,7 @@ if vim_plug_available
 	Plug 'ompugao/vim-airline-cwd'
 	let g:airline#extensions#branch#enabled = 0
 	let g:airline#extensions#branch#empty_message = '(no branch)'
+	let g:ale_virtualtext_cursor = 0 
 	let g:airline#extensions#ale#enabled = 1
 	let g:airline#extensions#syntastic#enabled = 1
 	let g:airline#extensions#capslock#enabled = 1
