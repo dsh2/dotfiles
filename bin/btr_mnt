@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+mnt=/mnt/btrbk
+mountpoint -q /mnt/btrbk && { echo "Already mounted."; exit 0; } 
+
+open() {
+	btrbk_dev=$( blkid -L $1 -o device -u crypto ) &&
+		sudo cryptsetup status $1 || 
+		sudo cryptsetup open --key-file /btrbk_key $btrbk_dev $1
+
+}
+open btrbk_luks
+open btrbk_luks_2
+sudo mount /mnt/btrbk
