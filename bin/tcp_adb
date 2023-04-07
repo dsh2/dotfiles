@@ -1,18 +1,21 @@
-# Skip adb version mismatch via adb port forwarding
-#
-# Example usage:
-# adb_host=some_host source tcp_adb
+# ADB connection helper
+# - Overcome adb/adbd version mismatches via adb port forwarding
+# - Mount ADBFS
+# - Setup scrcpy session
+# - Set tmux pane title
+# - Update env vars
+
+# Usage:
+# [adb_host=some_host] source tcp_adb
 
 : ${adb_host:=localhost}
-[[ -z $adb_host ]] && { echo "usage: adb_host=some_host source tcp_adb"; return 9; }
-
 : ${sudo:=}
 
 null="/dev/null"
 ssh=( ssh -T $adb_host )
 $ssh true || { echo "Failed to ssh into $adb_host."; return 9; }
 
-# Determine tcp adb serial
+# Determine tcp_serial
 [[ -z $tcp_serial ]] && {
 	# Try first (remote) USB device
 	tcp_serial=$( $ssh adb -d get-serialno 2>$null ) || {
@@ -33,8 +36,9 @@ port=$( $radb shell getprop service.adb.tcp.port )
 
 # Establish new forwardings (unless port is already in use)
 sa=127.0.0.1:$port
-lsof -i :$port >$null || $ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$tcp_serial sh <<-EOF
+# lsof -i :$port >$null || $ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$tcp_serial sh <<-EOF
 $ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$tcp_serial sh <<-EOF
+	# set -x
 	# adb kill-server
 	test "\$( adb shell id -u )" -eq 0 || adb root
 	# Try hard to establish ADB forwarding
@@ -47,6 +51,7 @@ EOF
 echo "Connecting locally..."
 adb connect $sa || return 9
 export ANDROID_SERIAL=$sa
+adb shell true || return 9
 
 # ai = Android info
 ai() {
@@ -71,14 +76,18 @@ aic() {
 	[[ -n $current_tmux_pane ]] && tmux select-pane -t $current_tmux_pane -T "ADB: $ADB_PRODUCT_MODUL @ $ADB_TCP_HOST"
 
 	pgrep -f "scrcpy.*--tcpip=localhost:$ADB_TCP_PORT" || scrcpy --disable-screensaver --shortcut-mod=rctrl --tcpip=localhost:$ADB_TCP_PORT &
+
 	type adbfs >$n && {
 		adbfs_path=~/mnt/ADBFS/$adb_host@$port-${ADB_FINGERPRINT:gs.[:/]._.}
+	set -x
+		sudo umount -R $adbfs_path || true
 		mountpoint -q $adbfs_path || {
 			mkdir -p $adbfs_path
 			adbfs $adbfs_path
 		}
 		echo ls $adbfs_path
 		ls $adbfs_path
+		alias cda="cd $adbfs_path"
 	}
 }; aic
 
