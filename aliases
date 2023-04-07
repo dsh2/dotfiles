@@ -32,6 +32,7 @@ source ~/.dotfiles/z/z.sh
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
 alias adf=adbfs
+alias af=adbfs
 alias adkl=adbk
 alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
@@ -47,6 +48,7 @@ alias adp='adb shell dumpsys'
 alias adpp='adb shell dumpsys package'
 alias addd='adb shell dumpsys'
 alias aps='adb shell ps -Awf -T'
+alias adps'adb-ps.sh'
 alias adu='export ANDROID_SERIAL=$( adb -d get-serialno )'
 alias adm='export ANDROID_SERIAL=emulator-5554'
 alias adi="adb shell <<< ' getprop ro.product.model ; id '"
@@ -412,7 +414,6 @@ alias ipj='\ip -d -s -j -p'
 alias ipln="\ip -j link show | jq -r '.[].ifname'"
 alias nf=nft
 # alias P='parallel -i $SHELL -c "echo {} {} |& stdbuf -oL sed \"s|^|{}-\$$:\\t|\"" -- $('
-alias P='cd /peeq/lineage/LINEAGE_18_1/'
 alias par=parallel
 alias tc='tc -col'
 yt() { printf "$*\nquit" | nc localhost 5038; }
@@ -615,7 +616,7 @@ alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set
-alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
+alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom)'
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -e'
@@ -767,6 +768,7 @@ alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
 alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
 
 alias lo='losetup --find --show'
+alias los=losetup 
 SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a ; }
 xdD() {
 	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
@@ -934,6 +936,7 @@ alias oks='openstack server list'
 alias okv='openstack volume list'
 
 alias fb=fastboot
+alias fas=fastboot
 alias fl=fastboot
 alias re=resolvectl
 alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
@@ -986,3 +989,8 @@ alias no=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
 alias dr=dracut
 alias sw=swapo
+alias ak='adb shell killall -vw'
+alias apg='adb shell pgrep -l -f'
+alias zp='zsh_prepend='
+alias arpp=arp-scan
+alias nmc=nmcli
