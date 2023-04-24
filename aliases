@@ -32,6 +32,7 @@ source ~/.dotfiles/z/z.sh
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
 # alias adbk='adb shell input keyboard text \"\"'
 alias adf=adbfs
+alias af=adbfs
 alias adkl=adbk
 alias adk=adbk
 adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
@@ -190,7 +191,7 @@ alias tsc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
 alias tskc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
 # alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
 alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
-alias wsd='wireshark -r ~/.pcaps/tcpdump-*(.om[1])&'
+alias wsd='wireshark -r ~/.pcaps/*(.om[1])&'
 alias wsa='wireshark -r $pcap&'
 alias wgq=wg-quick
 alias nmap='nmap -oA ~/.logs/nmap/log-$(nn)'
@@ -454,12 +455,13 @@ alias NN="date '+%F__%H.%M.%S.%N'"
  # %H.%M.%S.%N
 alias nnn="date '+%F__%T' --date=@"
 alias tgi=telegram-cli
-alias ncn=nmcli
+alias ncn='nmcli con'
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias nd='nmcli dev'
 alias ncnc='nmcli con'
-alias vv=voltron
+# alias vv=voltron
+alias vv=vboxmanage
 # alias k='command kill --verbose'
 # alias k='kill --verbose'
 alias k='kill'
@@ -573,6 +575,7 @@ alias sx='screen -X'
 alias sxt='sx title'
 alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias slp=sleep
+alias slpp='sleep 0.9'
 alias rs=rsync
 alias ry=rsync
 alias ws=wireshark
@@ -738,7 +741,7 @@ alias p3=python3
 alias tsh=tshark
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
-i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
+# i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
 alias ki=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
@@ -775,6 +778,8 @@ alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
 alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
 
 alias lo='losetup --find --show'
+alias los='losetup'
+
 SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a ; }
 xdD() {
 	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
@@ -837,6 +842,7 @@ alias da=date
 alias tailf='tail -fc+0'
 alias L=leg
 alias xo=xdotool
+alias xd=xdotool
 alias xdo=xdotool
 alias p0='print -N'
 alias p0v='print -N **/*(/l2) | xargs -0 -P $(nproc)'
@@ -938,8 +944,6 @@ alias okv='openstack volume list'
 
 alias fb=fastboot
 alias fl=fastboot
-alias re=resolvectl
-alias tr1="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p'"
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
 alias in='inotifywait -qm'
 alias pid='pgrep -a -u $(id -u)'
@@ -989,3 +993,11 @@ alias no=notify-send
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
+alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
+alias fw=fwupdmgr 
+alias mok=mokutil 
+alias xpp=xpra
+alias whi=while
+alias adL=adb_all
+alias adLl=adb_all shell
+alias adLL=adb_all shell
