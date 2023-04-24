@@ -115,10 +115,9 @@ create_host_config()
 	# Check if non-auto conf already exists
 	local host_conf=($local_home/.ssh/HOSTS/**/$remote_hostname_cmd(N))  
 	[[ -n $host_conf ]] && {
-		ssh_notify low "Host $remote_hostname_cmd has already config: $host_confs"
+		ssh_notify low "Host $remote_hostname_cmd has already config: $host_conf"
 		return
 	}
-	
 	
 	# Check if auto conf already exists
 	local auto_conf_dir="$local_home/.ssh/AUTO_HOSTS"
