@@ -691,6 +691,7 @@ bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 bindkey -s Pp\  'postgresql'
 bindkey -s PJ\  'postgres'
+bindkey -s zp\  "zsh_prepend="
 
 function start_tmux_logging()
 {
@@ -1363,7 +1364,7 @@ c() {
 }
 
 typeset -a expand_ealias_skip
-expand_ealias_skip=(l ls)
+expand_ealias_skip=(ls)
 expand_ealias() {
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
