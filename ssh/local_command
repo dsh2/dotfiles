@@ -112,28 +112,14 @@ uncloak_control_path()
 
 create_host_config()
 {
-	# Check if non-auto conf already exists
-	local host_conf=($local_home/.ssh/HOSTS/**/$remote_hostname_cmd(N))  
-	[[ -n $host_conf ]] && {
-		ssh_notify low "Host $remote_hostname_cmd has already config: $host_conf"
-		return
-	}
-	
-	# Check if auto conf already exists
-	local auto_conf_dir="$local_home/.ssh/AUTO_HOSTS"
-	mkdir -p $auto_conf_dir
-	local auto_conf="$auto_conf_dir/$remote_hostname_cmd.auto"
-	
-	[[ -e $auto_conf ]] && {
-		ssh_notify low "Host $remote_hostname_cmd has already auto-config: $auto_conf"
-		return
-	}
-	
-	local auto_conf_key_template="$local_home/.ssh/keys/$remote_username@$remote_hostname_cmd"
-	[[ -e $auto_conf_key_template ]] || {
-		ssh_notify critical "Creating key template \"$auto_conf_key_template\""
-			( umask 066 ; touch $auto_conf_key_template )
-	}
+	local host_dir="$local_home/.ssh/AUTO_HOSTS"
+	mkdir -p $host_dir
+	local host_conf="$host_dir/$remote_hostname_cmd.auto"
+	# Check if auto conf or other conf already exists
+	[[ -e $host_conf ]] || [[ -n ~/.local_home/.ssh/HOSTS/**/$remote_hostname_cmd(#qN) ]] && return
+	local host_key="$local_home/.ssh/keys/$remote_username@$remote_hostname_cmd"
+	touch $host_key
+	chmod 0600 $host_key
 
 	ssh_notify critical "Creating auto-config \"$auto_conf\""
 
