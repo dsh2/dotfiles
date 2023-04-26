@@ -623,12 +623,8 @@ alias rfB='rfkill block bluetooth'
 alias uf='uftrace --no-pager'
 alias ufr='uftrace --no-pager record -A . -R . '
 alias se=set
-<<<<<<< HEAD
-alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom)'
-=======
 # alias x='xeyes -outline \#$(rand_color) -fg \#$(rand_color) -center \#$(rand_color) $(rand_geom) &'
 alias x=xeyes
->>>>>>> 5c82cd39c45f86e9191b2c57fec493b09b08bb36
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -e'
@@ -780,12 +776,8 @@ alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
 alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
 
 alias lo='losetup --find --show'
-<<<<<<< HEAD
 alias los=losetup 
-=======
-alias los='losetup'
 
->>>>>>> 5c82cd39c45f86e9191b2c57fec493b09b08bb36
 SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a ; }
 xdD() {
 	[ $# = 2 ] || { echo "xdD example_file program"; return ; }
@@ -1011,8 +1003,8 @@ alias zp='zsh_prepend='
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
-alias ADS='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl& '
-alias ADF='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl& '
+alias ADS='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
+alias ADF='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
 alias AS='export ANDROID_SERIAL='
 alias p1=p11tool
 alias p11=p11tool
@@ -1022,6 +1014,6 @@ alias fw=fwupdmgr
 alias mok=mokutil 
 alias xpp=xpra
 alias whi=while
-alias adL=adb_all
-alias adLl=adb_all shell
-alias adLL=adb_all shell
+alias adL="adb_all"
+alias adLl="adb_all shell"
+alias adLL="adb_all shell"
