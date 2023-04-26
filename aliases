@@ -336,7 +336,7 @@ alias aI='( for region in $(aws ec2 describe-regions --query "Regions[].RegionNa
 alias aeAT="aws ec2 terminate-instances --instance-ids \$(aeA) --output table"
 alias aed="aws ec2 describe-instances --instance-ids"
 # alias ac='aws cloudformation'
-alias ac='aws cognito-idp'
+# alias ac='aws cognito-idp'
 alias ax=autorandr
 alias xx=xrandr
 alias TCPTRACEOPTS_minimal='export TCPTRACEOPTS="--noshowdupack3 --noshowsacks --noshowrexmit --noshowoutorder"'
@@ -994,3 +994,7 @@ alias apg='adb shell pgrep -l -f'
 alias zp='zsh_prepend='
 alias arpp=arp-scan
 alias nmc=nmcli
+alias AD='adb_all adb shell'
+alias ADS='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl& '
+alias ADF='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl& '
+alias AS='export ANDROID_SERIAL='
