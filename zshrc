@@ -502,17 +502,13 @@ function diff_last_two_outputs {
 bindkey_func '^x^m' diff_last_two_outputs
 
 function run_ab {
-	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- 'zsh_a and zsh_b are not set.'; return }
+	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are not set."; return }
+	[[ $zsh_a = $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are equal. (\"$zsh_a\")"; return }
 	[[ -z $BUFFER ]] && zle up-history
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
-	if echo $BUFFER | grep -q $zsh_a; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
-	elif echo $BUFFER | grep -q $zsh_b; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_b:$zsh_a:g")
-	else
-	    zle -M "[$zsh_a <> $zsh_b] Not found."
-	fi
+	local zsh_c=1_zsh_deadbeef  # TODO: zip zsh_a and zsh_b?
+	BUFFER=$(<<< $BUFFER sed -e "s:$zsh_a:$zsh_c:g" -e "s:$zsh_b:$zsh_a:g" -e "s:$zsh_c:$zsh_b:g")
 }
 bindkey_func '^x^f' run_ab
 
@@ -660,6 +656,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
+bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
@@ -695,6 +692,7 @@ bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 bindkey -s Pp\  'postgresql'
 bindkey -s PJ\  'postgres'
+bindkey -s zp\  "zsh_prepend="
 
 function start_tmux_logging()
 {
@@ -1367,7 +1365,7 @@ c() {
 }
 
 typeset -a expand_ealias_skip
-expand_ealias_skip=(l ls)
+expand_ealias_skip=(ls)
 expand_ealias() {
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
