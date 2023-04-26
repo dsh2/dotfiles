@@ -432,9 +432,9 @@ mode $mode_manipulate {
 	bindsym shift+$down move down $step_size
 	bindsym shift+$right move right $step_size
 
-	bindsym 1 resize set 100 100
-	bindsym 2 resize set 350 200
-	bindsym 3 resize set 200 600
+	bindsym 1 resize set 250 0
+	bindsym 2 resize set 500 0
+	bindsym 3 resize set 700 0
 	bindsym i floating toggle
 
 	# Exit mode
