@@ -41,6 +41,7 @@ alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:
 alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
 alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
+alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias ads='adb shell'
 alias ada='adb shell am start'
@@ -141,7 +142,7 @@ alias gco='git checkout'
 alias gcom='git checkout master'
 alias gcol='git checkout local'
 alias gA='mlocate -eb \\HEAD | while read p; do p=${p:h}; [[ -d $p/objects && -f $p/config ]] && echo $p; done'
-alias gk='x0; gitk --all&'
+alias gk='x0; gitk --date-order --all&'
 alias gkk='v +"GV --all"'
 alias gss='GIT_MODIFIED_FILES=$(git ls-files --modified) && [ -n $GIT_MODIFIED_FILES ] && $EDITOR $=GIT_MODIFIED_FILES +Gstatus +only'
 alias gcp='git cherry-pick -x'
@@ -1017,3 +1018,6 @@ alias whi=while
 alias adL="adb_all"
 alias adLl="adb_all shell"
 alias adLL="adb_all shell"
+alias unsa='unset ANDROID_SERIAL'
+alias unss='unset SSH_AUTH_SOCK'
+alias ai=openai_pipe
