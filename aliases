@@ -800,6 +800,7 @@ alias xin=xinput
 alias os=openssl
 alias xq='xset q'
 alias blc=bluetoothctl
+alias bl=bluetoothctl
 alias cm=command
 alias cmd=command
 alias un=unset
