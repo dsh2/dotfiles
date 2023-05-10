@@ -454,6 +454,7 @@ alias NN="date '+%F__%H.%M.%S.%N'"
 alias nnn="date '+%F__%T' --date=@"
 alias tgi=telegram-cli
 alias ncn='nmcli con'
+alias ndn='nmcli con'
 alias ncc=nmcli
 alias ncnn='nmcli dev'
 alias nd='nmcli dev'
@@ -899,7 +900,6 @@ alias sour=source
 alias snn=snmp
 alias snnt=snmptranslate
 alias ssn=snmp
-alias EE='command dd conv=swab <<<'
 alias zd=zstd
 alias bb=bitbake
 alias s1=sha1sum
@@ -1021,4 +1021,4 @@ alias adLl="adb_all shell"
 alias adLL="adb_all shell"
 alias unsa='unset ANDROID_SERIAL'
 alias unss='unset SSH_AUTH_SOCK'
-alias ai=openai_pipe
+alias E='noglob echo'

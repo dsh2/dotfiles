@@ -1252,6 +1252,7 @@ alias -g xr='| xxd -r -p'
 alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
+alias -g AI=' | openai_pipe'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
 
@@ -1464,9 +1465,9 @@ alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
 # type keychain > /dev/null && eval $(keychain --eval --quiet)
-export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-export GPG_TTY="$(tty)"
-gpg-connect-agent updatestartuptty /bye > /dev/null
+# export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+# export GPG_TTY="$(tty)"
+# gpg-connect-agent updatestartuptty /bye > /dev/null
 
 # TODO: Think about a way how to select umask for sudo
 umask 002
@@ -1555,6 +1556,7 @@ rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
 [[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
+
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
