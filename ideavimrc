@@ -1,11 +1,220 @@
-set nowrapscan
-nmap <leader>cc :cd ..<cr>:pwd<cr>
-nmap <nowait> <leader>s :update<cr>\|:touch %<cr>
 let mapleader=" "
 
-set ideajoin
-set ideaput
+set notimeout
+set nottimeout
 
-set scrolloff=20
+set ideajoin
+" set ideaput
+set nowrapscan
+
+" map <c-f> <action>(EditorPageUp)
+" map <c-b> <action>(EditorPageDown)
+
+nmap <leader>, <action>(PreviousTab)
+nmap <c-,> <action>(PreviousTab)
+nmap <leader>. <action>(NextTab)
+nmap <c-.> <action>(NextTab)
+
+nmap ,e <action>(EditorTextEndWithSelection)
+nmap <leader>A <action>(VimFindActionIdAction)
+
+map zi <action>(ExpandAll)
+map ]] <action>(EditorCodeBlockEnd)
+map ]} <action>(EditorCodeBlockEndWithSelection)
+map [[ <action>(EditorCodeBlockStart)
+map [{ <action>(EditorCodeBlockStartWithSelection)
+
+map ]s <action>(EditorUpWithSelection)
+map [s <action>(EditorDownWithSelection)
+
+map ]f <action>(MethodDown)
+map [f <action>(MethodUp)
+map [e I<cr><esc>
+map [<space> I<cr><esc>
+" map dil ddI<cr><esc>0
+
+map <a-n> <action>(NextOccurence)
+map <a-p> <action>(PreviousOccurence)
+
+map ]r <action>(NextOccurence)
+map [r <action>(PreviousOccurence)
+
+map ]d <action>(Diff.PrevChange)
+map zz <action>(EditorScrollToCenter)
+
+set ignorecase
+" set scrolloff=20
+set scrolloff=999
 set incsearch
+set showmode
+set ideastatusicon=gray
+set idearefactormode=keep
+
+set NERDTree
+map <f2> :NERDTreeFind<cr>
+map <f3> :NERDTree<cr>
+let g:NERDTreeMapActivateNode='l'
+let g:NERDTreeMapJumpParent='h'
+
+set highlightedyank
+
+
+nnoremap <leader>E :edit ~/.ideavimrc<CR>
+map <C-c> <Esc>
+
+vnoremap < <gv
+vnoremap > >gv
+
+let g:highlightedyank_highlight_duration = "1000"
+
+Plug 'https://github.com/tommcdo/vim-exchange'
+Plug 'https://github.com/machakann/vim-highlightedyank'
+
+set surround
+set multiple-cursors
+set commentary
+set argtextobj
+" set easymotion
+set textobj-entire
+set ReplaceWithRegister
+
+map <leader>f <Plug>(easymotion-s)
+map <leader>e <Plug>(easymotion-f)
+
+map <leader>D <Action>(Debug)
+map <leader>md <Action>(Debug
+" map <leader>R <Action>(android.deploy.ApplyChanges)
+map <leader>x <Action>(CloseContent)
+map <leader>X <Action>(CloseAllEditorsButActive)
+
+" Window management
+map <c-x> <Action>(CloseContent)
+map <c-wx> <Action>(CloseContent)
+map <leader>tt :action ActivateStructureToolWindow<cr>
+map ,A <Action>(VimFindActionIdAction)
+map <c-w>K <Action>(ResizeToolWindowUp)
+map <c-w>L <Action>(ResizeToolWindowDown)
+map <c-w>m <Action>(ZoomCurrentWindow)
+map <c-w>e <Action>(ActivateEventLogToolWindow)
+map <c-w>E <Action>(ActivateEventLogToolWindow)
+
+nnoremap <c-w>= :action Unsplit<CR>
+nnoremap <c-w>k :action Unsplit<CR>
+nnoremap <leader>en :action EditSourceInNewWindow<CR>
+map <c-wl> <Action>(SplitVertically)
+map <c-wL> <Action>(ChangeSplitOrientation)
+map <c-w><c-l> <Action>(SplitVertically)
+map <c-w><c-j> <Action>(SplitHorizontally)
+map <c-l> <Action>(NextSplitter)
+map <c-j> <Action>(NextSplitter)
+map <c-h> <Action>(PrevSplitter)
+map <c-k> <Action>(PrevSplitter)
+map <c-[> <Action>(EditorEsc)
+
+map <c-s-t> <Action>(ReopenClosedTab)
+map <c-e> <Action>(RecentFiles)
+map <leader>b <Action>(Run)
+
+map <leader>b <Action>(RecentFiles)
+map <c-/> <Action>(RecentFiles)
+map q <Action>(RecentFiles)
+
+map <leader>U <Action>(ReopenClosedTab)
+map <leader>u <Action>(ReopenClosedTab)
+
+map <leader>R <Action>(IdeaVim.ReloadVimRc.reload)
+
+map gh <Action>(ShowErrorDescription)
+
+map <leader>s :w<cr>
+
+" Git
+map <leader>gd <Action>(Compare.SameVersion)
+map ]c <Action>(NextDiff)
+map [c <Action>(PreviousDiff)
+map <leader>gs <Action>(ActivateVersionControlToolWindow)
+map <leader>gl <Action>(LocalHistory.ShowHistory)
+map <leader>gv <Action>(Vcs.ShowTabbedFileHistory)
+map <leader>G <action>(Git.Menu)
+nmap <leader>/ <action>(ShowErrorDescription)
+
+map <leader>gg <action>(Generate)
+
+map <leader>YP <Action>(CopyAbsolutePath)
+map YP <Action>(CopyAbsolutePath)
+
+map g; <Action>(JumpToLastChange)
+
+map <leader>i <Action>(ShowIntentionActions)
+
+
+map <leader>mr <Action>(Run)
+map <leader>mm <Action>(Run)
+" map <leader>mm <Action>(MakeGradleProject)
+map <leader>mM <Action>(MakeGradleProject)
+map <leader>mb <Action>(ActivateBuildToolWindow)
+map <leader>M <Action>(BuildMenu)
+map <leader>N <Action>(NewElement)
+
+map U <Action>(Redo)
+
+map <leader>C <Action>(ChangeSignature)
+
+" Debug
+map <leader>db <Action>(ToggleLineBreakpoint)
+map <leader>dB <Action>(ToggleLineBreakpoint)
+map <leader>dw <Action>(Debugger.AddToWatch)
+" map <leader>dd <Action>(Debugger.ShowExecutionPoint)
+map <leader>da <Action>(AndroidConnectDebuggerAction)
+map <leader>dc <Action>(Debugger.AddInlineWatch)
+map <leader>di <Action>(Debugger.AddInlineWatch)
+map <leader>dr <Action>(Resume)
+map ,c <Action>(Resume)
+map <leader>df <Action>(StepOver)
+map <leader>dF <Action>(StepInto)
+map <leader>dF <Action>(StepOut)
+map <leader>B <Action>(Stop)
+set clipboard+=unnamed
+
+map ]n <Action>(GotoNextError)
+map <c-n> <Action>(GotoNextError)
+map ]p <Action>(GotoPreviousError)
+map <c-p> <Action>(GotoPreviousError)
+
+map <a-.> <Action>(Tree-selectNext)
+map <m-,> <Action>(Tree-selectNext)
+
+nnoremap ,r :action ContextRun<CR>
+nnoremap ,c :action RunClass<CR>
+nnoremap ,f :action ChooseRunConfiguration<CR>
+nnoremap ,t :action ActivateRunToolWindow<CR>
+nnoremap ,u :action Rerun<CR>
+
+nnoremap ,b :action ToggleLineBreakpoint<CR>
+nnoremap ,d :action ContextDebug<CR>
+nnoremap ,n :action ActivateDebugToolWindow<CR>
+map <leader>r :action Refactorings.QuickListPopupAction<CR>
+map ,r <Action>(RenameElement)
+
+map <leader>L <action>(ActivateLogcatToolWindow)
+map <leader>ml <action>(ActivateLogcatToolWindow)
+map <leader>wr <action>(ActivateRunToolWindow)
+map <leader>wb <action>(ActivateBuildToolWindow)
+" map <leader>wb <action>()
+" map <leader>wb <action>()
+
+set showmode
+
+imap <c-j> <cr>
+
+map <leader>w :action EditorSelectWord<CR>
+map <leader>W viW EditorSelectWord<CR>
+
+
+" Fix the search highlight
+set incsearch
+set hlsearch
+set nowrapscan
+nnoremap <CR> :noh<CR><CR>
+
 echo "ideamvimrc loaded."

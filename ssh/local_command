@@ -4,7 +4,7 @@
 
 : "${ssh_history:=$HOME/.ssh/host_history}"
 
-readonly n="/dev/null"
+n="/dev/null"
 
 has() { for f in $@; do type $f &> /dev/null || return 1 ; done }
 
@@ -12,7 +12,7 @@ ssh_notify()
 {
 	local -r level=${SSH_DEBUG:-$1}; shift # low, normal, critical
 	local -r msg="$*"
-	local app="ssh $R"
+	local app="LocalCommand: $R"
 	[ -z $SSH_GROUP ] || app="$app ($SSH_GROUP)"
 
 	# TODO: Map level to systemd prio
@@ -41,31 +41,32 @@ mount_remote_fs()
 	type sshfs >$n || { ssh_notify normal "sshfs not available."; return ; }
 
 	local sshfs_opts="-o compression=yes -o idmap=user -o transform_symlinks"
-	local mnt_point="$local_home/mnt/$remote_hostname_cmd"
+	local mnt_point="$local_home/mnt/SSHFS/$remote_hostname_cmd"
 	fusermount -u $mnt_point >&$n || true
 	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
 	sshfs $=sshfs_opts -p $remote_port $R:/ $mnt_point || { ssh_notify critical "sshfs failed to mount." ; return ; }
 	ssh_notify low "Successfully mounted sshfs at $mnt_point."
 
 	# Create second mount point with root access - if possible
-	[[ $remote_username != "root" || $( ssh $R sudo id -u ) = 0 ]] || return  # Already mounted as root or no sudo
-	mnt_point=$mnt_point-ROOT
-	fusermount -u $mnt_point >&$n || true
-	mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
+	# [[ $remote_username != "root" || $( ssh $R sudo id -u ) = 0 ]] || return  # Already mounted as root or no sudo
+	# mnt_point=$mnt_point-ROOT
+	# fusermount -u $mnt_point >&$n || true
+	# mkdir -p $mnt_point || { ssh_notify critical "Failed to create mount point \"$mnt_point\"." ; return ; }
 
-	# Login via localhost over control connection to ensure graceful shutdown of
-	# root-connection when disconnecting from host
-	local ssh_cmd="ssh -J $R"  # XXX: Remote port might become ambiguous here
-	ssh_cmd+=" -i $local_home/.ssh/hosts/$remote_hostname_cmd/id"
-	ssh_cmd+=" -o HostKeyAlias=ROOT-$R-$remote_port"
-	ssh_cmd+=" -o StrictHostKeyChecking=accept-new"
+	# # Login via localhost over control connection to ensure graceful shutdown of
+	# # root-connection when disconnecting from host
+	# local ssh_cmd="ssh -J $R"  # XXX: Remote port might become ambiguous here
+	# ssh_cmd+=" -i $local_home/.ssh/hosts/$remote_hostname_cmd/id"
+	# ssh_cmd+=" -o HostKeyAlias=ROOT-$R-$remote_port"
+	# ssh_cmd+=" -o StrictHostKeyChecking=accept-new"
 
-	ssh_notify low "ssh_cmd = $ssh_cmd"
+	# ssh_notify low "ssh_cmd = $ssh_cmd"
 
-	o=$( sshfs $=sshfs_opts -o ssh_command="$ssh_cmd" root@localhost:/ $mnt_point ) ||
-		{ ssh_notify critical "sshfs failed for root: err = $?, output = \"$o\"" ; return ; }
+	# o=$( sshfs $=sshfs_opts -o ssh_command="$ssh_cmd" root@localhost:/ $mnt_point ) ||
+	# 	{ ssh_notify critical "sshfs failed for root: err = $?, output = \"$o\"" ; return ; }
 
-	ssh_notify low "Successfully mounted sshfs as root."
+	# ssh_notify low "Successfully mounted sshfs as root."
+	
 }
 
 connect_tun()
@@ -109,11 +110,75 @@ uncloak_control_path()
 	    { ssh_notify critical "Failed to link hashed control path."; return ; }
 }
 
+create_host_config()
+{
+	local host_dir="$local_home/.ssh/AUTO_HOSTS"
+	mkdir -p $host_dir
+	local host_conf="$host_dir/$remote_hostname_cmd.auto"
+	# Check if auto conf or other conf already exists
+	[[ -e $host_conf ]] || [[ -n ~/.local_home/.ssh/HOSTS/**/$remote_hostname_cmd(#qN) ]] && return
+	local host_key="$local_home/.ssh/keys/$remote_username@$remote_hostname_cmd"
+	touch $host_key
+	chmod 0600 $host_key
+
+	ssh_notify critical "Creating auto-config \"$auto_conf\""
+
+	<<-EOF > $auto_conf
+		# vim:ft=sshconfig
+		Host $remote_hostname_cmd $remote_hostname_cmd.local $remote_hostname_cmd.jump $remote_hostname
+
+		HostName $remote_hostname
+		Port $remote_port
+		# CheckHostIP no
+		# AddressFamily inet
+		# AddressFamily inet6
+		# ProxyCommand tsocks nc %h %p
+		# ProxyJump jump.b3
+
+		User $remote_username
+		# IdentityFile $auto_conf_key_template
+
+		ForwardAgent no
+		ForwardX11 no
+		PermitLocalCommand yes
+
+		# ClearAllForwardings yes
+		# ExitOnForwardFailure yes
+
+		# tinyproxy 
+		# RemoteForward localhost:8888 localhost:8888
+
+		# ssh me
+		# RemoteForward 2299 localhost:22
+		# RemoteForward 2280 localhost:80
+		 
+		# cups
+		# LocalForward localhost:631 localhost:631 
+
+		# usbip
+		# LocalForward localhost:3240 localhost:3240 
+
+		# DynamicForward 1080
+		# RemoteForward 1080
+
+		# n=99; dev=tun$n ; sudo sh -c "ip link del $dev &>/dev/null; ip tuntap add dev $dev mode tun user $USER && sudo ip address add 10.0.$n.1/30 dev $dev && sudo ip link set dev $dev up"
+		# TunnelDevice 99:99
+		# Tunnel point-to-point
+		# Tunnel ethernet
+
+		# Match host = $remote_hostname_cmd.jump all
+		# ProxyJump jump.b3
+		# Hostname localhost
+		# Port NNNNN
+	EOF
+}
+
 main()
 {
-	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\""
+	ssh_notify low "LocalCommand: $@ ($#@) debug=\"$SSH_DEBUG\" $(pstree -ps $$)"
 	(( $#@ >= 11 )) || return
 
+	# Read ssh tokens from command line
 	C_hash=$1                 # %C
 	local_home=$2             # %d
 	remote_hostname=$3        # %h
@@ -126,25 +191,30 @@ main()
 	local_tuntap=$9; shift    # %T
 	local_username=$9         # %u
 
+	ssh_notify low "LocalCommand: parsed cmd_line"
+
 	# TODO: Check if adding '-p $remote_port' makes sense...
 	R="$remote_username@$remote_hostname_cmd"
 	tail -1 $ssh_history | read date time host 
 	[[ $host = $R:$remote_port ]] || {
 		echo "$(date '+%F %T') $R:$remote_port" >> $ssh_history
 		ssh_notify low "Updated ssh host history with $R:$remote_port." 
-	echo "$(date '+%F %T') $R:$remote_port" >> ~/.ssh/host_history; ssh_notify low "Updated ssh host history." 
+	}
 
-	sleep 0.3
+	sleep 1.3
+	ssh_notify low "Checking multiplex"
 	o=$( ssh -o BatchMode=yes -O check $R -p $remote_port 2>&1 ) ||
 		{ ssh_notify critical "Connection failed to multiplex: \"${(q)o//[[:cntrl:]]/}\"" ; return 1 ; }
 	ssh_notify normal "Connection multiplex: \"${o//[[:cntrl:]]/}\"" ; 
 
+	create_host_config
 	uncloak_control_path
 	check_remote_clock
-	$ssh_no_mount || mount_remote_fs
+	# $ssh_no_mount || mount_remote_fs
+	mount_remote_fs
 	connect_tun
 
-	sleep 2
+	sleep 9
 }
 
 main $@

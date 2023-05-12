@@ -7,6 +7,7 @@ i3m -t get_workspaces | jq -r '.[].name' | while read ws; do
     # local ws_name=${ws:s.*:..}
     local ws_name=${ws##*:}
     print $ws to $ws_name
-    i3m rename workspace \"$ws\" to "$i:$ws_name"
+    # i3m rename workspace \"$ws\" to "$i:${ws_name}_$i"
+	i3m rename workspace \"$ws\" to "$i:${ws_name}"
     i=$[i+1]
 done

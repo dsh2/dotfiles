@@ -1,6 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 # set -x
 
+autoload -Uz add-zsh-hook
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
@@ -71,7 +72,7 @@ zstyle ':vcs_info:*' actionformats '%%F{136}[%F{240}%b%F{136}|%F{240}%a%F{136}]%
 zstyle ':vcs_info:*' formats '%F{136}[%F{166}%b%F{136}]%f '
 zstyle ':vcs_info:*' branchformat '%b%F{1}:%F{3}%r'
 zstyle ':vcs_info:*' disable bzr tla
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd vcs_info
 
 # Main prompt {{{
@@ -155,6 +156,7 @@ PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
 # Reset color
 # PS4+='%f'
 PS4+=' | '
+export PS4
 # }}}
 # }}}
 
@@ -188,7 +190,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|/tmp|~/src/HC/)"
+zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/)"
 zshaddhistory() {
 	# Skip empty lines
 	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
@@ -201,7 +203,7 @@ zshaddhistory() {
 	local local_history_dir=~/.zsh_local_history_dir/${(q)PWD}
 	local local_history=$local_history_dir/history
 	[[ -d $local_history_dir ]] || {
-		print "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
+		print -- "zshaddhistory: Creating new directory to local history \"$local_history_dir\"."
 		mkdir -p $local_history_dir
 	}
 	fc -p $local_history
@@ -215,11 +217,11 @@ zshaddhistory() {
 			# Check if directory was renamed after last update
 			local target=$(stat +link $local_history_link)
 			if [[ $target != $local_history ]]; then
-				print "zshaddhistory: Updating symlink to local history \"$local_history\"."
+				print -- "zshaddhistory: Updating symlink to local history \"$local_history\"."
 				ln -vsfT $local_history $local_history_link
 				ln -vsfT $PWD $local_history_dir/current_target
 				ls -al $target
-				print "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
+				print -- "$( date '+%F%t%T' )\t$PWD" >> $local_history_dir/targets
 			fi
 			# print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 		else
@@ -381,7 +383,7 @@ function kill-line-copy {
 		filter_last_output
 	else
 		zle kill-line
-		echo -n $CUTBUFFER | $=XC 2> /dev/null
+		print -r -n -- $CUTBUFFER | $=XC 2> /dev/null
 		zle -M "Copied content from (C-k): \"$CUTBUFFER\"" 
 		
 	fi
@@ -392,7 +394,7 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	echo -n $CUTBUFFER | $=XC \
+	print -r -n -- $CUTBUFFER | $=XC \
 		&& zle -M "Copied last command line." \
 		|| zle -M "FAILED to copy last command line. (XC=$XC)"
 }
@@ -500,17 +502,13 @@ function diff_last_two_outputs {
 bindkey_func '^x^m' diff_last_two_outputs
 
 function run_ab {
-	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- 'zsh_a and zsh_b are not set.'; return }
+	[[ -z $zsh_a && -z $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are not set."; return }
+	[[ $zsh_a = $zsh_b ]] && { zle -M -- "zsh_a and zsh_b are equal. (\"$zsh_a\")"; return }
 	[[ -z $BUFFER ]] && zle up-history
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
-	if echo $BUFFER | grep -q $zsh_a; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_a:$zsh_b:g")
-	elif echo $BUFFER | grep -q $zsh_b; then
-	    BUFFER=$(echo $BUFFER | sed "s:$zsh_b:$zsh_a:g")
-	else
-	    zle -M "[$zsh_a <> $zsh_b] Not found."
-	fi
+	local zsh_c=1_zsh_deadbeef  # TODO: zip zsh_a and zsh_b?
+	BUFFER=$(<<< $BUFFER sed -e "s:$zsh_a:$zsh_c:g" -e "s:$zsh_b:$zsh_a:g" -e "s:$zsh_c:$zsh_b:g")
 }
 bindkey_func '^x^f' run_ab
 
@@ -658,6 +656,7 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
+bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s r22\  "rax2 -s  hx"
 bindkey -s AD\  "adbk ''"
@@ -679,6 +678,7 @@ bindkey -s Dh\  '~/*(.om[1])\t'
 bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Sl\  '/SNAPSHOTS/h*(om[1])\t'
 bindkey -s Pw\  '$( pwd )\t'
+bindkey -s Ts\  'torsocks\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
@@ -692,6 +692,7 @@ bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 bindkey -s Pp\  'postgresql'
 bindkey -s PJ\  'postgres'
+bindkey -s zp\  "zsh_prepend="
 
 function start_tmux_logging()
 {
@@ -700,7 +701,7 @@ function start_tmux_logging()
 	tmux_log_ts=$( date +%s%N )
 	tmux_log_file=$HOME/.tmux-log/$(print -P '%!')
 	# ZSH_DEBUG=1
-	print -P $LINE_SEPARATOR
+	print -P -- $LINE_SEPARATOR
 	if [[ -n $ZSH_DEBUG ]]; then
 		print literal = \"$1\"
 		print compact: \"$2\"
@@ -959,7 +960,7 @@ elif [[ -n $X_AUTOLOCK ]]; then
 	ZSH_LOCK_STATUS+="Clearing TMOUT because zsh runs under a protected X server.\n"
 	TMOUT=
 fi
-(( $TMOUT )) && print -n $ZSH_LOCK_STATUS
+(( $TMOUT )) && print -n -- $ZSH_LOCK_STATUS
 # set +x
 
 # # Try to save tmux from OOM
@@ -1172,8 +1173,8 @@ zloc() {
 }
 
 alias -g 0,="| perl -pe 's:\0:, :g'"
-alias -g 000='0.0.0.0/0'
-alias -g 00='0.0.0.0'
+# alias -g 000='0.0.0.0/0'
+# alias -g 00='0.0.0.0'
 alias -g 0m='| tr \\0 \\n'
 alias -g 0s0='::1/0'
 alias -g 0s='::1'
@@ -1251,6 +1252,7 @@ alias -g xr='| xxd -r -p'
 alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
+alias -g AI=' | openai_pipe'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
 
@@ -1287,7 +1289,7 @@ if has trash; then
 else
 	tl() { err "trash-cli NOT installed." }
 fi
-alias rm='\rm -rf --'
+alias rm='\rm -rf -v --'
 
 visudo_append() {
 	has -v sudo || { die; return }
@@ -1299,7 +1301,7 @@ visudo_append() {
 	trap 'sudo \rm -rf $visudo_tmp; unset visudo_tmp' EXIT
 	sudo cp -a /etc/sudoers $visudo_tmp
 	sudo grep -q $line $visudo_tmp && { die "Line \"$line\" already contained in sudoers"; return }
-	print $line | sudo tee --append $visudo_tmp > /dev/null
+	print -- $line | sudo tee --append $visudo_tmp > /dev/null
 	sudo visudo --check --file=$visudo_tmp > /dev/null && sudo mv $visudo_tmp /etc/sudoers
 	chown 0:0 /etc/sudoers
 }
@@ -1325,6 +1327,7 @@ elif has yum; then
 	alias pi='sudo -E yum -y install '
 	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias pii='sudo -E yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
+	alias agr='sudo dnf remove $( dnf list --installed | fzf -m | cut -f1 -d" " )'
 	alias dps='rpm -qf'
 	alias dpl='rpm -qvli'
 	alias dnp='noglob dnf provides */'
@@ -1363,7 +1366,7 @@ c() {
 }
 
 typeset -a expand_ealias_skip
-expand_ealias_skip=(l ls)
+expand_ealias_skip=(ls)
 expand_ealias() {
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
@@ -1461,7 +1464,10 @@ alias at='noglob _at'
 alias atp='noglob _at +'
 
 # type keychain > /dev/null && eval $(keychain --eval --timeout 3600 --quiet)
-type keychain > /dev/null && eval $(keychain --eval --quiet)
+# type keychain > /dev/null && eval $(keychain --eval --quiet)
+# export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+# export GPG_TTY="$(tty)"
+# gpg-connect-agent updatestartuptty /bye > /dev/null
 
 # TODO: Think about a way how to select umask for sudo
 umask 002
@@ -1496,7 +1502,8 @@ gcd() {
 }
 
 mount_dev() {
-	[[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
+	set -x
+	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	sudo sfdisk -J $1  |
 		jq -r '.partitiontable.partitions[].node' |
 		while read dev; do 
@@ -1509,13 +1516,14 @@ alias uma='sudo umount mnt/*'
 
 mount_img() {
 	[[ -r $1 ]] || { echo "usage: $0 image"; return; }
+	set -x
 	img=$1
 	sfdisk -J $img |
 		jq -r '.partitiontable.partitions[] | ["mnt/"+.node, .start * 512] | @tsv' |
 		while read node offset; do
 			dev=$(sudo losetup --show -J --verbose --find --offset $offset $img) &&
 			mkdir -p $node &&
-			sudo mount $dev $node &&
+			sudo mount -o ro $dev $node &&
 			echo "Mounted $node ($dev)"
 		done
 }
@@ -1548,10 +1556,13 @@ rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
 [[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
+
 [ -e ~/.environment.local ] && source ~/.environment.local
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
+pree() { pre "$* " }
+# pret() { pre "$*'$\t'" }
 post() { sed "s|\$|$*|"; }
 rsz() {
 	local IFS='[;' escape geometry x y
@@ -1588,3 +1599,7 @@ seq_pairs() {
 }
 
 test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+set +x

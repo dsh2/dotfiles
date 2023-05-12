@@ -1,0 +1,18 @@
+#!/usr/bin/zsh
+
+# findmnt --json |
+#	jq -r '
+#		def fuse: "fuse";
+#		.. |
+#		select((.fstype? | .[0:fuse | length]) == fuse) |
+#		.target
+# ' |
+
+(
+	for fs in fuse.sshfs fuse.adbfs; do
+		findmnt -t $fs -no target
+	done
+) |
+while read target; do
+	sudo sh <<< " umount $target || fuser -afuv $target "
+done

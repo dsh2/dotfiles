@@ -1,4 +1,4 @@
 bin/fzf
 bin/fzf-linux_amd64
 /mpv/history.log
-/mpv/warch_later/
+/mpv/warch_later/*

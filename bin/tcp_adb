@@ -1,0 +1,115 @@
+# ADB connection helper
+# - Overcome adb/adbd version mismatches via adb port forwarding
+# - Mount ADBFS
+# - Setup scrcpy session
+# - Set tmux pane title
+# - Update env vars
+
+# Usage:
+# [adb_host=some_host] source tcp_adb
+
+# ai = Android info
+ai() {
+	typeset -p ADB_ID ADB_ID_U ADB_PRODUCT_MODUL ADB_FINGERPRINT ADB_TCP_HOST ADB_TCP_PORT
+	adb shell <<-EOF
+		getprop ro.serialno
+		getprop ro.build.fingerprint
+		getprop | grep build\.version
+		id
+	EOF
+}
+
+# ac = Android connect (scrcpy+adbfs+tmux-pane)
+ac() {
+	ADB_ID=$( adb shell id )
+	ADB_ID_U=$( adb shell id -u )
+	ADB_PRODUCT_MODUL=$( adb shell getprop ro.product.model )
+	ADB_FINGERPRINT=$( adb shell getprop ro.build.fingerprint )
+	ADB_TCP_HOST=$adb_host
+	ADB_TCP_PORT=$port
+
+	current_tmux_pane=$(tmux list-pane -F '#{pane_id}' -f "#{m:$TTY,#{pane_tty}}" 2>$n)
+	[[ -n $current_tmux_pane ]] && tmux select-pane -t $current_tmux_pane -T "ADB: $ADB_PRODUCT_MODUL @ $ADB_TCP_HOST"
+
+	pgrep -f "scrcpy.*--tcpip=$sa" || 
+		scrcpy --window-title "[$adb_host:$port] id=$ADB_ID_U $ADB_PRODUCT_MODUL $ADB_FINGERPRINT" \
+			--disable-screensaver \
+			--shortcut-mod=rctrl \
+			--tcpip=$sa >/dev/null &
+
+	type adbfs >$n && {
+		adbfs_path=~/mnt/ADBFS/$adb_host@$port-${ADB_FINGERPRINT:gs.[:/]._.}
+		sudo umount -R $adbfs_path || true
+		mountpoint -q $adbfs_path || {
+			mkdir -p $adbfs_path
+			adbfs $adbfs_path
+		}
+		echo ls $adbfs_path
+		ls -lh $adbfs_path
+		alias cda="cd $adbfs_path"
+	}
+}
+
+: ${adb_host:=localhost}
+: ${sudo:=}
+
+null="/dev/null"
+ssh=( ssh -T $adb_host )
+$ssh true || { echo "Failed to ssh into $adb_host."; return 9; }
+
+# Determine tcp_serial(s)
+tcp_serials=( $( $ssh adb devices 2>$null | tail -n+2 | cut -f 1) ) 
+[[ ${#tcp_serials} -eq 0 ]] && { echo "No ADB devices available at $adb_host"; return 9; }
+[[ ${#tcp_serials} -gt 1 ]] && {
+	if [[ -z $tcp_serial ]]; then 
+		if [[ "$adb_all" != yes ]]; then
+			echo "Set adb_all to \"yes\" or tcp_serial to one of these:"
+			$ssh adb devices -l
+			return 9
+		fi
+	elif [[ "$adb_all" = yes ]]; then
+		echo "NOTE: tcp_serial=$tcp_serial will overwrite adb_all=yes." 
+	fi
+}
+
+connected_serials=()
+for serial in ${tcp_serials[@]}; do 
+	[[ $adb_all != yes ]] || [[ -n $tcp_serial ]] && [[ $serial != $tcp_serial ]] && continue
+	
+	# Ensure that remote ADB connection is running in TCP mode
+	radb=( $ssh adb -s $serial )
+	$radb shell true || { echo "$serial: ADB connection on remote host failed."; continue; }
+	port=$( $radb shell getprop service.adb.tcp.port )
+	[[ -z $port ]] && {
+		port=$(shuf -i 62000-65000 -n 1)
+		$radb tcpip $port
+	}
+
+	# Establish new forwardings (unless port is already in use)
+	sa=127.0.0.1:$port
+	# lsof -i :$port >$null || $ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$serial sh <<-EOF
+	$ssh -L $sa:$sa <<< $sudo ANDROID_SERIAL=$serial sh <<-EOF
+		# set -x
+		# adb kill-server
+		# pkill -e adb
+		test "\$( adb shell id -u )" -eq 0 || adb root
+		# Try hard to establish ADB forwarding
+		while ! adb forward --list | grep -q $port; do
+			adb forward tcp:$port tcp:$port
+			sleep 0.1
+		done
+	EOF
+
+	echo "Connecting locally..."
+	adb connect $sa || continue
+	export ANDROID_SERIAL=$sa
+	adb shell true || continue
+
+	connected_serials+=$serial
+	ac 
+	ai
+done
+typeset -p connected_serials
+[[ ${#connected_serials} -ne 1 ]] && [[ -n tcp_serial ]] && { echo "Failed to connect to $tcp_serial" }
+
+# vim: ft=zsh

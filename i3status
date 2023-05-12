@@ -19,7 +19,7 @@ general {
 order += "wireless _first_"
 order += "ethernet _first_"
 order += "disk /"
-order += "load"
+# order += "load"
 order += "memory"
 order += "battery all"
 order += "tztime local"
@@ -35,8 +35,9 @@ ethernet _first_ {
 }
 
 battery all {
-        format = " %status %percentage %remaining (%emptytime %consumption)"
-		# format = "<span background='#b48ead'> %status %percentage %remaining</span>"
+        # format = " %status %percentage %remaining (%emptytime %consumption)"
+		# format = " %status %percentage %remaining (%emptytime %consumption)"
+		format = "<span background='#b48ead'> %status %percentage %remaining</span>"
         format_down = "No battery"
         status_chr = "CHR"
         status_bat = "BAT"
@@ -48,20 +49,20 @@ battery all {
         low_threshold = 60
 }
 
-disk "/" {
-        format = "<span background='#ebcb8b'>%avail</span>"
-}
+# disk "/" {
+#         format = "<span background='#ebcb8b'>%avail</span>"
+# }
 
 load {
         # format = "L: %1min, %5min, %15min"
 		format = "<span background='#f59335'>L: %1min, %5min, %15min</span>"
 }
 
-memory {
-        format = "<span background='#a1d569'>%used | %available</span>"
-        threshold_degraded = "1G"
-        format_degraded = "MEMORY < %available"
-}
+# memory {
+#         format = "<span background='#a1d569'>%used | %available</span>"
+#         threshold_degraded = "1G"
+#         format_degraded = "MEMORY < %available"
+# }
 
 tztime local {
 		format = "%Y-%m-%d %H:%M:%S"

@@ -123,7 +123,7 @@ gcb() {
 	    fzf \
 		--ansi \
 		--bind 'ctrl-x:execute(cut -f 3 <<< {} | xclip -selection clipboard -in)' \
-		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' "$(dirname "$(readlink  ~/.config/google-chrome-history)")"/Preferences)): " \
+		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' ~/.config/google-chrome/Default/Preferences)): " \
 		--multi | 
 	    cut -f 3) &&
 	    xdg-open $=urls
