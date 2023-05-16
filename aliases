@@ -42,7 +42,13 @@ alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -
 alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
-alias add='adb devices -l'
+alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
+alias adi="adb shell <<< ' getprop ro.product.model ; id '"
+adb_device_n() { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) ; export ANDROID_SERIAL=${serials[$1]} ; adi ; }
+alias adn="adb_device_n "
+alias an="adb_device_n "
+alias ad1="adb_device_n 1"
+alias ad2="adb_device_n 1"
 alias ads='adb shell'
 alias ada='adb shell am start'
 alias adp='adb shell dumpsys'
@@ -52,7 +58,6 @@ alias aps='adb shell ps -Awf -T'
 alias adps'adb-ps.sh'
 alias adu='export ANDROID_SERIAL=$( adb -d get-serialno )'
 alias adm='export ANDROID_SERIAL=emulator-5554'
-alias adi="adb shell <<< ' getprop ro.product.model ; id '"
 ash() {
 	[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
 	[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
@@ -89,6 +94,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # git
 alias g=git
 alias gi=git
+alias gf='git fetch'
 alias gcm='git commit --verbose -m ""'
 alias gC='git cherry --verbose'
 alias gcn='git clean --dry-run'
