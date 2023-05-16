@@ -103,7 +103,7 @@ gch() {
 	title_width=$(( COLUMNS / 2 ))
 	sep='{{::}}'
 	tmp_file=$(mktemp)
-	cp -f "$HOME/.config/google-chrome/History" $tmp_file &&
+	cp -f "$HOME/.config/google-chrome/Default/History" $tmp_file &&
 		sqlite3 -separator $sep $tmp_file  \
 			"select datetime((last_visit_time/1000000)-11644473600, 'unixepoch', 'localtime'), visit_count, substr(title, 1, $title_width), url from urls order by last_visit_time desc" |
 		awk -F $sep '{printf "%s #%s %-'$title_width's  \x1b[36m%s\n", $1, $2, $3, $4}' |
@@ -128,7 +128,9 @@ gcb() {
 	    cut -f 3) &&
 	    xdg-open $=urls
 }
-zle -N gcb; bindkey '\eB' gcb
+zle -N gcb; 
+bindkey '\eB' gcb
+bindkey '\eI' gcb
 
 # twf - browse twitter favorites
 twf() {
