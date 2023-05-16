@@ -35,7 +35,7 @@ alias adf=adbfs
 alias af=adbfs
 alias adkl=adbk
 alias adk=adbk
-adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
+adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
@@ -139,7 +139,7 @@ alias gcrss='git clone --recursive --jobs=8 --verbose --shallow-submodules --no-
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
-alias gcom='git checkout master'
+alias gcom='git checkout ma'
 alias gcol='git checkout local'
 alias gA='mlocate -eb \\HEAD | while read p; do p=${p:h}; [[ -d $p/objects && -f $p/config ]] && echo $p; done'
 alias gk='x0; gitk --date-order --all&'
@@ -196,7 +196,7 @@ alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/*(.om[1])&'
 alias wsa='wireshark -r $pcap&'
 alias wgq=wg-quick
-alias nmap='nmap -oA ~/.logs/nmap/log-$(nn)'
+alias nmap='nmap -oA ~/.logs/nmap/log-$(nn) -p- '
 alias nmr='nmap --resume ~/.logs/nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.logs/nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
@@ -953,6 +953,7 @@ alias fl=fastboot
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
 alias in='inotifywait -qm'
 alias pid='pgrep -a -u $(id -u)'
+alias pgm='pgrep -a -u $(id -u)'
 alias wpa=wpa_cli
 alias nbb=nbd-client
 alias res=resolvectl
@@ -1022,3 +1023,4 @@ alias adLL="adb_all shell"
 alias unsa='unset ANDROID_SERIAL'
 alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
+alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'

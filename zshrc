@@ -1180,6 +1180,7 @@ alias -g 0s0='::1/0'
 alias -g 0s='::1'
 alias -g BB='| base64'
 alias -g BBD='| base64 -d -i | hexdump -C | LESS= less'
+alias -g CC="| cat"
 alias -g C,="| column -nts,"
 alias -g C="| column -t"
 alias -g CD="| column -t | vd --header 0 -f fixed"
