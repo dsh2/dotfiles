@@ -528,8 +528,11 @@ function run_prepend {
 	BUFFER="$zsh_prepend $BUFFER"
 	CURSOR=$[$#zsh_prepend+1]
 }
-bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
+
+prepend_volla_22() { zsh_prepend='ssh mtk ANDROID_SERIAL=GS5CTP209140' ; run_prepend ; }; bindkey_func '^xp1' prepend_volla_22
+prepend_giga_gx4() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTPC01794' ; run_prepend ; } ; bindkey_func '^xp2' prepend_giga_gx4
+prepend_volla_x23() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTR201011' ; run_prepend ; } ; bindkey_func '^xp3' prepend_volla_x23
 
 function run_subshell {
 	if [[ -n $BUFFER ]]; then
@@ -658,8 +661,9 @@ bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
 bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
+bindkey -s EE\  "noglob echo ''  | openai_pipe"
 bindkey -s r22\  "rax2 -s  hx"
-bindkey -s AD\  "adbk ''"
+# bindkey -s AD\  "adbk ''"
 bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
