@@ -34,6 +34,8 @@ alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON
 alias adf=adbfs
 alias af=adbfs
 alias adkl=adbk
+alias adke='adb shell input keyevent'
+alias adbke='adb shell input keyevent'
 alias adk=adbk
 adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
@@ -814,6 +816,7 @@ alias cmd=command
 alias un=unset
 alias uns=unset
 alias unse=unset
+alias unsp='export PAGER='
 alias psc='ps -O ppid,cgroup, '
 alias torr=torsocks
 alias um='sudo umount'
@@ -894,7 +897,7 @@ alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'
 alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
 alias ltmp='l -dt tmp-*'
-alias yd='noglob yt-dlp -v'
+alias yd='noglob yt-dlp -vo $(nn)_'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -976,6 +979,7 @@ alias emu=emulator
 alias mp='noglob mpv -v'
 alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
+alias btt=btrbk
 alias sem=semanage
 alias gru=grubby
 alias ge=getent
@@ -1030,3 +1034,4 @@ alias unsa='unset ANDROID_SERIAL'
 alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
+alias ha=hashcat
