@@ -53,3 +53,5 @@
 	rebase = false
 [pager]
 	diff = false
+[safe]
+	directory = /home/dsf/src/NextGenRouter.git
