@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+# setopt nounset
+# setopt errexit
+# PS4=+ ; setopt xtrace
+
+: "${host:=b3.selfhost.me}"
+
+ip=$( dig +short $host )
+[[ -z $ip ]] && {
+	print -u2 "Failed to get IP for host $host"
+	exit 1
+}
+
+dev=$( ip -j route get $ip | jq -r '.[].dev' )
+[[ -z $dev ]] && {
+	print -u2 "Failed to get network device for host $host ($ip)"
+	exit 1
+}
+
+con=$( nmcli -g general.connection dev show $dev )
+[[ -z $con ]] && {
+	print -u2 "Failed to get connection for device $dev serving host $host"
+	exit 1
+}
+
+metered=$( nmcli -g connection.metered con show $con )
+[[ -z $metered ]] && {
+	print -u2 "Failed to get metered setting for con \"$con\" serving host $host"
+	exit 1
+}
+
+[[ $metered == "no" ]] && print "Connection to host $host is NOT metered" || print "Connection to host $host is METERED"
