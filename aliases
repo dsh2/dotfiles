@@ -175,6 +175,7 @@ alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gb='git branch'
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
@@ -664,7 +665,7 @@ alias gp=gpg
 alias gpc=gpgconf
 alias gpc=gpg-connect-agent
 alias gpa=gpg-connect-agent
-alias fm=findmnt
+alias fm='findmnt --real --raw'
 alias jr='journalctl -f -u'
 alias jc=journalctl
 alias jcc='journalctl -S -1m'
@@ -765,6 +766,7 @@ alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 # i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
 alias ki=kitty
+alias kit=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
 TT() { nvim +'norm i' term://"$*" ; }
@@ -856,8 +858,8 @@ alias rax='rax2 -s'
 alias sqll=sqlite3
 
 # alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl'
-alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
-alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
+# alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
+# alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
 alias dme='dmesg -e'
 alias R=rclone
 alias rk=rclone
@@ -1017,6 +1019,8 @@ alias ni=ninja
 alias nin=ninja
 alias nj=ninja
 alias blk=blkid
+alias bli='sudo blkid'
+alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
 alias grl=gradle
 alias dun='dunstctl is-paused'
@@ -1039,6 +1043,7 @@ alias oc=oscap
 alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
 alias fw=fwupdmgr 
 alias mok=mokutil 
+alias xpr=xpra
 alias xpp=xpra
 alias xpr=xpra
 alias whi=while
