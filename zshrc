@@ -748,14 +748,9 @@ function stop_tmux_logging()
 function set_terminal_title()
 {
     # TODO:
-    # -check esc sequences instead of wmctrl
     # -make this more portable
     # -check for ssh_tty
-	if [ -n $DISPLAY ]; then
-		if type wmctrl > /dev/null; then
-			wmctrl -r :ACTIVE: -N "$*" &>/dev/null
-		fi
-	fi
+	kitty @ set-window-title "$*"
 }
 
 function zsh_terminal_title()
