@@ -1,7 +1,8 @@
 let mapleader=" "
 
-set notimeout
-set nottimeout
+" set notimeout
+" set nottimeout
+
 
 set ideajoin
 " set ideaput
@@ -18,7 +19,8 @@ nmap <c-.> <action>(NextTab)
 nmap ,e <action>(EditorTextEndWithSelection)
 nmap <leader>A <action>(VimFindActionIdAction)
 
-map zi <action>(ExpandAll)
+map zi <action>(ExpandAllRegions)
+
 map ]] <action>(EditorCodeBlockEnd)
 map ]} <action>(EditorCodeBlockEndWithSelection)
 map [[ <action>(EditorCodeBlockStart)
@@ -130,8 +132,10 @@ map <leader>s :w<cr>
 
 " Git
 map <leader>gd <Action>(Compare.SameVersion)
-map ]c <Action>(NextDiff)
-map [c <Action>(PreviousDiff)
+map ]c <Action>(VcsShowNextChangeMarker)
+map [c <Action>(VcsShowPrevChangeMarker)
+" map ]c <Action>(NextDiff)
+" map [c <Action>(PreviousDiff)
 map <leader>gs <Action>(ActivateVersionControlToolWindow)
 map <leader>gl <Action>(LocalHistory.ShowHistory)
 map <leader>gv <Action>(Vcs.ShowTabbedFileHistory)
@@ -169,7 +173,6 @@ map <leader>da <Action>(AndroidConnectDebuggerAction)
 map <leader>dc <Action>(Debugger.AddInlineWatch)
 map <leader>di <Action>(Debugger.AddInlineWatch)
 map <leader>dr <Action>(Resume)
-map ,c <Action>(Resume)
 map <leader>df <Action>(StepOver)
 map <leader>dF <Action>(StepInto)
 map <leader>dF <Action>(StepOut)
@@ -185,7 +188,7 @@ map <a-.> <Action>(Tree-selectNext)
 map <m-,> <Action>(Tree-selectNext)
 
 nnoremap ,r :action ContextRun<CR>
-nnoremap ,c :action RunClass<CR>
+" nnoremap ,c :action RunClass<CR>
 nnoremap ,f :action ChooseRunConfiguration<CR>
 nnoremap ,t :action ActivateRunToolWindow<CR>
 nnoremap ,u :action Rerun<CR>
