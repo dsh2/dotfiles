@@ -30,14 +30,28 @@ source ~/.dotfiles/z/z.sh
 
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
+
 # alias adbk='adb shell input keyboard text \"\"'
-alias adf=adbfs
+# alias adf=adbfs
+adf() {
+	[[ -z $ANDROID_SERIAL ]] && {
+		print -u "Please set ANDROID_SERIAL"
+		return 1
+	} 
+	adbfs_mnt=~/mnt/ADBFS/$ANDROID_SERIAL 
+	mkdir -p $adbfs_mnt
+	adb shell id
+	adbfs $adbfs_mnt
+	${EDITOR:-nvim} $adbfs_mnt
+}
+export ANDROID_SERIAL=127.0.0.1:64958
 alias af=adbfs
 alias adkl=adbk
 alias adke='adb shell input keyevent'
 alias adbke='adb shell input keyevent'
 alias adk=adbk
-adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
+adbk() { timeout 1 adb shell input keyboard text "${(q)*}$'\n'" }
+# adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
@@ -45,8 +59,8 @@ alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
-alias adi="adb shell <<< ' getprop ro.product.model ; id '"
-adb_device_n() { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) ; export ANDROID_SERIAL=${serials[$1]} ; adi ; }
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
+adb_device_n() { [[ -z $1 ]] && add || { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) && export ANDROID_SERIAL=${serials[$1]} && adi } ; }
 alias adn="adb_device_n "
 alias an="adb_device_n "
 alias ad1="adb_device_n 1"
@@ -1026,6 +1040,7 @@ alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
 alias fw=fwupdmgr 
 alias mok=mokutil 
 alias xpp=xpra
+alias xpr=xpra
 alias whi=while
 alias adL="adb_all"
 alias adLl="adb_all shell"
