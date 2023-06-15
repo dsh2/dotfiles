@@ -960,7 +960,7 @@ alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
 alias bt=btrfs
 alias btr=btrfs
-alias gj=./gradlew
+alias gr=./gradlew
 alias f2='sudo fail2ban-client status'
 alias ok=openstack
 
@@ -997,10 +997,10 @@ alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
 alias btt=btrbk
 alias sem=semanage
-alias gru=grubby
+# alias gru=grubby
+# alias gr=grubby
 alias ge=getent
 alias pin=ping
-alias gr=grubby
 alias sys=systool
 alias lp=lpa
 alias la=lpa
@@ -1030,7 +1030,7 @@ alias dr=dracut
 alias sw=swapo
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
-alias zp='zsh_prepend='
+alias zp='zsh_prepend= '
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
@@ -1040,7 +1040,7 @@ alias AS='export ANDROID_SERIAL='
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
-alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
+alias zpp='echo $zsh_prepend | tee ~/.zsh_prepend'
 alias fw=fwupdmgr 
 alias mok=mokutil 
 alias xpr=xpra
