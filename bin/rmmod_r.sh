@@ -23,4 +23,4 @@ rm() {
 [[ $# == 1 ]] || { echo "usage: $0 module"; exit 1; }
 
 module=$1
-rm $module $module
+echo rm $module $module

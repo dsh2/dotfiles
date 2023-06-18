@@ -20,7 +20,8 @@ if [ "$1" = "-b" ] && nmcli con show --active | grep -qE '(dsn3|dsn5)'; then
 fi
 
 trap revert HUP INT TERM
-pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
+# pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
+for s in $(pactl list short sinks | cut -f 1); do pactl set-sink-mute $s 0 ; done
 # In single screen setups chose innocuous screen after unlock
 [ $(herbstclient list_monitors | wc -l) = 1 ] && herbstclient use log
 # i3-msg workspace --no-auto-back-and-forth 0:log
@@ -29,7 +30,7 @@ pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
 i3-msg workspace desktop
 xset +dpms dpms 10 10 10 
 pstree -ps $$ | logger
-rfkill block all
+# rfkill block all
 msg "Locking screen... (no fork)"
 [ -r /tmp/i3lock.png ] && show_image="-i /tmp/i3lock.png"
 i3lock --nofork --beep --color ff0000 --show-failed-attempts --ignore-empty-password $show_image

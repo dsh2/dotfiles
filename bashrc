@@ -60,8 +60,9 @@ export LS_COLORS
 
 # Setup (debug) prompt
 if ((D)); then 
+	echo "Hello debug world"
 	msource ~/.dotfiles/colors/colors.sh
-	export PS4="\t\000$white[\$$:$green\${BASH_SOURCE/*\//}$lightyellow:$white\${LINENO}$lightyellow:$purple\${FUNCNAME[0]:+\${FUNCNAME[0]}()}$lightyellow=$red${?/0/${lightyellow}0}$white]$fixed_col | $reset"
+	export PS4="$white[\$$:$green\${BASH_SOURCE/*\//}$lightyellow:$white\${LINENO}$lightyellow:$purple\${FUNCNAME[0]:+\${FUNCNAME[0]}()}$lightyellow=$red${?/0/${lightyellow}0}$white]$fixed_col | $reset"
 	set -x
 else
 	if [ "$MYHOSTNAME" != "P3-01882" -a "$MYHOSTNAME" != "P3-01910" ]; then
@@ -74,3 +75,7 @@ else
 			export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 	fi
 fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

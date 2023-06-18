@@ -783,6 +783,7 @@ set wildmenu
 set wildmode=list:longest,full
 autocmd vimrc BufNewFile,BufReadPost Vagrantfile setfiletype ruby
 autocmd vimrc BufNewFile,BufReadPost .clang-format setfiletype yaml
+autocmd vimrc BufReadPost ~/.tmux-log/*,*-strace*,strace\.* setfiletype strace
 
 " }}}
 " Mappings {{{

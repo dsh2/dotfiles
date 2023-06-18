@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+me=${0#*/}
+usage="Usage: $0 ssid password"
+
+ssid=$1
+[ -n "$ssid" ] || { echo "No SSID provided. $usage "; exit 1; }
+password=$2
+[ -n "$password" ] || { echo "No password provided. $usage"; exit 1; }
+
+echo "WIFI:S:${ssid};T:WPA;P:${password};;" | qrencode -t utf8

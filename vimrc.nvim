@@ -135,7 +135,7 @@ if vim_plug_available
 	nmap <leader>gg :Git
 	nmap <leader>gl :silent! Glog --<cr>:bot copen<cr>
 	" TODO: Find out why this end up in the left window
-	autocmd vimrc FileType gitcommit,fugitive map <buffer> ; odvlzi
+	autocmd vimrc FileType gitcommit,fugitive map <buffer> ; dv
 	autocmd vimrc FileType fugitive map <buffer> D =
 	autocmd vimrc FileType fugitive map <buffer> e =
 	autocmd vimrc FileType fugitive map <buffer> dd =
@@ -213,7 +213,7 @@ if vim_plug_available
 	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
 	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
 	" Plug 'rickhowe/diffchar.vim'
-	let g:DiffUnit = 'Word1'
+	" let g:DiffUnit = 'Word1'
 	" let g:DiffColors = 0 " fixed color
 	" " let g:DiffColors = 1 " 4 colors in fixed order
 	" Plug 'rickhowe/spotdiff.vim'
@@ -358,21 +358,21 @@ if vim_plug_available
 	" nnoremap <F4> :UndotreeToggle<cr>
 	" autocmd vimrc FileType undotree nmap <buffer> ; <cr>
 	" " }}}
-	Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
-	Plug 'vim-pandoc/vim-pandoc-syntax'
-	autocmd vimrc FileType markdown set wrap
-	let g:pandoc#folding#level = 9
+	" Plug 'vim-pandoc/vim-pandoc', {'for': ['pandoc', 'markdown']} "{{{
+	" Plug 'vim-pandoc/vim-pandoc-syntax'
+	" autocmd vimrc FileType markdown set wrap
+	" let g:pandoc#folding#level = 9
 	" let g:pandoc#formatting#mode = 'hA' " hard wraps, auto smart
-	let g:pandoc#formatting#mode = 'h' " soft wraps
+	" let g:pandoc#formatting#mode = 'h' " soft wraps
 	" let g:pandoc#formatting#mode = 's' " soft wraps
 	" let g:pandoc#formatting#mode = 'a' " autoformatting
 	" let g:pandoc#formatting#mode = 'A' " smart autoformatting (watch out for source code)
-	let g:pandoc#formatting#textwidth=79
-	let g:pandoc#modules#disabled = ["chdir"]
-	let g:pandoc#formatting#extra_equalprg="--atx-headers"
+	" let g:pandoc#formatting#textwidth=79
+	" let g:pandoc#modules#disabled = ["chdir"]
+	" let g:pandoc#formatting#extra_equalprg="--atx-headers"
 	" let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
-	let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
-	"}}}
+	" let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
+	" }}}
 	Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
 	" hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
 	" hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
@@ -412,7 +412,7 @@ if vim_plug_available
 	let g:vim_json_syntax_concealcursor = 0
 	" }}}
 	Plug 'scrooloose/nerdtree' "{{{
-	Plug 'Xuyuanp/nerdtree-git-plugin'
+	" Plug 'Xuyuanp/nerdtree-git-plugin'
 	" let g:NERDTreeShowIgnoredStatus = 1
 	let g:NERDTreeGitStatusShowIgnored = 1
 	let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -432,6 +432,7 @@ if vim_plug_available
 	let NERDTreeWinSize = 46
 	let NERDTreeMinimalUI = 1
 	autocmd vimrc FileType nerdtree map <buffer> l oj^
+	autocmd vimrc FileType nerdtree map <buffer> c o
 	"autocmd vimrc FileType nerdtree map <buffer> O mo
 	autocmd vimrc FileType nerdtree map <buffer> h x^
 	autocmd vimrc FileType nerdtree map <buffer> ; go
@@ -498,6 +499,7 @@ if vim_plug_available
 	Plug 'ompugao/vim-airline-cwd'
 	let g:airline#extensions#branch#enabled = 0
 	let g:airline#extensions#branch#empty_message = '(no branch)'
+	let g:ale_virtualtext_cursor = 0 
 	let g:airline#extensions#ale#enabled = 1
 	let g:airline#extensions#syntastic#enabled = 1
 	let g:airline#extensions#capslock#enabled = 1
@@ -761,6 +763,7 @@ if vim_plug_available
 	" let g:echodoc#type = 'echo'
 	let g:echodoc#type = 'signature'"}}}
 	Plug 'sakhnik/nvim-gdb'
+	" Plug 'udalov/javap-vim'
 	" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
 	Plug 'christianrondeau/vim-base64'
@@ -861,6 +864,7 @@ if vim_plug_available
 	Plug 'Shougo/neco-vim'
 	Plug 'ujihisa/neco-look'
 	Plug 'deoplete-plugins/deoplete-jedi'
+	Plug 'udalov/kotlin-vim' 
 	call plug#end()
 
 	call deoplete#custom#option({
@@ -912,8 +916,8 @@ set completeopt=menuone
 set concealcursor=n
 set conceallevel=0
 set clipboard=unnamedplus
-set diffopt=iwhite
-" set diffopt=filler,context:4
+" set diffopt=iwhite
+set diffopt=filler,context:4
 " set dir=~/.vim/swo
 set encoding=utf8
 set exrc
@@ -969,7 +973,7 @@ set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servernam
 set notimeout
 set nottimeout
 set ttimeoutlen=50
-set undodir=~/.vim/undodir/
+set undodir=~/.local/share/nvim/undo
 set nofoldenable
 set undofile
 set updatetime=500
@@ -1004,7 +1008,7 @@ nnoremap <s-f11> :Step<cr>
 nnoremap <c-s-f11> :Finish<cr>
 " }}}
 cabbr BB <buffer>
-nmap <nowait> <leader>s :update<cr>\|:touch %<cr>
+nmap <nowait> <leader>s :update<cr>\|:silent exec "!touch %"<cr>
 " nnoremap <c-s> :update<cr>
 inoremap <c-s> <c-o>:update<cr><esc>
 map <a-s> <c-o>:update<cr><esc>
@@ -1302,11 +1306,9 @@ autocmd vimrc BufRead,BufNewFile *.ipy set filetype=python
 " Netrw
 autocmd vimrc FileType netrw nmap <buffer> q <c-w>c
 let g:netrw_liststyle         = 3
-let g:netrw_banner            = 0
-" let g:Netrw_UserMaps= [
-"     \    ["l","execute('wincmd l')"]
-"     \    ["<c-l>","execute('wincmd l')"]
-"     \]
+let g:netrw_banner            = 1
+
+" let g:Netrw_UserMaps= [["I","gh"]]
 
 function! EnableAutoWrite()
     exe ":au FocusLost" expand("%") ":update"
@@ -1520,7 +1522,9 @@ map <leader>0, :call KeepView("silent! '<,'>s/,/\r/")<cr>
 " map <leader><space><cr> :call KeepView("silent! '<,'>s/\s\+/\r/")<cr>
 " map <leader><space><cr> :s/\s\+/\r/<cr>
 map <leader><leader><cr> :s/\s\+/\r/<cr>
+map <leader>;<cr> :s/;\+/\r/<cr>
 map <leader><leader>,<cr> :s/,\+/\r/<cr>
+" map <leader><leader>,<cr> :s/,\+/\r/<cr>
 map <leader>0; :call KeepView("silent! '<,'>s:\\s*;\\s*:\r")<cr>
 map <leader>0: :call KeepView("silent! '<,'>s:\\s*:\\s*:\r")<cr>
 
@@ -1589,7 +1593,9 @@ map <leader><leader><cr> :s/\s\+/\r/<cr>
 vmap <leader><leader><cr> :'<'>s/\s\+/\r/<cr>
 cmap <m-v> <c-r>"
 
-map <c-w><c-l> <c-w>v<c-w>l
+set splitright
+nnoremap <c-w>l :vertical new<cr>
+nnoremap <c-w><c-l> <c-w>v<c-w>l
 map <c-w><c-j> <c-w>s<c-w>j
 
 function! ToggleOption(name)
@@ -1634,7 +1640,7 @@ map <leader><S-S>e :%s:\(\<1\d\{9\}\>\):\=strftime("\"%F %T\"",submatch(0)):c<cr
 autocmd vimrc FileType json  nmap <buffer> <leader>e yq:new<CR>P:%s:\\n:\r:<cr>gg:se ft=sql<cr>
 " Re-paste string joined with \n
 " autocmd vimrc FileType javascript   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
-autocmd vimrc FileType sql   nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
+" autocmd vimrc FileType sql nmap <buffer> <leader>e ggGk$A\\n\<Esc>0vaeJ0yy:bdel!<cr>viq
 vmap / /\%V
 nmap v/ /\V
 "}}}

@@ -1,0 +1,27 @@
+#!/bin/zsh
+
+PS4=+
+set -eu
+
+[[ -v dev_root ]] || { print -u2 "usage: dev_root=DEV [dev_boot=DEV] $0:t [cmd]"; exit 1; }
+
+# root
+mnt_root=$(mktemp -d)
+sudo mount $dev_root $mnt_root
+for mnt in dev sys proc ; do sudo mount --bind /$mnt $mnt_root/$mnt; done
+
+# efi
+mnt_efi=/sys/firmware/efi/efivars
+mountpoint -q $mnt_efi && sudo mount --bind $mnt_efi $mnt_root/$mnt_efi
+
+# boot
+[[ -v dev_boot ]] && {
+	mnt_boot=$mnt_root/boot
+	[[ -e $mnt_boot ]] || { print -u2 "$mnt_boot does not exist."; exit 1; }
+	[[ -d $mnt_boot ]] || { print -u2 "$mnt_boot is not a directory."; exit 1; }
+	mountpoint -q $mnt_boot && { print -u2 "$mnt_boot already mounted?"; exit 1; }
+	sudo mount $dev_boot $mnt_boot
+}
+cmd=$*
+sudo chroot $mnt_root $=cmd
+sudo umount -R $mnt_root

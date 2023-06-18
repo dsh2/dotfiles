@@ -1,0 +1,25 @@
+#!/bin/sh
+# vim: ft=sh
+
+output_rf_status() {
+	for id in wifi wwan bluetooth; do
+		rfkill list $id | grep -q -- "Soft blocked: yes"
+		eval $id=$?
+	done
+
+	(($wifi)) && echo -n 🔴
+	(($bluetooth)) && echo -n 🔵
+	(($wwan)) && echo -n ⚪
+
+	((!$wifi && !$bluetooth && !$wwan)) && echo -n 🛪
+}
+
+status() {
+	i3status | while :; do
+		read line
+		# echo "$line | $(output_rf_status)"
+		echo "$line"
+	done
+}
+
+status

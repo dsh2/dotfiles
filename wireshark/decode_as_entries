@@ -1,6 +1,8 @@
-# "Decode As" entries file for Wireshark 3.4.4.
+# "Decode As" entries file for Wireshark 3.6.2.
 #
 # This file is regenerated each time "Decode As" preferences
 # are saved within Wireshark. Making manual changes should be safe,
 # however.
 decode_as_entry: tcp.port,5555,SIGCOMP,GDB remote
+decode_as_entry: tcp.port,56790,(none),Socks
+decode_as_entry: tcp.port,7734,(none),Socks
