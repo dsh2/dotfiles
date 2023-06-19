@@ -91,4 +91,4 @@ export TSOCKS_CONF_FILE=~/.tsocks.conf
 
 export TZ=CET
 
-ykserial=$(ykman list --serials | head -1) 
+has ykman && ykserial=$(ykman list --serials | head -1) 

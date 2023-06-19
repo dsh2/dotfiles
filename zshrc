@@ -750,7 +750,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	kitty @ set-window-title "$*"
+	has kitty &&kitty @ set-window-title "$*"
 }
 
 function zsh_terminal_title()
