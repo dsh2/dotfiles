@@ -431,6 +431,23 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+min_version() {
+	local current_version=$1
+	local min_version=$2
+	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
+}
+
+if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
+	export VISUAL=nvim
+else
+	if has vimx; then
+		export VISUAL=vimx
+	else
+		export VISUAL=vi
+	fi
+fi
+export EDITOR=$VISUAL
+
 # vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
 vimp="$VISUAL +AnsiEsc"
 function page_last_output_fullscreen {
@@ -1256,23 +1273,6 @@ PRE='echo $RANDOM'
 alias -g AI=' | openai_pipe'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
-
-# set -x
-min_version() {
-	local current_version=$1
-	local min_version=$2
-	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
-}
-
-if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
-	export VISUAL=nvim
-else
-	if has vimx; then
-		export VISUAL=vimx
-	else
-		export VISUAL=vim
-	fi
-fi
 
 err() {
   printf '\e[31m%s\e[0m\n' "$*" >&2
