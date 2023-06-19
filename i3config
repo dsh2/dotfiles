@@ -167,6 +167,13 @@ bindsym $ctrl+$meta+$alt+0 workspace next
 bindsym $meta+$shift+1 workspace prev
 bindsym $meta+$shift+2 workspace next
 
+# exec --no-startup-id i3-msg 'workspace ii; exec kitty'
+exec --no-startup-id i3-msg 'workspace ii; exec kitty'
+
+# workspace next
+# bindsym $mod+x move container to workspace 3; workspace 3
+
+# set workspace check
 bindsym $meta+9 workspace $WS_COMS
 bindsym $meta+0 workspace $WS_LOG
 ### }}}
@@ -555,22 +562,47 @@ bar {
 
 # WS_LOG {{{
 set $WS_LOG "0:log"
-assign [class="copyq"] $WS_LOG
-# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
+# assign [class="copyq"] $WS_LOG
+exec --no-startup-id i3-msg 'workspace $WS_LOG; exec $terminal_tmux'
 # }}}
 
 # WS_COMS {{{
 set $WS_COMS "1:coms"
+exec --no-startup-id i3-msg 'workspace $WS_COMS; exec $terminal_tmux'
 assign [class="Google-chrome" title="Telegram Web - Google Chrome"] $WS_COMS
 assign [class="Signal" ] $WS_COMS
 assign [instance="crx_nckgahadagoaajjgafhacjanaoiihapd"] $WS_COMS
 assign [class="Pidgin"] $WS_COMS
 # }}}
 
-# WS_ROOT {{{
-set $WS_ROOT "2:root"
-# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
-# exec_always --no-startup-id i3-msg 'workspace $WS_ROOT; exec $browser'
+# # WS_ROOT {{{
+# set $WS_ROOT "2:root"
+# exec --no-startup-id i3-msg 'workspace $WS_ROOT; exec $terminal_tmux'
+# # exec --no-startup-id i3-msg 'workspace $WS_ROOT; exec $browser'
+# # }}}
+
+# WS_NGEN {{{
+set $WS_NGEN "2:ngen"
+exec --no-startup-id i3-msg 'workspace $WS_NGEN; exec $terminal_tmux'
+# exec --no-startup-id i3-msg 'workspace $WS_NGEN; exec $browser'
+# }}}
+
+# WS_WWW {{{
+set $WS_WWW "3:www"
+# exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $terminal_tmux'
+exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
+# }}}
+
+# WS_UML {{{
+set $WS_UML "4:UML"
+# exec --no-startup-id i3-msg 'workspace $WS_UML; exec $terminal_tmux'
+exec --no-startup-id i3-msg 'workspace $WS_UML; exec $browser'
+# }}}
+
+# WS_TV {{{
+set $WS_TV "5:TV"
+exec --no-startup-id i3-msg 'workspace $WS_TV; exec $terminal_tmux'
+exec --no-startup-id i3-msg 'workspace $WS_TV; exec $browser'
 # }}}
 
 # WS_QEMU {{{
