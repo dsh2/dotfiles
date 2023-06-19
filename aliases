@@ -289,6 +289,7 @@ gv() { gvim "$*"; raiseX; }
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 # vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+alias nv=nvim
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
