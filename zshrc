@@ -750,7 +750,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	kitty @ set-window-title "$*" 2>/dev/null
+	timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -776,6 +776,25 @@ function zsh_terminal_title_running()
 	zsh_terminal_title "[$(tty) zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
 }
 
+# WIP
+function zsh_detect_display()
+{
+	return
+	client_name=$( tmux display-message -p -F '#{client_termname}' )
+	[[ -z $client_name ]] && return
+	export DISPLAY
+	
+	[[ $client_name = *xterm* ]] && DISPLAY=$( pgrep -x -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p' ) || {
+		2>/dev/null lsof -P -i4 -a -p $(pgrep -u $(id -u) -x sshd ) -sTCP:LISTEN, |
+		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do 
+			DISPLAY=:$port
+			echo "Trying DISPLAY=$DISPLAY"
+			xset q 2>/dev/null && break
+		done
+	}
+}
+
+# add-zsh-hook preexec zsh_detect_display
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
@@ -1475,7 +1494,7 @@ umask 002
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
-[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && {
+[[ $(stat -L +size -- $HISTFILE) -lt 10000 ]] && {
 	print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)."
 	sleep 3
 }
@@ -1532,7 +1551,7 @@ mount_img() {
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
-zsh_source -q ~/.android-serial
+# zsh_source -q ~/.android-serial
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
@@ -1555,11 +1574,8 @@ rand_geom() {
 }
 rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
-[[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
 
-[ -e ~/.environment.local ] && source ~/.environment.local
-env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
 pree() { pre "$* " }
@@ -1578,7 +1594,6 @@ rsz() {
 	fi
 }
 set +x
-zsh_source ~/.aliases
 
 sponge2() {
 	local dst=$1
@@ -1599,8 +1614,14 @@ seq_pairs() {
 	done
 }
 
+env_local=(~/.environment.d/*(N)) 2>/dev/null
+[ -e ~/.environment.local ] && source ~/.environment.local
+
+zsh_source ~/.aliases
 test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+lo=127.0.0.1
 set +x
