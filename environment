@@ -22,8 +22,10 @@ pathprepend $HOME/.cargo/bin
 # export PAGER=fzf
 # export PAGER=less
 # [[ -z $TMUX ]] && PAGER=less
-PAGER=less
-export GIT_PAGER=less
+# export PAGER=less
+export PAGER=
+# export GIT_PAGER=less
+export GIT_PAGER=
 export LESSBINFMT='*d[0x%02x]'
 export LESSUTFBINFMT='*d[0x%04x]'
 export LESS=cRMWSJ-i
