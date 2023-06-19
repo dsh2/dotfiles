@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Sym-link all executables into a path from $PATH
+# Usage: [install_path=TARGET_DIR] [doit=yes] [force=yes] install_path
+ 
+# TODO: Check if $file is already in path
+
+search_path() {
+	IFS=":"
+	for p in $PATH; do
+		[ -d "$p" ] && [ -w "$p" ] && { echo "$p"; return; }
+	done
+}
+
+main() {
+	: "${install_path:=$(search_path)}"
+	[ -z "$install_path" ] && { echo "Failed to find writeable directory in \$PATH."; exit 1; }
+	[ -n "$force" ] && force="-f"
+	echo "Installing into \"$install_path\"."
+	files="${*:-*}"
+	for f in $files; do 
+		[ "$f" -ef "$0" ] && continue  # Skip me
+		[ -d "$f" ] && continue  # Don't "install" directories
+		[ -x "$f" ] || { echo "File \"$f\" is not executable. Skipping installation."; continue; }
+		[ "yes" = "$doit" ] || { echo "Would link \"$f\"."; continue; }
+		ln $force -rst "$install_path" "$f" && echo "Successfully linked \"$f\"."
+	done
+}
+
+main "$@"

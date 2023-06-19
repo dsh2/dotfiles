@@ -750,7 +750,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	has kitty &&kitty @ set-window-title "$*"
+	has kitty && kitty @ set-window-title "$*"
 }
 
 function zsh_terminal_title()
@@ -1206,6 +1206,7 @@ alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -q'
+alias -g FF=' | file -kbz -'
 alias -g LV='|& lnav'
 alias -g LVT='|& lnav -t'
 alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
