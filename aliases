@@ -44,7 +44,6 @@ adf() {
 	adbfs $adbfs_mnt
 	${EDITOR:-nvim} $adbfs_mnt
 }
-export ANDROID_SERIAL=127.0.0.1:64958
 alias af=adbfs
 alias adkl=adbk
 alias adke='adb shell input keyevent'
@@ -58,9 +57,10 @@ alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -
 alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
-alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
+# alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
+alias add='adb devices -l'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
-adb_device_n() { [[ -z $1 ]] && add || { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) && export ANDROID_SERIAL=${serials[$1]} && adi } ; }
+adb_device_n() { [[ -z $1 ]] && { adb devices -l | head -n-1 | tail -n+2 | cat -ns } || { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) && export ANDROID_SERIAL=${serials[$1]} && adi } ; }
 alias adn="adb_device_n "
 alias an="adb_device_n "
 alias ad1="adb_device_n 1"
@@ -125,6 +125,7 @@ alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
+alias gwl='git worktree list'
 alias glg='noglob git log'
 # gst() {
 #	local git_min_version="2.10.0"
@@ -1056,3 +1057,4 @@ alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
+alias IP=install_path
