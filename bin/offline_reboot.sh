@@ -1,7 +1,8 @@
 #!/bin/zsh
 
 : ${remote_host:=1.1.1.1}
-: ${reboot_delay_seconds:=30}
+: ${reboot_delay_seconds:=90}
+: ${recheck_delay_seconds:=90}
 
 while :; do 
 	ping -W1 -c3 $remote_host || {
@@ -9,5 +10,5 @@ while :; do
 		sleep $reboot_delay_seconds
 		reboot
 	}
-	sleep 5
+	sleep $recheck_delay_seconds
 done
