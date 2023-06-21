@@ -60,19 +60,16 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
-<<<<<<< HEAD
 adb_device_n() {
-	add
+	adb devices -l | head -n-1 | tail -n+2 | cat -ns
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
 	integer n=$1
 	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
-	(( n == 0 )) && { echo -n "n=" ; read n ; }
+	(( n == 0 )) && { echo -n "Enter device number: " ; read n ; }
 	(( n == 0 )) && return
 	export ANDROID_SERIAL=${serials[$n]} && adi 
+	typeset -p ANDROID_SERIAL > ~/.android/current_serial
 }
-=======
-adb_device_n() { [[ -z $1 ]] && { adb devices -l | head -n-1 | tail -n+2 | cat -ns } || { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) && export ANDROID_SERIAL=${serials[$1]} && adi } ; }
->>>>>>> f54938b6a622acfb642b35a988872f9751b6b5be
 alias adn="adb_device_n "
 alias an="adb_device_n "
 alias ad1="adb_device_n 1"
