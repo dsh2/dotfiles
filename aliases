@@ -44,7 +44,6 @@ adf() {
 	adbfs $adbfs_mnt
 	${EDITOR:-nvim} $adbfs_mnt
 }
-export ANDROID_SERIAL=127.0.0.1:64958
 alias af=adbfs
 alias adkl=adbk
 alias adke='adb shell input keyevent'
@@ -58,8 +57,10 @@ alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -
 alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
-alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
+# alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
+alias add='adb devices -l'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
+<<<<<<< HEAD
 adb_device_n() {
 	add
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
@@ -69,6 +70,9 @@ adb_device_n() {
 	(( n == 0 )) && return
 	export ANDROID_SERIAL=${serials[$n]} && adi 
 }
+=======
+adb_device_n() { [[ -z $1 ]] && { adb devices -l | head -n-1 | tail -n+2 | cat -ns } || { serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1) ) && export ANDROID_SERIAL=${serials[$1]} && adi } ; }
+>>>>>>> f54938b6a622acfb642b35a988872f9751b6b5be
 alias adn="adb_device_n "
 alias an="adb_device_n "
 alias ad1="adb_device_n 1"
@@ -133,6 +137,7 @@ alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
+alias gwl='git worktree list'
 alias glg='noglob git log'
 # gst() {
 #	local git_min_version="2.10.0"
@@ -968,7 +973,7 @@ alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
 alias bt=btrfs
 alias btr=btrfs
-alias gj=./gradlew
+alias gr=./gradlew
 alias f2='sudo fail2ban-client status'
 alias ok=openstack
 
@@ -1005,10 +1010,10 @@ alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
 alias btt=btrbk
 alias sem=semanage
-alias gru=grubby
+# alias gru=grubby
+# alias gr=grubby
 alias ge=getent
 alias pin=ping
-alias gr=grubby
 alias sys=systool
 alias lp=lpa
 alias la=lpa
@@ -1038,7 +1043,7 @@ alias dr=dracut
 alias sw=swapo
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
-alias zp='zsh_prepend='
+alias zp='zsh_prepend= '
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
@@ -1048,7 +1053,7 @@ alias AS='export ANDROID_SERIAL='
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
-alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
+alias zpp='echo $zsh_prepend | tee ~/.zsh_prepend'
 alias fw=fwupdmgr 
 alias mok=mokutil 
 alias xpr=xpra
@@ -1063,3 +1068,4 @@ alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
+alias IP=install_path
