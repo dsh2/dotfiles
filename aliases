@@ -1009,7 +1009,7 @@ alias la=lpa
 alias cpr='cp --reflink=always'
 alias dif=diff
 alias iper=iperf
-alias mtr='command mtr --displaymode 2'
+alias mtr='command mtr --curses --displaymode 2 1.1.1.1'
 alias cdr='cd $REPO_ROOT'
 alias rp=rpm
 alias ssf=sshfs
