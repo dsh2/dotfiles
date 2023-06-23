@@ -767,7 +767,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	has kitty && timeout 1 kitty @ set-window-title "$*"
+	has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -1551,7 +1551,7 @@ mount_img() {
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
-# zsh_source -q ~/.android-serial
+zsh_source -q  ~/.android/current_serial
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
