@@ -49,7 +49,7 @@ alias adkl=adbk
 alias adke='adb shell input keyevent'
 alias adbke='adb shell input keyevent'
 alias adk=adbk
-adbk() { timeout 1 adb shell input keyboard text "${(q)*}$'\n'" }
+adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
@@ -485,7 +485,7 @@ alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
-alias nnn="date '+%F__%T' --date=@"
+alias nnn="date '+%F__%T' --date=@\$(( N / 1000 ))"
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'
@@ -804,9 +804,9 @@ alias rz='sudo -E HOME=$HOME zsh'
 alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
-alias chx='sudo chmod a+x'
-alias chnox='sudo chmod -Rc a-x'
-alias chnx='sudo chmod -Rc a-x'
+alias chx='sudo chmod +x'
+alias chnox='sudo chmod -Rc -x'
+alias chnx='sudo chmod -Rc -x'
 alias chmer='sudo chown -c -R $(id -u):$(id -g) .'
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
