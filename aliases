@@ -30,19 +30,50 @@ source ~/.dotfiles/z/z.sh
 
 # AOSP
 alias aosp='cd "$AOSP_HOME" && source build/envsetup.sh && export OUT_DIR_COMMON_BASE="$AOSP_HOME/out.$MYHOSTNAME"'
+
 # alias adbk='adb shell input keyboard text \"\"'
-alias adf=adbfs
+# alias adf=adbfs
+adf() {
+	[[ -z $ANDROID_SERIAL ]] && {
+		print -u "Please set ANDROID_SERIAL"
+		return 1
+	} 
+	adbfs_mnt=~/mnt/ADBFS/$ANDROID_SERIAL 
+	mkdir -p $adbfs_mnt
+	adb shell id
+	adbfs $adbfs_mnt
+	${EDITOR:-nvim} $adbfs_mnt
+}
 alias af=adbfs
 alias adkl=adbk
+alias adke='adb shell input keyevent'
+alias adbke='adb shell input keyevent'
 alias adk=adbk
-adbk() { adb shell input keyboard text \"$*\" && adb shell input keyevent KEYCODE_ENTER ; }
+adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
+# adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
 alias adll='noglob adb logcat | lnav'
 alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
+# alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
+adb_device_n() {
+	adb devices -l | head -n-1 | tail -n+2 | cat -ns
+	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
+	integer n=$1
+	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
+	(( n == 0 )) && { echo -n "Enter device number: " ; read n ; }
+	(( n == 0 )) && return
+	export ANDROID_SERIAL=${serials[$n]} && adi 
+	typeset -p ANDROID_SERIAL > ~/.android/current_serial
+}
+alias adn="adb_device_n "
+alias an="adb_device_n "
+alias ad1="adb_device_n 1"
+alias ad2="adb_device_n 1"
 alias ads='adb shell'
 alias ada='adb shell am start'
 alias adp='adb shell dumpsys'
@@ -52,7 +83,6 @@ alias aps='adb shell ps -Awf -T'
 alias adps'adb-ps.sh'
 alias adu='export ANDROID_SERIAL=$( adb -d get-serialno )'
 alias adm='export ANDROID_SERIAL=emulator-5554'
-alias adi="adb shell <<< ' getprop ro.product.model ; id '"
 ash() {
 	[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
 	[ -z "$ANDROID_SERIAL" ] && ( echo No Android device found...; exit 1 )
@@ -89,6 +119,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 # git
 alias g=git
 alias gi=git
+alias gf='git fetch'
 alias gcm='git commit --verbose -m ""'
 alias gC='git cherry --verbose'
 alias gcn='git clean --dry-run'
@@ -103,6 +134,7 @@ alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
+alias gwl='git worktree list'
 alias glg='noglob git log'
 # gst() {
 #	local git_min_version="2.10.0"
@@ -139,7 +171,7 @@ alias gcrss='git clone --recursive --jobs=8 --verbose --shallow-submodules --no-
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
-alias gcom='git checkout master'
+alias gcom='git checkout ma'
 alias gcol='git checkout local'
 alias gA='mlocate -eb \\HEAD | while read p; do p=${p:h}; [[ -d $p/objects && -f $p/config ]] && echo $p; done'
 alias gk='x0; gitk --date-order --all&'
@@ -153,6 +185,7 @@ alias gppp='gpp && git push'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
+alias gb='git branch'
 alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
@@ -196,7 +229,7 @@ alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/*(.om[1])&'
 alias wsa='wireshark -r $pcap&'
 alias wgq=wg-quick
-alias nmap='nmap -oA ~/.logs/nmap/log-$(nn)'
+alias nmap='nmap -oA ~/.logs/nmap/log-$(nn) -p- '
 alias nmr='nmap --resume ~/.logs/nmap/*.gnmap(.om[1])'
 alias nmz='nmapfe ~/.logs/nmap/*.xml(.om[1])'
 alias ln='ln -rsv'
@@ -266,6 +299,7 @@ gv() { gvim "$*"; raiseX; }
 viminfo() { $EDITOR -R -c "Info $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" ; }
 vimman() { $EDITOR -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
 # vimman() { vimx -R -c "Man $1 $2" -c "bdelete 1" -c "setlocal nomodifiable" -c "map Q :cq<cr>" -c "set cursorline" "+silent! /example"; }
+alias nv=nvim
 alias m=vimman
 alias mm="vimman \$(man -k . | fzf | sed -e 's,\(.*\) (\([^)]*\).*-.*,\1.\2,')"
 alias q=qemu
@@ -451,7 +485,7 @@ alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
-alias nnn="date '+%F__%T' --date=@"
+alias nnn="date '+%F__%T' --date=@\$(( N / 1000 ))"
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'
@@ -642,7 +676,8 @@ alias gp=gpg
 alias gpc=gpgconf
 alias gpc=gpg-connect-agent
 alias gpa=gpg-connect-agent
-alias fm=findmnt
+alias fm='findmnt --real --raw'
+alias fmd='findmnt --df'
 alias jr='journalctl -f -u'
 alias jc=journalctl
 alias jcc='journalctl -S -1m'
@@ -743,6 +778,7 @@ alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 # i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
 alias ki=kitty
+alias kit=kitty
 alias K=kitty
 alias dnp='noglob dnf provides */'
 TT() { nvim +'norm i' term://"$*" ; }
@@ -769,9 +805,9 @@ alias rz='sudo -E HOME=$HOME zsh'
 alias xdft='xdg-mime query filetype '
 alias xdft='xdg-mime query filetype '
 alias sup=supermin
-alias chx='sudo chmod a+x'
-alias chnox='sudo chmod -Rc a-x'
-alias chnx='sudo chmod -Rc a-x'
+alias chx='sudo chmod +x'
+alias chnox='sudo chmod -Rc -x'
+alias chnx='sudo chmod -Rc -x'
 alias chmer='sudo chown -c -R $(id -u):$(id -g) .'
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
@@ -808,6 +844,7 @@ alias cmd=command
 alias un=unset
 alias uns=unset
 alias unse=unset
+alias unsp='export PAGER='
 alias psc='ps -O ppid,cgroup, '
 alias torr=torsocks
 alias um='sudo umount'
@@ -833,8 +870,8 @@ alias rax='rax2 -s'
 alias sqll=sqlite3
 
 # alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl'
-alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
-alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
+# alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
+# alias scrr='scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
 alias dme='dmesg -e'
 alias R=rclone
 alias rk=rclone
@@ -888,7 +925,7 @@ alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'
 alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
 alias ltmp='l -dt tmp-*'
-alias yd='noglob yt-dlp -v'
+alias yd='noglob yt-dlp -vo $(nn)_'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -935,7 +972,7 @@ alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
 alias bt=btrfs
 alias btr=btrfs
-alias gj=./gradlew
+alias gr=./gradlew
 alias f2='sudo fail2ban-client status'
 alias ok=openstack
 
@@ -953,6 +990,7 @@ alias fl=fastboot
 alias tr1x="for i in \$(seq 32); do ping -W 1 -c 1 -t \$i 1.1; done |& sed -nE 's|^From ([0-9a-f.:]*[0-9a-f]+).*exceeded.*|\1|p' | while read ip; do echo \"\$ip (\$(dig +short -x \$ip | tr '\n' ' ' | tr -dc '[:print:]'))\"; done"
 alias in='inotifywait -qm'
 alias pid='pgrep -a -u $(id -u)'
+alias pgm='pgrep -a -u $(id -u)'
 alias wpa=wpa_cli
 alias nbb=nbd-client
 alias res=resolvectl
@@ -969,18 +1007,19 @@ alias emu=emulator
 alias mp='noglob mpv -v'
 alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
+alias btt=btrbk
 alias sem=semanage
-alias gru=grubby
+# alias gru=grubby
+# alias gr=grubby
 alias ge=getent
 alias pin=ping
-alias gr=grubby
 alias sys=systool
 alias lp=lpa
 alias la=lpa
 alias cpr='cp --reflink=always'
 alias dif=diff
 alias iper=iperf
-alias mtr='command mtr --displaymode 2'
+alias mtr='command mtr --curses --displaymode 2 1.1.1.1'
 alias cdr='cd $REPO_ROOT'
 alias rp=rpm
 alias ssf=sshfs
@@ -992,6 +1031,8 @@ alias ni=ninja
 alias nin=ninja
 alias nj=ninja
 alias blk=blkid
+alias bli='sudo blkid'
+alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
 alias grl=gradle
 alias dun='dunstctl is-paused'
@@ -1001,7 +1042,7 @@ alias dr=dracut
 alias sw=swapo
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
-alias zp='zsh_prepend='
+alias zp='zsh_prepend= '
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
@@ -1011,10 +1052,12 @@ alias AS='export ANDROID_SERIAL='
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
-alias zpp='echo $zsh_prepend > ~/.zsh_prepend'
+alias zpp='echo $zsh_prepend | tee ~/.zsh_prepend'
 alias fw=fwupdmgr 
 alias mok=mokutil 
+alias xpr=xpra
 alias xpp=xpra
+alias xpr=xpra
 alias whi=while
 alias adL="adb_all"
 alias adLl="adb_all shell"
@@ -1022,3 +1065,6 @@ alias adLL="adb_all shell"
 alias unsa='unset ANDROID_SERIAL'
 alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
+alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
+alias ha=hashcat
+alias IP=install_path

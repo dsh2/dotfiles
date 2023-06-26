@@ -1,0 +1,132 @@
+#!/bin/zsh
+ 
+# Install with:
+# sudo sh -c "( crontab -l ; echo @reboot /usr/sbin/monitor_peeq ) | crontab -"
+
+export OS_CLOUD=otc
+
+nfs_host=psg-dsf-lineage-build-machine
+nfs_host_ip=192.168.0.10
+asset_host=psg-dsf-build-asset-hoster
+
+die() { echo "[-] $* Exiting..."; exit 1 ; }
+warn() { echo "[!] $*" ; }
+progress() { echo "[+] $*" >&2; }
+
+server_id() { openstack server show -f value -c id $1 }
+volume_id() { openstack volume show -f value -c id $1 }
+server_name() { openstack server show -f value -c name $1 }
+volume_attached_id() { openstack volume show -f json $1 | jq -r '.attachments[].server_id' }
+volume_status() { openstack volume show -f value -c status $1 }
+
+label=peeq
+volume=psg-dsf-lineage-build-machine-volume-0002
+volume_id=$( volume_id $volume ) || die "Failed to lookup volume_id."
+
+progress "Looking up server IDs."
+nfs_host_id=$( server_id $nfs_host )
+asset_host_id=$( server_id $asset_host )
+[[ $nfs_host_id != $asset_host_id ]] || 
+	die "Server \"$nfs_host\" and \"$asset_host\" are the same machine with id $nfs_host_id."
+
+mnt=/peeq
+N=/dev/null
+
+try() {
+	local -r message=$1
+	shift
+	local -i tries=0
+	while ! eval_result=$( eval $@ ); do
+		output="($tries) $message"
+		[[ -n $eval_result ]] && output+=" (eval_result=\"$eval_result\")"
+		echo $output
+		sleep 0.35
+		(( tries++ < 99 )) || { echo "Giving up!"; exit 1; }
+	done
+}
+
+ensure_attachment_from_to() {
+	id1=$1
+	id2=$2
+	aid=$( volume_attached_id $volume_id )
+
+	if [[ $aid == $id1 ]]; then
+		progress "Detaching volume..."
+		openstack server remove volume $id1 $volume_id
+		try "Waiting for volume to become available..." "[[ \$( volume_status $volume_id ) == "available" ]]"
+	fi
+
+	if [[ $aid != $id2 ]]; then
+		progress "Attaching volume..."
+		openstack server add volume $id2 $volume_id
+		try "Waiting for volume to become in-use..." "[[ \$( volume_status $volume_id ) == "in-use" ]]"
+	fi
+}
+
+free_mount_point() {
+	tries=5
+	while fuser $mnt; do
+		(( tries-- > 0 )) || break
+		progress "Mount point $mnt has users. Waiting..."
+		sleep 1
+	done
+	if (( tries <= 0 )); then
+		progress "Killing..."
+		fuser -TERM -vk $mnt
+		sleep 2
+		fuser -KILL -vk $mnt
+	fi
+	mountpoint -q $mnt && umount -rlfv $mnt
+}
+
+mnt_source() { findmnt -n -o source $mnt ; }
+check_local_mount() { [[ $( mnt_source ) == /dev/* ]]; }
+ensure_local_mount(){
+	check_local_mount && return
+	progress "Mounting volume locally."
+	free_mount_point $mnt
+	ensure_attachment_from_to $nfs_host_id $asset_host_id
+	# Racy: check if (some) auto-mounter was faster?
+	mount LABEL=$label $mnt || check_local_mount || warn "Failed to mount \"$label\"."
+}
+
+check_nfs_mount() { [[ $( mnt_source) == $nfs_host_ip* ]]; }
+ensure_nfs_mount() {
+	check_nfs_mount && return
+	progress "Mounting volume via NFS."
+	free_mount_point
+	ensure_attachment_from_to $asset_host_id $nfs_host_id
+	# Racy: check if (some) auto-mounter was faster?
+	mount $nfs_host_ip:$mnt $mnt || check_nfs_mount || warn "Failed to mount \"$nfs_host_ip:$mnt\"."
+}
+
+nfs_host_up() { ping -W1 -c2 $nfs_host_ip >$N; }
+
+main() {
+	while :; do
+		while nfs_host_up; do
+			progress "NFS host is alive."
+			ensure_nfs_mount
+			sleep 1
+		done
+
+		while ! nfs_host_up; do
+			progress "NFS host is NOT alive."
+			ensure_local_mount
+			sleep 1
+		done
+	done
+}
+
+sourced() {
+	if [ -n "$ZSH_EVAL_CONTEXT" ]; then
+		case $ZSH_EVAL_CONTEXT in *:file:*) return 0 ;; esac
+	elif [ -n "$BASH_VERSION" ] ; then
+		[ "$BASH_SOURCE" = "$0" ] || return 0
+	else
+		case ${0##*/} in sh | dash) return 0 ;; esac
+	fi
+	return 1
+}
+
+sourced || main $@

@@ -431,6 +431,23 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+min_version() {
+	local current_version=$1
+	local min_version=$2
+	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
+}
+
+if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
+	export VISUAL=nvim
+else
+	if has vimx; then
+		export VISUAL=vimx
+	else
+		export VISUAL=vi
+	fi
+fi
+export EDITOR=$VISUAL
+
 # vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
 vimp="$VISUAL +AnsiEsc"
 function page_last_output_fullscreen {
@@ -528,8 +545,11 @@ function run_prepend {
 	BUFFER="$zsh_prepend $BUFFER"
 	CURSOR=$[$#zsh_prepend+1]
 }
-bindkey_func '^xp' run_prepend
 bindkey_func '^x^p' run_prepend
+
+prepend_volla_22() { zsh_prepend='ssh mtk ANDROID_SERIAL=GS5CTP209140' ; run_prepend ; }; bindkey_func '^xp1' prepend_volla_22
+prepend_giga_gx4() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTPC01794' ; run_prepend ; } ; bindkey_func '^xp2' prepend_giga_gx4
+prepend_volla_x23() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTR201011' ; run_prepend ; } ; bindkey_func '^xp3' prepend_volla_x23
 
 function run_subshell {
 	if [[ -n $BUFFER ]]; then
@@ -658,8 +678,9 @@ bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
 bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
+bindkey -s EE\  "noglob echo ''  | openai_pipe"
 bindkey -s r22\  "rax2 -s  hx"
-bindkey -s AD\  "adbk ''"
+# bindkey -s AD\  "adbk ''"
 bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
@@ -744,14 +765,9 @@ function stop_tmux_logging()
 function set_terminal_title()
 {
     # TODO:
-    # -check esc sequences instead of wmctrl
     # -make this more portable
     # -check for ssh_tty
-	if [ -n $DISPLAY ]; then
-		if type wmctrl > /dev/null; then
-			wmctrl -r :ACTIVE: -N "$*" &>/dev/null
-		fi
-	fi
+	has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -777,6 +793,25 @@ function zsh_terminal_title_running()
 	zsh_terminal_title "[$(tty) zsh-run] $(echo $3 | tr '\n\t' '  ' | tr -s ' ' | sed -e 's/^ //') - $(pwd) [$USER@${HOST}]"
 }
 
+# WIP
+function zsh_detect_display()
+{
+	return
+	client_name=$( tmux display-message -p -F '#{client_termname}' )
+	[[ -z $client_name ]] && return
+	export DISPLAY
+	
+	[[ $client_name = *xterm* ]] && DISPLAY=$( pgrep -x -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p' ) || {
+		2>/dev/null lsof -P -i4 -a -p $(pgrep -u $(id -u) -x sshd ) -sTCP:LISTEN, |
+		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do 
+			DISPLAY=:$port
+			echo "Trying DISPLAY=$DISPLAY"
+			xset q 2>/dev/null && break
+		done
+	}
+}
+
+# add-zsh-hook preexec zsh_detect_display
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
@@ -1180,6 +1215,7 @@ alias -g 0s0='::1/0'
 alias -g 0s='::1'
 alias -g BB='| base64'
 alias -g BBD='| base64 -d -i | hexdump -C | LESS= less'
+alias -g CC="| cat"
 alias -g C,="| column -nts,"
 alias -g C="| column -t"
 alias -g CD="| column -t | vd --header 0 -f fixed"
@@ -1206,6 +1242,7 @@ alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -q'
+alias -g FF=' | file -kbz -'
 alias -g LV='|& lnav'
 alias -g LVT='|& lnav -t'
 alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
@@ -1255,23 +1292,6 @@ PRE='echo $RANDOM'
 alias -g AI=' | openai_pipe'
 alias SP="| sponge $f"
 alias SPP="| sponge -a $f"
-
-# set -x
-min_version() {
-	local current_version=$1
-	local min_version=$2
-	[ $(print -rl -- $current_version $min_version | sort -V | head -1) = $min_version ]
-}
-
-if has nvim && min_version ${${$(nvim --version):1:1}##v} 0.3; then
-	export VISUAL=nvim
-else
-	if has vimx; then
-		export VISUAL=vimx
-	else
-		export VISUAL=vim
-	fi
-fi
 
 err() {
   printf '\e[31m%s\e[0m\n' "$*" >&2
@@ -1474,7 +1494,7 @@ umask 002
 # }}}
 zstyle ':completion:*:processes' command 'ps -ea --forest -o pid,%cpu,tty,cputime,cmd'
 zmodload zsh/stat
-[[ $(stat -L +size -- $HISTFILE) -lt 1000 ]] && {
+[[ $(stat -L +size -- $HISTFILE) -lt 10000 ]] && {
 	print "WARNING: size of zsh history $HISTFILE is suspiciously low ($(cat $HISTFILE | wc -l) lines)."
 	sleep 3
 }
@@ -1531,7 +1551,7 @@ mount_img() {
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
-zsh_source -q ~/.android-serial
+zsh_source -q  ~/.android/current_serial
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
@@ -1554,11 +1574,8 @@ rand_geom() {
 }
 rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
-[[ -n $DISPLAY ]] || export DISPLAY=$(pgrep -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p')
 leafnode() { z=($REPLY/*(N/)) ; return $#z } 
 
-[ -e ~/.environment.local ] && source ~/.environment.local
-env_local=(~/.environment.d/*(N)) 2>/dev/null
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
 pree() { pre "$* " }
@@ -1577,7 +1594,6 @@ rsz() {
 	fi
 }
 set +x
-zsh_source ~/.aliases
 
 sponge2() {
 	local dst=$1
@@ -1598,8 +1614,14 @@ seq_pairs() {
 	done
 }
 
+env_local=(~/.environment.d/*(N)) 2>/dev/null
+[ -e ~/.environment.local ] && source ~/.environment.local
+
+zsh_source ~/.aliases
 test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+lo=127.0.0.1
 set +x

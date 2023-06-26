@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+PS4=+
+set -exu
+null="/dev/null"
+
+ADB_ID_U=$( adb shell id -u ) || { print -u2 "Failed to acquire ADB_ID." ; exit 1 ; }
+[[ -n $ADB_ID_U ]] || { print -u2 "ADB_ID is empty." ; exit 1 ; }
+
+ADB_PRODUCT_MODUL=$( adb shell getprop ro.product.model )
+ADB_FINGERPRINT=$( adb shell getprop ro.build.fingerprint )
+ADB_SERIAL=$( adb shell getprop ro.serialno )
+
+current_tmux_pane=$(tmux list-pane -F '#{pane_id}' -f "#{m:$TTY,#{pane_tty}}" 2> $null )
+[[ -n $current_tmux_pane ]] && tmux select-pane -t $current_tmux_pane -T "ADB: $ADB_SERIAL"
+
+scrcpy --window-title "id=$ADB_ID_U $ADB_SERIAL $ADB_PRODUCT_MODUL $ADB_FINGERPRINT" \
+	--turn-screen-off \
+	--disable-screensaver \
+	--shortcut-mod=rctrl &
