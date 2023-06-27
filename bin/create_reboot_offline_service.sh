@@ -65,7 +65,7 @@ cat > $script_path <<-EOF_script
 
 	ping -W1 -c3 \$remote_host || {
 		msg="Offline situation detected. Failed to ping \$remote_host. About to reboot in \$reboot_delay_seconds seconds. Kill pid \$\$ to prevent this."
-		logger \$msg
+		logger --stderr --tag reboot_offline --priority syslog.warning \$msg
 		wall \$msg
 		sleep \$reboot_delay_seconds
 		reboot
