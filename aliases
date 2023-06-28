@@ -61,12 +61,30 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
 adb_device_n() {
-	adb devices -l | head -n-1 | tail -n+2 | cat -ns
+	adb reconnect offline 
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
+	(( #serials == 0 )) && { echo "No devices found."; return ; }
 	integer n=$1
 	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
-	(( n == 0 )) && { echo -n "Enter device number: " ; read n ; }
-	(( n == 0 )) && return
+	(( n == 0 )) && { 
+		{ for ((i = 1; i <= $#serials; i++)); do 
+			setopt nomonitor
+			(
+				serial=${serials[i]}
+				real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
+				[[ -z $real_serial ]] && { 
+					print -u2 "$serial: Failed to get serial for $serial"
+					continue
+				}
+				model=$( adb -s $serial shell getprop ro.product.model 2>$null )
+				print "$i\t$serial\t$real_serial\t$model\t"
+			)&
+		done
+		wait
+	} | sort -n | column -ts \t 
+		echo -n "Enter device number: " ; read n ; 
+	}
+	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
 	export ANDROID_SERIAL=${serials[$n]} && adi 
 	typeset -p ANDROID_SERIAL > ~/.android/current_serial
 }
@@ -408,7 +426,7 @@ alias tag=prompt_tag
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
-alias pg='pgrep -a'
+alias pg='pgrep -ax'
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
@@ -1046,8 +1064,8 @@ alias zp='zsh_prepend= '
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
-alias ADS='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
-alias ADF='adb_all scrcpy --disable-screensaver --shortcut-mod=rctrl+lctrl&'
+alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
+alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias AS='export ANDROID_SERIAL='
 alias p1=p11tool
 alias p11=p11tool
