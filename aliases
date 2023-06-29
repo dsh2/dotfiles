@@ -61,7 +61,7 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
 adb_device_n() {
-	adb reconnect offline 
+	adb reconnect offline ; sleep 0.1
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
 	(( #serials == 0 )) && { echo "No devices found."; return ; }
 	integer n=$1
@@ -86,6 +86,8 @@ adb_device_n() {
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
 	export ANDROID_SERIAL=${serials[$n]} && adi 
+	export ANDROID_REAL_SERIAL=$( adb shell getprop ro.serialno 2>$null )
+	adb forward tcp:8022 tcp:8022
 	typeset -p ANDROID_SERIAL > ~/.android/current_serial
 }
 alias adn="adb_device_n "
