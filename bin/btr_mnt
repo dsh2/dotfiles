@@ -9,6 +9,7 @@ mnt=/mnt/btrbk
 blkid=/sbin/blkid
 
 limited_sleep() {
+	integer n=0
 	sleep 0.3
 	n=$(( n+1 ))
 	(( n < 100 )) || {
