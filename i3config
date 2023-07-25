@@ -168,7 +168,7 @@ bindsym $meta+$shift+1 workspace prev
 bindsym $meta+$shift+2 workspace next
 
 # exec --no-startup-id i3-msg 'workspace ii; exec kitty'
-exec --no-startup-id i3-msg 'workspace ii; exec kitty'
+# exec --no-startup-id i3-msg 'workspace ii; exec kitty'
 
 # workspace next
 # bindsym $mod+x move container to workspace 3; workspace 3
@@ -443,7 +443,10 @@ mode $mode_manipulate {
 
 	bindsym 1 resize set 250 0
 	bindsym 2 resize set 500 0
-	bindsym 3 resize set 700 0
+	bindsym 3 resize set 50ppt 0
+	bindsym 4 resize set 60ppt 0
+	bindsym 9 resize set 30ppt 0
+	bindsym 0 resize set 90ppt 0
 	bindsym i floating toggle
 
 	# Exit mode
@@ -589,7 +592,7 @@ exec --no-startup-id i3-msg 'workspace $WS_NGEN; exec $terminal_tmux'
 
 # WS_WWW {{{
 set $WS_WWW "3:www"
-# exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $terminal_tmux'
+exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $terminal_tmux'
 exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
 # }}}
 
