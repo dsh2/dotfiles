@@ -59,7 +59,8 @@ alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id '"
+alias acu='source ~/.android/current_serial '
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id ; uptime '"
 adb_device_n() {
 	adb reconnect offline ; sleep 0.1
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
@@ -95,13 +96,14 @@ alias an="adb_device_n "
 alias ad1="adb_device_n 1"
 alias ad2="adb_device_n 1"
 alias ads='adb shell'
+alias adr='adb shell run-as $pkg'
 alias ada='adb shell am start'
 alias adp='adb shell dumpsys'
 alias adpp='adb shell dumpsys package'
 alias addd='adb shell dumpsys'
 alias aps='adb shell ps -Awf -T'
 alias adps'adb-ps.sh'
-alias adu='export ANDROID_SERIAL=$( adb -d get-serialno )'
+alias adu='export ANDROID_SERIAL=$( adb -d get-serialno ) ; adi'
 alias adm='export ANDROID_SERIAL=emulator-5554'
 ash() {
 	[ -z "$ANDROID_SERIAL" ] && ANDROID_SERIAL=$(adb get-serialno 2> /dev/null)
@@ -505,7 +507,7 @@ alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
-alias nnn="date '+%F__%T' --date=@\$(( N / 1000 ))"
+alias nnn="N=0 ; date '+%F__%T' --date=@\$(( N / 1000 ))"
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'
@@ -524,8 +526,8 @@ alias fu='sudo fuser -afuv'
 # alias cs='killall -STOP chrome; echo -n Chrome sleeping....; cat ; echo CONT; killall -CONT chrome'
 alias cs=screen
 alias sd=sysdig
-alias st='strace -yttrfs 4096 '
-alias stp='strace -yttrfs 4096 -p '
+alias st='strace -yyttrfs 4096 '
+alias stp='strace -yyttrfs 4096 -p '
 alias stt='strace_log=$(mkt strace;pwd); strace -ffo $strace_log/strace -xttrfs 4096 ; (cd $strace_log; v *)'
 alias sudo='sudo '
 alias uu=uniq
@@ -810,7 +812,7 @@ alias nmm='nm --defined-only -l'
 alias mz=mausezahn
 alias ns=netsniff-ng
 alias i=ip
-alias pst=pstree
+alias pst='pstree -lp'
 alias ne=neomutt
 alias V=v4l2ctrl
 alias zat='zathura --fork'
@@ -1041,11 +1043,13 @@ alias dif=diff
 alias iper=iperf
 alias mtr='command mtr --curses --displaymode 2 1.1.1.1'
 alias cdr='cd $REPO_ROOT'
+alias cdrr='cd $REPO_ROOT/.repo/manifests'
 alias rp=rpm
 alias ssf=sshfs
 alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh . |& ts -m "[%F %T]" '
-alias re='repo --trace --no-pager'
-alias rep='repo --trace --no-pager'
+alias re='repo --color=never --trace-to-stderr --no-pager'
+alias rep='repo --color=never --trace-to-stderr --no-pager'
+alias reps='repo status -j 8 -v -o'
 alias mn=mount
 alias ni=ninja
 alias nin=ninja
