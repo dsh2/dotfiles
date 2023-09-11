@@ -1241,10 +1241,8 @@ alias -g E@='2>&1 '
 alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
-alias -g LQ='|& lnav -q'
+alias -g LQ='|& lnav -t'
 alias -g FF=' | file -kbz -'
-alias -g LV='|& lnav'
-alias -g LVT='|& lnav -t'
 alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
 alias -g S='| sort'
 alias -g SD2T="|sed -re 's/ - /\t/'"
@@ -1271,7 +1269,7 @@ alias -g XP0='| xargs -rP $(nproc) -0'
 alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='|& grep -v -- '
-alias -g hh='| hexdump -C | less'
+alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 if has hexa; then
 	alias -g hx='| heksa -f hex,asc -o dec,hex -w $[ COLUMNS / 5 ] | less'
