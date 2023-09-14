@@ -55,7 +55,7 @@ alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:
 # alias adl='adb logcat -v threadtime ThermalEngine:S DownloadManagerWrapper:S WifiConfigStore:S wpa_supplicant:S NewsWeather:S WifiStateMachine:S WifiService:S |& lnav -qw ~/.logs/adb/$(date "+%F-%T").log'
 alias adl='noglob adb logcat -b main,system,radio,events,crash,kernel,security -T 100 -v threadtime | lnav'
 alias adll='noglob adb logcat | lnav'
-alias adld='noglob adb logcat -d | vim -c "se ft=strace" -'
+alias adld='logcat=$(nn)_logcat.txt; noglob adb logcat -d > $logcat && nvim -c "se ft=strace" $logcat'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
@@ -72,7 +72,8 @@ adb_device_n() {
 			setopt nomonitor
 			(
 				serial=${serials[i]}
-				real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
+				print -u2 "Querying $serial"
+				real_serial=$( timeout 3 adb -s $serial shell getprop ro.serialno 2>$null )
 				[[ -z $real_serial ]] && { 
 					print -u2 "$serial: Failed to get serial for $serial"
 					continue
@@ -87,9 +88,9 @@ adb_device_n() {
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
 	export ANDROID_SERIAL=${serials[$n]} && adi 
-	export ANDROID_REAL_SERIAL=$( adb shell getprop ro.serialno 2>$null )
+	export adb_real_serial=$( adb shell getprop ro.serialno 2>$null )
+	typeset -p ANDROID_SERIAL ANDROID_REAL_SERIAL android_real_serial > ~/.android/current_serial
 	adb forward tcp:8022 tcp:8022
-	typeset -p ANDROID_SERIAL > ~/.android/current_serial
 }
 alias adn="adb_device_n "
 alias an="adb_device_n "
@@ -994,10 +995,11 @@ alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
 alias bt=btrfs
 alias btr=btrfs
-alias gr=./gradlew
+alias gr='./gradlew'
+alias grr='./gradlew --info --parallel --continuous --console plain '
 alias f2='sudo fail2ban-client status'
-alias ok=openstack
 
+alias ok=openstack
 alias oka='openstack availability zone list'
 alias okb='openstack backup list'
 alias okf='openstack floating ip list'
@@ -1092,3 +1094,5 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
+alias scp='rsync -axP'
+ 
