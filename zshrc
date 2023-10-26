@@ -676,7 +676,6 @@ zstyle ':completion:tmux-pane-words-anywhere:*' ignore-line current
 
 bindkey -s pslc\  "psl -c ''"
 bindkey -s psll\  'psl -c ""'
-bindkey -s zp\  "zsh_prepend="
 bindkey -s rq\  "r2 -Nqc ''  -"
 bindkey -s EE\  "noglob echo ''  | openai_pipe"
 bindkey -s r22\  "rax2 -s  hx"
@@ -713,7 +712,6 @@ bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 bindkey -s Pp\  'postgresql'
 bindkey -s PJ\  'postgres'
-bindkey -s zp\  "zsh_prepend="
 
 function start_tmux_logging()
 {
