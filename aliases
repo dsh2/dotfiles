@@ -1031,6 +1031,7 @@ alias emu=emulator
 alias mp='noglob mpv -v'
 alias mpf='noglob mpv -fullscreen -v'
 alias btb=btrbk
+alias btk=btrbk
 alias btt=btrbk
 alias sem=semanage
 # alias gru=grubby
@@ -1043,7 +1044,7 @@ alias la=lpa
 alias cpr='cp --reflink=always'
 alias dif=diff
 alias iper=iperf
-alias mtr='command mtr --curses --displaymode 2 1.1.1.1'
+alias mtr='command mtr --interval 5 --curses --displaymode 2 1.1.1.1'
 alias cdr='cd $REPO_ROOT'
 alias cdrr='cd $REPO_ROOT/.repo/manifests'
 alias rp=rpm
@@ -1095,4 +1096,6 @@ alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
 alias scp='rsync -axP'
- 
+alias cer=certutil
+alias cert=certutil
+alias fwk=fwknop
