@@ -908,7 +908,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi legd btrbk grubby
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi legd btrbk grubby fwknopd fwknop
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
