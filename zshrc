@@ -149,12 +149,12 @@ PS4+='%F{255}] '
 # Add parser state
 # PS4+="( %_ ) "
 # Add exit status of last job
-PS4+='%(0?.%f.%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
+# PS4+='%(0?.%f.%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
 # Make command line start at certain colum
-typeset -i ps4_output_column=50
-PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
+# typeset -i ps4_output_column=50
+# PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
 # Reset color
-# PS4+='%f'
+PS4+='%f'
 PS4+=' | '
 export PS4
 # }}}
