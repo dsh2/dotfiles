@@ -1619,5 +1619,9 @@ test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# source ~/.dotfiles/zsh/completion/docker-zsh-completion/docker-zsh-completion.plugin.zsh
+compdef _docker docker
+autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker 
+
 lo=127.0.0.1
 set +x
