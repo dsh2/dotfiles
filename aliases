@@ -237,7 +237,7 @@ alias lS='ls -ahlrSs'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
-alias tcp=tcpdump
+alias tcp='sudo tcpdump -pUnni any icmp'
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
