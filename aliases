@@ -718,6 +718,7 @@ alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofp='sudo lsof +c0 -P -n -p'
+alias fp=fping
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
