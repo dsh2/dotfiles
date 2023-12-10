@@ -210,6 +210,8 @@ main()
 	create_host_config
 	uncloak_control_path
 	check_remote_clock
+	# Try to double-check for fake servers
+	# check remote .ssh/authorized_keys
 	# $ssh_no_mount || mount_remote_fs
 	mount_remote_fs
 	connect_tun
