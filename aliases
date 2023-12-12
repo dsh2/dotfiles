@@ -314,6 +314,7 @@ envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 # alias va=variety
 alias doc=docker
+alias doo=docker
 alias docc=docker-compose
 alias dock=docker
 alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
@@ -721,6 +722,7 @@ alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofp='sudo lsof +c0 -P -n -p'
+alias fp=fping
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
