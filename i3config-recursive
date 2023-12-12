@@ -118,6 +118,8 @@ bar {
 		separator #709099
 
 
+	}
+}
 # WS_QEMU {{{
 set $WS_QEMU "qemu"
 assign [class="qemu-system-x86_64"] $WS_QEMU
