@@ -88,8 +88,11 @@ adb_device_n() {
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
 	export ANDROID_SERIAL=${serials[$n]} && adi 
 	export adb_real_serial=$( adb shell getprop ro.serialno 2>$null )
-	typeset -p ANDROID_SERIAL ANDROID_REAL_SERIAL android_real_serial > ~/.android/current_serial
+	typeset -p ANDROID_SERIAL adb_real_serial > ~/.android/current_serial
+	adb forward --remove tcp:8022 2> $null
 	adb forward tcp:8022 tcp:8022
+	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
+	zsh_prepend \$termux_ssh >$null
 }
 alias adn="adb_device_n "
 alias an="adb_device_n "
@@ -234,11 +237,11 @@ alias ltsh='l -rS -h'
 alias ltr='ls -al **/*(.om) '
 alias ltrD='ls -dal **/*(/om) '
 alias lsd='l -d'
-alias lS='ls -ahlrSs'
+alias lS='ls -ahlSsr'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
-alias tcp=tcpdump
+alias tcp='sudo tcpdump -pUnni any icmp'
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
@@ -312,6 +315,7 @@ envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 # alias va=variety
 alias doc=docker
+alias doo=docker
 alias docc=docker-compose
 alias dock=docker
 alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
@@ -509,7 +513,7 @@ alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
-alias nnn="N=0 ; date '+%F__%T' --date=@\$(( N / 1000 ))"
+ alias nnn='N=$( echo 00 ) ; date '+%F__%T' --date=@$(( N / 1 ))'
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'
@@ -719,6 +723,7 @@ alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
 alias lsofp='sudo lsof +c0 -P -n -p'
+alias fp=fping
 alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
@@ -1104,6 +1109,14 @@ alias ha=hashcat
 alias IP=install_path
 alias scp='rsync -axP'
 alias sR='ssh-keygen -R'
+alias cer=certutil
+alias cert=certutil
+alias fwk=fwknop
+alias hy=hydra
+alias ipc=ipcalc
+alias eth=ethtool
+alias fpi=fping
+alias vnc=vncviewer
 alias ngr='noglob ngr_sql'
 alias ngg='noglob ngr_sql'
 alias nggg='noglob ngr_sql_remote'

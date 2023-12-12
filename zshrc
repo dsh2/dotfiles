@@ -149,12 +149,12 @@ PS4+='%F{255}] '
 # Add parser state
 # PS4+="( %_ ) "
 # Add exit status of last job
-PS4+='%(0?.%f.%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
+# PS4+='%(0?.%f.%{$fg_bold[red]%}[err=%F{255}%?%{$fg_bold[red]%}])'
 # Make command line start at certain colum
-typeset -i ps4_output_column=50
-PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
+# typeset -i ps4_output_column=50
+# PS4+=$(echo -ne '\033[${ps4_output_column}D\033[${ps4_output_column}C')
 # Reset color
-# PS4+='%f'
+PS4+='%f'
 PS4+=' | '
 export PS4
 # }}}
@@ -906,7 +906,7 @@ bindkey -M menuselect '^p' vi-backward-blank-word
 bindkey -M menuselect '/' vi-insert
 
 # TODO: Figure out how to compdef _gnu_generic in case the is no completer for a command
-compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi legd btrbk grubby fwknopd fwknop
+compdef _gnu_generic  alsactl autorandr autossh bmon capinfos circo criu ctags dot fdp findmnt frida fzf iftop iperf iperf3 lnav lspci mausezahn mmcli ncat neato netcat netcat nmap nping nsenter osage pandoc patchwork pstree pv qmicli qrencode sfdp shuf speedometer speedtest-cli tc teamd teamdctl teamnl tee tshark tty twopi uuidgen virt-filesystems winedbg wireshark xbacklight zbarimg logger virt-builder scanelf ncdu sqlitebrowser tabs prlimit archivemount csvsql xpra virt-install dracut zbarcam variety lpa leg icomera_scraper vd rofi legd btrbk grubby fwknopd fwknop ipcalc
 # TODO: Add comments what we suppose to achive with all the zstyles
 # TODO: Figure out why compdef ls does not show options, but only files
 # TODO: Add 'something' which completes the current value when assigning a value
@@ -1618,6 +1618,12 @@ test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init
 
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# source ~/.dotfiles/zsh/completion/docker-zsh-completion/docker-zsh-completion.plugin.zsh
+compdef _docker docker
+autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker 
+
+adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
 set +x
