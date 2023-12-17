@@ -82,7 +82,7 @@ adb_device_n() {
 			)&
 		done
 		wait
-	} | sort -n | column -ts \t 
+	} | sort -n 
 		echo -n "Enter device number: " ; read n ; 
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
@@ -99,6 +99,7 @@ alias an="adb_device_n "
 alias ad1="adb_device_n 1"
 alias ad2="adb_device_n 1"
 alias ads='adb shell'
+alias admm='adb shell monkey -p $pkg 1'
 alias adr='adb shell run-as $pkg'
 alias ada='adb shell am start'
 alias adss='adb shell am start -S'

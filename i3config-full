@@ -351,7 +351,6 @@ mode $mode_i3 {
 
 	# bindsym $meta+u exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec i3-ws-enum,
 	bindsym $meta+u exec notify-send "i3: Entering recursive mode", exec ln -sf ~/.dotfiles/i3config-recursive ~/.config/i3/config, reload, $mode_return
-	bindsym o exec notify-send "i3: Leaving recursive mode", exec ln -sf ~/.dotfiles/i3config-full ~/.config/i3/config, reload, $mode_return
 	
 	# TODO: Make the following binding work
 	# bindsym "," exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
@@ -473,7 +472,6 @@ mode $mode_system {
 	bindsym s exec sus, $mode_return
 	bindsym $shift+l exec $lock_now && sleep 0.1 && sus, $mode_return
 	bindsym o exec $lock_now && sleep 0.1 && sus, $mode_return
-	bindsym $meta+o exec notify-send "i3: Leaving recursive mode", exec ln -sf ~/.dotfiles/i3config-full ~/.config/i3/config, reload, $mode_return
 	bindsym $shift+s exec $lock_now && sleep 0.1 && sus, $mode_return
 	bindsym h exec $lock_now && sleep 0.1 && hib, $mode_return
 	bindsym $shift+h exec $lock_now && sleep 0.1 && hib, $mode_return
