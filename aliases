@@ -59,7 +59,7 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial '
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S'"
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S'"
 adb_device_n() {
 	adb reconnect offline ; sleep 0.1
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
@@ -1076,6 +1076,7 @@ alias blk=blkid
 alias bli='sudo blkid'
 alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
+alias waa='watch -d -n 4'
 alias grl=gradle
 alias dun='dunstctl is-paused'
 alias no=notify-send
@@ -1130,3 +1131,4 @@ alias cer=certutil
 alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
+alias wge=wget
