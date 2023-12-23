@@ -596,19 +596,19 @@ exec --no-startup-id i3-msg 'workspace $WS_NGEN; exec $terminal_tmux'
 # WS_UML {{{
 set $WS_UML "3:UML"
 # exec --no-startup-id i3-msg 'workspace $WS_UML; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_UML; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_UML; exec $browser'
 # }}}
 
 # WS_WWW {{{
 set $WS_WWW "4:www"
 exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
 # }}}
 
 # WS_TV {{{
 set $WS_TV "5:TV"
 exec --no-startup-id i3-msg 'workspace $WS_TV; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_TV; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_TV; exec $browser'
 # }}}
 
 # WS_QEMU {{{
