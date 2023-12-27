@@ -59,8 +59,25 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial '
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S'"
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
+adb_all() {
+	setopt nomonitor
+	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
+	for serial in $=serials; do 
+		# real_serial=$( adb -s $serial shell getprop ro.serialno >& $null)
+		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
+		[[ -z $real_serial ]] && { 
+			echo "$serial:\tFailed to get serial for $serial"
+			continue
+		}
+		( eval ANDROID_SERIAL=$serial $* |& sed "s|^|$real_serial ($serial):\t|" ) &
+	done
+	wait
+}
+
 adb_device_n() {
+	echo $( adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; cmd wifi status | sed -nE "/Wifi is connected to \"(.*)\"$/s||\1|p" ' )
+	typeset -p ANDROID_SERIAL
 	adb reconnect offline ; sleep 0.1
 	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
 	(( #serials == 0 )) && { echo "No devices found."; return ; }
@@ -70,19 +87,20 @@ adb_device_n() {
 		{ for ((i = 1; i <= $#serials; i++)); do 
 			setopt nomonitor
 			(
-				serial=${serials[i]}
-				print -u2 "Querying $serial"
-				real_serial=$( timeout 3 adb -s $serial shell getprop ro.serialno 2>$null )
+				export ANDROID_SERIAL=${serials[i]}
+				# print -u2 "Querying $ANDROID_SERIAL"
+				real_serial=$( timeout 3 adb shell getprop ro.serialno 2> $null )
 				[[ -z $real_serial ]] && { 
-					print -u2 "$serial: Failed to get serial for $serial"
+					print -u2 "$ANDROID_SERIAL: Failed to acquire real serial for $ANDROID_SERIAL"
 					continue
 				}
-				model=$( adb -s $serial shell getprop ro.product.model 2>$null )
-				print "$i\t$serial\t$real_serial\t$model\t"
+				model=$( adb shell getprop ro.product.model 2> $null )
+				user=$( adb shell id -un )
+				print "$i\t$serial\t$real_serial\t($user)\t$model"
 			)&
 		done
 		wait
-	} | sort -n 
+	} | sort -n | column -ts $'\t' 
 		echo -n "Enter device number: " ; read n ; 
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
@@ -90,9 +108,9 @@ adb_device_n() {
 	export adb_real_serial=$( adb shell getprop ro.serialno 2>$null )
 	typeset -p ANDROID_SERIAL adb_real_serial > ~/.android/current_serial
 	adb forward --remove tcp:8022 2> $null
-	adb forward tcp:8022 tcp:8022
+	adb forward tcp:8022 tcp:8022 > $null
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
-	zsh_prepend \$termux_ssh >$null
+	# zsh_prepend \$termux_ssh >$null
 }
 alias adn="adb_device_n "
 alias an="adb_device_n "
@@ -1076,6 +1094,7 @@ alias blk=blkid
 alias bli='sudo blkid'
 alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
+alias waa='watch -d -n 4'
 alias grl=gradle
 alias dun='dunstctl is-paused'
 alias no=notify-send
@@ -1091,6 +1110,7 @@ zsh_prepend() { zsh_prepend=$*  ; zpp}
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
+alias AN=adb_all
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias AS='export ANDROID_SERIAL='
@@ -1131,3 +1151,4 @@ alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
 alias ev=eval
+alias wge=wget

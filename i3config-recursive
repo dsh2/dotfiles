@@ -92,6 +92,7 @@ bindsym $meta+o mode $mode_system
 mode $mode_system {
 	bindsym $meta+o exec notify-send "i3: Leaving recursive mode", exec ln -sf ~/.dotfiles/i3config-full ~/.config/i3/config, reload, reload $mode_return
 }
+
 # }}}
 
 
