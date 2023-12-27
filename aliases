@@ -1130,3 +1130,4 @@ alias cer=certutil
 alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
+alias ev=eval
