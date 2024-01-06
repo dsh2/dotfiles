@@ -1170,6 +1170,7 @@ alias cer=certutil
 alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
+alias ev=eval
 alias wge=wget
 alias adD='eval $( < ~/.android/current_serial >&2 )'
 alias zco=zcompile
