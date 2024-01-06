@@ -59,20 +59,37 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial '
+alias adgp='adb shell getprop'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
 adb_all() {
 	setopt nomonitor
+	if [[ $1 = "-s" ]]; then
+		target_real_serials=()
+		while :; do
+			shift
+			target_real_serials=+=($1)
+			shift
+			[[ $1 = "-s" ]] || break
+		done
+	fi
 	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
 	for serial in $=serials; do 
-		# real_serial=$( adb -s $serial shell getprop ro.serialno >& $null)
 		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
 		[[ -z $real_serial ]] && { 
 			echo "$serial:\tFailed to get serial for $serial"
 			continue
 		}
-		( eval ANDROID_SERIAL=$serial $* |& sed "s|^|$real_serial ($serial):\t|" ) &
+		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && 
+			( eval ANDROID_SERIAL=$serial $* |& sed "s|^|$real_serial ($serial):\t|" ) &
+		# TODO: Warn about target_real_serial which is not availabel
 	done
 	wait
+}
+
+adb_device_n_disconnect() {
+	adb_device_n &&
+	adb disconnect $ANDROID_SERIAL
+	adb_device_n
 }
 
 adb_device_n() {
@@ -94,9 +111,10 @@ adb_device_n() {
 					print -u2 "$ANDROID_SERIAL: Failed to acquire real serial for $ANDROID_SERIAL"
 					continue
 				}
-				model=$( adb shell getprop ro.product.model 2> $null )
 				user=$( adb shell id -un )
-				print "$i\t$serial\t$real_serial\t($user)\t$model"
+				model=$( adb shell getprop ro.product.model 2> $null )
+				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$n | xsv select SSID 2> $n | head -5 ) )
+				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t($ssids)"
 			)&
 		done
 		wait
@@ -112,10 +130,11 @@ adb_device_n() {
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
 	# zsh_prepend \$termux_ssh >$null
 }
-alias adn="adb_device_n "
-alias an="adb_device_n "
+alias adn=adb_device_n 
+alias adN=adb_device_n_disconnect
+alias an=adb_device_n 
 alias ad1="adb_device_n 1"
-alias ad2="adb_device_n 1"
+alias ad2="adb_device_n 2"
 alias ads='adb shell'
 alias admm='adb shell monkey -p $pkg 1'
 alias adr='adb shell run-as $pkg'
@@ -657,6 +676,7 @@ alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias slp=sleep
 alias slpp='sleep 0.9'
 alias rs=rsync
+alias rsy=rsync
 alias ry=rsync
 alias ws=wireshark
 alias wsl='wireshark -r ~/.pcaps/*.pcapng(om[1]) &'
@@ -715,7 +735,7 @@ alias x=xeyes
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -ex'
-alias ka='killall'
+alias ka='killall -v'
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 alias mnt='mount -o ro'
 # alias sdd=systemd
@@ -1151,3 +1171,5 @@ alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
 alias wge=wget
+alias adD='eval $( < ~/.android/current_serial >&2 )'
+alias zco=zcompile
