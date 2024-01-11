@@ -113,9 +113,10 @@ adb_device_n() {
 				}
 				user=$( adb shell id -un )
 				model=$( adb shell getprop ro.product.model 2> $null )
-				version=$( for prop in ro.build.date ro.build.version.release ro.build.version.incremental ro.vndk.version ro.kernel.version ro.build.version.codename ro.build.version.security_patch ; do adb shell getprop $prop; done | tr '\n' '\t' )
+				date=$( date '+%F %T' --date=@$( adb shell getprop ro.build.date.utc ) )
+				version=$( for prop in  ro.build.version.release ro.build.version.incremental ro.vndk.version ro.kernel.version ro.build.version.codename ro.build.version.security_patch ; do adb shell getprop $prop; done | tr '\n' '\t' )
 				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$n | xsv select SSID 2> $n | head -8 ) )
-				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t$version\t($ssids)"
+				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t$date\t$version\t($ssids)"
 			)&
 		done
 		wait
