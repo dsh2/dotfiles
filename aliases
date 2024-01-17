@@ -804,13 +804,14 @@ alias ssl=openssl
 
 alias sss=sssh
 sssh() {
+	now() { date '+%s' }
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do
-		connect_time=$(date '+%s')
+		connect_time=$( now )
 		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# TODO: Update to notify-send.py?
-		(( $(date '+%s') - connect_time > 5 )) || {
+		(( $( now ) - connect_time > 5 )) || {
 			notify-send -u critical "Lost connection to \"$host\"."
 			slp=$(( (2 + $RANDOM % 19) / 3.4 ))
 			printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'
