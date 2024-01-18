@@ -1626,4 +1626,5 @@ autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docke
 adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
+null=/dev/null
 set +x
