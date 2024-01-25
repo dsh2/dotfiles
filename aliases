@@ -640,6 +640,7 @@ alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNE
 alias x00='export DISPLAY=:0; printenv DISPLAY'
 alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY'
 alias digx='dig -x'
+alias dixx='dig -x'
 alias digr='dig -x'
 alias y=yum
 alias ZS='sudo -E $SHELL'
@@ -1122,6 +1123,7 @@ alias dun='dunstctl is-paused'
 alias no=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
 alias dr=dracut
+alias dra=dracut
 alias sw=swapo
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
@@ -1178,3 +1180,5 @@ alias adD='eval $( < ~/.android/current_serial >&2 )'
 alias zco=zcompile
 alias adms='adb shell dmesg -T -w | lnav -t'
 alias admsg='adb shell dmesg -T -w | lnav -t'
+alias chm='chmod -Rc'
+alias th='test_host='
