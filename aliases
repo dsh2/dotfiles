@@ -168,7 +168,6 @@ alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable
 alias fdd='f . -type d'
 # alias ff='f . -type f'
 alias ffn='ff -name'
-gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex '
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
@@ -706,8 +705,8 @@ alias p3n='ping ff02::1%'
 alias p3r='ping ff02::2%'
 alias p6n='ping ff02::1%'
 alias p6r='ping ff02::2%'
-alias 11='ping -c 100 -A 2606:4700:4700::1111'
-alias 111='ping -i0.2 1.1.1.1'
+alias 11='ping -W2 -c 100 -A 2606:4700:4700::1111'
+alias 111='ping -W2 -i0.2 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
@@ -1176,3 +1175,5 @@ alias ev=eval
 alias wge=wget
 alias adD='eval $( < ~/.android/current_serial >&2 )'
 alias zco=zcompile
+alias adms='adb shell dmesg -T -w | lnav -t'
+alias admsg='adb shell dmesg -T -w | lnav -t'
