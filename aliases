@@ -96,7 +96,7 @@ adb_device_n() {
 	echo $( adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; cmd wifi status | sed -nE "/Wifi is connected to \"(.*)\"$/s||\1|p" ' )
 	typeset -p ANDROID_SERIAL
 	adb reconnect offline ; sleep 0.1
-	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
+	serials=( $( adb devices 2>/dev/null | tail -n+2 | cut -f 1 ) )
 	(( #serials == 0 )) && { echo "No devices found."; return ; }
 	integer n=$1
 	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
@@ -803,13 +803,14 @@ alias ssl=openssl
 
 alias sss=sssh
 sssh() {
+	now() { date '+%s' }
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do
-		connect_time=$(date '+%s')
+		connect_time=$( now )
 		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# TODO: Update to notify-send.py?
-		(( $(date '+%s') - connect_time > 5 )) || {
+		(( $( now ) - connect_time > 5 )) || {
 			notify-send -u critical "Lost connection to \"$host\"."
 			slp=$(( (2 + $RANDOM % 19) / 3.4 ))
 			printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'
