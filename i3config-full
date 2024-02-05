@@ -229,7 +229,7 @@ bindsym $meta+$alt+$shift+$right move workspace to output right; focus output ri
 # }}}
 # Fullscreen {{{
 bindsym $meta+f layout toggle tabbed splith
-# bindsym $meta+$shift+f fullscreen
+bindsym $meta+$shift+f fullscreen
 # bindsym $meta+$shift+f fullscreen disable; focus parent; layout toggle tabbed splith; focus child
 bindsym $meta+z fullscreen disable; focus parent; layout toggle tabbed splith; focus child
 # bindsym $meta+$ctrl+$shift+f fullscreen global
@@ -465,26 +465,26 @@ mode $mode_manipulate {
 }
 # }}}
 
-# Mode "system" {{{
-bindsym $meta+o mode $mode_system
-mode $mode_system {
-	bindsym l exec $lock_now, $mode_return
-	bindsym s exec sus, $mode_return
-	bindsym $shift+l exec $lock_now && sleep 0.1 && sus, $mode_return
-	bindsym o exec $lock_now && sleep 0.1 && sus, $mode_return
-	bindsym $shift+s exec $lock_now && sleep 0.1 && sus, $mode_return
-	bindsym h exec $lock_now && sleep 0.1 && hib, $mode_return
-	bindsym $shift+h exec $lock_now && sleep 0.1 && hib, $mode_return
+# # Mode "system" {{{
+# bindsym $meta+o mode $mode_system
+# mode $mode_system {
+# 	bindsym l exec $lock_now, $mode_return
+# 	bindsym s exec sus, $mode_return
+# 	bindsym $shift+l exec $lock_now && sleep 0.1 && sus, $mode_return
+# 	bindsym o exec $lock_now && sleep 0.1 && sus, $mode_return
+# 	bindsym $shift+s exec $lock_now && sleep 0.1 && sus, $mode_return
+# 	bindsym h exec $lock_now && sleep 0.1 && hib, $mode_return
+# 	bindsym $shift+h exec $lock_now && sleep 0.1 && hib, $mode_return
 
-	# Exit mode
-	bindsym $ctrl+c $mode_return
-	bindsym $ctrl+0x5b $mode_return
-	bindsym Return $mode_return
-	bindsym Escape $mode_return
-	bindsym $meta+f $mode_return
-	bindsym $meta+o $mode_return
-}
-# }}}
+	# # Exit mode
+	# bindsym $ctrl+c $mode_return
+	# bindsym $ctrl+0x5b $mode_return
+	# bindsym Return $mode_return
+	# bindsym Escape $mode_return
+	# bindsym $meta+f $mode_return
+	# bindsym $meta+o $mode_return
+# }
+# # }}}
 
 # Mode "wallpaper"  {{{
 bindsym $meta+p mode $mode_wallpaper
@@ -596,19 +596,19 @@ exec --no-startup-id i3-msg 'workspace $WS_NGEN; exec $terminal_tmux'
 # WS_UML {{{
 set $WS_UML "3:UML"
 # exec --no-startup-id i3-msg 'workspace $WS_UML; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_UML; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_UML; exec $browser'
 # }}}
 
 # WS_WWW {{{
 set $WS_WWW "4:www"
 exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_WWW; exec $browser'
 # }}}
 
 # WS_TV {{{
 set $WS_TV "5:TV"
 exec --no-startup-id i3-msg 'workspace $WS_TV; exec $terminal_tmux'
-exec --no-startup-id i3-msg 'workspace $WS_TV; exec $browser'
+# exec --no-startup-id i3-msg 'workspace $WS_TV; exec $browser'
 # }}}
 
 # WS_QEMU {{{

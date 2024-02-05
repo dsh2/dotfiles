@@ -52,17 +52,51 @@ alias adk=adbk
 adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
-alias adl='noglob adb logcat | lnav'
+alias adl='logcat=~/.logs/adb/$(nn).log ; typeset -p logcat ; adb logcat | tee $logcat | lnav -q'
 alias adll='noglob adb logcat | lnav'
 alias adld='logcat=$(nn)_logcat.txt; noglob adb logcat -d > $logcat && nvim -c "se ft=strace" $logcat'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial '
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S'"
+alias adgp='adb shell getprop'
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
+adb_all() {
+	setopt nomonitor
+	if [[ $1 = "-s" ]]; then
+		target_real_serials=()
+		while :; do
+			shift
+			target_real_serials=+=($1)
+			shift
+			[[ $1 = "-s" ]] || break
+		done
+	fi
+	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
+	for serial in $=serials; do 
+		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
+		[[ -z $real_serial ]] && { 
+			echo "$serial:\tFailed to get serial for $serial"
+			continue
+		}
+		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && 
+			( eval ANDROID_SERIAL=$serial $* |& sed "s|^|$real_serial ($serial):\t|" ) &
+		# TODO: Warn about target_real_serial which is not availabel
+	done
+	wait
+}
+
+adb_device_n_disconnect() {
+	adb_device_n &&
+	adb disconnect $ANDROID_SERIAL
+	adb_device_n
+}
+
 adb_device_n() {
+	echo $( adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop service.adb.tcp.port ; cmd wifi status | sed -nE "/Wifi is connected to \"(.*)\"$/s||\1|p" ' )
+	typeset -p ANDROID_SERIAL
 	adb reconnect offline ; sleep 0.1
-	serials=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
+	serials=( $( adb devices 2>/dev/null | tail -n+2 | cut -f 1 ) )
 	(( #serials == 0 )) && { echo "No devices found."; return ; }
 	integer n=$1
 	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
@@ -70,19 +104,23 @@ adb_device_n() {
 		{ for ((i = 1; i <= $#serials; i++)); do 
 			setopt nomonitor
 			(
-				serial=${serials[i]}
-				print -u2 "Querying $serial"
-				real_serial=$( timeout 3 adb -s $serial shell getprop ro.serialno 2>$null )
+				export ANDROID_SERIAL=${serials[i]}
+				# print -u2 "Querying $ANDROID_SERIAL"
+				real_serial=$( timeout 3 adb shell getprop ro.serialno 2> $null )
 				[[ -z $real_serial ]] && { 
-					print -u2 "$serial: Failed to get serial for $serial"
+					print -u2 "$ANDROID_SERIAL: Failed to acquire real serial for $ANDROID_SERIAL"
 					continue
 				}
-				model=$( adb -s $serial shell getprop ro.product.model 2>$null )
-				print "$i\t$serial\t$real_serial\t$model\t"
+				user=$( adb shell id -un )
+				model=$( adb shell getprop ro.product.model 2> $null )
+				date=$( date '+%F %T' --date=@$( adb shell getprop ro.build.date.utc ) )
+				version=$( for prop in  ro.build.version.release ro.build.version.incremental ro.vndk.version ro.kernel.version ro.build.version.codename ro.build.version.security_patch ; do adb shell getprop $prop; done | tr '\n' '\t' )
+				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$n | xsv select SSID 2> $n | head -8 ) )
+				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t$date\t$version\t($ssids)"
 			)&
 		done
 		wait
-	} | sort -n 
+	} | sort -n | column -ts $'\t' 
 		echo -n "Enter device number: " ; read n ; 
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
@@ -90,14 +128,15 @@ adb_device_n() {
 	export adb_real_serial=$( adb shell getprop ro.serialno 2>$null )
 	typeset -p ANDROID_SERIAL adb_real_serial > ~/.android/current_serial
 	adb forward --remove tcp:8022 2> $null
-	adb forward tcp:8022 tcp:8022
+	adb forward tcp:8022 tcp:8022 > $null
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
-	zsh_prepend \$termux_ssh >$null
+	# zsh_prepend \$termux_ssh >$null
 }
-alias adn="adb_device_n "
-alias an="adb_device_n "
+alias adn=adb_device_n 
+alias adN=adb_device_n_disconnect
+alias an=adb_device_n 
 alias ad1="adb_device_n 1"
-alias ad2="adb_device_n 1"
+alias ad2="adb_device_n 2"
 alias ads='adb shell'
 alias admm='adb shell monkey -p $pkg 1'
 alias adr='adb shell run-as $pkg'
@@ -129,7 +168,6 @@ alias fBBx='for f in $(find -type f); do file -L $f | grep -q -E ELF\|executable
 alias fdd='f . -type d'
 # alias ff='f . -type f'
 alias ffn='ff -name'
-gffn() { ffn "$1" -exec grep --color=auto -HE "$2" {} \; ; }
 alias fgr='f . | grep -i --color=auto '
 alias lc='locate --ignore-case --existing --regex '
 loc() { lc "$*" | grep --ignore-case --color "$*"; }
@@ -602,6 +640,7 @@ alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNE
 alias x00='export DISPLAY=:0; printenv DISPLAY'
 alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY'
 alias digx='dig -x'
+alias dixx='dig -x'
 alias digr='dig -x'
 alias y=yum
 alias ZS='sudo -E $SHELL'
@@ -639,6 +678,7 @@ alias ssv2csv="sed -re 's/([^ \"]*|\"[^\"]*\") /\1,/g; s/\"([^\"]*)\"/\1/g'"
 alias slp=sleep
 alias slpp='sleep 0.9'
 alias rs=rsync
+alias rsy=rsync
 alias ry=rsync
 alias ws=wireshark
 alias wsl='wireshark -r ~/.pcaps/*.pcapng(om[1]) &'
@@ -662,8 +702,12 @@ alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; c
 alias RR=reset
 alias H='cd ~/.ssh'
 alias 1='ping -c 100 -A 1.1.1.1'
-alias 11='ping -c 100 -A 2606:4700:4700::1111'
-alias 111='ping -i0.2 1.1.1.1'
+alias p3n='ping ff02::1%'
+alias p3r='ping ff02::2%'
+alias p6n='ping ff02::1%'
+alias p6r='ping ff02::2%'
+alias 11='ping -W2 -c 100 -A 2606:4700:4700::1111'
+alias 111='ping -W2 -i0.2 1.1.1.1'
 alias 1n='nping -p 443 1.1.1.1'
 alias 2='traceroute 1.1.1.1'
 alias 3='dig one.one.one.one @1.1.1.1'
@@ -693,7 +737,7 @@ alias x=xeyes
 alias vi=virsh
 alias vir=virsh
 alias pk='pkill -ex'
-alias ka='killall'
+alias ka='killall -v'
 alias p.t="curl -s 'http://pass.telekom.de/' -H 'User-Agent: Mozilla/45.0 (X11; Linux x86_63)' | xmllint --html --xpath '/html/body/div[2]/div[2]/div[1]/div/div[3]' - 2> /dev/null | sed -e 's/<[^>]*>//g' "
 alias mnt='mount -o ro'
 # alias sdd=systemd
@@ -760,13 +804,14 @@ alias ssl=openssl
 
 alias sss=sssh
 sssh() {
+	now() { date '+%s' }
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do
-		connect_time=$(date '+%s')
+		connect_time=$( now )
 		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# TODO: Update to notify-send.py?
-		(( $(date '+%s') - connect_time > 5 )) || {
+		(( $( now ) - connect_time > 5 )) || {
 			notify-send -u critical "Lost connection to \"$host\"."
 			slp=$(( (2 + $RANDOM % 19) / 3.4 ))
 			printf "Trying to reconnect to \"$host\" in %.2f seconds: " $slp | ts -m '[%F %T]'
@@ -1078,6 +1123,7 @@ alias dun='dunstctl is-paused'
 alias no=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
 alias dr=dracut
+alias dra=dracut
 alias sw=swapo
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
@@ -1088,6 +1134,7 @@ zsh_prepend() { zsh_prepend=$*  ; zpp}
 alias arpp=arp-scan
 alias nmc=nmcli
 alias AD='adb_all adb shell'
+alias AN=adb_all
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias AS='export ANDROID_SERIAL='
@@ -1129,3 +1176,11 @@ alias fwk=fwknop
 alias hy=hydra
 alias wge=wget
 alias diffo=diffoscope
+alias ev=eval
+alias wge=wget
+alias adD='eval $( < ~/.android/current_serial >&2 )'
+alias zco=zcompile
+alias adms='adb shell dmesg -T -w | lnav -t'
+alias admsg='adb shell dmesg -T -w | lnav -t'
+alias chm='chmod -Rc'
+alias th='test_host='
