@@ -1273,6 +1273,7 @@ alias -g WH='| tr -d "[:space:]" | tr "[:upper:]" "[:lower:]" ; echo'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs -r'
+alias -g X1='| xargs -rn 1'
 # alias -g X0='| xargs -r0'
 alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
@@ -1283,6 +1284,7 @@ alias -g ggg='|& grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
 alias -g ggvv='|& grep -v -- '
+alias -g ff='| file -z'
 alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 if has hexa; then
@@ -1642,4 +1644,8 @@ autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docke
 adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
+
+now_epoch() { date '+%s' ; } 
+now_epoch_ms() { date '+%s000' ; } 
+
 set +x
