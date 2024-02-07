@@ -822,6 +822,19 @@ then
     add-zsh-hook precmd stop_tmux_logging
 fi
 
+function pre_ssh()
+{
+	[[ -v remote_host ]] || return
+	cmd=$3
+	[[ -n $cmd ]] || echo "$0: cmd empty"
+	[[ $cmd = "unset remote_host" ]] && { eval $cmd; echo "Stopping $0."; return }
+	[[ -n $remote_host ]] || echo "$0: remote_host empty"
+	print "==========[ Redirecting to zsh on remote host \"$remote_host\": \"${(q)cmd}\" ]=========="
+	ssh -T $remote_host zsh <<< $cmd
+	kill -INT $$
+}
+add-zsh-hook preexec pre_ssh
+
 function showbuffers()
 {
     local nl=$'\n' kr
@@ -1260,6 +1273,7 @@ alias -g WH='| tr -d "[:space:]" | tr "[:upper:]" "[:lower:]" ; echo'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs -r'
+alias -g X1='| xargs -rn 1'
 # alias -g X0='| xargs -r0'
 alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
@@ -1270,6 +1284,7 @@ alias -g ggg='|& grep -i -- ' # TODO: use rg with rust regex instead
 alias -g ggs='| strings | grep -i --'
 alias -g ggv='| grep -v -- '
 alias -g ggvv='|& grep -v -- '
+alias -g ff='| file -z'
 alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
 if has hexa; then
@@ -1630,4 +1645,8 @@ adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; don
 
 lo=127.0.0.1
 null=/dev/null
+
+now_epoch() { date '+%s' ; } 
+now_epoch_ms() { date '+%s000' ; } 
+
 set +x
