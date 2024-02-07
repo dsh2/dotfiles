@@ -822,18 +822,27 @@ then
     add-zsh-hook precmd stop_tmux_logging
 fi
 
-function pre_ssh()
+function preexec_ssh()
 {
 	[[ -v remote_host ]] || return
 	cmd=$3
 	[[ -n $cmd ]] || echo "$0: cmd empty"
 	[[ $cmd = "unset remote_host" ]] && { eval $cmd; echo "Stopping $0."; return }
+	: ${remote_shell:=zsh}
 	[[ -n $remote_host ]] || echo "$0: remote_host empty"
-	print "==========[ Redirecting to zsh on remote host \"$remote_host\": \"${(q)cmd}\" ]=========="
-	ssh -T $remote_host zsh <<< $cmd
+	print "==========[ Redirecting to \"$remote_shell\" on remote host \"$remote_host\": \"${(q)cmd}\" ]=========="
+	ssh -T $remote_host $remote_shell <<< $cmd
 	kill -INT $$
 }
-add-zsh-hook preexec pre_ssh
+add-zsh-hook preexec preexec_ssh
+
+function precmd_ssh()
+{
+	[[ -v remote_host ]] || return
+	: ${remote_shell:=zsh}
+	print "==========[ Redirecting next command to \"$remote_shell\" on remote host \"$remote_host\" ]=========="
+}
+add-zsh-hook precmd precmd_ssh
 
 function showbuffers()
 {
