@@ -494,7 +494,10 @@ function filter_last_output {
 		--margin 0,0,1,0 \
 		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
 		--preview-window 'up:45%:wrap:hidden' \
-		| tr '\t\n' '  ' | tr -s ' ')
+		| ( has dos2unix && dos2unix || cat) \
+		| tr -d '\n'
+	)
+		# | tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
@@ -699,6 +702,7 @@ bindkey -s DL\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Sl\  '/SNAPSHOTS/h*(om[1])\t'
 bindkey -s Pw\  '$( pwd )\t'
 bindkey -s Ts\  'torsocks\t'
+bindkey -s Cl\  '~/CQ/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
 bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
@@ -1313,8 +1317,9 @@ alias -g PR='| sed -s "s|^|"$(eval $PRE)"\\t|"'
 alias -g SF='| sed -s "s|$|"\\t$(eval $PRE)"|"'
 PRE='echo $RANDOM'
 alias -g AI=' | openai_pipe'
-alias SP="| sponge $f"
-alias SPP="| sponge -a $f"
+alias -g SP="| sponge $f"
+alias -g SPP="| sponge -a $f"
+alias -g XC=" | $XC "
 
 err() {
   printf '\e[31m%s\e[0m\n' "$*" >&2
