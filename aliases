@@ -281,6 +281,7 @@ alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
 alias tcp='sudo tcpdump -pUnni any icmp'
+alias tcpd='sudo tcpdump -pUnni any icmp'
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
@@ -1156,7 +1157,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -axP'
+alias scp='rsync --bwlimit=0.9m -axP'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1184,3 +1185,4 @@ alias adms='adb shell dmesg -T -w | lnav -t'
 alias admsg='adb shell dmesg -T -w | lnav -t'
 alias chm='chmod -Rc'
 alias th='test_host='
+DO() { while :; do $*; echo $(nn): $* ; sleep 1; done }
