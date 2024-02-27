@@ -52,7 +52,8 @@ alias adk=adbk
 adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
-alias adl='logcat=~/.logs/adb/$(nn).log ; typeset -p logcat ; adb logcat | tee $logcat | lnav -q'
+# alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
+alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; echo $logcat ; adb logcat > >( gzip > $logcat ) | lnav -q' 
 alias adll='noglob adb logcat | lnav'
 alias adld='logcat=$(nn)_logcat.txt; noglob adb logcat -d > $logcat && nvim -c "se ft=strace" $logcat'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
@@ -60,7 +61,7 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial '
 alias adgp='adb shell getprop'
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
+alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
 adb_all() {
 	setopt nomonitor
 	if [[ $1 = "-s" ]]; then
@@ -115,7 +116,7 @@ adb_device_n() {
 				model=$( adb shell getprop ro.product.model 2> $null )
 				date=$( date '+%F %T' --date=@$( adb shell getprop ro.build.date.utc ) )
 				version=$( for prop in  ro.build.version.release ro.build.version.incremental ro.vndk.version ro.kernel.version ro.build.version.codename ro.build.version.security_patch ; do adb shell getprop $prop; done | tr '\n' '\t' )
-				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$n | xsv select SSID 2> $n | head -8 ) )
+				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$null | xsv select SSID 2>$null | head -8 ) )
 				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t$date\t$version\t($ssids)"
 			)&
 		done
