@@ -1235,6 +1235,7 @@ alias -g 0,="| perl -pe 's:\0:, :g'"
 # alias -g 000='0.0.0.0/0'
 # alias -g 00='0.0.0.0'
 alias -g 0m='| tr \\0 \\n'
+alias -g COL=' | color_lines'
 alias -g 0s0='::1/0'
 alias -g 0s='::1'
 alias -g BB='| base64'
