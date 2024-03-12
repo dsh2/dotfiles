@@ -139,7 +139,20 @@ adb_device_n() {
 	adb forward --remove tcp:8022 2> $null
 	adb forward tcp:8022 tcp:8022 > $null
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
+	has adbfs && {
+		adbfs_path=~/mnt/ADBFS/$adb_real_serial
+		$sudo umount -R $adbfs_path &> $null || true
+		mountpoint -q $adbfs_path || {
+			mkdir -p $adbfs_path
+			adbfs $adbfs_path
+		}
+		echo ls $adbfs_path
+		ls -lh $adbfs_path
+		alias cda="cd $adbfs_path"
+	}
+
 	# zsh_prepend \$termux_ssh >$null
+	# 
 }
 alias adn=adb_device_n 
 alias adN=adb_device_n_disconnect
