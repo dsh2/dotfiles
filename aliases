@@ -75,7 +75,9 @@ adb_all() {
 	fi
 	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
 	tmp_files=()
-	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')/
+	cmd=$*
+	typeset -p cmd
+	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')-${cmd//(#m)[[:space:]]/_}/
 	mkdir -p $tmp_dir
 	for serial in $=serials; do 
 		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
@@ -86,7 +88,7 @@ adb_all() {
 		tmp_file=$tmp_dir/$real_serial
 		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && {
 			tmp_files+=($tmp_file)
-			( eval ANDROID_SERIAL=$serial $* |& tee $tmp_file | sed "s|^|$real_serial ($serial):\t|" ) &
+			( eval ANDROID_SERIAL=$serial $cmd |& tee $tmp_file | sed "s|^|$real_serial ($serial):\t|" ) &
 		}
 		# TODO: Warn about target_real_serial which is not availabel
 	done
