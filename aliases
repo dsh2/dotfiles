@@ -38,10 +38,10 @@ adf() {
 		print -u "Please set ANDROID_SERIAL"
 		return 1
 	} 
-	adbfs_mnt=~/mnt/ADBFS/$ANDROID_SERIAL 
+	adbfs_mnt=/ADBFS/$ANDROID_SERIAL 
 	mkdir -p $adbfs_mnt
 	adb shell id
-	adbfs $adbfs_mnt
+	sudo -E adbfs -o allow_other -o auto_unmount $adbfs_mnt
 	${EDITOR:-nvim} $adbfs_mnt
 }
 alias af=adbfs
@@ -64,36 +64,66 @@ alias adgp='adb shell getprop | sort'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
 adb_all() {
 	setopt nomonitor
-	if [[ $1 = "-s" ]]; then
-		target_real_serials=()
+	target_devices=()
+	if [[ $1 = -t || $1 = -s ]]; then
+		target=$1
 		while :; do
 			shift
-			target_real_serials+=($1)
+			target_devices+=($1)
 			shift
-			[[ $1 = "-s" ]] || break
+			[[ $1 = $target ]] || break
 		done
 	fi
-	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
+	[[ $1 = -t || $1 = -s ]] && { echo "Cannot use -t and -s at the same time."; return; }
+	if [[ $target = -s ]]; then
+		devices=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )  
+		cmd=$*
+	else
+		if [[ $1 = adb ]]; then
+			shift
+			cmd=$*
+		else
+			echo "Cannot target transport id for non-adb commands."
+			return 1
+		fi
+		target="-t"
+		devices=( $( adb devices -l | tail -n+2 | awk -F: '{print $(NF)}' ) )
+	fi
+	# typeset -p target_devices devices
 	tmp_files=()
-	cmd=$*
-	typeset -p cmd
-	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')-${cmd//(#m)[[:space:]]/_}/
+	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')-${cmd//(#m)[[:space:]\/]/_}
 	mkdir -p $tmp_dir
-	for serial in $=serials; do 
-		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
+
+	for device in $devices; do 
+		# typeset -p device
+		real_serial=$( adb $target $device shell getprop ro.serialno )
 		[[ -z $real_serial ]] && { 
-			echo "$serial:\tFailed to get serial for $serial"
+			echo "$device:\tFailed to get serial for $device ($target)"
 			continue
 		}
-		tmp_file=$tmp_dir/$real_serial
-		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && {
+		# TODO: Find something more "unique": MAC addresses, IMEI, etc.
+		tmp_file=$tmp_dir/$real_serial-$device
+		[[ $#target_devices -eq 0 ]] || (( $target_devices[(I)$device] )) && {
 			tmp_files+=($tmp_file)
-			( eval ANDROID_SERIAL=$serial $cmd |& tee $tmp_file | sed "s|^|$real_serial ($serial):\t|" ) &
+			( 
+				{ 
+					if [[ $target = "-s" ]]; then
+						ANDROID_SERIAL=$device $=cmd
+					else
+						adb -t $device $=cmd 
+					fi
+				} |& tee $tmp_file | sed "s|^|$real_serial ($device):\t|" ) &
 		}
-		# TODO: Warn about target_real_serial which is not availabel
 	done
 	wait
-	typeset -p tmp_files tmp_dir
+
+	for target_device in $target_devices; do 
+		(( $devices[(I)$target_device] )) || 
+			echo "WARNING: Target device $target $target_device not found."
+	done
+			
+	# typeset -p tmp_files tmp_dir
+	typeset -p tmp_dir
 	echo nvim -d $tmp_dir/*
 }
 
@@ -142,14 +172,13 @@ adb_device_n() {
 	adb forward tcp:8022 tcp:8022 > $null
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
 	has adbfs && {
-		adbfs_path=~/mnt/ADBFS/$adb_real_serial
+		adbfs_path=/ADBFS/$adb_real_serial
 		$sudo umount -R $adbfs_path &> $null || true
 		mountpoint -q $adbfs_path || {
-			mkdir -p $adbfs_path
-			adbfs $adbfs_path
+			sudo -E mkdir -p $adbfs_path
+			sudo -E adbfs -o allow_other -o auto_unmount $adbfs_path
 		}
-		echo ls $adbfs_path
-		ls -lh $adbfs_path
+		echo ls -al $adbfs_path
 		alias cda="cd $adbfs_path"
 	}
 
