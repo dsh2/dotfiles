@@ -59,8 +59,8 @@ alias adld='logcat=$(nn)_logcat.txt; noglob adb logcat -d > $logcat && nvim -c "
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
-alias acu='source ~/.android/current_serial '
-alias adgp='adb shell getprop'
+alias acu='source ~/.android/current_serial ; adi'
+alias adgp='adb shell getprop | sort'
 alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
 adb_all() {
 	setopt nomonitor
@@ -68,23 +68,31 @@ adb_all() {
 		target_real_serials=()
 		while :; do
 			shift
-			target_real_serials=+=($1)
+			target_real_serials+=($1)
 			shift
 			[[ $1 = "-s" ]] || break
 		done
 	fi
 	serials=$( adb devices 2>$null | tail -n+2 | cut -f 1 )  
+	tmp_files=()
+	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')/
+	mkdir -p $tmp_dir
 	for serial in $=serials; do 
 		real_serial=$( adb -s $serial shell getprop ro.serialno 2>$null )
 		[[ -z $real_serial ]] && { 
 			echo "$serial:\tFailed to get serial for $serial"
 			continue
 		}
-		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && 
-			( eval ANDROID_SERIAL=$serial $* |& sed "s|^|$real_serial ($serial):\t|" ) &
+		tmp_file=$tmp_dir/$real_serial
+		[[ $#target_real_serials -eq 0 ]] || (($target_real_serials[(I)$real_serial])) && {
+			tmp_files+=($tmp_file)
+			( eval ANDROID_SERIAL=$serial $* |& tee $tmp_file | sed "s|^|$real_serial ($serial):\t|" ) &
+		}
 		# TODO: Warn about target_real_serial which is not availabel
 	done
 	wait
+	typeset -p tmp_files tmp_dir
+	echo nvim -d $tmp_dir/*
 }
 
 adb_device_n_disconnect() {
@@ -107,7 +115,7 @@ adb_device_n() {
 			(
 				export ANDROID_SERIAL=${serials[i]}
 				# print -u2 "Querying $ANDROID_SERIAL"
-				real_serial=$( timeout 3 adb shell getprop ro.serialno 2> $null )
+				real_serial=$( timeout 1 adb shell getprop ro.serialno 2> $null )
 				[[ -z $real_serial ]] && { 
 					print -u2 "$ANDROID_SERIAL: Failed to acquire real serial for $ANDROID_SERIAL"
 					continue
@@ -131,7 +139,20 @@ adb_device_n() {
 	adb forward --remove tcp:8022 2> $null
 	adb forward tcp:8022 tcp:8022 > $null
 	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
+	has adbfs && {
+		adbfs_path=~/mnt/ADBFS/$adb_real_serial
+		$sudo umount -R $adbfs_path &> $null || true
+		mountpoint -q $adbfs_path || {
+			mkdir -p $adbfs_path
+			adbfs $adbfs_path
+		}
+		echo ls $adbfs_path
+		ls -lh $adbfs_path
+		alias cda="cd $adbfs_path"
+	}
+
 	# zsh_prepend \$termux_ssh >$null
+	# 
 }
 alias adn=adb_device_n 
 alias adN=adb_device_n_disconnect
@@ -1142,8 +1163,8 @@ alias zp=zsh_prepend
 zsh_prepend() { zsh_prepend=$*  ; zpp}
 alias arpp=arp-scan
 alias nmc=nmcli
-alias AD='adb_all adb shell'
-alias AN=adb_all
+alias AN='adb_all adb shell'
+alias AD=adb_all
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias AS='export ANDROID_SERIAL='
