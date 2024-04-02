@@ -1,0 +1,31 @@
+#!/bin/sh
+
+: ${host:=mtk}
+: ${port:=44556}
+: ${null:=/dev/null}
+: ${iperf_options:=-i1}
+
+set -e
+set -u
+# PS4=+\ ; set -x
+
+abort() { echo "[x] $*. Aborting."; exit 1 ; }
+pid_listening() { lsof -t -sTCP:LISTEN -a -i :$1 ; }
+ssh_host() { ssh -T $* $host ; }
+Kill() { /bin/kill --timeout 100 TERM --timeout 100 KILL $1 ; }
+pid=$( pid_listening $port ) && { 
+	ps $pid 
+	echo "Killing $pid"
+	Kill $pid
+	sleep 1
+	pid=$( pid_listening $port ) && abort "Port $port still busy with pid $pid"
+}
+
+ssh_host -fN -o ControlMaster=yes -L 127.0.0.1:$port:127.0.0.1:$port
+pid_listening $port || abort "Port $port failed to listen"
+ssh_pid=$( pid_listening $port ) || abort "Failed to acquire ssh pid"
+
+ssh_host <<< "iperf -sDB 127.0.0.1 -p $port" || abort "Failed to start iperf daemon on remote host $host"
+iperf -c 127.0.0.1 -p $port $iperf_options
+ssh_host <<< "pkill iperf"
+Kill $ssh_pid
