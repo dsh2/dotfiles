@@ -1217,7 +1217,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync --bwlimit=0.9m -axP'
+alias scp='rsync -axP --bwlimit=0.9m'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1247,3 +1247,4 @@ alias chm='chmod -Rc'
 alias th='test_host='
 DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
+alias rest='restorecon -v'
