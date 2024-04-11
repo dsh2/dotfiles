@@ -1248,3 +1248,6 @@ alias th='test_host='
 DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
+alias min='minicom -C ~/.logs/minicom/$(nn).log'
+alias mii='minicom -C ~/.logs/minicom/$(nn).log'
+alias mini='minicom -C ~/.logs/minicom/$(nn).log'
