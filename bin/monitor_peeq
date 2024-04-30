@@ -10,7 +10,7 @@ nfs_host_ip=192.168.0.10
 asset_host=psg-dsf-build-asset-hoster
 
 die() { echo "[-] $* Exiting..."; exit 1 ; }
-warn() { echo "[!] $*" ; }
+warn() { echo "[!] $*" >&2 ; }
 progress() { echo "[+] $*" >&2; }
 
 server_id() { openstack server show -f value -c id $1 }
