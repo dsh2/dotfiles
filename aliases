@@ -638,6 +638,7 @@ alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RA
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done ; }
 
+alias mvo=mvO
 mvO() {
 	for f in $*; do
 		if [ -e $f-OFF ]; then
@@ -824,7 +825,7 @@ alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
 alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
-alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
+alias lsofii='sudo lsof +c0 -P -n -sTCP:LISTEN, -a -i'
 alias lsofp='sudo lsof +c0 -P -n -p'
 alias fp=fping
 alias dpp=docker-packer
