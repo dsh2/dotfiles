@@ -249,7 +249,7 @@ alias gdf='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines
 alias gdff='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines -- .'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='noglob git status -sb -- '
+alias gst='git submodule ; noglob git status -sb -- '
 alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
@@ -301,7 +301,8 @@ alias gcp='git cherry-pick -x'
 alias gcpa='git cherry-pick --abort'
 alias gsl='git stash list -p'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
-alias gppp='gpp && git push'
+alias gppp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive && git push --recurse-submodules=on-demand'
+alias gpP='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive && git push --recurse-submodules=on-demand'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
@@ -638,6 +639,7 @@ alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RA
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done ; }
 
+alias mvo=mvO
 mvO() {
 	for f in $*; do
 		if [ -e $f-OFF ]; then
@@ -824,7 +826,7 @@ alias ci=criu
 alias lsof='sudo lsof +c0 -P -n'
 alias lsofi='sudo lsof +c0 -P -n -i :'
 alias lsofil='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
-alias lsofii='sudo lsof +c0 -P -n -i -a -sTCP:LISTEN,'
+alias lsofii='sudo lsof +c0 -P -n -sTCP:LISTEN, -a -i'
 alias lsofp='sudo lsof +c0 -P -n -p'
 alias fp=fping
 alias dpp=docker-packer
@@ -1072,7 +1074,7 @@ alias snn=snmp
 alias snnt=snmptranslate
 alias ssn=snmp
 alias zd=zstd
-alias bb=bitbake
+# alias bb=bitbake
 alias s1=sha1sum
 alias s5=sha512sum
 alias zk='ykman -d $ykserial'
@@ -1252,3 +1254,9 @@ alias rest='restorecon -v'
 alias min='minicom -C ~/.logs/minicom/$(nn).log'
 alias mii='minicom -C ~/.logs/minicom/$(nn).log'
 alias mini='minicom -C ~/.logs/minicom/$(nn).log'
+alias oo=openvpn
+alias ov=openvpn
+alias ovv=openvpn
+alias ea=easyrsa
+alias br=brctl 
+alias bb=brctl 
