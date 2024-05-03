@@ -255,7 +255,7 @@ alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
 alias gwl='git worktree list'
-alias glg='noglob git log'
+alias glg='noglob git log -n 10'
 # gst() {
 #	local git_min_version="2.10.0"
 
@@ -310,6 +310,7 @@ alias gba='git branch -a -vv'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias grC='git rebase --continue'
+alias gri='git rebase --interactive --autosquash'
 alias grh='noglob git reset HEAD^'
 alias grH='noglob git reset HEAD@{1}'
 alias gsm='git submodule'
