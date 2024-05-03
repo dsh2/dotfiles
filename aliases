@@ -1255,6 +1255,7 @@ alias mii='minicom -C ~/.logs/minicom/$(nn).log'
 alias mini='minicom -C ~/.logs/minicom/$(nn).log'
 alias oo=openvpn
 alias ov=openvpn
+alias ovv=openvpn
 alias ea=easyrsa
 alias br=brctl 
 alias bb=brctl 
