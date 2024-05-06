@@ -24,7 +24,7 @@ alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
-alias cdd=popd
+alias cdd='cd $PWD'
 alias cdv='cd $(prl $dirstack | fzf)'
 source ~/.dotfiles/z/z.sh
 
