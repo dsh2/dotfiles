@@ -1266,3 +1266,4 @@ alias zr=zramctl
 alias zrr='dev=$(sudo zramctl --find --size 1G ) && sudo mkswap $dev && sudo swapon $dev && free -h'
 alias lsu=lsusb
 alias np=npm
+alias aj=ajv
