@@ -24,7 +24,7 @@ alias .....='cd ../../../..'
 alias ....='cd ../../..'
 alias ...='cd ../..'
 alias ..='cd ..'
-alias cdd=popd
+alias cdd='cd $PWD'
 alias cdv='cd $(prl $dirstack | fzf)'
 source ~/.dotfiles/z/z.sh
 
@@ -249,7 +249,7 @@ alias gdf='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines
 alias gdff='noglob git diff --ext-diff --ignore-space-change --ignore-blank-lines -- .'
 alias grp='git reset --patch'
 # alias gst='git -c color.ui=always status -sb --show-stash'
-alias gst='noglob git status -sb -- '
+alias gst='git submodule ; noglob git status -sb -- '
 alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
@@ -291,7 +291,7 @@ alias gcrss='git clone --recursive --jobs=8 --verbose --shallow-submodules --no-
 alias grv='git remote --verbose'
 alias gfa='git fetch --all --tags --progress --verbose'
 alias gco='git checkout'
-alias gcom='git checkout ma'
+alias gcom='git checkout main'
 alias gcol='git checkout local'
 alias gA='mlocate -eb \\HEAD | while read p; do p=${p:h}; [[ -d $p/objects && -f $p/config ]] && echo $p; done'
 alias gk='x0; gitk --date-order --all&'
@@ -301,7 +301,8 @@ alias gcp='git cherry-pick -x'
 alias gcpa='git cherry-pick --abort'
 alias gsl='git stash list -p'
 alias gpp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive'
-alias gppp='gpp && git push'
+alias gppp='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive && git push --recurse-submodules=on-demand'
+alias gpP='git pull --recurse-submodules --jobs=8 && git submodule update --init --merge --recursive && git push --recurse-submodules=on-demand'
 alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
@@ -315,7 +316,9 @@ alias grh='noglob git reset HEAD^'
 alias grH='noglob git reset HEAD@{1}'
 alias gsm='git submodule'
 alias gsmp='git submodule foreach git pull'
-alias gsmcm='git submodule foreach git checkout master'
+alias gsma='git submodule foreach'
+alias gsmA='git submodule foreach ""'
+alias gsmcm='git submodule foreach git checkout main'
 alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
@@ -638,6 +641,7 @@ alias xrr='while :; do xrandr --output eDP-1 --gamma 0.$(($RANDOM%8+2)):0.$(($RA
 alias xR='xrandr --output eDP-2 --gamma 1:1:1'
 rl() { ff=( ${@:-.} ); for f in $ff; do file $f && readlink -f $f; done ; }
 
+alias mvo=mvO
 mvO() {
 	for f in $*; do
 		if [ -e $f-OFF ]; then
@@ -1072,7 +1076,7 @@ alias snn=snmp
 alias snnt=snmptranslate
 alias ssn=snmp
 alias zd=zstd
-alias bb=bitbake
+# alias bb=bitbake
 alias s1=sha1sum
 alias s5=sha512sum
 alias zk='ykman -d $ykserial'
@@ -1254,4 +1258,11 @@ alias mii='minicom -C ~/.logs/minicom/$(nn).log'
 alias mini='minicom -C ~/.logs/minicom/$(nn).log'
 alias oo=openvpn
 alias ov=openvpn
+alias ovv=openvpn
 alias ea=easyrsa
+alias br=brctl 
+alias bb=brctl 
+alias zr=zramctl
+alias zrr='dev=$(sudo zramctl --find --size 1G ) && sudo mkswap $dev && sudo swapon $dev && free -h'
+alias lsu=lsusb
+alias np=npm
