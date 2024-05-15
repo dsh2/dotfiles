@@ -1262,3 +1262,8 @@ alias ovv=openvpn
 alias ea=easyrsa
 alias br=brctl 
 alias bb=brctl 
+alias zr=zramctl
+alias zrr='dev=$(sudo zramctl --find --size 1G ) && sudo mkswap $dev && sudo swapon $dev && free -h'
+alias lsu=lsusb
+alias np=npm
+alias aj=ajv
