@@ -307,7 +307,7 @@ alias gaa='git apply --verbose --check --3way'
 # TODO: add to fbr
 alias gbb='git checkout $(git for-each-ref --format="%(color:red)%(objectname:short)%(color:reset) %(HEAD) (%(color:green)%(committerdate:format:%a %F %T) - %(committerdate:relative)%(color:reset)) %09 %(color:yellow)%(refname:short)%(color:reset) %09 %(contents:subject) (%(color:green)%(authorname)%(color:reset))" --sort=committerdate  | fzf --tac --tabstop=17 --preview="git log --color --graph --pretty=format:\"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\" --abbrev-commit -p {1}" | cut -f 1 -d\  )'
 alias gb='git branch'
-alias gba='git branch -a -vv'
+alias gba='noglob git branch -a -vv --list'
 alias gcs='git config --show-origin'
 alias gra='git rebase --abort'
 alias grC='git rebase --continue'
