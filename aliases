@@ -254,6 +254,8 @@ alias gst.='noglob git status -sb -- ./'
 alias gstt='noglob git status -sb -- ./'
 alias gs='noglob git status -sb -- ./'
 alias gw='git worktree'
+alias gw='git worktree'
+alias gws='git worktree'
 alias gwl='git worktree list'
 alias glg='noglob git log -n 10'
 # gst() {
