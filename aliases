@@ -53,9 +53,8 @@ adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
-alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; echo $logcat ; adb logcat > >( gzip > $logcat ) | lnav -q' 
-alias adll='noglob adb logcat | lnav'
-alias adld='logcat=$(nn)_logcat.txt; noglob adb logcat -d > $logcat && nvim -c "se ft=strace" $logcat'
+alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; adb logcat | tee -a $logcat | lnav -q' 
+alias adld='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=(~/.logs/adb/*-$adb_real_serial*(om[1])) && typeset -p logcat && nvim -c "se ft=strace" $logcat'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
