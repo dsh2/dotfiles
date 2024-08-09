@@ -15,6 +15,8 @@ current_tmux_pane=$(tmux list-pane -F '#{pane_id}' -f "#{m:$TTY,#{pane_tty}}" 2>
 [[ -n $current_tmux_pane ]] && tmux select-pane -t $current_tmux_pane -T "ADB: $ADB_SERIAL"
 
 # --turn-screen-off \
-scrcpy --window-title "id=$ADB_ID_U $ADB_SERIAL $ADB_PRODUCT_MODUL $ADB_FINGERPRINT" \
+scrcpy --window-title "id=$ADB_ID_U $ADB_SERIAL [$ANDROID_SERIAL] $ADB_PRODUCT_MODUL $ADB_FINGERPRINT" \
+	--no-audio \
+	--no-audio-playback \
 	--disable-screensaver \
-	--shortcut-mod=rctrl &
+	--shortcut-mod=rctrl $* &

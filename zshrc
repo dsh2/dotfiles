@@ -714,8 +714,6 @@ bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
-bindkey -s Pp\  'postgresql'
-bindkey -s PJ\  'postgres'
 
 function start_tmux_logging()
 {

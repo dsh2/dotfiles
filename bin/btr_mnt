@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-# set -x
+set -x
 set -eu
 
 log=/var/log/btr_mnt
@@ -9,21 +9,22 @@ mnt=/mnt/btrbk
 blkid=/sbin/blkid
 
 limited_sleep() {
-	integer n=0
 	sleep 0.3
-	n=$(( n+1 ))
-	(( n < 100 )) || {
+	limited_sleep_n=$(( limited_sleep_n-1 ))
+	(( limited_sleep_n > 0 )) || {
 		echo $*
 		return 1
 	} 
 }
 
-while ! systemctl --quiet is-active time-sync.target ; do 
-	limited_sleep "Timeout when waiting for time-sync.target. Continueing withouth sync..." || break
-done
+integer limited_sleep_n=100
+# while ! systemctl --quiet is-active time-sync.target ; do 
+# 	limited_sleep "Timeout when waiting for time-sync.target. Continueing withouth sync..." || break
+# done
 
 exec 1> >( sed "s|^|$(date '+%F %T'): |" | tee -a $log ) 2>&1
 
+integer limited_sleep_n=100
 while ! type $blkid 2>&1 >/dev/null ; do 
 	limited_sleep "Timeout when waiting for $blkid to become available. EXITING." || exit 1
 done
