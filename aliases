@@ -918,7 +918,6 @@ alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 alias ki=kitty
 alias kit=kitty
 alias K=kitty
-alias dnp='noglob dnf provides */'
 TT() { nvim +'norm i' term://"$*" ; }
 T() { nvim term://"$*" ; }
 alias ng=noglob
@@ -1272,3 +1271,9 @@ alias np=npm
 alias aj=ajv
 alias ZSH="(sudo locate --existing --regexp .zsh_local_history ; print -rl -- ~/.zsh_local_history_dir/**/history ) | xargs -r sudo cat | sed -nE '/: [0-9]{6,}/p' | sort | uniq"
 alias sel='sealert -l'
+alias flat=flatpak
+hidetty() { $* | cat }
+alias h=hidetty
+alias sdk=sdkmanager
+alias ccc=ccache
+alias xmll=xmllint
