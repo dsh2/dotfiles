@@ -366,7 +366,7 @@ fi
 set_clippers() {
 	clippers=()
 	has xclip || has xsel {
-		displays=($( ss \
+		displays=($( ss 2>/dev/null \
 			--no-header \
 			--oneline \
 			--numeric \
