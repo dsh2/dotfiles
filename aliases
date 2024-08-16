@@ -1272,7 +1272,6 @@ alias lsu=lsusb
 alias np=npm
 alias aj=ajv
 alias ZSH="(sudo locate --existing --regexp .zsh_local_history ; print -rl -- ~/.zsh_local_history_dir/**/history ) | xargs -r sudo cat | sed -nE '/: [0-9]{6,}/p' | sort | uniq"
-<<<<<<< HEAD
 alias sel='sealert -l'
 alias xml=xmllint
 alias xmll=xmllint
@@ -1282,10 +1281,4 @@ hidetty() { $* | cat }
 alias h=hidetty
 alias sdk=sdkmanager
 alias ccc=ccache
-alias xmll=xmllint
 alias ti=tidy
-=======
-alias flat=flatpak
-hidetty() { $* | cat }
-alias h=hidetty
->>>>>>> a66e36e (aliases)
