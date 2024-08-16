@@ -994,7 +994,7 @@ stty -ixon
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
-TMOUT=200
+# TMOUT=200
 
 # set -x
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"

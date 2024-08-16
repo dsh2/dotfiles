@@ -221,6 +221,50 @@ if vim_plug_available
 	" noremap <leader>ldr :Diffoff!<CR>
 	" noremap <leader>ldo :Diffoff!<CR>
 	" " }}}
+	Plug 'hari-rangarajan/CCTree' "{{{
+	" TODO:
+	" let g:CCTreeCscopeDb = ".cscope/out"
+	" autocmd vimrc BufNewFile,BufReadPost CCTree-View nnoremap q :echo q
+	let g:CCTreeCscopeDb = "cscope.out"
+	let g:CCTreeDisplayMode = 1
+	let g:CCTreeHilightCallTree=1
+	let g:CCTreeMinVisibleDepth = 3
+	let g:CCTreeOrientation = "topleft"
+	let g:CCTreeRecursiveDepth = 1
+	let g:CCTreeUseUTF8Symbols = 1
+	let g:CCTreeWindowWidth = -1
+	let g:CCTreeDbFileMaxSize = 40000000
+	let g:CCTreeKeyHilightTree = '<C-h>'        " Static highlighting
+	let g:CCTreeKeyDepthPlus = '='
+	let g:CCTreeKeyDepthMinus = '-'
+	" -re-use tree control code for uftrace, etc
+	" map ; to preview
+	" -add command to load db to cscope load event
+	" -use async-run or similar for that
+	" }}}
+	Plug 'Ilink/cscope-quickfix' "{{{
+	" set cscopepathcomp=2
+	" set cscopeprg=/opt/local/bin/cscope
+	"set cscopetag
+	"set cscopequickfix=s-,c-,d-,i-,t-,e-
+	"set cscoperelative
+	if filereadable("cscope.out")
+	silent! cscope add cscope.out
+	" CCTreeLoadDB cscope.out
+	endif
+"	set cscopeverbose
+	function! QfLlNext()
+		windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
+	endfunction
+	nnoremap <C-n> :call QfLlNext()<cr>
+	function! QfLlPrevious()
+		windo if &l:buftype == "quickfix" | silent! cprevious | if &l:buftype == "location" | silent! lprevious | endif | endif
+	endfunction
+	nnoremap <C-p> :call QfLlPrevious()<cr>
+	" FIXME: does not work :(
+	autocmd vimrc FileType qf set norelativenumber
+	autocmd vimrc FileType qf wincmd J
+	"}}}
 	" Plug 'text objects' {{{
 	Plug 'kana/vim-textobj-user'
 	Plug 'kana/vim-textobj-indent'
@@ -718,7 +762,7 @@ if vim_plug_available
 	" let g:echodoc#type = 'virtual'
 	" let g:echodoc#type = 'echo'
 	let g:echodoc#type = 'signature'"}}}
-	Plug 'sakhnik/nvim-gdb'
+	" Plug 'sakhnik/nvim-gdb'
 	" Plug 'udalov/javap-vim'
 	" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
@@ -1602,3 +1646,4 @@ nmap v/ /\V
 "}}}
 
 packadd cfilter
+nmap <leader>< :vertical new<cr>cod

@@ -65,6 +65,7 @@ for_window [class="XEyes"] floating enable, border none
 bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol
 bindsym $meta+$alt+$ctrl+$shift+p exec /usr/bin/blueman-manager
 # for_window [class="Pavucontrol"] floating enable, resize set 600 750
+for_window [class="Pavucontrol"] floating enable, resize set 600 750
 # for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 for_window [class="jetbrains-studio" title="Breakpoints"] floating disable
 for_window [class="jetbrains-studio" title="Change Signature"] floating disable
