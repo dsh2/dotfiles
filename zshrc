@@ -250,7 +250,7 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs | tr -d \\n | $=XC
+    curl --data-binary @${file} https://paste.rs | tr -d \\n | clip
 }
 
 alias PPd='curl -X DELETE '
@@ -363,28 +363,22 @@ elif type powershell.exe > /dev/null; then
 	XP="powershell.exe -command Get-Clipboard"
 fi
 
-XC=${XC:-/bin/false}
-if [[ -n $DISPLAY ]]; then
-	if type xclip >/dev/null; then
-		XC="xclip -rmlastnl -selection clipboard -in"
-	elif type xsel >/dev/null; then
-		XC="xsel --clipboard --input"
-	fi
-else
-	if type clip.exe > /dev/null; then
-		XC="clip.exe"
-	elif [[ -n $TMUX ]]; then
-		XC="tmux load-buffer -"
-	fi
-fi
+clippers=()
+[[ -n $DISPLAY ]] && {
+	{ has xclip && clippers+=( "xclip -d \$DISPLAY -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
+	{ has xsel && clippers+=( "xsel --display \$DISPLAY --clipboard --input 2>$/dev/null " ) }
+}
+has clip.exe && clippers+=( "clip.exe" )
+[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
+clip() { (( #clippers > 0 )) && eval ${clippers:s.#.> >(.:s.%.).} }
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
 		filter_last_output
 	else
 		zle kill-line
-		print -r -n -- $CUTBUFFER | $=XC 2> /dev/null
-		zle -M "Copied content from (C-k): \"$CUTBUFFER\"" 
+		print -r -n -- $CUTBUFFER | clip
+		zle -M "Clipped \"$CUTBUFFER\"" 
 		
 	fi
 }
@@ -394,9 +388,9 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	print -r -n -- $CUTBUFFER | $=XC \
+	print -r -n -- $CUTBUFFER | clip \
 		&& zle -M "Copied last command line." \
-		|| zle -M "FAILED to copy last command line. (XC=$XC)"
+		|| zle -M "FAILED to copy last command line. (clippers=$clippers)"
 }
 # bindkey_func '^x^k' copy_last_command
 bindkey '^x^k' up-line
@@ -404,22 +398,22 @@ bindkey '^x^j' down-line
 
 # Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
-	check_output $XC || return
+	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	cat $tmux_log_file | $=XC \
+	cat $tmux_log_file | clip \
 		&& zle -M "Copied last command's output WITH ansi escape sequences." \
-		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
 bindkey_func '^x^o' copy_last_output
 
 # Copy last command's output to xclipboard WITHOUT ansi escape sequences
 function copy_last_output_stripped {
-	check_output $XC || return
+	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
-	cat $tmux_log_file | strip-ansi | $=XC \
+	cat $tmux_log_file | strip-ansi | clip \
 		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
-		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
 bindkey_func '^xo' copy_last_output_stripped
 
@@ -1285,6 +1279,7 @@ alias -g WH='| tr -d "[:space:]" | tr "[:upper:]" "[:lower:]" ; echo'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs -r'
+alias -g X0='| xargs -0 -r'
 alias -g X1='| xargs -rn 1'
 # alias -g X0='| xargs -r0'
 alias -g XP='| xargs -rP $(nproc)'
