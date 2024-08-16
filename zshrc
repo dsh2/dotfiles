@@ -462,7 +462,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 $=vimp $tmux_log_file
+	tmux split -vbl 60% $=vimp $tmux_log_file
 }
 bindkey_func '^x^x' page_last_output
 
@@ -610,7 +610,7 @@ function edit_command_line() {
 	echo $old_buffer | tee /tmp/some_file >> $run_file
 	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
-		tmux split -vbp 80 $SHELL -ic "$editor $run_file; $SHELL -i "
+		tmux split -vbl 80% $SHELL -ic "$editor $run_file; $SHELL -i "
 		zle -U "RUN -tcsv $run_file"
   	else
 		# TODO: Try something new when running out of tmux
