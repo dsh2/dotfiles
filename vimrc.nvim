@@ -634,13 +634,13 @@ if vim_plug_available
 	Plug 'matze/vim-ini-fold' "{{{
 	autocmd vimrc BufNewFile,BufReadPost wg*\.conf,*.nmconnection,*/NetworkManager/system-connections/* setfiletype dosini"
 	"}}}
-	Plug 'machakann/vim-highlightedundo' "{{{
-	let g:highlightedundo#highlight_mode=2
-	nmap u <Plug>(highlightedundo-undo)
-	nmap U <Plug>(highlightedundo-redo)
-	nmap g- <Plug>(highlightedundo-gminus)
-	nmap g+ <Plug>(highlightedundo-gplus)
-	"}}}
+	"Plug 'machakann/vim-highlightedundo' "{{{
+	"let g:highlightedundo#highlight_mode=2
+	"nmap u <Plug>(highlightedundo-undo)
+	nmap U :redo<cr>
+	"nmap g- <Plug>(highlightedundo-gminus)
+	"nmap g+ <Plug>(highlightedundo-gplus)
+	""}}}
 	let g:go_version_warning = 0
 	Plug 'fatih/vim-go'"{{{
 	let g:go_version_warning = 0
