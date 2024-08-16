@@ -26,6 +26,8 @@ map ]} <action>(EditorCodeBlockEndWithSelection)
 map [[ <action>(EditorCodeBlockStart)
 map [{ <action>(EditorCodeBlockStartWithSelection)
 
+map cow <action>(EditorToggleUseSoftWraps)
+
 map ]s <action>(EditorUpWithSelection)
 map [s <action>(EditorDownWithSelection)
 
@@ -116,6 +118,7 @@ map <c-[> <Action>(EditorEsc)
 map <c-s-t> <Action>(ReopenClosedTab)
 map <c-e> <Action>(RecentFiles)
 map <leader>b <Action>(Run)
+map <leader>O <Action>(OpenFile)
 
 map <leader>b <Action>(RecentFiles)
 map <c-/> <Action>(RecentFiles)
@@ -189,7 +192,7 @@ map <a-.> <Action>(Tree-selectNext)
 map <m-,> <Action>(Tree-selectNext)
 
 nnoremap ,r :action ContextRun<CR>
-" nnoremap ,c :action RunClass<CR>
+nnoremap ,c :action RunClass<CR>
 nnoremap ,f :action ChooseRunConfiguration<CR>
 nnoremap ,t :action ActivateRunToolWindow<CR>
 nnoremap ,u :action Rerun<CR>
