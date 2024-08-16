@@ -366,7 +366,7 @@ fi
 set_clippers() {
 	clippers=()
 	has xclip || has xsel {
-		displays=($( ss 2>/dev/null \
+		displays=($( echo ${DISPLAY#:} ; ss 2>/dev/null \
 			--no-header \
 			--oneline \
 			--numeric \
@@ -378,7 +378,7 @@ set_clippers() {
 		)
 		# displays+=($DISPLAY)
 		for display in $displays; do
-			{ has xclip && clippers+=( "xclip -d :$display -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
+			{ has xclip && clippers+=( "xclip -display :$display -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
 			{ has xsel && clippers+=( "xsel --display :$display --clipboard --input 2>$/dev/null " ) }
 		done
 	has clip.exe && clippers+=( "clip.exe" )
