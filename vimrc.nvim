@@ -164,7 +164,7 @@ if vim_plug_available
 	"}}}
 	Plug 'inkarkat/vim-CompleteHelper' "{{{
 	Plug 'inkarkat/vim-ingo-library'
-	Plug 'vim-scripts/PrevInsertComplete'
+	" Plug 'vim-scripts/PrevInsertComplete'
 	Plug 'vim-scripts/MotionComplete'
 	Plug 'vim-scripts/BracketComplete'
 	Plug 'vim-scripts/MultiWordComplete'
