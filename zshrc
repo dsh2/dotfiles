@@ -27,7 +27,7 @@ has() {
 	verbose=true
 	shift
   fi
-  for c in "$@"; do 
+  for c in "$@"; do
 	c="${c%% *}"
 	if ! command -v "$c" &> /dev/null; then
 	  [[ "$verbose" == true ]] && err "$c not found"
@@ -121,7 +121,7 @@ PS1+='%(3V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}] .)'  # Add netns
 # PS1+='🤮 '						    # Add user status
 # PS1+=' '
 # PS1+='​'
-      
+
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -211,7 +211,7 @@ zshaddhistory() {
 	# set -x
 	# Make local history visible in local directory
 	# [[ -w $PWD ]]
-	local local_history_link=$PWD/.zsh_local_history 
+	local local_history_link=$PWD/.zsh_local_history
 	if [[ -f $local_history_link ]]; then
 		if [[ -h $local_history_link ]]; then
 			# Check if directory was renamed after last update
@@ -239,7 +239,7 @@ zshaddhistory() {
 			ln -vsfT $PWD $local_history_dir/current_target
 			print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 			ls -l $local_history_dir
-		fi 
+		fi
 	fi
 	# TODO: Fossil commit
 
@@ -393,8 +393,8 @@ function kill-line-copy {
 	else
 		zle kill-line
 		print -r -n -- $CUTBUFFER | clip
-		zle -M "Clipped \"$CUTBUFFER\"" 
-		
+		zle -M "Clipped \"$CUTBUFFER\""
+
 	fi
 }
 bindkey_func '^k' kill-line-copy
@@ -809,10 +809,10 @@ function zsh_detect_display()
 	client_name=$( tmux display-message -p -F '#{client_termname}' )
 	[[ -z $client_name ]] && return
 	export DISPLAY
-	
+
 	[[ $client_name = *xterm* ]] && DISPLAY=$( pgrep -x -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p' ) || {
 		2>/dev/null lsof -P -i4 -a -p $(pgrep -u $(id -u) -x sshd ) -sTCP:LISTEN, |
-		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do 
+		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do
 			DISPLAY=:$port
 			echo "Trying DISPLAY=$DISPLAY"
 			xset q 2>/dev/null && break
@@ -906,13 +906,6 @@ fpath+=~/src/autorandr/contrib/zsh_completion/_autorandr
 zmodload zsh/complist
 autoload -U compinit && compinit -i
 autoload -U zed
-
-# TODO: check fpath vs. source
-zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
-compdef _t t
-zsh_source -q /usr/share/zsh/vendor-completions/_awscli
-zsh_source -q /usr/share/zsh/site-functions/_awscli
-zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
 
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
@@ -1563,7 +1556,7 @@ mount_dev() {
 	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	sudo sfdisk -J $1  |
 		jq -r '.partitiontable.partitions[].node' |
-		while read dev; do 
+		while read dev; do
 			mnt=mnt/${dev#/dev/}
 			mkdir -p $mnt && sudo mount -v $dev $mnt
 		done
@@ -1584,7 +1577,7 @@ mount_img() {
 			echo "Mounted $node ($dev)"
 		done
 }
-	
+
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
@@ -1611,7 +1604,7 @@ rand_geom() {
 }
 rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
-leafnode() { z=($REPLY/*(N/)) ; return $#z } 
+leafnode() { z=($REPLY/*(N/)) ; return $#z }
 
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
@@ -1662,14 +1655,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # source ~/.dotfiles/zsh/completion/docker-zsh-completion/docker-zsh-completion.plugin.zsh
 compdef _docker docker
-autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker 
+autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker
 
 adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
 null=/dev/null
 
-now_epoch() { date '+%s' ; } 
-now_epoch_ms() { date '+%s000' ; } 
+now_epoch() { date '+%s' ; }
+now_epoch_ms() { date '+%s000' ; }
 
 set +x

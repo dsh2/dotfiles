@@ -53,6 +53,5 @@
 	rebase = false
 [pager]
 	diff = false
-[safe]
-	directory = /root/lineage_volla/android
-	directory = /mnt/lineage_volla/.repo/manifests
+[protocol "file"]
+	allow = always
