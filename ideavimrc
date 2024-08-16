@@ -10,6 +10,8 @@ set nowrapscan
 
 " map <c-f> <action>(EditorPageUp)
 " map <c-b> <action>(EditorPageDown)
+nmap <leader>G <action>(Generate)
+nmap <leader>g <action>(Generate)
 
 nmap <leader>, <action>(PreviousTab)
 nmap <c-,> <action>(PreviousTab)
@@ -158,12 +160,15 @@ map <leader>i <Action>(ShowIntentionActions)
 
 map <leader>mr <Action>(Run)
 map <leader>mm <Action>(Run)
+map <leader>mc <Action>(RunConfiguration)
 " map <leader>mm <Action>(MakeGradleProject)
 map <leader>mM <Action>(MakeGradleProject)
 map <leader>mb <Action>(ActivateBuildToolWindow)
 map <leader>M <Action>(BuildMenu)
 map <leader>N <Action>(NewElement)
 
+map <c-o> <Action>(Back)
+map <c-i> <Action>(Forward)
 map U <Action>(Redo)
 
 map <leader>C <Action>(ChangeSignature)
