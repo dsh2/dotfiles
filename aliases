@@ -697,9 +697,9 @@ alias dd='dd status=progress conv=fdatasync'
 alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY'
-alias x00='export DISPLAY=:0; printenv DISPLAY'
-alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY'
+alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY; xprop -root'
+alias x00='export DISPLAY=:0; printenv DISPLAY; xprop -root'
+alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY; xprop -root'
 alias digx='dig -x'
 alias dixx='dig -x'
 alias digr='dig -x'
@@ -1277,3 +1277,4 @@ alias h=hidetty
 alias sdk=sdkmanager
 alias ccc=ccache
 alias xmll=xmllint
+alias ti=tidy
