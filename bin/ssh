@@ -25,10 +25,11 @@ vars=(${(f)"$($ssh -G $*)"})
 }
 host=${v["hostkeyalias"]:=${v["host"]}}
 
-# Create ssh-agent for host
+# Ensure a working ssh-agent for host
 agents_dir=~/.ssh/agents
 mkdir -p $agents_dir
 export SSH_AUTH_SOCK=$agents_dir/$host
+[[ -S $SSH_AUTH_SOCK ]] && ssh-add -ql >/dev/null || { fuser -k $SSH_AUTH_SOCK &>/dev/null || true ; rm -f $SSH_AUTH_SOCK }
 [[ -S $SSH_AUTH_SOCK ]] || ssh-agent -da $SSH_AUTH_SOCK |& ts -m '%F %T' >> $SSH_AUTH_SOCK.log & 
 [[ -t 1 ]] && {
 	echo "Agent for host \"$host\" has the following identities loaded:"
