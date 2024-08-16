@@ -10,6 +10,8 @@ set nowrapscan
 
 " map <c-f> <action>(EditorPageUp)
 " map <c-b> <action>(EditorPageDown)
+nmap <leader>G <action>(Generate)
+nmap <leader>g <action>(Generate)
 
 nmap <leader>, <action>(PreviousTab)
 nmap <c-,> <action>(PreviousTab)
@@ -25,6 +27,8 @@ map ]] <action>(EditorCodeBlockEnd)
 map ]} <action>(EditorCodeBlockEndWithSelection)
 map [[ <action>(EditorCodeBlockStart)
 map [{ <action>(EditorCodeBlockStartWithSelection)
+
+map cow <action>(EditorToggleUseSoftWraps)
 
 map ]s <action>(EditorUpWithSelection)
 map [s <action>(EditorDownWithSelection)
@@ -116,6 +120,7 @@ map <c-[> <Action>(EditorEsc)
 map <c-s-t> <Action>(ReopenClosedTab)
 map <c-e> <Action>(RecentFiles)
 map <leader>b <Action>(Run)
+map <leader>O <Action>(OpenFile)
 
 map <leader>b <Action>(RecentFiles)
 map <c-/> <Action>(RecentFiles)
@@ -155,12 +160,15 @@ map <leader>i <Action>(ShowIntentionActions)
 
 map <leader>mr <Action>(Run)
 map <leader>mm <Action>(Run)
+map <leader>mc <Action>(RunConfiguration)
 " map <leader>mm <Action>(MakeGradleProject)
 map <leader>mM <Action>(MakeGradleProject)
 map <leader>mb <Action>(ActivateBuildToolWindow)
 map <leader>M <Action>(BuildMenu)
 map <leader>N <Action>(NewElement)
 
+map <c-o> <Action>(Back)
+map <c-i> <Action>(Forward)
 map U <Action>(Redo)
 
 map <leader>C <Action>(ChangeSignature)
@@ -189,7 +197,7 @@ map <a-.> <Action>(Tree-selectNext)
 map <m-,> <Action>(Tree-selectNext)
 
 nnoremap ,r :action ContextRun<CR>
-" nnoremap ,c :action RunClass<CR>
+nnoremap ,c :action RunClass<CR>
 nnoremap ,f :action ChooseRunConfiguration<CR>
 nnoremap ,t :action ActivateRunToolWindow<CR>
 nnoremap ,u :action Rerun<CR>
