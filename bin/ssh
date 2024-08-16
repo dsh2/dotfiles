@@ -1,0 +1,39 @@
+#!/bin/zsh
+
+zmodload zsh/stat
+
+has() { command -v $* &>/dev/null }
+err_out() { print -u 2 "$*"; exit 1; }
+
+# set -x
+setopt errexit
+
+# Search for real ssh binary
+me=$( stat +inode $0 )
+for s in $( whence -a ssh ); do (( $me == $(stat +inode $s) )) || ssh=$s; done
+[[ -n $s ]]	|| err_out "No ssh available"
+
+# Search for target host
+vars=(${(f)"$($ssh -G $*)"})
+(( #vars > 0 )) && {
+	# Convert ssh vars into zsh assoc array
+	typeset -A v
+	for l in $vars; do 
+		kv=(${(z)l})
+		v["${kv[1]}"]=${kv[2,-1]}
+	done
+}
+host=${v["hostkeyalias"]:=${v["host"]}}
+
+# Create ssh-agent for host
+agents_dir=~/.ssh/agents
+mkdir -p $agents_dir
+export SSH_AUTH_SOCK=$agents_dir/$host
+[[ -S $SSH_AUTH_SOCK ]] || ssh-agent -a $SSH_AUTH_SOCK
+[[ -t 1 ]] && {
+	echo "Agent for host \"$host\" has the following identities loaded:"
+	ssh-add -L || true
+}
+
+# Execute original user command
+$ssh $* 
