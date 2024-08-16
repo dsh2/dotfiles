@@ -722,7 +722,7 @@ if vim_plug_available
 	" Plug 'udalov/javap-vim'
 	" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
-	Plug 'christianrondeau/vim-base64'
+	" Plug 'christianrondeau/vim-base64'
 	Plug 'mhinz/vim-rfc'
 	Plug 'nakal/vim-smarttabs'
 	Plug 'bfrg/vim-cpp-modern'
