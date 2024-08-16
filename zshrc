@@ -363,13 +363,28 @@ elif type powershell.exe > /dev/null; then
 	XP="powershell.exe -command Get-Clipboard"
 fi
 
-clippers=()
-[[ -n $DISPLAY ]] && {
-	{ has xclip && clippers+=( "xclip -d \$DISPLAY -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
-	{ has xsel && clippers+=( "xsel --display \$DISPLAY --clipboard --input 2>$/dev/null " ) }
+set_clippers() {
+	clippers=()
+	has xclip || has xsel {
+		displays=($( ss \
+			--no-header \
+			--oneline \
+			--numeric \
+			--listening \
+			--extended \
+			--processes |
+			sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p" |
+			sort -u )
+		)
+		# displays+=($DISPLAY)
+		for display in $displays; do
+			{ has xclip && clippers+=( "xclip -d :$display -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
+			{ has xsel && clippers+=( "xsel --display :$display --clipboard --input 2>$/dev/null " ) }
+		done
+	has clip.exe && clippers+=( "clip.exe" )
+	[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
 }
-has clip.exe && clippers+=( "clip.exe" )
-[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
+set_clippers
 clip() { (( #clippers > 0 )) && eval ${clippers:s.#.> >(.:s.%.).} }
 
 function kill-line-copy {
