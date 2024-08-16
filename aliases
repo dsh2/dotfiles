@@ -1224,7 +1224,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -axP --bwlimit=0.9m'
+alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1256,9 +1256,10 @@ alias th='test_host='
 DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
-alias min='minicom -C ~/.logs/minicom/$(nn).log'
-alias mii='minicom -C ~/.logs/minicom/$(nn).log'
-alias mini='minicom -C ~/.logs/minicom/$(nn).log'
+alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mii='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
 alias ovv=openvpn
@@ -1271,6 +1272,7 @@ alias lsu=lsusb
 alias np=npm
 alias aj=ajv
 alias ZSH="(sudo locate --existing --regexp .zsh_local_history ; print -rl -- ~/.zsh_local_history_dir/**/history ) | xargs -r sudo cat | sed -nE '/: [0-9]{6,}/p' | sort | uniq"
+<<<<<<< HEAD
 alias sel='sealert -l'
 alias xml=xmllint
 alias xmll=xmllint
@@ -1282,3 +1284,8 @@ alias sdk=sdkmanager
 alias ccc=ccache
 alias xmll=xmllint
 alias ti=tidy
+=======
+alias flat=flatpak
+hidetty() { $* | cat }
+alias h=hidetty
+>>>>>>> a66e36e (aliases)
