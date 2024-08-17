@@ -1276,9 +1276,11 @@ alias sel='sealert -l'
 alias xml=xmllint
 alias xmll=xmllint
 alias SA='typeset -p SSH_AUTH_SOCK && ssh-add -L'
-alias flat=flatpak
 hidetty() { $* | cat }
 alias h=hidetty
 alias sdk=sdkmanager
 alias ccc=ccache
 alias ti=tidy
+alias fla=flatpak
+alias flat=flatpak
+alias xdm=xdg-mime 
