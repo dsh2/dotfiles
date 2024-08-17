@@ -31,6 +31,7 @@ mkdir -p $agents_dir
 [[ -S $SSH_AUTH_SOCK ]] || ssh-agent -da $SSH_AUTH_SOCK |& ts -m '%F %T' >> $SSH_AUTH_SOCK.log & 
 [[ -t 1 && -v SSH_AGENT_VERBOSE ]] && {
 	echo "Agent for host \"$host\" has the following identities loaded [$SSH_AUTH_SOCK]:"
+	typeset -p SSH_AUTH_SOCK
 	ssh-add -L || true
 }
 
