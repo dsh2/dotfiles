@@ -610,6 +610,7 @@ alias n="date '+%F %H.%M.%S'"
 alias N="date '+%F %H.%M.%S.%N'"
 alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
+alias Nn="date '+%F %T'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
  alias nnn='N=$( echo 00 ) ; date '+%F__%T' --date=@$(( N / 1 ))'
@@ -1282,3 +1283,4 @@ alias sdk=sdkmanager
 alias ccc=ccache
 alias xmll=xmllint
 alias ti=tidy
+alias sett=set_clippers
