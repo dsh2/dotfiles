@@ -14,5 +14,5 @@
 	done
 ) |
 while read target; do
-	sudo sh <<< " umount $target || fuser -afuv $target "
+	sudo sh <<< " set -x; umount $target || fuser -afuv $target "
 done

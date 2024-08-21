@@ -8,6 +8,8 @@ User me
 
 IdentitiesOnly yes 
 IdentityFile ~/.ssh/keys/me.pub
+UserKnownHostsFile /dev/null 
+StrictHostKeyChecking off 
 
 # ControlPersist yes
 ControlPersist no

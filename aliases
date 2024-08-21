@@ -610,6 +610,7 @@ alias n="date '+%F %H.%M.%S'"
 alias N="date '+%F %H.%M.%S.%N'"
 alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
+alias Nn="date '+%F %T'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
  alias nnn='N=$( echo 00 ) ; date '+%F__%T' --date=@$(( N / 1 ))'
@@ -687,7 +688,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='( agents=(${TMPDIR:=/tmp}/ssh-*/agent.*(om)) ; typeset -p agents ; (( #agents > 0 )) || return; export SSH_AUTH_SOCK=$agents[1] && typeset -p SSH_AUTH_SOCK && ssh-add -L )'
+alias sa='agents=(${TMPDIR:=/tmp}/ssh-*/agent.*(om)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
@@ -697,9 +698,9 @@ alias dd='dd status=progress conv=fdatasync'
 alias hc=hcitool
 alias cts=curl-tesseract
 alias gdb='gdb -q'
-alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY'
-alias x00='export DISPLAY=:0; printenv DISPLAY'
-alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY'
+alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY; xprop -root'
+alias x00='export DISPLAY=:0; printenv DISPLAY; xprop -root'
+alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY; xprop -root'
 alias digx='dig -x'
 alias dixx='dig -x'
 alias digr='dig -x'
@@ -918,7 +919,6 @@ alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 alias ki=kitty
 alias kit=kitty
 alias K=kitty
-alias dnp='noglob dnf provides */'
 TT() { nvim +'norm i' term://"$*" ; }
 T() { nvim term://"$*" ; }
 alias ng=noglob
@@ -1225,7 +1225,8 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -axP --bwlimit=0.9m'
+alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
+alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1235,6 +1236,7 @@ alias ipc=ipcalc
 alias eth=ethtool
 alias fpi=fping
 alias vnc=vncviewer
+alias vn=vncviewer
 alias ngr='noglob ngr_sql'
 alias ngg='noglob ngr_sql'
 alias nggg='noglob ngr_sql_remote'
@@ -1256,9 +1258,10 @@ alias th='test_host='
 DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
-alias min='minicom -C ~/.logs/minicom/$(nn).log'
-alias mii='minicom -C ~/.logs/minicom/$(nn).log'
-alias mini='minicom -C ~/.logs/minicom/$(nn).log'
+alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mii='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
 alias ovv=openvpn
@@ -1271,3 +1274,20 @@ alias lsu=lsusb
 alias np=npm
 alias aj=ajv
 alias ZSH="(sudo locate --existing --regexp .zsh_local_history ; print -rl -- ~/.zsh_local_history_dir/**/history ) | xargs -r sudo cat | sed -nE '/: [0-9]{6,}/p' | sort | uniq"
+alias sel='sealert -l'
+alias xml=xmllint
+alias xmll=xmllint
+alias SA='typeset -p SSH_AUTH_SOCK && ssh-add -L'
+hidetty() { $* | cat }
+alias h=hidetty
+alias sdk=sdkmanager
+alias ccc=ccache
+alias ti=tidy
+alias fla=flatpak
+alias flat=flatpak
+alias xdm=xdg-mime 
+alias sett=set_clippers
+alias iii=i3
+alias ii=i3
+alias hostn=hostname
+alias hn=hostname

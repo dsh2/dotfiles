@@ -27,7 +27,7 @@ has() {
 	verbose=true
 	shift
   fi
-  for c in "$@"; do 
+  for c in "$@"; do
 	c="${c%% *}"
 	if ! command -v "$c" &> /dev/null; then
 	  [[ "$verbose" == true ]] && err "$c not found"
@@ -121,7 +121,7 @@ PS1+='%(3V.%F{255}[%{$fg_no_bold[red]%}$ns%F{255}] .)'  # Add netns
 # PS1+='🤮 '						    # Add user status
 # PS1+=' '
 # PS1+='​'
-      
+
 # PS1+='(%!) '						# Add number of next shell event
 # PS1='%F{5}${fg[green]}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
 # PS1="%{$fg_bold[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
@@ -211,7 +211,7 @@ zshaddhistory() {
 	# set -x
 	# Make local history visible in local directory
 	# [[ -w $PWD ]]
-	local local_history_link=$PWD/.zsh_local_history 
+	local local_history_link=$PWD/.zsh_local_history
 	if [[ -f $local_history_link ]]; then
 		if [[ -h $local_history_link ]]; then
 			# Check if directory was renamed after last update
@@ -239,7 +239,7 @@ zshaddhistory() {
 			ln -vsfT $PWD $local_history_dir/current_target
 			print "$( date '+%F%t%T' )\t$PWD" > $local_history_dir/targets
 			ls -l $local_history_dir
-		fi 
+		fi
 	fi
 	# TODO: Fossil commit
 
@@ -250,7 +250,7 @@ zshaddhistory() {
 
 PP() {
     local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs | tr -d \\n | $=XC
+    curl --data-binary @${file} https://paste.rs | tr -d \\n | clip
 }
 
 alias PPd='curl -X DELETE '
@@ -363,29 +363,38 @@ elif type powershell.exe > /dev/null; then
 	XP="powershell.exe -command Get-Clipboard"
 fi
 
-XC=${XC:-/bin/false}
-if [[ -n $DISPLAY ]]; then
-	if type xclip >/dev/null; then
-		XC="xclip -rmlastnl -selection clipboard -in"
-	elif type xsel >/dev/null; then
-		XC="xsel --clipboard --input"
-	fi
-else
-	if type clip.exe > /dev/null; then
-		XC="clip.exe"
-	elif [[ -n $TMUX ]]; then
-		XC="tmux load-buffer -"
-	fi
-fi
+set_clippers() {
+	clippers=()
+	has xclip || has xsel {
+		displays=($( echo ${DISPLAY#:} ; ss 2>/dev/null \
+			--no-header \
+			--oneline \
+			--numeric \
+			--listening \
+			--extended \
+			--processes |
+			sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p" |
+			sort -u )
+		)
+		# displays+=($DISPLAY)
+		for display in $displays; do
+			{ has xclip && clippers+=( "xclip -display :$display -rmlastnl -selection clipboard -in 2>/dev/null" ) } ||
+			{ has xsel && clippers+=( "xsel --display :$display --clipboard --input 2>$/dev/null " ) }
+		done
+	has clip.exe && clippers+=( "clip.exe" )
+	[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
+}
+set_clippers
+clip() { (( #clippers > 0 )) && eval ${clippers:s.#.> >(.:s.%.).} }
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
 		filter_last_output
 	else
 		zle kill-line
-		print -r -n -- $CUTBUFFER | $=XC 2> /dev/null
-		zle -M "Copied content from (C-k): \"$CUTBUFFER\"" 
-		
+		print -r -n -- $CUTBUFFER | clip
+		zle -M "Clipped \"$CUTBUFFER\""
+
 	fi
 }
 bindkey_func '^k' kill-line-copy
@@ -394,9 +403,9 @@ bindkey_func '^k' kill-line-copy
 function copy_last_command {
 	zle up-history
 	zle kill-whole-line
-	print -r -n -- $CUTBUFFER | $=XC \
+	print -r -n -- $CUTBUFFER | clip \
 		&& zle -M "Copied last command line." \
-		|| zle -M "FAILED to copy last command line. (XC=$XC)"
+		|| zle -M "FAILED to copy last command line. (clippers=$clippers)"
 }
 # bindkey_func '^x^k' copy_last_command
 bindkey '^x^k' up-line
@@ -404,22 +413,22 @@ bindkey '^x^j' down-line
 
 # Copy last command's output to xclipboard WITH ansi escape sequences
 function copy_last_output {
-	check_output $XC || return
+	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	cat $tmux_log_file | $=XC \
+	cat $tmux_log_file | clip \
 		&& zle -M "Copied last command's output WITH ansi escape sequences." \
-		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
 bindkey_func '^x^o' copy_last_output
 
 # Copy last command's output to xclipboard WITHOUT ansi escape sequences
 function copy_last_output_stripped {
-	check_output $XC || return
+	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
-	cat $tmux_log_file | strip-ansi | $=XC \
+	cat $tmux_log_file | strip-ansi | clip \
 		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
-		|| zle -M "FAILED to copy last command's output. (XC=$XC)"
+		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
 bindkey_func '^xo' copy_last_output_stripped
 
@@ -468,7 +477,7 @@ function page_last_output {
 	# TODO: This crashes tmux much too often. Fix tmux.
 	# -c 'autocmd vimrc VimLeave * silent! !tmux set-hook pane-exited "select-layout '$(tmux display-message -pF '#{window_layout}')\" \
 	# -c 'StripAnsi' \
-	tmux split -vbp 60 $=vimp $tmux_log_file
+	tmux split -vbl 60% $=vimp $tmux_log_file
 }
 bindkey_func '^x^x' page_last_output
 
@@ -616,7 +625,7 @@ function edit_command_line() {
 	echo $old_buffer | tee /tmp/some_file >> $run_file
 	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
-		tmux split -vbp 80 $SHELL -ic "$editor $run_file; $SHELL -i "
+		tmux split -vbl 80% $SHELL -ic "$editor $run_file; $SHELL -i "
 		zle -U "RUN -tcsv $run_file"
   	else
 		# TODO: Try something new when running out of tmux
@@ -714,8 +723,6 @@ bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
-bindkey -s Pp\  'postgresql'
-bindkey -s PJ\  'postgres'
 
 function start_tmux_logging()
 {
@@ -802,10 +809,10 @@ function zsh_detect_display()
 	client_name=$( tmux display-message -p -F '#{client_termname}' )
 	[[ -z $client_name ]] && return
 	export DISPLAY
-	
+
 	[[ $client_name = *xterm* ]] && DISPLAY=$( pgrep -x -a --uid=$(id -u) Xorg | sed -nE 's|.*(:[0-9]+).*|\1|p' ) || {
 		2>/dev/null lsof -P -i4 -a -p $(pgrep -u $(id -u) -x sshd ) -sTCP:LISTEN, |
-		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do 
+		sed -nE 's/.*(60[0-9][0-9]).*/\1/p' | while read port; do
 			DISPLAY=:$port
 			echo "Trying DISPLAY=$DISPLAY"
 			xset q 2>/dev/null && break
@@ -900,13 +907,6 @@ zmodload zsh/complist
 autoload -U compinit && compinit -i
 autoload -U zed
 
-# TODO: check fpath vs. source
-zsh_source ~/.dotfiles/src/t/etc/t-completion.zsh
-compdef _t t
-zsh_source -q /usr/share/zsh/vendor-completions/_awscli
-zsh_source -q /usr/share/zsh/site-functions/_awscli
-zsh_source ~/.dotfiles/colors/dynamic-colors/completions/dynamic-colors.zsh
-
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^j' menu-complete
 bindkey -M menuselect '^k' reverse-menu-complete
@@ -987,7 +987,7 @@ stty -ixon
 # TODO: Think about if this is a really a safe setup
 # TODO: check if DISPLAY and xautolock refert to the same server
 # TODO: Check if distros provide appropriate means to archive a safe setup
-TMOUT=200
+# TMOUT=200
 
 # set -x
 ZSH_LOCK_STATUS="Setting TMOUT=200\n"
@@ -1287,6 +1287,7 @@ alias -g WH='| tr -d "[:space:]" | tr "[:upper:]" "[:lower:]" ; echo'
 alias -g WLD='| sort | uniq -d | wc -l'
 alias -g WLU='| sort | uniq | wc -l'
 alias -g X='| xargs -r'
+alias -g X0='| xargs -0 -r'
 alias -g X1='| xargs -rn 1'
 # alias -g X0='| xargs -r0'
 alias -g XP='| xargs -rP $(nproc)'
@@ -1555,7 +1556,7 @@ mount_dev() {
 	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	sudo sfdisk -J $1  |
 		jq -r '.partitiontable.partitions[].node' |
-		while read dev; do 
+		while read dev; do
 			mnt=mnt/${dev#/dev/}
 			mkdir -p $mnt && sudo mount -v $dev $mnt
 		done
@@ -1576,7 +1577,7 @@ mount_img() {
 			echo "Mounted $node ($dev)"
 		done
 }
-	
+
 mvA() {
     mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
 }
@@ -1603,7 +1604,7 @@ rand_geom() {
 }
 rand_color() { od -v -An -tx1 -N 3 /dev/urandom | tr -d '[:space:]' }
 
-leafnode() { z=($REPLY/*(N/)) ; return $#z } 
+leafnode() { z=($REPLY/*(N/)) ; return $#z }
 
 (( #env_local )) && source $env_local
 pre() { sed "s|^|${${*/|/\\|}/\\/\\\\}|"; }
@@ -1654,14 +1655,14 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # source ~/.dotfiles/zsh/completion/docker-zsh-completion/docker-zsh-completion.plugin.zsh
 compdef _docker docker
-autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker 
+autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker
 
 adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
 null=/dev/null
 
-now_epoch() { date '+%s' ; } 
-now_epoch_ms() { date '+%s000' ; } 
+now_epoch() { date '+%s' ; }
+now_epoch_ms() { date '+%s000' ; }
 
 set +x

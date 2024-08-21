@@ -3,8 +3,8 @@
 # @reboot btrbk_failure_notify 
 
 while :; do
-	journalctl -o json -S -3d -u btrbk.service |
+	journalctl -o json -S -5d -u btrbk.service |
 		jq 'if .MESSAGE | endswith("successfully.") then ( now - ( .__REALTIME_TIMESTAMP | tonumber / 1000000 ) ) else empty end | round' |
 		tail -1 > ~/.btrbk_age_in_seconds
-	sleep 66m
+	sleep 10m
 done

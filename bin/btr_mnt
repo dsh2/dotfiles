@@ -1,34 +1,34 @@
 #!/bin/zsh
 
-# set -x
+[[ -v x ]] && { PS4="+ " ; set -x ; }
 set -eu
 
+: ${mnt:=/mnt/btrbk}
+: ${blkid:=/sbin/blkid}
 log=/var/log/btr_mnt
-# log=/tmp/btr_mnt
-mnt=/mnt/btrbk
-blkid=/sbin/blkid
 
 limited_sleep() {
-	integer n=0
 	sleep 0.3
-	n=$(( n+1 ))
-	(( n < 100 )) || {
+	limited_sleep_n=$(( limited_sleep_n-1 ))
+	(( limited_sleep_n > 0 )) || {
 		echo $*
 		return 1
 	} 
 }
 
-while ! systemctl --quiet is-active time-sync.target ; do 
-	limited_sleep "Timeout when waiting for time-sync.target. Continueing withouth sync..." || break
-done
+integer limited_sleep_n=100
+# while ! systemctl --quiet is-active time-sync.target ; do 
+# 	limited_sleep "Timeout when waiting for time-sync.target. Continueing withouth sync..." || break
+# done
 
 exec 1> >( sed "s|^|$(date '+%F %T'): |" | tee -a $log ) 2>&1
 
+integer limited_sleep_n=100
 while ! type $blkid 2>&1 >/dev/null ; do 
 	limited_sleep "Timeout when waiting for $blkid to become available. EXITING." || exit 1
 done
 
-mountpoint -q /mnt/btrbk && {
+mountpoint -q $mnt && {
 	echo "Already mounted."
 	exit 0
 } 
@@ -39,8 +39,11 @@ open() {
 		sudo cryptsetup open --key-file /btrbk_key $btrbk_dev $1
 
 }
+
 open btrbk_luks_1 &
 open btrbk_luks_2 &
+open btrbk_luks_3 &
+
 wait
-sudo mount /mnt/btrbk
-ls -al /mnt/btrbk
+sudo mount $mnt
+ls -al $mnt

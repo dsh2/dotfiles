@@ -22,6 +22,35 @@ ControlPersist yes
 # KexAlgorithms +curve25519-sha256@libssh.org
 # KexAlgorithms +sntrup761x25519-sha512@openssh.com 
 
+HostKeyAlgorithms ssh-ed25519
+HostKeyAlgorithms +ssh-ed25519-cert-v01@openssh.com
+# HostKeyAlgorithms +sk-ssh-ed25519@openssh.com
+# HostKeyAlgorithms +sk-ssh-ed25519-cert-v01@openssh.com
+HostKeyAlgorithms +rsa-sha2-256
+HostKeyAlgorithms +rsa-sha2-256-cert-v01@openssh.com
+HostKeyAlgorithms +rsa-sha2-512
+HostKeyAlgorithms +rsa-sha2-512-cert-v01@openssh.com 
+
+MACs hmac-sha2-256-etm@openssh.com
+MACs +hmac-sha2-512-etm@openssh.com
+MACs +umac-128-etm@openssh.com 
+
+# KexAlgorithms sntrup761x25519-sha512@openssh.com
+# KexAlgorithms +gss-curve25519-sha256-
+# KexAlgorithms +curve25519-sha256
+# KexAlgorithms +curve25519-sha256@libssh.org
+# KexAlgorithms +gss-group16-sha512-
+# KexAlgorithms +diffie-hellman-group16-sha512
+# KexAlgorithms +diffie-hellman-group18-sha512
+# KexAlgorithms +diffie-hellman-group-exchange-sha256 
+
+Ciphers chacha20-poly1305@openssh.com
+Ciphers +aes256-gcm@openssh.com
+Ciphers +aes128-gcm@openssh.com
+Ciphers +aes256-ctr
+Ciphers +aes192-ctr
+Ciphers +aes128-ctr 
+
 AddKeysToAgent yes
 StrictHostKeyChecking ask 
 IdentitiesOnly yes
@@ -35,8 +64,8 @@ UpdateHostKeys no
 
 # LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
 LocalCommand  ~/.ssh/local_command %C %d %h %i %L %l %n %p %r %T %u &
-PermitLocalCommand yes
-# PermitLocalCommand no
+# PermitLocalCommand yes
+PermitLocalCommand no
 
 # EscapeChar ^^
 HashKnownHosts no

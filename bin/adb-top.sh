@@ -4,5 +4,6 @@ clear
 while :; do 
     # adb shell top -n 1 -m $(($(tput lines) - 3)) | column -t 
     adb shell top -n 1 -m $(($(tput lines) - 3)) 
-    sleep 2
+    # sleep 2
+	sleep 0.8
 done

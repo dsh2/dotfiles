@@ -40,7 +40,7 @@ set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 # }}}
 
 # Default applications {{{
-set $browser google-chrome-stable
+set $browser google-chrome-stable --profile-directory=Default
 set $terminal kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance
 set $terminal_tmux kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance zsh -ic 'tmm'
 set $lock_now ~/bin/i3lock-wrapper.sh
@@ -62,8 +62,13 @@ bindsym $meta+$alt+$ctrl+n exec /usr/bin/xeyes
 for_window [class="XEyes"] floating enable, border none
 # for_window [class="XEyes"] floating enable, resize set 350 200, border none
 # bindsym $meta+$alt+$ctrl+p exec pavucontrol
-bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol-qt
+bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol
+bindsym $meta+$alt+$ctrl+$shift+p exec /usr/bin/blueman-manager
+# for_window [class="Pavucontrol"] floating enable, resize set 600 750
+<<<<<<< HEAD
 for_window [class="Pavucontrol"] floating enable, resize set 600 750
+=======
+>>>>>>> 5e622d2 (i3)
 # for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 for_window [class="jetbrains-studio" title="Breakpoints"] floating disable
 for_window [class="jetbrains-studio" title="Change Signature"] floating disable
@@ -131,9 +136,9 @@ bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
 # }}}
 # Start a browser {{{
 # bindsym $ctrl+Return exec $browser
-bindsym $meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec i3-ws-enum,
+bindsym $meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec ~/.dotfiles/bin/i3-ws-enum,
 # TODO: Add delay such that new terminal show up on new workspace
-# bindsym $shift+$meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $terminal_tmux, exec i3-ws-enum,
+# bindsym $shift+$meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $terminal_tmux, exec ~/.dotfiles/bin/i3-ws-enum,
 # }}}
 # }}}
 # Move focused container to workspace {{{
@@ -254,7 +259,7 @@ bindsym $meta+$alt+$ctrl+$left exec redshift -O 4500
 # }}}
 # Lock screen {{{
 bindsym $meta+a exec $lock_now
-bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && sus || notify-send -u critical "WARNING: i3lock failed."
+bindsym $meta+w exec $lock_now & sleep 0.01 && pgrep i3lock && ~/bin/sus || notify-send -u critical "WARNING: i3lock failed."
 bindsym $meta+$shift+w exec sus || notify-send -u critical "WARNING: suspend failed."
 bindsym $meta+$ctrl+w exec $lock_now & sleep 0.01 && pgrep i3lock && hib || notify-send -u critical "WARNING: i3lock failed."
 bindsym $meta+$ctrl+$shift+w exec hib || notify-send -u critical "WARNING: hibernate failed."
@@ -340,7 +345,7 @@ mode $mode_i3 {
 	bindsym h move scratchpad, $mode_return
 	bindsym i floating toggle, $mode_return
 	bindsym m scratchpad show, $mode_return
-	bindsym n move window to workspace "new", exec i3-ws-enum, $mode_return
+	bindsym n move window to workspace "new", exec ~/.dotfiles/bin/i3-ws-enum, $mode_return
 	bindsym r exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
 	bindsym $shift+r exec reload, $mode_return
 	bindsym 0x2c exec $i3input -F 'rename workspace to "%s"' -P 'Rename workspace: ', $mode_return
@@ -349,7 +354,7 @@ mode $mode_i3 {
 	bindsym v split toggle
 	bindsym y sticky toggle, $mode_return
 
-	# bindsym $meta+u exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec i3-ws-enum,
+	# bindsym $meta+u exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec ~/.dotfiles/bin/i3-ws-enum,
 	bindsym $meta+u exec notify-send "i3: Entering recursive mode", exec ln -sf ~/.dotfiles/i3config-recursive ~/.config/i3/config, reload, $mode_return
 	
 	# TODO: Make the following binding work
@@ -631,6 +636,7 @@ bindsym $ctrl+$shift+2 exec dunstpause
 bindsym $ctrl+$shift+3 exec dunstctl history-pop
 # xautolock's hotcorner seem to get confused when switching monitor setup
 # exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
+exec_always --no-startup-id xss-lock --verbose --transfer-sleep-lock -- ~/.dotfiles/bin/i3lock-wrapper.sh
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
 exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5

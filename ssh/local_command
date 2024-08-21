@@ -106,6 +106,8 @@ uncloak_control_path()
 	local -r cph_host=$cph/$C_hash
 	[ -S $cph_host ] || 
 	    { ssh_notify critical "Control path not found. (\"$cph_host\")"; return ; }
+	ln -sf $cph_host $cph_host---$local_username@$local_hostname---$R:$remote_port || 
+		{ ssh_notify critical "Failed to link hashed control path."; return ; }
 	ln -sf $cph_host $cp/$local_username@$local_hostname---$R:$remote_port || 
 	    { ssh_notify critical "Failed to link hashed control path."; return ; }
 }
