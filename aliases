@@ -1226,6 +1226,7 @@ alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
 alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
+alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1286,3 +1287,7 @@ alias fla=flatpak
 alias flat=flatpak
 alias xdm=xdg-mime 
 alias sett=set_clippers
+alias iii=i3
+alias ii=i3
+alias hostn=hostname
+alias hn=hostname
