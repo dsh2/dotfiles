@@ -1174,7 +1174,11 @@ alias rp=rpm
 alias ssf=sshfs
 alias DUP='sudo duperemove --hashfile=duperemove.hashfile -rdh . |& ts -m "[%F %T]" '
 alias re=repo
-alias rep='repo --color=never --trace-to-stderr --no-pager'
+alias rep=repo
+alias fo='repo forall'
+alias faa='repo forall'
+alias rel='repo forall'
+# alias rep='repo --color=never --trace-to-stderr --no-pager'
 alias reps='repo status -j 8 -v -o'
 alias mn=mount
 alias ni=ninja
