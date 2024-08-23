@@ -754,11 +754,10 @@ function start_tmux_logging()
 	# -create log_file_name from cmdline contents and timestamp as history event
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
-	if has dos2unix; then
-	    tmux pipe-pane "dos2unix -f > $tmux_log_file"
-	else
-	    tmux pipe-pane "cat> $tmux_log_file"
-	fi
+	has dos2unix && pipe_cmd="dos2unix -f" || pipe_cmd=cat
+	pipe_cmd=cat
+	[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
+	tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
 	set +x
 }
 
