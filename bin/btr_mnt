@@ -16,10 +16,7 @@ limited_sleep() {
 	} 
 }
 
-<<<<<<< HEAD
 integer limited_sleep_n=100
-=======
->>>>>>> e7b6f33 (Merge upstream)
 # while ! systemctl --quiet is-active time-sync.target ; do 
 # 	limited_sleep "Timeout when waiting for time-sync.target. Continueing withouth sync..." || break
 # done

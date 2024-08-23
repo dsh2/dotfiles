@@ -610,6 +610,7 @@ alias n="date '+%F %H.%M.%S'"
 alias N="date '+%F %H.%M.%S.%N'"
 alias nn="date '+%F__%H.%M.%S'"
 alias NN="date '+%F__%H.%M.%S.%N'"
+alias Nn="date '+%F %T'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
  alias nnn='N=$( echo 00 ) ; date '+%F__%T' --date=@$(( N / 1 ))'
@@ -1228,7 +1229,8 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -axP --bwlimit=0.9m'
+alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
+alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
 alias cer=certutil
 alias cert=certutil
@@ -1260,9 +1262,10 @@ alias th='test_host='
 DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
-alias min='minicom -C ~/.logs/minicom/$(nn).log'
-alias mii='minicom -C ~/.logs/minicom/$(nn).log'
-alias mini='minicom -C ~/.logs/minicom/$(nn).log'
+alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mii='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
 alias ovv=openvpn
@@ -1279,10 +1282,16 @@ alias sel='sealert -l'
 alias xml=xmllint
 alias xmll=xmllint
 alias SA='typeset -p SSH_AUTH_SOCK && ssh-add -L'
-alias flat=flatpak
 hidetty() { $* | cat }
 alias h=hidetty
 alias sdk=sdkmanager
 alias ccc=ccache
-alias xmll=xmllint
 alias ti=tidy
+alias fla=flatpak
+alias flat=flatpak
+alias xdm=xdg-mime 
+alias sett='set_clippers ; typeset -p clippers'
+alias iii=i3
+alias ii=i3
+alias hostn=hostname
+alias hn=hostname

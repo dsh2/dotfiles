@@ -120,8 +120,9 @@ if vim_plug_available
 	map <leader>y :MerginalToggle<cr>
 	"}}}
 	" HELP: Find out why the screwed up map works and the other one NOT!
-	" nmap <leader>gd :Gvdiff<cr><c-w>l
-	nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
+	nmap <leader>gd :Gvdiff<cr><c-l>
+	" nmap <leader>gd :Gvdiff<cr>
+	" nmap <silent> <leader>gd :TagbarClose<cr>:Gvdiff<cr>:ERROR<cr>:set nofoldendable<cr>:wincmd l<cr>
 	nmap <leader>gD :Gdelete<cr>:ERROR<cr>:wincmd L<cr>
 	nmap <leader>gc :tabnew<cr>:Git commit --verbose<cr>:only<cr>
 	nmap <leader>gC :tabnew<cr>:Git commit --verbose --amend<cr>:only<cr>
@@ -147,18 +148,18 @@ if vim_plug_available
 	autocmd vimrc BufReadPost /tmp/cvs*,svn-commit.tmp*,*hg-editor* setlocal spell
 	" }}}
 	Plug 'gregsexton/gitv'
-	Plug 'junegunn/gv.vim' "{{{
-	command! Gvv GV --all
-	command! Gvvv GV --all --date-order
-	" nmap <leader>gv :GV --all<cr>
-	nmap <leader>gv :GV<cr>
-	nmap <leader>gV :GV!<cr>
-	vmap Gv :GV!<cr>
-	vmap GV :GV?<cr>
-	autocmd vimrc FileType GV map <buffer> ; o
-	autocmd vimrc FileType GV map <buffer> l ;
-	autocmd vimrc FileType GV map <buffer>  O
-	" }}}
+	 Plug 'junegunn/gv.vim' "{{{
+	 command! Gvv GV --all
+	 command! Gvvv GV --all --date-order
+	 " nmap <leader>gv :GV --all<cr>
+	 nmap <leader>gv :GV<cr>
+	 nmap <leader>gV :GV!<cr>
+	 vmap Gv :GV!<cr>
+	 vmap GV :GV?<cr>
+	 autocmd vimrc FileType GV map <buffer> ; o
+	 autocmd vimrc FileType GV map <buffer> l ;
+	 autocmd vimrc FileType GV map <buffer>  O
+	 " }}}
 	Plug 'AndrewRadev/splitjoin.vim'"{{{
 	let g:splitjoin_quiet=0
 	"}}}
@@ -187,72 +188,29 @@ if vim_plug_available
 	" let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute($PWD, "/\| ", "_", "g")
 	" let &viminfo="'50,<1000,s100,:9999,/9999,n~/.vim/viminfo/" . substitute(substitute($PWD, "/", "_", "g"), " ", "_", "g")
 	"}}}
-	Plug 'airblade/vim-gitgutter', {'on': 'GitGutterToggle'} "{{{
-	let g:gitgutter_highlight_lines = 0
-	let g:gitgutter_override_sign_column_highlight = 1
-	highlight clear SignColumn
-	highlight GitGutterAdd ctermbg=black
-	map <leader>gG :GitGutterToggle<cr>
-	" }}}
-	Plug 'junegunn/vim-github-dashboard' "{{{
-	let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
-	" }}}
-	Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
-	nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
-	nnoremap <silent> <F3> :Unite buffer<cr>
-	autocmd vimrc FileType unite map <buffer> <F3> q
-	Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-	Plug 'Shougo/neomru.vim'
-	let g:neomru#time_format='%F %T '
-	let g:neomru#update_interval=60
-	"}}}
+	"Plug 'airblade/vim-gitgutter', {'on': 'GitGutterToggle'} "{{{
+	"let g:gitgutter_highlight_lines = 0
+	"let g:gitgutter_override_sign_column_highlight = 1
+	"highlight clear SignColumn
+	"highlight GitGutterAdd ctermbg=black
+	"map <leader>gG :GitGutterToggle<cr>
+	"" }}}
+	"Plug 'junegunn/vim-github-dashboard' "{{{
+	"let g:github_dashboard = { 'username': 'dsh2', 'password': $GHD_GITHUB_TOKEN }
+	"" }}}
+	"Plug 'Shougo/unite.vim', {'on': 'Unite'} "{{{
+	"nnoremap <silent> <leader>lb :<C-u>Unite buffer file_mru<CR>
+	"nnoremap <silent> <F3> :Unite buffer<cr>
+	"autocmd vimrc FileType unite map <buffer> <F3> q
+	"Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+	"Plug 'Shougo/neomru.vim'
+	"let g:neomru#time_format='%F %T '
+	"let g:neomru#update_interval=60
+	""}}}
 	Plug 'AndrewRadev/linediff.vim' "{{{
 	nmap <leader>ld :Linediff<cr>
 	nmap <leader>lD :LinediffReset<cr>
-	" }}}
-	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
-	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
-	" Plug 'rickhowe/diffchar.vim'
-	" let g:DiffUnit = 'Word1'
-	" let g:DiffColors = 0 " fixed color
-	" " let g:DiffColors = 1 " 4 colors in fixed order
-	" Plug 'rickhowe/spotdiff.vim'
-	" noremap <leader>ldt :Diffthis<CR>
-	" noremap <leader>ldr :Diffoff!<CR>
-	" noremap <leader>ldo :Diffoff!<CR>
-	" " }}}
-	Plug 'hari-rangarajan/CCTree' "{{{
-	" TODO:
-	" let g:CCTreeCscopeDb = ".cscope/out"
-	" autocmd vimrc BufNewFile,BufReadPost CCTree-View nnoremap q :echo q
-	let g:CCTreeCscopeDb = "cscope.out"
-	let g:CCTreeDisplayMode = 1
-	let g:CCTreeHilightCallTree=1
-	let g:CCTreeMinVisibleDepth = 3
-	let g:CCTreeOrientation = "topleft"
-	let g:CCTreeRecursiveDepth = 1
-	let g:CCTreeUseUTF8Symbols = 1
-	let g:CCTreeWindowWidth = -1
-	let g:CCTreeDbFileMaxSize = 40000000
-	let g:CCTreeKeyHilightTree = '<C-h>'        " Static highlighting
-	let g:CCTreeKeyDepthPlus = '='
-	let g:CCTreeKeyDepthMinus = '-'
-	" -re-use tree control code for uftrace, etc
-	" map ; to preview
-	" -add command to load db to cscope load event
-	" -use async-run or similar for that
-	" }}}
-	Plug 'Ilink/cscope-quickfix' "{{{
-	" set cscopepathcomp=2
-	" set cscopeprg=/opt/local/bin/cscope
-	"set cscopetag
-	"set cscopequickfix=s-,c-,d-,i-,t-,e-
-	"set cscoperelative
-	if filereadable("cscope.out")
-	silent! cscope add cscope.out
-	" CCTreeLoadDB cscope.out
-	endif
-"	set cscopeverbose
+	"}}}
 	function! QfLlNext()
 		windo if &l:buftype == "quickfix" | silent! cnext | if &l:buftype == "location" | silent! lnext | endif | endif
 	endfunction
@@ -315,39 +273,39 @@ if vim_plug_available
 	nmap <leader>tn :$tabnew<cr>
 	nmap <leader>tc :tabclose<cr>
 	" }}}
-	Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
-	map <leader>ff :Ranger<cr>
-	"}}}
-	Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
-	nnoremap <F4> :MundoToggle<cr>
-	let g:mundo_preview_bottom=1
-	let g:mundo_verbose_graph=0
+	"Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
+	"map <leader>ff :Ranger<cr>
+	""}}}
+	"Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
+	"nnoremap <F4> :MundoToggle<cr>
+	"let g:mundo_preview_bottom=1
+	"let g:mundo_verbose_graph=0
 
-	let g:mundo_mappings = {
-		\ '<CR>': 'preview',
-		\ 'o': 'preview',
-		\ 'j': 'move_older',
-		\ 'k': 'move_newer',
-		\ '<down>': 'move_older',
-		\ '<up>': 'move_newer',
-		\ 'J': 'move_older_write',
-		\ 'K': 'move_newer_write',
-		\ 'gg': 'move_top',
-		\ 'G': 'move_bottom',
-		\ 'P': 'play_to',
-		\ 'd': 'diff',
-		\ 'i': 'toggle_inline',
-		\ '/': 'search',
-		\ 'n': 'next_match',
-		\ 'N': 'previous_match',
-		\ 'p': 'diff_current_buffer',
-		\ 'r': 'diff',
-		\ '?': 'toggle_help',
-		\ 'q': 'quit',
-		\ '<2-LeftMouse>': 'mouse_click' }
+	"let g:mundo_mappings = {
+	"	\ '<CR>': 'preview',
+	"	\ 'o': 'preview',
+	"	\ 'j': 'move_older',
+	"	\ 'k': 'move_newer',
+	"	\ '<down>': 'move_older',
+	"	\ '<up>': 'move_newer',
+	"	\ 'J': 'move_older_write',
+	"	\ 'K': 'move_newer_write',
+	"	\ 'gg': 'move_top',
+	"	\ 'G': 'move_bottom',
+	"	\ 'P': 'play_to',
+	"	\ 'd': 'diff',
+	"	\ 'i': 'toggle_inline',
+	"	\ '/': 'search',
+	"	\ 'n': 'next_match',
+	"	\ 'N': 'previous_match',
+	"	\ 'p': 'diff_current_buffer',
+	"	\ 'r': 'diff',
+	"	\ '?': 'toggle_help',
+	"	\ 'q': 'quit',
+	"	\ '<2-LeftMouse>': 'mouse_click' }
 
-	autocmd vimrc FileType Mundo nnoremap <buffer> ; <cr>l
-	" }}}
+	"autocmd vimrc FileType Mundo nnoremap <buffer> ; <cr>l
+	"" }}}
 	" Plug 'mbbill/undotree', {'on': 'UndotreeToggle'} "{{{
 	" let g:undotree_WindowLayout = 2
 	" let g:undotree_SetFocusWhenToggle = 1
@@ -373,38 +331,38 @@ if vim_plug_available
 	" let g:pandoc#formatting#equalprg= "pandoc -t markdown --atx-headers --columns " . g:pandoc#formatting#textwidth
 	" let g:pandoc#formatting#smart_autoformat_on_cursormoved = 0
 	" }}}
-	Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
-	" hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
-	" hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
-	" hi link CSVColumnOdd MoreMsg
-	" hi link CSVColumnEven Question
-	" autocmd vimrc Filetype csv hi CSVColumnEven ctermbg=4
-	" autocmd vimrc Filetype csv hi CSVColumnOdd  ctermbg=5
-	let g:csv_no_column_highlight = 0
-	let b:csv_arrange_align = 'l*'
-	let g:csv_arrange_align = 'l*'
-	let g:csv_autocmd_arrange = 1
-	" TODO: If readonly set nofile?
-	map <leader>CT :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim="\t"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-	map <leader>C; :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=";"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-	" map <leader>C, :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=','<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-	map <leader>C, :setlocal modifiable<cr>:setlocal filetype=csv<cr>:NewDelimiter ,<cr>ggVGG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-	map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
-	map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
-	autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
-	" TODO: Add toggle reverse order support
-	autocmd vimrc FileType csv map <buffer> <leader>cs :Sort<cr>
-	autocmd vimrc FileType csv map <buffer> <leader>c/ :CSVSearchInColumn
-	autocmd vimrc FileType csv map <buffer> <leader>ca :Analyze<cr>
-	" TODO: Add maps for
-	" -Toggle aligns (left, right, etc.)
-	" -Number types (hex, etc.)
-	" }}}
-	Plug 'kelwin/vim-smali', {'for': 'smali'} "{{{
-	"Plug 'alderz/smali-vim'
-	autocmd vimrc BufRead *.smali set filetype=smali
-	" }}}
-	Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
+	"Plug 'chrisbra/csv.vim', {'for': 'csv' } "{{{
+	"" hi CSVColumnEven term=bold ctermbg=4 guibg=DarkBlue
+	"" hi CSVColumnOdd  term=bold ctermbg=5 guibg=DarkMagenta
+	"" hi link CSVColumnOdd MoreMsg
+	"" hi link CSVColumnEven Question
+	"" autocmd vimrc Filetype csv hi CSVColumnEven ctermbg=4
+	"" autocmd vimrc Filetype csv hi CSVColumnOdd  ctermbg=5
+	"let g:csv_no_column_highlight = 0
+	"let b:csv_arrange_align = 'l*'
+	"let g:csv_arrange_align = 'l*'
+	"let g:csv_autocmd_arrange = 1
+	"" TODO: If readonly set nofile?
+	"map <leader>CT :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim="\t"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+	"map <leader>C; :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=";"<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+	"" map <leader>C, :setlocal modifiable<cr>:setlocal filetype=csv<cr>let g:csv_delim=','<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+	"map <leader>C, :setlocal modifiable<cr>:setlocal filetype=csv<cr>:NewDelimiter ,<cr>ggVGG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+	"map <leader>CC :setlocal modifiable<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let b:csv_headerline = 0<cr>
+	"map <leader>CS :set noreadonly<cr>:setlocal modifiable<cr>:%s/\s\{1,\}/,/<cr>:let @/=""<cr>:setlocal filetype=csv<cr>ggVG:ArrangeColumn!<cr>let g:csv_headerline=0<cr>0
+	"autocmd vimrc BufRead,BufNewFile *.csv set filetype=csv
+	"" TODO: Add toggle reverse order support
+	"autocmd vimrc FileType csv map <buffer> <leader>cs :Sort<cr>
+	"autocmd vimrc FileType csv map <buffer> <leader>c/ :CSVSearchInColumn
+	"autocmd vimrc FileType csv map <buffer> <leader>ca :Analyze<cr>
+	"" TODO: Add maps for
+	"" -Toggle aligns (left, right, etc.)
+	"" -Number types (hex, etc.)
+	"" }}}
+	"Plug 'kelwin/vim-smali', {'for': 'smali'} "{{{
+	""Plug 'alderz/smali-vim'
+	"autocmd vimrc BufRead *.smali set filetype=smali
+	"" }}}
+	"Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'} "{{{
 	Plug 'xolox/vim-misc'
 	" }}}
 	" Plug 'elzr/vim-json', {'for': 'json'}  "{{{
@@ -439,61 +397,61 @@ if vim_plug_available
 	autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 	nnoremap <F2> :NERDTreeFind<cr>
 	" }}}
-	Plug 'tyru/open-browser.vim' "{{{
-	" let g:netrw_nogx = 1 " disable netrw's gx mapping.
-	nmap gx <Plug>(openbrowser-smart-search)
-	vmap gx <Plug>(openbrowser-smart-search)
-	command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
-	map gX OpenBrowserCurrent
-	" let g:openbrowser_browser_commands = [
-	"         \   {'name': 'google-chome',
-	"         \    'args': ['start', '{browser}', '{uri}']}
-	"         \]
-	"}}}
-	Plug 'dsh2/tagbar' " ", {'on': 'TagbarToggle'}  
-	Plug 'hushicai/tagbar-javascript.vim' " {{{
-	let g:tagbar_autoclose = 0
-	" TODO: Add support for percent instead of number of characters
-	let g:tagbar_width = 40
-	let g:tagbar_zoomwidth = 0
-	let g:tagbar_compact = 1
-	let g:tagbar_indent = 1
-	let g:tagbar_show_linenumbers = 0
-	let g:tagbar_autofocus = 0
-	let g:tagbar_hide_nonpublic = 0
-	let g:tagbar_autoshowtag = 1
-	let g:tagbar_autopreview = 0
-	map <leader>tt :silent! TagbarToggle<cr>
-	autocmd vimrc VimEnter * nested :silent! call tagbar#autoopen(1)
-	" autocmd vimrc VimEnter * nested :silent! TagbarToggle
-	autocmd vimrc FileType tagbar map <buffer> ; p
-	autocmd vimrc FileType tagbar map <buffer> A x
-	autocmd vimrc FileType tagbar map <buffer> l za
-	autocmd vimrc FileType tagbar map <buffer> h za
-	" }}}
-	Plug 'jeetsukumaran/vim-markology' "{{{
-	let g:markology_enable = 0
-	let g:markology_textlower = "\t>"
-	let g:markology_textupper = "\t}"
-	let g:markology_textother = "\t:"
-	let g:markology_hlline_lower = 0
-	let g:markology_hlline_upper = 0
-	let g:markology_hlline_other = 0
-	highlight MarkologyHLl ctermfg=Cyan ctermbg=black
-	highlight MarkologyHLu ctermfg=Cyan ctermbg=black
-	highlight MarkologyHLo ctermfg=Cyan ctermbg=black
-	" }}}
-	Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
-	" map <leader>a :Ag! \\b<cword\\b><CR>
-	" map <leader>a :Ag! <cword><CR>
-	map <leader>a :Rg <cword><CR>
-	map <leader><leader>a :Rg --no-ignore <cword><CR>
-	vnoremap <leader>a :<c-u>execute("Ag -- ") . GetSelected()<cr>
-	" }}}
-	Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
-	nnoremap <c-w>m :MaximizerToggle<cr>
-	nnoremap <c-w><c-m> :MaximizerToggle<cr>
-	"}}}
+	""Plug 'tyru/open-browser.vim' "{{{
+	""" let g:netrw_nogx = 1 " disable netrw's gx mapping.
+	""nmap gx <Plug>(openbrowser-smart-search)
+	""vmap gx <Plug>(openbrowser-smart-search)
+	""command! OpenBrowserCurrent execute "OpenBrowser" "file://" . expand('%:p:gs?\\?/?')
+	""map gX OpenBrowserCurrent
+	""" let g:openbrowser_browser_commands = [
+	"""         \   {'name': 'google-chome',
+	"""         \    'args': ['start', '{browser}', '{uri}']}
+	"""         \]
+	"""}}}
+	"Plug 'dsh2/tagbar' " ", {'on': 'TagbarToggle'}  
+	"Plug 'hushicai/tagbar-javascript.vim' " {{{
+	"let g:tagbar_autoclose = 0
+	"" TODO: Add support for percent instead of number of characters
+	"let g:tagbar_width = 40
+	"let g:tagbar_zoomwidth = 0
+	"let g:tagbar_compact = 1
+	"let g:tagbar_indent = 1
+	"let g:tagbar_show_linenumbers = 0
+	"let g:tagbar_autofocus = 0
+	"let g:tagbar_hide_nonpublic = 0
+	"let g:tagbar_autoshowtag = 1
+	"let g:tagbar_autopreview = 0
+	"map <leader>tt :silent! TagbarToggle<cr>
+	"autocmd vimrc VimEnter * nested :silent! call tagbar#autoopen(1)
+	"" autocmd vimrc VimEnter * nested :silent! TagbarToggle
+	"autocmd vimrc FileType tagbar map <buffer> ; p
+	"autocmd vimrc FileType tagbar map <buffer> A x
+	"autocmd vimrc FileType tagbar map <buffer> l za
+	"autocmd vimrc FileType tagbar map <buffer> h za
+	"" }}}
+	"Plug 'jeetsukumaran/vim-markology' "{{{
+	"let g:markology_enable = 0
+	"let g:markology_textlower = "\t>"
+	"let g:markology_textupper = "\t}"
+	"let g:markology_textother = "\t:"
+	"let g:markology_hlline_lower = 0
+	"let g:markology_hlline_upper = 0
+	"let g:markology_hlline_other = 0
+	"highlight MarkologyHLl ctermfg=Cyan ctermbg=black
+	"highlight MarkologyHLu ctermfg=Cyan ctermbg=black
+	"highlight MarkologyHLo ctermfg=Cyan ctermbg=black
+	"" }}}
+	"Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
+	"" map <leader>a :Ag! \\b<cword\\b><CR>
+	"" map <leader>a :Ag! <cword><CR>
+	"map <leader>a :Rg <cword><CR>
+	"map <leader><leader>a :Rg --no-ignore <cword><CR>
+	"vnoremap <leader>a :<c-u>execute("Ag -- ") . GetSelected()<cr>
+	"" }}}
+	"Plug 'szw/vim-maximizer', {'on': 'MaximizerToggle'}  "{{{
+	"nnoremap <c-w>m :MaximizerToggle<cr>
+	"nnoremap <c-w><c-m> :MaximizerToggle<cr>
+	""}}}
 	Plug 'bling/vim-airline' "{{{
 	Plug 'vim-airline/vim-airline-themes'
 	Plug 'ompugao/vim-airline-cwd'
@@ -522,7 +480,6 @@ if vim_plug_available
 	let g:pasta_disabled_filetypes = ['qf', 'tagbar', 'netrw']
 	"}}}
 	let g:no_cecutil_maps=1
-
 	Plug 'powerman/vim-plugin-AnsiEsc', {'on': 'AnsiEsc'} "{{{
 	map <leader>W :AnsiEsc<cr>
 	" Remove ansi escape sequence
@@ -544,18 +501,18 @@ if vim_plug_available
 	Plug 'romgrk/winteract.vim', {'on': 'InteractiveWindow'} "{{{
 	nmap gw :InteractiveWindow<CR>
 	"}}}
-	Plug 'Shougo/vinarise.vim', {'on': 'Vinarise'} "{{{
-	map <leader>V :Vinarise<cr>
-	"}}}
-	Plug 'nathanaelkane/vim-indent-guides', {'on': 'IndentGuidesToggle'} "{{{
-	let g:indent_guides_guide_size = 1
-	" let g:indent_guides_start_level = 2
-	"}}}
-	Plug 'junegunn/vim-peekaboo' "{{{
-	let g:peekaboo_window = 'vertical botright 51new'
-	let g:peekaboo_delay = 0
-	let g:peekaboo_compact = 0
-	"}}}
+	"Plug 'Shougo/vinarise.vim', {'on': 'Vinarise'} "{{{
+	"map <leader>V :Vinarise<cr>
+	""}}}
+	"Plug 'nathanaelkane/vim-indent-guides', {'on': 'IndentGuidesToggle'} "{{{
+	"let g:indent_guides_guide_size = 1
+	"" let g:indent_guides_start_level = 2
+	""}}}
+	"Plug 'junegunn/vim-peekaboo' "{{{
+	"let g:peekaboo_window = 'vertical botright 51new'
+	"let g:peekaboo_delay = 0
+	"let g:peekaboo_compact = 0
+	""}}}
 	Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
 	" let g:formatdef_my_custom_json = '"jq -s"'
 	let g:formatdef_my_custom_json = '"jq ."'
@@ -575,31 +532,38 @@ if vim_plug_available
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
-	Plug 'pseewald/vim-anyfold'
-	Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
-	autocmd vimrc FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
-	"}}}
-	Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
-	" map <leader>B :AsyncRun binwalk %<cr>
-	autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
-	autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc,.nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
-	"}}}
-	Plug 'atimholt/spiffy_foldtext' "{{{
-	" TODO: Add more preview text, squece as much content as possible?
-	let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
-	"}}}
-	Plug 't9md/vim-quickhl'
-	Plug 'dsh2/HiCursorWords' "{{{
-	let g:HiCursorWords_delay = 10
-	let g:HiCursorWords_hiGroupRegexp = ''
-	" let g:HiCursorWords_style='term=reverse cterm=reverse gui=reverse'
-	" let g:HiCursorWords_linkStyle='ErrorMsg'
-	" let g:HiCursorWords_linkStyle='IncSearch'
-	let g:HiCursorWords_linkStyle='MatchParen'
-	" let g:HiCursorWords_linkStyle='VisualNOS'
-	" let g:HiCursorWords_debugEchoHiName = 1
-	let g:HiCursorWords_debugEchoHiName = 0
-	" }}}
+	"Plug 'tpope/vim-commentary' "{{{
+	"autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
+	"" autocmd vimrc FileType asn setlocal commentstring=--\ %s
+	"autocmd vimrc FileType config,crontab,expect,exports,fstab,dosini,sshconfig,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	"autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
+	"nmap gcC yygccp
+	""}}}
+	"Plug 'pseewald/vim-anyfold'
+	"Plug 'dsh2/diff-fold.vim', {'for': 'diff'} "{{{
+	"autocmd vimrc FileType diff map <buffer> <leader>d <Plug>DiffFoldNav
+	""}}}
+	"Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'} "{{{
+	"" map <leader>B :AsyncRun binwalk %<cr>
+	"autocmd vimrc User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
+	"autocmd vimrc BufReadPost .\\\{0,1\}vimrc,vimrc.nvim,init.vim,nvimrc,.nvimrc nnoremap <buffer> <silent> <cr> 0f/lgf
+	""}}}
+	"Plug 'atimholt/spiffy_foldtext' "{{{
+	"" TODO: Add more preview text, squece as much content as possible?
+	"let g:SpiffyFoldtext_format='%c{-} %<%f{-}| %4n lines |-%l{--}'
+	""}}}
+	"Plug 't9md/vim-quickhl'
+	"Plug 'dsh2/HiCursorWords' "{{{
+	"let g:HiCursorWords_delay = 10
+	"let g:HiCursorWords_hiGroupRegexp = ''
+	"" let g:HiCursorWords_style='term=reverse cterm=reverse gui=reverse'
+	"" let g:HiCursorWords_linkStyle='ErrorMsg'
+	"" let g:HiCursorWords_linkStyle='IncSearch'
+	"let g:HiCursorWords_linkStyle='MatchParen'
+	"" let g:HiCursorWords_linkStyle='VisualNOS'
+	"" let g:HiCursorWords_debugEchoHiName = 1
+	"let g:HiCursorWords_debugEchoHiName = 0
+	"" }}}
 	Plug 'flatcap/vim-keyword' "{{{
 	" TODO: Make this work
 	map <leader>k <plug>KeywordToggle
@@ -685,64 +649,29 @@ if vim_plug_available
 	"nmap g- <Plug>(highlightedundo-gminus)
 	"nmap g+ <Plug>(highlightedundo-gplus)
 	""}}}
-	let g:go_version_warning = 0
-	Plug 'fatih/vim-go'"{{{
-	let g:go_version_warning = 0
-	let g:go_def_mode='gopls'
-	let g:go_info_mode='gopls'
-	" run :GoBuild or :GoTestCompile based on the go file
-	function! s:build_go_files()
-		let l:file = expand('%')
-		if l:file =~# '^\f\+_test\.go$'
-			call go#test#Test(0, 1)
-		elseif l:file =~# '^\f\+\.go$'
-			call go#cmd#Build(0)
-		endif
-	endfunction
 
-	autocmd vimrc FileType go nmap <a-s-k> :GoDocBrowser<cr>
-	autocmd vimrc FileType go nmap <f9> :GoDebugBreakpoint<cr>
-	autocmd vimrc FileType go nmap <leader>B :GoBuild<cr>
-	autocmd vimrc FileType go nmap <a-s-r> :GoDebugStart<cr>
-	autocmd vimrc FileType go nmap <c-a-s-r> :GoDebugStop<cr>
-	autocmd vimrc FileType go nmap <s-f10> :GoDebugNext<cr>
-	autocmd vimrc FileType go nmap <s-f11> :GoDebugStep<cr>
-	autocmd vimrc FileType go nmap <a-s-f11> :GoDebugStepOut<cr>
-	autocmd vimrc FileType go nmap <leader>T :GoDecls<CR>
-	autocmd vimrc FileType go nmap <leader>m :<C-u>call <SID>build_go_files()<CR>
+	" autocmd vimrc FileType go nmap <a-s-k> :GoDocBrowser<cr>
+	" autocmd vimrc FileType go nmap <f9> :GoDebugBreakpoint<cr>
+	" autocmd vimrc FileType go nmap <leader>B :GoBuild<cr>
+	" autocmd vimrc FileType go nmap <a-s-r> :GoDebugStart<cr>
+	" autocmd vimrc FileType go nmap <c-a-s-r> :GoDebugStop<cr>
+	" autocmd vimrc FileType go nmap <s-f10> :GoDebugNext<cr>
+	" autocmd vimrc FileType go nmap <s-f11> :GoDebugStep<cr>
+	" autocmd vimrc FileType go nmap <a-s-f11> :GoDebugStepOut<cr>
+	" autocmd vimrc FileType go nmap <leader>T :GoDecls<CR>
+	" autocmd vimrc FileType go nmap <leader>m :<C-u>call <SID>build_go_files()<CR>
 
-	autocmd vimrc FileType go map <buffer> <leader>r :GoRun<cr>
-	autocmd vimrc FileType go map <buffer> <leader>~ :GoDescribe<cr>
-	autocmd vimrc FileType go nmap <c-space> :GoDescribe<CR>
-	autocmd vimrc FileType go map <buffer> <s-f2> :GoRename<cr>
-	autocmd vimrc FileType go map <buffer> <c-\>s :GoReferrers<cr>
-	autocmd vimrc FileType go map <buffer> <leader><c-]> :<C-U>call go#def#Jump("vert", 0)<CR>
-	" let g:go_debug = [ 'shell-commands', 'debugger-state', 'debugger-commands', 'lsp' ]
-	" let g:go_debug = [ 'lsp' ]
-	let g:go_info_mode = 'guru'
-	let g:go_fmt_command = "goimports"
-	" }}}
-	Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
-
-	let g:jedi#goto_stubs_command = ''
-	let g:jedi#auto_close_doc = 0
-	let g:jedi#completions_command = "<C-space>"
-	let g:jedi#goto_command = "<c-]>"
-	let g:jedi#show_call_signatures = 2
-	let g:jedi#show_call_signatures_delay = 0
-	let g:jedi#smart_auto_mappings = 1
-	let g:jedi#squelch_py_warning = 1
-	" let g:jedi#use_splits_not_buffers = ""
-	" let g:jedi#use_tabs_not_buffers = 1
-	let g:jedi#use_splits_not_buffers = "left"
-	let g:jedi#use_tabs_not_buffers = 0
-	let g:jedi#completions_enabled = 0  " favor deoplete-jedi
-
-	" let g:jedi#force_py_version = 3.4
-	Plug 'tmhedberg/SimpylFold', {'for': 'python'}
-	" Plug 'nvie/vim-flake8'
-	" Plug 'xolox/vim-pyref'
-	" }}}
+	" autocmd vimrc FileType go map <buffer> <leader>r :GoRun<cr>
+	" autocmd vimrc FileType go map <buffer> <leader>~ :GoDescribe<cr>
+	" autocmd vimrc FileType go nmap <c-space> :GoDescribe<CR>
+	" autocmd vimrc FileType go map <buffer> <s-f2> :GoRename<cr>
+	" autocmd vimrc FileType go map <buffer> <c-\>s :GoReferrers<cr>
+	" autocmd vimrc FileType go map <buffer> <leader><c-]> :<C-U>call go#def#Jump("vert", 0)<CR>
+	" " let g:go_debug = [ 'shell-commands', 'debugger-state', 'debugger-commands', 'lsp' ]
+	" " let g:go_debug = [ 'lsp' ]
+	" let g:go_info_mode = 'guru'
+	" let g:go_fmt_command = "goimports"
+	" " }}}
 	" Plug 'dsh2/vim-man' " TODO: { 'dir': '~/.vim-man', 'do': 'git pull orig' } " {{{
 	" augroup manlaunchtoc
 	"     autocmd!
@@ -757,45 +686,18 @@ if vim_plug_available
 	"     endif
 	" augroup end
 	" }}}
-	Plug 'Shougo/echodoc.vim'"{{{
-	let g:echodoc_enable_at_startup = 1
-	" let g:echodoc#type = 'virtual'
-	" let g:echodoc#type = 'echo'
-	let g:echodoc#type = 'signature'"}}}
 	" Plug 'sakhnik/nvim-gdb'
 	" Plug 'udalov/javap-vim'
-	" Plug rest... {{{
+	"" Plug rest... {{{
 	Plug 'terryma/vim-expand-region'
-	" Plug 'christianrondeau/vim-base64'
-	Plug 'mhinz/vim-rfc'
-	Plug 'nakal/vim-smarttabs'
-	Plug 'bfrg/vim-cpp-modern'
-	Plug 'cespare/vim-toml'
-	Plug 'tommcdo/vim-exchange'
-	Plug 'robbles/logstash.vim'
-	Plug 'junegunn/vim-easy-align' "{{{
-	map <leader>EA :EasyAlign<cr>
-	" 	let g:easy_align_delimiters = {
-	" " \ '>': { 'pattern': '>>\|=>\|>' },
-	" \ '-': {
-	" \     'pattern':         '\\+\|/\*\|\*/',
-	" \     'delimiter_align': 'l',
-	" \     'ignore_groups':   ['!Comment'] },
-	" \ }
-	xmap ga <Plug>(EasyAlign)
-	nmap ga <Plug>(EasyAlign)
-	" }}}
-	
-	Plug 'actionshrimp/vim-xpath'
 	Plug 'tpope/vim-abolish'
 	Plug 'nfnty/vim-nftables'
 	Plug 'jremmen/vim-ripgrep'
 	Plug 'tpope/vim-endwise'
-	Plug 'vim-ruby/vim-ruby'
-	Plug 'pedrohdz/vim-yaml-folds'
-	Plug 'tpope/vim-bundler'
-	Plug 'Quramy/tsuquyomi'
-	Plug 'tommcdo/vim-exchange'
+	"Plug 'pedrohdz/vim-yaml-folds'
+	"Plug 'tpope/vim-bundler'
+	"Plug 'Quramy/tsuquyomi'
+	"Plug 'tommcdo/vim-exchange'
 	Plug 'szw/vim-dict'
 	Plug 'google/vim-searchindex'
 	Plug 'tpope/vim-surround'
@@ -803,34 +705,33 @@ if vim_plug_available
 	Plug 'dsh2/vim-CtrlXA'
 	Plug 'Valloric/vim-operator-highlight'
 	Plug 'tmhedberg/matchit'
-	Plug 'chrisbra/Colorizer'
-	Plug 'chrisbra/Recover.vim'
-	Plug 'StanAngeloff/php.vim'
-	Plug 'rayburgemeestre/phpfolding.vim'
+	"Plug 'ervandew/matchem'
+	"Plug 'chrisbra/Colorizer'
+	"Plug 'chrisbra/Recover.vim'
+	"Plug 'StanAngeloff/php.vim'
+	"Plug 'rayburgemeestre/phpfolding.vim'
 	Plug 'dsh2/vim-unimpaired'
 	Plug 'christoomey/vim-sort-motion'
-	Plug 'christoomey/vim-system-copy'
+	" Plug 'christoomey/vim-system-copy'
 	Plug 'embear/vim-foldsearch'
-	Plug 'ervandew/matchem'
 	Plug 'junegunn/rainbow_parentheses.vim'
 	Plug 'lzap/vim-selinux', {'for': 'te'}
-	Plug 'maksimr/vim-yate', {'for': 'yate'}
 	Plug 'mboughaba/i3config.vim', {'for': 'i3config'}
 	Plug 'nelstrom/vim-visual-star-search'
 	Plug 'tpope/vim-afterimage'
 	" Plug 'tpope/vim-dadbod'
 	Plug 'tpope/vim-eunuch'
-	Plug 'tpope/vim-rsi'
+	"Plug 'tpope/vim-rsi'
 	Plug 'tpope/vim-tbone'
 	Plug 'tpope/vim-abolish'
-	Plug 'vim-scripts/ReplaceWithRegister'
-	Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
-	Plug 'vim-scripts/info.vim', {'on': 'Info'}
+	"Plug 'vim-scripts/ReplaceWithRegister'
+	"Plug 'vim-scripts/VCard-syntax', {'for': 'vcard'}
+	"Plug 'vim-scripts/info.vim', {'on': 'Info'}
 	Plug 'vim-scripts/renamer.vim', {'on': 'Renamer'}
-	Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
+	"Plug 'wannesm/wmgraphviz.vim', {'for': 'dot'}
 	Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
-	Plug 'frioux/vim-regedit'
-	"}}}
+	"Plug 'frioux/vim-regedit'
+	""}}}
 	Plug 'Shougo/deoplete.nvim' " {{{
 	let g:deoplete#enable_at_startup = 0
 	autocmd vimrc InsertEnter * call deoplete#enable()
@@ -1027,7 +928,7 @@ nmap <leader>o :silent !open "%"<cr>
 nmap <nowait> <leader>s :update<cr>
 " TODO: PWD vs. CWD
 " TODO: merge witih neovim rc files
-" map <silent><leader>R :source ~/.config/nvim/init.vim \| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
+map <silent><leader>R :source ~/.config/nvim/init.vim \| if filereadable("./.vimrc") \| source ./.vimrc \|  endif<cr>
 " TODO: source scriptname instead
 map <silent><leader>R :update<cr>:source ~/.config/nvim/init.vim<cr>
 nnoremap <cr> :nohlsearch<CR>/<BS><CR>
