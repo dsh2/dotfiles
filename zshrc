@@ -1,5 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 # set -x
+# exec > >( ts -s -m '[%F %T]' | tee -i /tmp/zshrc.log )
+# exec 2>&1
 
 autoload -Uz add-zsh-hook
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
