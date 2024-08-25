@@ -51,10 +51,10 @@ _logdog() {
 }
 complete -o default -o nospace -F _logdog logdog
 
-if type dircolors > /dev/null 2>&1 ; then
-	eval $(dircolors ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
-fi
-export LS_COLORS
+# if type dircolors > /dev/null 2>&1 ; then
+# 	eval $(dircolors ~/.dotfiles/colors/dircolors-solarized/dircolors.256dark)
+# fi
+# export LS_COLORS
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
