@@ -688,7 +688,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='agents=(${TMPDIR:=/tmp}/ssh-*/agent.*(om)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
+alias sa='agents=( {/tmp,$TMPDIR}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
