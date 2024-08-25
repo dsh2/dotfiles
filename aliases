@@ -3,18 +3,6 @@
 UNAME=$(uname)
 : "${TMPDIR:=/tmp}"
 
-LS_COMMAND=ls
-if [ "$UNAME" = "Darwin" ]; then
-	# TODO: check if gnu core utils is installed
-	alias find=gfind
-	alias locate=glocate
-	LS_COMMAND=gls
-	alias sed=gsed
-	alias tac=gtac
-	# Switch profile of running iTerm2 window
-	it2prof() { printf '\033]50;SetProfile=$@\a'; }
-fi
-
 if [ "$OSTYPE" = "cygwin" ]; then
 	alias sudo="cygstart --action=runas"
 fi
@@ -325,7 +313,7 @@ alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 
 # ls
-alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
+# alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
 alias l='ls -lh'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
