@@ -366,15 +366,18 @@ fi
 set_clippers() {
 	clippers=()
 	has xclip || has xsel {
-		displays=($( echo ${DISPLAY#:} ; ss 2>/dev/null \
-			--no-header \
-			--oneline \
-			--numeric \
-			--listening \
-			--extended \
-			--processes |
-			sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p" |
-			sort -u )
+		displays=($( {
+			echo ${DISPLAY/*:/} ;
+			lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
+				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
+			ss --no-header \
+				--oneline \
+				--numeric \
+				--listening \
+				--extended \
+				--processes |
+				sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p"
+			} 2>/dev/null | sort -u )
 		)
 		# displays+=($DISPLAY)
 		for display in $displays; do
@@ -382,6 +385,7 @@ set_clippers() {
 			{ has xsel && clippers+=( "xsel --display :$display --clipboard --input 2>$/dev/null " ) }
 		done
 	has clip.exe && clippers+=( "clip.exe" )
+	has pbcopy && clippers+=( "pbcopy" )
 	[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
 }
 set_clippers
