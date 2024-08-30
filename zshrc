@@ -1653,14 +1653,14 @@ env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
 zsh_source ~/.aliases
-test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+# test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# export SDKMAN_DIR="$HOME/.sdkman"
+# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # source ~/.dotfiles/zsh/completion/docker-zsh-completion/docker-zsh-completion.plugin.zsh
-compdef _docker docker
-autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker
+# compdef _docker docker
+# autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker
 
 adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
