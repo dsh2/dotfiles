@@ -40,7 +40,8 @@ set $i3input i3-input -f "pango:DejaVu Sans Mono 10"
 # }}}
 
 # Default applications {{{
-set $browser google-chrome-stable --profile-directory=Default
+# set $browser google-chrome-stable --profile-directory=Default
+set $browser google-chrome-stable 
 set $terminal kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance
 set $terminal_tmux kitty -o allow_remote_control=socket-only --listen-on unix:/tmp/kittyctrl --single-instance zsh -ic 'tmm'
 set $lock_now ~/bin/i3lock-wrapper.sh
@@ -65,10 +66,7 @@ for_window [class="XEyes"] floating enable, border none
 bindsym $meta+$alt+$ctrl+p exec /usr/bin/pavucontrol
 bindsym $meta+$alt+$ctrl+$shift+p exec /usr/bin/blueman-manager
 # for_window [class="Pavucontrol"] floating enable, resize set 600 750
-<<<<<<< HEAD
 for_window [class="Pavucontrol"] floating enable, resize set 600 750
-=======
->>>>>>> 5e622d2 (i3)
 # for_window [class="Pidgin" window_role="buddy_list"] floating enable, resize set 540 260
 for_window [class="jetbrains-studio" title="Breakpoints"] floating disable
 for_window [class="jetbrains-studio" title="Change Signature"] floating disable

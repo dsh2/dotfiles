@@ -1,5 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 ts=4 sw=4
 # set -x
+# exec > >( ts -s -m '[%F %T]' | tee -i /tmp/zshrc.log )
+# exec 2>&1
 
 autoload -Uz add-zsh-hook
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
@@ -366,15 +368,18 @@ fi
 set_clippers() {
 	clippers=()
 	has xclip || has xsel {
-		displays=($( echo ${DISPLAY#:} ; ss 2>/dev/null \
-			--no-header \
-			--oneline \
-			--numeric \
-			--listening \
-			--extended \
-			--processes |
-			sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p" |
-			sort -u )
+		displays=($( {
+			echo ${DISPLAY/*:/} ;
+			lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
+				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
+			ss --no-header \
+				--oneline \
+				--numeric \
+				--listening \
+				--extended \
+				--processes |
+				sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p"
+			} 2>/dev/null | sort -u )
 		)
 		# displays+=($DISPLAY)
 		for display in $displays; do
@@ -382,6 +387,7 @@ set_clippers() {
 			{ has xsel && clippers+=( "xsel --display :$display --clipboard --input 2>$/dev/null " ) }
 		done
 	has clip.exe && clippers+=( "clip.exe" )
+	has pbcopy && clippers+=( "pbcopy" )
 	[[ -n $TMUX ]] && clippers+=( "tmux load-buffer -" )
 }
 set_clippers
@@ -754,11 +760,10 @@ function start_tmux_logging()
 	# -create log_file_name from cmdline contents and timestamp as history event
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
-	if has dos2unix; then
-	    tmux pipe-pane "dos2unix -f > $tmux_log_file"
-	else
-	    tmux pipe-pane "cat> $tmux_log_file"
-	fi
+	has dos2unix && pipe_cmd="dos2unix -f" || pipe_cmd=cat
+	pipe_cmd=cat
+	[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
+	tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
 	set +x
 }
 
