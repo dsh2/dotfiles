@@ -3,18 +3,6 @@
 UNAME=$(uname)
 : "${TMPDIR:=/tmp}"
 
-LS_COMMAND=ls
-if [ "$UNAME" = "Darwin" ]; then
-	# TODO: check if gnu core utils is installed
-	alias find=gfind
-	alias locate=glocate
-	LS_COMMAND=gls
-	alias sed=gsed
-	alias tac=gtac
-	# Switch profile of running iTerm2 window
-	it2prof() { printf '\033]50;SetProfile=$@\a'; }
-fi
-
 if [ "$OSTYPE" = "cygwin" ]; then
 	alias sudo="cygstart --action=runas"
 fi
@@ -325,7 +313,7 @@ alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 
 # ls
-alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
+# alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
 alias l='ls -lh'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
@@ -688,7 +676,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='agents=(${TMPDIR:=/tmp}/ssh-*/agent.*(om)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
+alias sa='agents=( {/tmp,$TMPDIR}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
@@ -1290,8 +1278,9 @@ alias ti=tidy
 alias fla=flatpak
 alias flat=flatpak
 alias xdm=xdg-mime 
-alias sett='set_clippers ; typeset -p clippers'
+alias sett='set_clippers ; typeset -p clippers ; print -rl -- $clippers'
 alias iii=i3
 alias ii=i3
 alias hostn=hostname
 alias hn=hostname
+alias be=brew
