@@ -1,7 +1,6 @@
 #!/bin/zsh
 
 [[ -v x ]] && { PS4="+ " ; set -x ; }
-set -eu
 
 : ${mnt:=/mnt/btrbk}
 : ${blkid:=/sbin/blkid}
