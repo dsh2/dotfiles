@@ -761,7 +761,7 @@ function start_tmux_logging()
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
 	has dos2unix && pipe_cmd="dos2unix -f" || pipe_cmd=cat
-	pipe_cmd=cat
+	# pipe_cmd=cat
 	[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
 	tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
 	set +x
@@ -1670,4 +1670,5 @@ null=/dev/null
 now_epoch() { date '+%s' ; }
 now_epoch_ms() { date '+%s000' ; }
 
+zsh_prepend="$( < ~/.zsh_prepend)"
 set +x
