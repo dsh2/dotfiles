@@ -28,6 +28,9 @@
     ~/.gnupg/scdaemon.conf: gpg/scdaemon.conf
     ~/.config/i3/config: i3config-full
     ~/.config/i3status/config: i3status
+    ~/bin/i3status_wrapper: bin/i3status_wrapper
+    ~/bin/i3lock-wrapper.sh: bin/i3lock-wrapper.sh
+    ~/bin/ssh:  bin/ssh
     ~/.config/feh/keys: feh_keys
     ~/.config/feh/themes: feh_themes
     ~/.config/herbstluftwm: herbstluftwm/
