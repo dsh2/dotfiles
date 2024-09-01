@@ -20,8 +20,8 @@ vars=(${(f)"$($ssh -G $*)"})
 		v["${kv[1]}"]=${kv[2,-1]}
 	done
 }
-host=${v["hostkeyalias"]:=${v["host"]}}
-[[ -n $host ]] || err_out "Host not found"
+host=${v["hostkeyalias"]:=${v["hostname"]}}
+[[ -n $host ]] || { print -rl -- $vars ; err_out "Host not found" ; }
  
 # Ensure a working ssh-agent for host
 agents_dir=~/.ssh/agents
