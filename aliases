@@ -1251,9 +1251,10 @@ DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
 alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
-alias mii='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/uart-*'
+alias mii='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
+alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
-alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
+# alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
 alias ovv=openvpn
@@ -1284,3 +1285,4 @@ alias ii=i3
 alias hostn=hostname
 alias hn=hostname
 alias be=brew
+alias str=strings
