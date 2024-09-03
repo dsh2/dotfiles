@@ -1286,3 +1286,4 @@ alias hostn=hostname
 alias hn=hostname
 alias be=brew
 alias str=strings
+alias adw='adb wait-for-device &&'
