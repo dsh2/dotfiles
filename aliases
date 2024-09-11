@@ -330,16 +330,16 @@ alias vb=vboxmanage
 alias tcp='sudo tcpdump -pUnni any icmp'
 alias tcpd='sudo tcpdump -pUnni any icmp'
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
-# alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcapng; tshark --capture-comment "" -qwnlpFpcapng -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
-alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; tshark -QwnlpFpcapng -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
-alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcapng; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcapng -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -T tabs -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
+# alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcap; tshark --capture-comment "" -qwnlpFpcap -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
+alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcap; tshark -QwnlpFpcap -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
+alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcap; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcap -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -T tabs -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
 alias tmH='tmux rename-session $(hostname)'
 alias tskO='export columns='\''"Time", "%t", "No.", "%m", "Source", "%s", "Comment", "%Cus:frame.comment :0:R", "Destination", "%d", "Info", "%i", "Expert Info", "%Cus:_ws.expert.message:0:R", "f.proto", "%Cus:frame.protocols:0:R", "data.data", "%Cus:data.data:0:L"'\'''
-# alias tsk='pcap=~/.pcaps/$(nn).pcapng; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcapng -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
-alias tsc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
-alias tskc='capinfos -m -T ~/.pcaps/*.pcapng | column -nts,'
-# alias tsa='mergecap ~/.pcaps/*.pcapng(.rm-1) -w - | tshark -r - -qz io,phs'
-alias tsa='mergecap ~/.pcaps/*.pcapng(.om[1]) -w - | tshark -r - -qz io,phs'
+# alias tsk='pcap=~/.pcaps/$(nn).pcap; touch $pcap && tshark -i any --capture-comment "" -qwnlpfpcap -w $pcap& tail -c0 -f $pcap | tshark --color -r - -c ssl '
+alias tsc='capinfos -m -T ~/.pcaps/*.pcap | column -nts,'
+alias tskc='capinfos -m -T ~/.pcaps/*.pcap | column -nts,'
+# alias tsa='mergecap ~/.pcaps/*.pcap(.rm-1) -w - | tshark -r - -qz io,phs'
+alias tsa='mergecap ~/.pcaps/*.pcap(.om[1]) -w - | tshark -r - -qz io,phs'
 alias wsd='wireshark -r ~/.pcaps/*(.om[1])&'
 alias wsa='wireshark -r $pcap&'
 alias wgq=wg-quick
@@ -731,15 +731,15 @@ alias rs=rsync
 alias rsy=rsync
 alias ry=rsync
 alias ws=wireshark
-alias wsl='wireshark -r ~/.pcaps/*.pcapng(om[1]) &'
+alias wsl='wireshark -r ~/.pcaps/*.pcap(om[1]) &'
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 # export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias lvs='tmux split -d lnav ssldebug'
 alias tsv='truncate -s0 ssldebug'
-alias ww='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/null -r cap.pcapng &'
-alias wwss='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/stdout -r cap.pcapng'
-alias wws='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug -r cap.pcapng & truncate -s0 ssldebug'
-alias wwso='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug-orig -r cap.pcapng & truncate -s0 ssldebug-orig'
+alias ww='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/null -r cap.pcap &'
+alias wwss='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/stdout -r cap.pcap'
+alias wws='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug -r cap.pcap & truncate -s0 ssldebug'
+alias wwso='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug-orig -r cap.pcap & truncate -s0 ssldebug-orig'
 alias sshn='ssh -o ControlMaster=no -o ControlPath=/dev/null'
 alias trim="sed -e 's,^[[:blank:]]*\(.*\)[[:blank:]],\1,'"
 alias xpidof='xprop  _NET_WM_PID | cut -d= -f2 | trim'
