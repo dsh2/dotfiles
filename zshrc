@@ -510,9 +510,9 @@ function filter_last_output {
 		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
 		--preview-window 'up:45%:wrap:hidden' \
 		| ( has dos2unix && dos2unix || cat) \
-		| tr -d '\n'
+		| tr '\t\n' '  ' | tr -s ' '
+		# | tr -d '\n'
 	)
-		# | tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
