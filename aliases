@@ -37,7 +37,7 @@ alias adkl=adbk
 alias adke='adb shell input keyevent'
 alias adbke='adb shell input keyevent'
 alias adk=adbk
-adbk() { timeout 3 adb shell input keyboard text "${(q)*}$'\n'" }
+adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
@@ -143,7 +143,8 @@ adb_device_n() {
 				model=$( adb shell getprop ro.product.model 2> $null )
 				date=$( date '+%F %T' --date=@$( adb shell getprop ro.build.date.utc ) )
 				version=$( for prop in  ro.build.version.release ro.build.version.incremental ro.vndk.version ro.kernel.version ro.build.version.codename ro.build.version.security_patch ; do adb shell getprop $prop; done | tr '\n' '\t' )
-				ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$null | xsv select SSID 2>$null | head -8 ) )
+				# ssids=$( echo $( adb shell cmd wifi list-scan-results | vd -f fixed --delimiter=, -b -o - 2>$null | xsv select SSID 2>$null | head -8 ) )
+				ssids=""
 				print "$i\t$ANDROID_SERIAL\t$real_serial\t($user)\t$model\t$date\t$version\t($ssids)"
 			)&
 		done
@@ -327,8 +328,10 @@ alias lS='ls -ahlSsr'
 alias fre='free -hwt'
 alias tt=set_terminal_title
 alias vb=vboxmanage
-alias tcp='sudo tcpdump -pUnni any icmp'
-alias tcpd='sudo tcpdump -pUnni any icmp'
+alias stcp='host=$( echo 127.0.0.1 ) ; iface=$( echo any ) ; filter=$( echo port not 22 ) ; pcap=~/.pcaps/$(nn)-$host.pcap ; ssh $host sudo stdbuf -o0 tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
+alias tcp='iface=$( echo any ) ; filter=$( echo icmp ) ; pcap=~/.pcaps/$(nn).pcap ; sudo tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
+# alias tcp='sudo tcpdump -pUnni any icmp'
+# alias tcpd='sudo tcpdump -pUnni any icmp'
 alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcap; tshark --capture-comment "" -qwnlpFpcap -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcap; tshark -QwnlpFpcap -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
@@ -690,6 +693,7 @@ alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNE
 alias x00='export DISPLAY=:0; printenv DISPLAY; xprop -root'
 alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY; xprop -root'
 alias digx='dig -x'
+alias digxx='dig -x'
 alias dixx='dig -x'
 alias digr='dig -x'
 alias y=yum
@@ -750,7 +754,8 @@ alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread ap
 # TODO: make C a zle binding
 alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
-alias H='cd ~/.ssh'
+alias H='cd ~/.ssh/HOSTS/'
+alias Hk='cd ~/.ssh/keys/'
 alias 1='ping -c 100 -A 1.1.1.1'
 alias p3n='ping ff02::1%'
 alias p3r='ping ff02::2%'
@@ -901,6 +906,7 @@ alias b=bridge
 # alias p3='python3.8'
 alias p3=python3
 alias tsh=tshark
+alias tsl='tshark -r $pcap -qz expert -z io,phs'
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 # i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
@@ -1286,3 +1292,6 @@ alias hostn=hostname
 alias hn=hostname
 alias be=brew
 alias str=strings
+alias get='getent passwd'
+alias pcap='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
+alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
