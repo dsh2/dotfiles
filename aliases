@@ -43,6 +43,7 @@ alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:
 # alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
 alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; adb logcat | tee -a $logcat | lnav -q' 
 alias adld='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=(~/.logs/adb/*-$adb_real_serial*(om[1])) && typeset -p logcat && nvim -c "se ft=strace" $logcat'
+alias adll='noglob adb logcat -d'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
@@ -1155,7 +1156,7 @@ alias sem=semanage
 # alias gru=grubby
 # alias gr=grubby
 alias ge=getent
-alias pin='ping -i 0.3 -A -c 10 -W 1'
+alias pin='ping -i 0.3 -c 10 -W 1 1.1.1.1'
 alias sys=systool
 alias lp=lpa
 alias la=lpa
@@ -1215,8 +1216,6 @@ alias xpp=xpra
 alias xpr=xpra
 alias whi=while
 alias adL="adb_all"
-alias adLl="adb_all shell"
-alias adLL="adb_all shell"
 alias unsa='unset ANDROID_SERIAL'
 alias unss='unset SSH_AUTH_SOCK'
 alias E='noglob echo'
