@@ -41,7 +41,9 @@ adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
-alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; adb logcat | tee -a $logcat | lnav -q' 
+# j
+alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; ( while :; do adb logcat ; sleep 1.1 ; done ) |& tee -a $logcat | lnav -q' 
+alias adR='adb reboot ; sleep 2 ; adb wait-for-device && adb root && adb shell getprop ro.build.type'
 alias adld='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=(~/.logs/adb/*-$adb_real_serial*(om[1])) && typeset -p logcat && nvim -c "se ft=strace" $logcat'
 alias adll='noglob adb logcat -d'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
@@ -49,7 +51,7 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial ; adi'
 alias adgp='adb shell getprop | sort'
-alias adi="adb shell <<< ' getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
+alias adi="adb shell <<< ' getprop ro.vendor.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
 adb_all() {
 	setopt nomonitor
 	target_devices=()
@@ -332,8 +334,10 @@ alias vb=vboxmanage
 alias stcp='host=$( echo 127.0.0.1 ) ; iface=$( echo any ) ; filter=$( echo port not 22 ) ; pcap=~/.pcaps/$(nn)-$host.pcap ; ssh $host sudo stdbuf -o0 tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
 alias tcp='iface=$( echo any ) ; filter=$( echo icmp ) ; pcap=~/.pcaps/$(nn).pcap ; sudo tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
 # alias tcp='sudo tcpdump -pUnni any icmp'
-# alias tcpd='sudo tcpdump -pUnni any icmp'
-alias tcpD='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
+alias tcpd='sudo tcpdump -pUnni any icmp'
+alias tcpa='adb shell -t tcpdump -pUnni any icmp'
+alias tcpD='tcpdump -D | cut -d. -f2- | sort -n'
+alias tcpP='sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump'
 # alias tsk='pcap=~/.pcaps/tcpdump-$(nn).pcap; tshark --capture-comment "" -qwnlpFpcap -qwn -w - -i any | tee $pcap | tshark -t a --color -r -'
 alias tsk='interface= any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcap; tshark -QwnlpFpcap -w - --capture-comment "$comment" -i $interface $filter | tee $pcap | tshark --color -T tabs -lt a -r -  '
 alias tskl='interface=any; filter="not port 22"; comment=""; pcap=~/.pcaps/$(nn)-$interface.pcap; touch $pcap.txt; echo $pcap.txt; ( setopt nomonitor ; tshark -QwnlpFpcap -w $pcap --capture-comment "$comment" -i $interface $filter ) & tmux split -p 99 "less +F $pcap.txt"; (trap "kill $!" INT EXIT; script -qfc "tshark -o protocols.display_byte_fields_with_spaces:\ false -o gui.column.format:\ \$columns -T tabs -lt a -r <(tail --pid=$! -c+0 -s0.1 -qF $pcap 2> /dev/null) --color" $pcap.txt ) > /dev/null'
@@ -907,7 +911,8 @@ alias b=bridge
 # alias p3='python3.8'
 alias p3=python3
 alias tsh=tshark
-alias tsl='tshark -r $pcap -qz expert -z io,phs'
+# alias tsl='tshark -r $pcap -qz expert -z io,phs'
+alias tsl='tshark -r $pcap -nq -z expert -z conv,udp -z conv,tcp -z io,phs'
 alias nw=notmuch
 alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 # i3t() { i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1])) rename workspace to $1; i3-ws-enum ; }
