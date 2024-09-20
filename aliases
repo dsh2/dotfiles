@@ -45,13 +45,15 @@ alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:
 alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; ( while :; do adb logcat ; sleep 1.1 ; done ) |& tee -a $logcat | lnav -q' 
 alias adR='adb reboot ; sleep 2 ; adb wait-for-device && adb root && adb shell getprop ro.build.type'
 alias adld='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=(~/.logs/adb/*-$adb_real_serial*(om[1])) && typeset -p logcat && nvim -c "se ft=strace" $logcat'
+alias ngrs=ngr_setting
+alias nss=ngr_setting
 alias adll='noglob adb logcat -d'
 alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial ; adi'
 alias adgp='adb shell getprop | sort'
-alias adi="adb shell <<< ' getprop ro.vendor.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime ; ifconfig -S' ; "
+alias adi="adb shell <<< ' getprop ro.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime -s ; uptime -p' ; "
 adb_all() {
 	setopt nomonitor
 	target_devices=()
