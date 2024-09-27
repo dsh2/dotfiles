@@ -288,10 +288,10 @@ if vim_plug_available
 	"Plug 'francoiscabrol/ranger.vim', {'on': 'Ranger'}"{{{
 	"map <leader>ff :Ranger<cr>
 	""}}}
-	"Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
-	"nnoremap <F4> :MundoToggle<cr>
-	"let g:mundo_preview_bottom=1
-	"let g:mundo_verbose_graph=0
+	Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} "{{{
+	nnoremap <F4> :MundoToggle<cr>
+	let g:mundo_preview_bottom=1
+	let g:mundo_verbose_graph=0
 
 	"let g:mundo_mappings = {
 	"	\ '<CR>': 'preview',
