@@ -53,8 +53,8 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial ; adi'
 alias adgp='adb shell getprop | sort'
-alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial' 
-alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial' 
+alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
+alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adi="adb shell <<< ' getprop ro.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime -s ; uptime -p' ; "
 adb_all() {
 	setopt nomonitor
@@ -1277,7 +1277,8 @@ alias br=brctl
 alias bb=brctl 
 alias zr=zramctl
 alias zrr='dev=$(sudo zramctl --find --size 1G ) && sudo mkswap $dev && sudo swapon $dev && free -h'
-alias lsu=lsusb
+alias lsu='lsusb -tvv'
+alias lsuu=lsusb
 alias np=npm
 alias aj=ajv
 alias ZSH="(sudo locate --existing --regexp .zsh_local_history ; print -rl -- ~/.zsh_local_history_dir/**/history ) | xargs -r sudo cat | sed -nE '/: [0-9]{6,}/p' | sort | uniq"
@@ -1300,6 +1301,7 @@ alias hostn=hostname
 alias hn=hostname
 alias be=brew
 alias str=strings
+alias tff='journalctl -S -20h -f |& lnav -q'
 alias get='getent passwd'
 alias pcap='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
 alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
