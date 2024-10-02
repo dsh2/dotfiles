@@ -510,9 +510,9 @@ function filter_last_output {
 		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
 		--preview-window 'up:45%:wrap:hidden' \
 		| ( has dos2unix && dos2unix || cat) \
-		| tr -d '\n'
+		| tr '\t\n' '  ' | tr -s ' '
+		# | tr -d '\n'
 	)
-		# | tr '\t\n' '  ' | tr -s ' ')
 }
 bindkey_func '^o' filter_last_output
 
@@ -761,7 +761,7 @@ function start_tmux_logging()
 	#  number does not seem to be stable enough
 	# TODO: save hostname to merge log among different hosts
 	has dos2unix && pipe_cmd="dos2unix -f" || pipe_cmd=cat
-	pipe_cmd=cat
+	# pipe_cmd=cat
 	[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
 	tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
 	set +x
@@ -1283,7 +1283,8 @@ alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SS='| strings -t x -e S | LESS= less'
-alias -g SUU='| sort | uniq'
+alias -g SUU='| sort --unique'
+alias -g SUN='| sort -n'
 alias -g TS="|& ts -m '[%F %T]'"
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
@@ -1670,4 +1671,5 @@ null=/dev/null
 now_epoch() { date '+%s' ; }
 now_epoch_ms() { date '+%s000' ; }
 
+zsh_prepend="$( < ~/.zsh_prepend)"
 set +x
