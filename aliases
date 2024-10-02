@@ -1284,3 +1284,4 @@ alias ii=i3
 alias hostn=hostname
 alias hn=hostname
 alias be=brew
+alias duff='diff -u'
