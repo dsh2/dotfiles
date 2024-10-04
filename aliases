@@ -819,7 +819,6 @@ alias fm='findmnt --real --raw'
 alias fmd='findmnt --df'
 alias jr='journalctl -f -u'
 alias jc=journalctl
-alias jcc='journalctl -S -1m'
 alias sf=sshfs
 alias cu=curl
 alias cur=curl

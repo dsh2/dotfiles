@@ -565,10 +565,6 @@ function run_prepend {
 }
 bindkey_func '^x^p' run_prepend
 
-prepend_volla_22() { zsh_prepend='ssh mtk ANDROID_SERIAL=GS5CTP209140' ; run_prepend ; }; bindkey_func '^xp1' prepend_volla_22
-prepend_giga_gx4() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTPC01794' ; run_prepend ; } ; bindkey_func '^xp2' prepend_giga_gx4
-prepend_volla_x23() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTR201011' ; run_prepend ; } ; bindkey_func '^xp3' prepend_volla_x23
-
 function run_subshell {
 	if [[ -n $BUFFER ]]; then
 		local current_buffer=$BUFFER
@@ -719,14 +715,9 @@ bindkey -s Pw\  '$( pwd )\t'
 bindkey -s Ts\  'torsocks\t'
 bindkey -s Cl\  '~/CQ/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
-bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
-bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s mvdl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s mvl\  'mv ~/INCOMING/*(.om[1])\t .'
-bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
-bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
-bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
@@ -1404,12 +1395,6 @@ if [[ -e $tf_file ]]; then
 	alias tf="$tf_alias tail -f $tf_file &"
 else
 	alias tf='err("syslog NOT found")'
-fi
-
-if has lnav; then
-	alias tff="sudo true && cd $tf_file:h && sudo lnav $tf_file:t "
-else
-	alias tff='err("lnav not found")'
 fi
 
 c() {
