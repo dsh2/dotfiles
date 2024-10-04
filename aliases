@@ -1021,7 +1021,8 @@ alias rk=rclone
 alias rcl=rclone
 alias da=date
 alias tailf='tail -fc+0'
-alias L=leg
+# alias L=leg
+alias L=lpa
 alias xo=xdotool
 alias xd=xdotool
 alias xdo=xdotool
@@ -1305,3 +1306,5 @@ alias tff='journalctl -S -20h -f |& lnav -q'
 alias get='getent passwd'
 alias pcap='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
 alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
+alias tp=ttyplot
+alias ty=ttyplot

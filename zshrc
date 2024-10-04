@@ -143,7 +143,7 @@ PS4="%f%u"
 # Add timestamp
 # PS4+='(%D{%3.})'
 # PS4+='(%T)'
-PS4+='%D{%H:%M:%S.%.}'
+PS4+='%D{%H:%M:%S.%.} '
 # Add source and absolute and relative source line
 PS4+='%F{255}['
 PS4+='%F{136}%N%F{255}:%F{255}%I%F{240}(%F{100}%i%F{240})'
@@ -370,9 +370,9 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
+			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
-			ss --no-header \
+			timeout 0.1 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \
@@ -1272,6 +1272,7 @@ alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -t'
+alias -g FI=' | file -kbz -'
 alias -g FF=' | file -kbz -'
 alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
 alias -g S='| sort'
