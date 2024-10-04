@@ -1301,6 +1301,7 @@ alias ii=i3
 alias hostn=hostname
 alias hn=hostname
 alias be=brew
+alias duff='diff -u'
 alias str=strings
 alias tff='journalctl -S -20h -f |& lnav -q'
 alias get='getent passwd'
