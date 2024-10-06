@@ -2,19 +2,23 @@
 
 : ${host:=mtk}
 : ${port:=44556}
-: ${null:=/dev/null}
 : ${iperf_options:=-i1}
+: ${null:=/dev/null}
 
 set -e
 set -u
 # PS4=+\ ; set -x
 
-abort() { echo "[x] $*. Aborting."; exit 1 ; }
+[[ -v 1 ]] && { host=$1 ; shift ; }
+[[ -v 1 ]] && { port=$1 ; shift ; }
+[[ -v 1 ]] && iperf_options=$*
+
+abort() { echo "x $*. Aborting."; exit 1 ; }
 pid_listening() { lsof -t -sTCP:LISTEN -a -i :$1 ; }
 ssh_host() { ssh -T $* $host ; }
 Kill() { /bin/kill --timeout 100 TERM --timeout 100 KILL $1 ; }
-pid=$( pid_listening $port ) && { 
-	ps $pid 
+pid=$( pid_listening $port ) && {
+	ps $pid
 	echo "Killing $pid"
 	Kill $pid
 	sleep 1
