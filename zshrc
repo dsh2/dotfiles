@@ -143,7 +143,7 @@ PS4="%f%u"
 # Add timestamp
 # PS4+='(%D{%3.})'
 # PS4+='(%T)'
-PS4+='%D{%H:%M:%S.%.}'
+PS4+='%D{%H:%M:%S.%.} '
 # Add source and absolute and relative source line
 PS4+='%F{255}['
 PS4+='%F{136}%N%F{255}:%F{255}%I%F{240}(%F{100}%i%F{240})'
@@ -370,9 +370,9 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
+			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
-			ss --no-header \
+			timeout 0.1 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \
@@ -565,10 +565,6 @@ function run_prepend {
 }
 bindkey_func '^x^p' run_prepend
 
-prepend_volla_22() { zsh_prepend='ssh mtk ANDROID_SERIAL=GS5CTP209140' ; run_prepend ; }; bindkey_func '^xp1' prepend_volla_22
-prepend_giga_gx4() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTPC01794' ; run_prepend ; } ; bindkey_func '^xp2' prepend_giga_gx4
-prepend_volla_x23() { zsh_prepend='ssh mtk ANDROID_SERIAL=GX4CTR201011' ; run_prepend ; } ; bindkey_func '^xp3' prepend_volla_x23
-
 function run_subshell {
 	if [[ -n $BUFFER ]]; then
 		local current_buffer=$BUFFER
@@ -719,14 +715,9 @@ bindkey -s Pw\  '$( pwd )\t'
 bindkey -s Ts\  'torsocks\t'
 bindkey -s Cl\  '~/CQ/*(.om[1])\t'
 bindkey -s Dl\  '~/INCOMING/*(.om[1])\t'
-bindkey -s Dlp\  '~/INCOMING-db/*(.om[1])\t'
-bindkey -s DPl\  '~/INCOMING-db/*(.om[1])\t'
 bindkey -s mdl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s mvdl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s mvl\  'mv ~/INCOMING/*(.om[1])\t .'
-bindkey -s Dl3\  '~/P3-INCOMING/*(.om[1])\t'
-bindkey -s D3l\  '~/P3-INCOMING/*(.om[1])\t'
-bindkey -s d3l\  '~/P3-INCOMING/*(.om[1])\t'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
@@ -1272,6 +1263,7 @@ alias -g GE="|& grep -i -E '^'"
 alias -g J="| jq '.[]'"
 alias -g JQ="| jq '.[]'"
 alias -g LQ='|& lnav -t'
+alias -g FI=' | file -kbz -'
 alias -g FF=' | file -kbz -'
 alias -g QQ='-nographic -nodefaults -kernel kernel -initrd initrd -drive file=root,index=0,media=disk,format=raw -serial stdio -append "console=ttyS0 root=/dev/sda"'
 alias -g S='| sort'
@@ -1404,12 +1396,6 @@ if [[ -e $tf_file ]]; then
 	alias tf="$tf_alias tail -f $tf_file &"
 else
 	alias tf='err("syslog NOT found")'
-fi
-
-if has lnav; then
-	alias tff="sudo true && cd $tf_file:h && sudo lnav $tf_file:t "
-else
-	alias tff='err("lnav not found")'
 fi
 
 c() {
