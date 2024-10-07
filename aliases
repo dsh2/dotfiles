@@ -1212,6 +1212,7 @@ alias arpp=arp-scan
 alias nmc=nmcli
 alias AN='adb_all adb shell'
 alias AD=adb_all
+alias mos=mosh
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias AS='export ANDROID_SERIAL='
@@ -1267,6 +1268,7 @@ alias rest='restorecon -v'
 alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
 alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
 alias DD='dev=/dev/ttyUSB*'
+alias devv='dev=/dev/ttyUSB*'
 # alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias miil='log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
@@ -1310,3 +1312,4 @@ alias pcap='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinf
 alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
 alias tp=ttyplot
 alias ty=ttyplot
+alias pt='sudo perf top -p'
