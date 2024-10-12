@@ -444,7 +444,7 @@ if vim_plug_available
 	"Plug 'brookhong/ag.vim', {'on': 'Ag'}  "{{{
 	"" map <leader>a :Ag! \\b<cword\\b><CR>
 	"" map <leader>a :Ag! <cword><CR>
-	"map <leader>a :Rg <cword><CR>
+	map <leader>a :Rg <cword><CR>
 	"map <leader><leader>a :Rg --no-ignore <cword><CR>
 	"vnoremap <leader>a :<c-u>execute("Ag -- ") . GetSelected()<cr>
 	"" }}}
