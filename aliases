@@ -185,6 +185,7 @@ adb_device_n() {
 	#
 }
 alias adn=adb_device_n
+alias adn=adb_device_n 
 alias adN=adb_device_n_disconnect
 alias adnn=adb_device_n_disconnect
 alias an=adb_device_n
@@ -1325,11 +1326,8 @@ alias app=apropos
 alias abr=abrt-cli
 alias sfp=sftp
 alias UL=unlock
-<<<<<<< HEAD
 alias km=kmonad
 alias xm=xmodmap
 alias xmo=xmodmap
 alias caj='caja . &'
-=======
->>>>>>> fe96262 (ok)
 alias ASL='lnav ~/.cache/Google/*/log/idea.log(.om[1])'
