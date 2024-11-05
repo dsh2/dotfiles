@@ -36,6 +36,7 @@ alias af=adbfs
 alias adkl=adbk
 alias adke='adb shell input keyevent'
 alias adbke='adb shell input keyevent'
+alias als='adb shell ls -alZ'
 alias adk=adbk
 adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
@@ -1267,8 +1268,8 @@ alias core=coredumpctl
 alias rest='restorecon -v'
 alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
 alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
-alias DD='dev=/dev/ttyUSB*'
-alias devv='dev=/dev/ttyUSB*'
+alias DD='dev=/dev/ttyUSB'
+alias devv='dev=/dev/ttyUSB'
 # alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias miil='log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
