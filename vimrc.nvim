@@ -223,6 +223,18 @@ if vim_plug_available
 	autocmd vimrc FileType qf set norelativenumber
 	autocmd vimrc FileType qf wincmd J
 	"}}}
+	" }}}
+	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
+	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
+	" Plug 'rickhowe/diffchar.vim'
+	" let g:DiffUnit = 'Word1'
+	" let g:DiffColors = 0 " fixed color
+	" " let g:DiffColors = 1 " 4 colors in fixed order
+	" Plug 'rickhowe/spotdiff.vim'
+	" noremap <leader>ldt :Diffthis<CR>
+	" noremap <leader>ldr :Diffoff!<CR>
+	" noremap <leader>ldo :Diffoff!<CR>
+	" " }}}
 	" Plug 'text objects' {{{
 	Plug 'kana/vim-textobj-user'
 	Plug 'kana/vim-textobj-indent'
@@ -686,6 +698,11 @@ if vim_plug_available
 	"     endif
 	" augroup end
 	" }}}
+	Plug 'Shougo/echodoc.vim'"{{{
+	let g:echodoc_enable_at_startup = 1
+	" let g:echodoc#type = 'virtual'
+	" let g:echodoc#type = 'echo'
+	let g:echodoc#type = 'signature'"}}}
 	" Plug 'sakhnik/nvim-gdb'
 	" Plug 'udalov/javap-vim'
 	"" Plug rest... {{{

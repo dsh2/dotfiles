@@ -59,7 +59,7 @@ alias adgp='adb shell getprop | sort'
 alias adgpp='adb shell getprop'
 alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
-alias adi="adb shell <<< ' getprop ro.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime -s ; uptime -p' ; "
+alias adi="adb shell <<< 'getprop ro.serialno ; getprop ro.product.model ; getprop ro.build.type ; getprop ro.build.version.incremental ; getprop ro.build.date; echo tcp_port=\$(getprop service.adb.tcp.port) ; id ; uptime -s ; uptime -p' ; "
 adb_all() {
 	setopt nomonitor
 	target_devices=()
@@ -1274,9 +1274,9 @@ DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
 alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
-alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
+alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; sudo minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
 alias DD='dev=/dev/ttyUSB'
-alias devv='dev=/dev/ttyUSB'
+alias devv='dev=/dev/ttyUSB0'
 # alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias miil='log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
 alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
@@ -1314,8 +1314,10 @@ alias hn=hostname
 alias be=brew
 alias duff='diff -u'
 alias str=strings
+alias adw='adb wait-for-device &&'
 alias tff='journalctl -S -20h -f |& lnav -q'
 alias get='getent passwd'
+alias gett=getent
 alias pcap='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
 alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos $pcap'
 alias tp=ttyplot
