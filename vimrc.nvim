@@ -223,6 +223,18 @@ if vim_plug_available
 	autocmd vimrc FileType qf set norelativenumber
 	autocmd vimrc FileType qf wincmd J
 	"}}}
+	" }}}
+	Plug 'will133/vim-dirdiff', { 'on': 'DirDiff'} "{{{
+	" let g:DirDiffExcludes = "*.class,*.exe,.*.swp,*.so,*.img"
+	" Plug 'rickhowe/diffchar.vim'
+	" let g:DiffUnit = 'Word1'
+	" let g:DiffColors = 0 " fixed color
+	" " let g:DiffColors = 1 " 4 colors in fixed order
+	" Plug 'rickhowe/spotdiff.vim'
+	" noremap <leader>ldt :Diffthis<CR>
+	" noremap <leader>ldr :Diffoff!<CR>
+	" noremap <leader>ldo :Diffoff!<CR>
+	" " }}}
 	" Plug 'text objects' {{{
 	Plug 'kana/vim-textobj-user'
 	Plug 'kana/vim-textobj-indent'
@@ -686,6 +698,11 @@ if vim_plug_available
 	"     endif
 	" augroup end
 	" }}}
+	Plug 'Shougo/echodoc.vim'"{{{
+	let g:echodoc_enable_at_startup = 1
+	" let g:echodoc#type = 'virtual'
+	" let g:echodoc#type = 'echo'
+	let g:echodoc#type = 'signature'"}}}
 	" Plug 'sakhnik/nvim-gdb'
 	" Plug 'udalov/javap-vim'
 	"" Plug rest... {{{
@@ -764,6 +781,22 @@ if vim_plug_available
 	Plug 'fszymanski/deoplete-emoji'
 	Plug 'Shougo/neco-vim'
 	Plug 'ujihisa/neco-look'
+	Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
+	let g:jedi#goto_stubs_command = ''
+	let g:jedi#auto_close_doc = 0
+	let g:jedi#completions_command = "<C-space>"
+	let g:jedi#goto_command = "<c-]>"
+	let g:jedi#show_call_signatures = 2
+	let g:jedi#show_call_signatures_delay = 0
+	let g:jedi#smart_auto_mappings = 1
+	let g:jedi#squelch_py_warning = 1
+	" let g:jedi#use_splits_not_buffers = ""
+	" let g:jedi#use_tabs_not_buffers = 1
+	let g:jedi#use_splits_not_buffers = "left"
+	let g:jedi#use_tabs_not_buffers = 0
+	let g:jedi#completions_enabled = 0  " favor deoplete-jedi
+	" let g:jedi#force_py_version = 3.4
+	""}}}
 	Plug 'deoplete-plugins/deoplete-jedi'
 	Plug 'udalov/kotlin-vim' 
 	call plug#end()
