@@ -56,6 +56,7 @@ alias add='adb devices -l'
 alias acu='source ~/.android/current_serial ; adi'
 alias adsp='adb shell setprop'
 alias adgp='adb shell getprop | sort'
+alias adgpp='adb shell getprop'
 alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adi="adb shell <<< ' getprop ro.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime -s ; uptime -p' ; "
@@ -255,6 +256,7 @@ alias gw='git worktree'
 alias gw='git worktree'
 alias gws='git worktree'
 alias gwl='git worktree list'
+alias gwsgl='git worktree list'
 alias glg='noglob git log -n 10'
 # gst() {
 #	local git_min_version="2.10.0"
