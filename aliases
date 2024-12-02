@@ -36,7 +36,8 @@ alias af=adbfs
 alias adkl=adbk
 alias adke='adb shell input keyevent'
 alias adbke='adb shell input keyevent'
-alias als='adb shell ls -alZ'
+alias als='noglob adb shell ls -alZ'
+alias aff='noglob adb shell find  /sys/class/ -xdev -context u:object_r:sysfs_leds:s0 -printf '\''"%M\t%Z\t%u:%g\t%p\t%l\n"'\'''
 alias adk=adbk
 adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
@@ -53,7 +54,9 @@ alias adldl='noglob adb logcat -d | vim -c "se ft=strace" -'
 # alias add='adb devices -l | head -n-1 | tail -n+2 | cat -ns'
 alias add='adb devices -l'
 alias acu='source ~/.android/current_serial ; adi'
+alias adsp='adb shell setprop'
 alias adgp='adb shell getprop | sort'
+alias adgpp='adb shell getprop'
 alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
 alias adi="adb shell <<< ' getprop ro.build.type ; getprop ro.product.model ; getprop ro.serialno ; getprop ro.build.version.incremental ; getprop ro.build.date; getprop service.adb.tcp.port ; id ; uptime -s ; uptime -p' ; "
@@ -196,7 +199,7 @@ alias adss='adb shell am start -S'
 alias adp='adb shell dumpsys'
 alias adpp='adb shell dumpsys package'
 alias addd='adb shell dumpsys'
-alias aps='adb shell ps -Awf -T'
+alias aps='adb shell ps -Awf -Z -T'
 alias adps'adb-ps.sh'
 alias adu='export ANDROID_SERIAL=$( adb -d get-serialno ) ; adi'
 alias adm='export ANDROID_SERIAL=emulator-5554'
@@ -254,6 +257,7 @@ alias gw='git worktree'
 alias gw='git worktree'
 alias gws='git worktree'
 alias gwl='git worktree list'
+alias gwsgl='git worktree list'
 alias glg='noglob git log -n 10'
 
 gcr() {
@@ -532,6 +536,8 @@ alias vp='vim -c "nmap Q :q!<cr>" -c "setlocal nomodifiable" -'
 alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArrangeColumn!" -c "nmap Q :q!<cr>" -c "set nomodifiable" -'
 alias vpp=vpcsv
 alias tag=prompt_tag
+alias agg='ag --depth=-1'
+alias rgg='time rg --stats --no-search-zip -g '\''*.c'\'' '
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
@@ -1011,6 +1017,7 @@ alias ud=udevadm
 alias ude=udevadm
 alias so=socat
 alias soc=socat
+alias sco=socat
 alias sha=sha512sum
 alias chr=chronyc
 alias zm='noglob zmv -n'
@@ -1277,7 +1284,7 @@ alias ti=tidy
 alias fla=flatpak
 alias flat=flatpak
 alias xdm=xdg-mime 
-alias sett='set_clippers ; typeset -p clippers ; print -rl -- $clippers'
+alias sett='set_clippers ; typeset -p clippers ; print -rl -- $clippers ; print -rl -- "$(  repeat 10 echo $(nn) $RANDOM )" | clip'
 alias iii=i3
 alias ii=i3
 alias hostn=hostname
@@ -1292,3 +1299,5 @@ alias PC='pcaps=(~/.pcaps/*(om)) && pcap=$pcaps[1] && ls -ltr $pcaps && capinfos
 alias tp=ttyplot
 alias ty=ttyplot
 alias pt='sudo perf top -p'
+alias uh=uhubctl
+alias uc=uhubctl
