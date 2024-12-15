@@ -1034,12 +1034,12 @@ nnoremap <c-h> <c-w><c-h>
 function! YankUp(string)
 	let @"=a:string
 	if executable("clip.exe") | call system("clip.exe", a:string) | endif
-	if !empty($TMUX) && executable("tmux") | call system("tmux load-buffer -", a:string) | endif
 	if !empty($DISPLAY)
 		if executable("xclip") | call system("xclip -selection clipboard -in", a:string)
 		elseif executable("xsel") | call system("xsel -bi", a:string)
 		endif
 	endif
+	if !empty($TMUX) && executable("tmux") | call system("tmux load-buffer -", a:string) | endif
 	echo "YANK-UP: \"" . strtrans(a:string) . "\""
 endfunction
 
