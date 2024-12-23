@@ -4,11 +4,15 @@
 # exec 2>&1
 
 autoload -Uz add-zsh-hook
+
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
-# TODO: Think about run-away loops
-while [ -L $SHELL ]; do SHELL=$(readlink $SHELL); done
+while [ -L $SHELL ]; do 
+	(( n++ > 10 )) && { print -u2 "Failed to detect running shell."; break; }
+	SHELL=$(readlink $SHELL)
+done
+
 if [[ $RUNNING_SHELL != $SHELL ]]; then
     echo "WARNING: Fixing shell mismatch (RUNNING_SHELL = \"$RUNNING_SHELL\", SHELL = \"$SHELL)\""
     SHELL=$RUNNING_SHELL
