@@ -327,7 +327,7 @@ alias gci='git config --show-origin --get-regexp user.\*; git init && git add . 
 
 # ls
 # alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
-alias l='ls -lh'
+alias l='ls -alh'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
@@ -539,6 +539,7 @@ alias vpp=vpcsv
 alias tag=prompt_tag
 alias agg='ag --depth=-1'
 alias rgg='time rg --stats --no-search-zip -g '\''*.c'\'' '
+alias rgo='noglob rg --no-search-zip -g !out'
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
 # alias pg='ping gdns |& lnav -qt'
@@ -1273,7 +1274,7 @@ alias adms='adb shell dmesg -T -w | lnav -t'
 alias admsg='adb shell dmesg -T -w | lnav -t'
 alias chm='chmod -Rc'
 alias th='test_host='
-DO() { while :; do $*; echo $(nn): $* ; sleep 1; done; }
+DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $*; echo $(nn): $* ; echo "Sleeping $n seconds..." ; sleep $n; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
 alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
@@ -1330,3 +1331,4 @@ alias uh=uhubctl
 alias uc=uhubctl
 alias app=apropos
 alias abr=abrt-cli
+alias sfp=sftp
