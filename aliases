@@ -25,8 +25,8 @@ adf() {
 	[[ -z $ANDROID_SERIAL ]] && {
 		print -u "Please set ANDROID_SERIAL"
 		return 1
-	} 
-	adbfs_mnt=/ADBFS/$ANDROID_SERIAL 
+	}
+	adbfs_mnt=/ADBFS/$ANDROID_SERIAL
 	mkdir -p $adbfs_mnt
 	adb shell id
 	sudo -E adbfs -o allow_other -o auto_unmount $adbfs_mnt
@@ -44,7 +44,7 @@ adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
 # alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log.gz ; typeset -p logcat ; adb logcat | ( gzip | tee $logcat ) | lnav -q'
 # j
-alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; ( while :; do adb logcat ; sleep 1.1 ; done ) |& tee -a $logcat | lnav -q' 
+alias adl='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=~/.logs/adb/$(nn)-$adb_real_serial.log; typeset -p logcat ; ( while :; do adb logcat ; sleep 1.1 ; done ) |& tee -a $logcat | lnav -q'
 alias adR='adb reboot ; sleep 2 ; adb wait-for-device && adb root && adb shell getprop ro.build.type'
 alias adld='adb_real_serial=$(adb shell getprop ro.serialno) && logcat=(~/.logs/adb/*-$adb_real_serial*(om[1])) && typeset -p logcat && nvim -c "se ft=strace" $logcat'
 alias ngrs=ngr_setting
@@ -57,8 +57,8 @@ alias acu='source ~/.android/current_serial ; adi'
 alias adsp='adb shell setprop'
 alias adgp='adb shell getprop | sort'
 alias adgpp='adb shell getprop'
-alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
-alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN' 
+alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
+alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
 alias adi="adb shell <<< 'getprop ro.serialno ; getprop ro.product.model ; getprop ro.build.type ; getprop ro.build.version.incremental ; getprop ro.build.date; echo tcp_port=\$(getprop service.adb.tcp.port) ; id ; uptime -s ; uptime -p' ; "
 adb_all() {
 	setopt nomonitor
@@ -74,7 +74,7 @@ adb_all() {
 	fi
 	[[ $1 = -t || $1 = -s ]] && { echo "Cannot use -t and -s at the same time."; return; }
 	if [[ $target = -s ]]; then
-		devices=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )  
+		devices=( $( adb devices 2>$null | tail -n+2 | cut -f 1 ) )
 		cmd=$*
 	else
 		if [[ $1 = adb ]]; then
@@ -92,10 +92,10 @@ adb_all() {
 	tmp_dir=~/.logs/adb/$(date '+%F__%H.%M.%S')-${cmd//(#m)[[:space:]\/]/_}
 	mkdir -p $tmp_dir
 
-	for device in $devices; do 
+	for device in $devices; do
 		# typeset -p device
 		real_serial=$( adb $target $device shell getprop ro.serialno )
-		[[ -z $real_serial ]] && { 
+		[[ -z $real_serial ]] && {
 			echo "$device:\tFailed to get serial for $device ($target)"
 			continue
 		}
@@ -103,23 +103,23 @@ adb_all() {
 		tmp_file=$tmp_dir/$real_serial-$device
 		[[ $#target_devices -eq 0 ]] || (( $target_devices[(I)$device] )) && {
 			tmp_files+=($tmp_file)
-			( 
-				{ 
+			(
+				{
 					if [[ $target = "-s" ]]; then
 						ANDROID_SERIAL=$device $=cmd
 					else
-						adb -t $device $=cmd 
+						adb -t $device $=cmd
 					fi
 				} |& tee $tmp_file | sed "s|^|$real_serial ($device):\t|" ) &
 		}
 	done
 	wait
 
-	for target_device in $target_devices; do 
-		(( $devices[(I)$target_device] )) || 
+	for target_device in $target_devices; do
+		(( $devices[(I)$target_device] )) ||
 			echo "WARNING: Target device $target $target_device not found."
 	done
-			
+
 	# typeset -p tmp_files tmp_dir
 	typeset -p tmp_dir
 	echo nvim -d $tmp_dir/*
@@ -139,14 +139,14 @@ adb_device_n() {
 	(( #serials == 0 )) && { echo "No devices found."; return ; }
 	integer n=$1
 	(( n == 0 )) && [[ ${#serials} == 1 ]] && n=1
-	(( n == 0 )) && { 
-		{ for ((i = 1; i <= $#serials; i++)); do 
+	(( n == 0 )) && {
+		{ for ((i = 1; i <= $#serials; i++)); do
 			setopt nomonitor
 			(
 				export ANDROID_SERIAL=${serials[i]}
 				# print -u2 "Querying $ANDROID_SERIAL"
 				real_serial=$( timeout 1 adb shell getprop ro.serialno 2> $null )
-				[[ -z $real_serial ]] && { 
+				[[ -z $real_serial ]] && {
 					print -u2 "$ANDROID_SERIAL: Failed to acquire real serial for $ANDROID_SERIAL"
 					continue
 				}
@@ -160,16 +160,16 @@ adb_device_n() {
 			)&
 		done
 		wait
-	} | sort -n | column -ts $'\t' 
-		echo -n "Enter device number: " ; read n ; 
+	} | sort -n | column -ts $'\t'
+		echo -n "Enter device number: " ; read n ;
 	}
 	(( n < 1 )) || (( n >= #serials )) && { print -u2 "Invalid device number"; return; }
-	export ANDROID_SERIAL=${serials[$n]} && adi 
+	export ANDROID_SERIAL=${serials[$n]} && adi
 	export adb_real_serial=$( adb shell getprop ro.serialno 2>$null )
 	typeset -p ANDROID_SERIAL adb_real_serial > ~/.android/current_serial
 	adb forward --remove tcp:8022 2> $null
 	adb forward tcp:8022 tcp:8022 > $null
-	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo) 
+	termux_ssh=(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/keys/thc_termux_user -p 8022 $lo)
 	has adbfs && {
 		adbfs_path=/ADBFS/$adb_real_serial
 		$sudo umount -R $adbfs_path &> $null || true
@@ -182,12 +182,12 @@ adb_device_n() {
 	}
 
 	# zsh_prepend \$termux_ssh >$null
-	# 
+	#
 }
-alias adn=adb_device_n 
+alias adn=adb_device_n
 alias adN=adb_device_n_disconnect
 alias adnn=adb_device_n_disconnect
-alias an=adb_device_n 
+alias an=adb_device_n
 alias ad1="adb_device_n 1"
 alias ad2="adb_device_n 2"
 alias ads='adb shell'
@@ -477,7 +477,7 @@ RUN() {
 			[[ -z $verbose ]] || print -l "Watching: $watch_objs" "Running: $run_obj" "Output: $tmp_out"
 			[[ -z $print_time ]] || print "Start: $(n)"
 			print -P $LINE_SEPARATOR
-			$=run_obj |& tee $tmp_out 
+			$=run_obj |& tee $tmp_out
 			err=$pipestatus[1]
 			print -P $LINE_SEPARATOR
 			(( err )) && err "err = $err"
@@ -963,7 +963,7 @@ alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
 alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
 
 alias lo='losetup --find --show'
-alias los=losetup 
+alias los=losetup
 
 SB() { supermin -v --build $1 --include-packagelist -f ext2 -o ${1%.s}.a ; }
 xdD() {
@@ -1035,6 +1035,7 @@ alias xdo=xdotool
 alias p0='print -N'
 alias p0v='print -N **/*(/l2) | xargs -0 -P $(nproc)'
 alias ct=crontab
+alias cron=crontab
 alias ud=udevadm
 alias ude=udevadm
 alias so=socat
@@ -1198,7 +1199,8 @@ alias ni=ninja
 alias nin=ninja
 alias nj=ninja
 alias blk=blkid
-alias bli='sudo blkid'
+alias bli='sudo blkid | sort'
+alias blii='sudo blkid | sort'
 alias blid='sudo blkid'
 alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
@@ -1223,12 +1225,13 @@ alias AD=adb_all
 alias mos=mosh
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
-alias AS='export ANDROID_SERIAL='
+# alias AS='export ANDROID_SERIAL='
+alias AS='typeset -p ANDROID_SERIAL'
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
-alias fw=fwupdmgr 
-alias mok=mokutil 
+alias fw=fwupdmgr
+alias mok=mokutil
 alias xpr=xpra
 alias xpp=xpra
 alias xpr=xpra
@@ -1285,8 +1288,8 @@ alias oo=openvpn
 alias ov=openvpn
 alias ovv=openvpn
 alias ea=easyrsa
-alias br=brctl 
-alias bb=brctl 
+alias br=brctl
+alias bb=brctl
 alias zr=zramctl
 alias zrr='dev=$(sudo zramctl --find --size 1G ) && sudo mkswap $dev && sudo swapon $dev && free -h'
 alias lsu='lsusb -tvv'
@@ -1305,7 +1308,7 @@ alias ccc=ccache
 alias ti=tidy
 alias fla=flatpak
 alias flat=flatpak
-alias xdm=xdg-mime 
+alias xdm=xdg-mime
 alias sett='set_clippers ; typeset -p clippers ; print -rl -- $clippers ; print -rl -- "$(  repeat 10 echo $(nn) $RANDOM )" | clip'
 alias iii=i3
 alias ii=i3
@@ -1325,3 +1328,5 @@ alias ty=ttyplot
 alias pt='sudo perf top -p'
 alias uh=uhubctl
 alias uc=uhubctl
+alias app=apropos
+alias abr=abrt-cli
