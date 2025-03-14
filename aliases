@@ -59,7 +59,7 @@ alias adgp='adb shell getprop | sort'
 alias adgpp='adb shell getprop'
 alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
 alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
-alias adi="adb shell <<< 'getprop ro.serialno ; getprop ro.product.model ; getprop ro.build.type ; getprop ro.build.version.incremental ; getprop ro.build.date; echo tcp_port=\$(getprop service.adb.tcp.port) ; id ; uptime -s ; uptime -p' ; "
+alias adi='prop ro.serialno ; prop ro.build.version.release ; prop ro.build.type ; prop ro.build.version.incremental ; prop ro.build.date ; prop service.adb.tcp.port ; prop ro.turbox.build.id.kernel ; prop ro.boot.slot_suffix ; trait "uptime -s" ; trait "uptime -p" ; '
 adb_all() {
 	setopt nomonitor
 	target_devices=()
@@ -256,8 +256,17 @@ alias gw='git worktree'
 alias gw='git worktree'
 alias gws='git worktree'
 alias gwl='git worktree list'
+alias gwsl='git worktree list'
 alias gwsgl='git worktree list'
-alias glg='noglob git log -n 10'
+alias grl='git reflog --date=relative -10'
+alias glg='noglob git log --oneline -n 10'
+alias glgp='noglob git log -p --oneline -n 10'
+trait() {
+	trait=$( timeout 1 adb shell $1 ) || trait="[FAILED]"
+	[[ -z $trait ]] && trait="[UNKNOWN]"
+	echo "${2:=$1}: \"$trait\""
+}
+prop() { trait "getprop $1" $2 }
 
 gcr() {
 	set -x
@@ -372,7 +381,8 @@ alias ran=ranger
 alias rD='ranger $(xdg-user-dir DOWNLOAD)'
 alias zl='fc -rlEDt "%a %F  %T" 1 gg'
 alias za='echo Sourcing ~/.aliases; time source ~/.aliases'
-alias zs=zstyle
+# alias zs=zstyle
+alias zs=zstd
 alias zz='echo exec $SHELL; exec $SHELL'
 alias zzz='echo Sourcing ~/.zshrc; time source ~/.zshrc'
 alias msf='./msfconsole --real-readline --quiet -r $HOME/.dotfiles/msfc.rc'
@@ -1186,7 +1196,6 @@ alias blid='sudo blkid'
 alias btdu='btrfs filesystem du -s *'
 alias wa='watch -d -n 0.4'
 alias waa='watch -d -n 4'
-alias grl=gradle
 alias dun='dunstctl is-paused'
 alias no=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
@@ -1313,3 +1322,4 @@ alias app=apropos
 alias abr=abrt-cli
 alias sfp=sftp
 alias UL=unlock
+alias ASL='lnav ~/.cache/Google/*/log/idea.log(.om[1])'

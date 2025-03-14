@@ -3,6 +3,7 @@ let mapleader=" "
 " set notimeout
 " set nottimeout
 
+map <leader>C <Action>(Android.Designer.CommonActions.ForceCompileAndRefreshActionForNotification)
 
 set ideajoin
 " set ideaput
@@ -40,10 +41,14 @@ map [<space> I<cr><esc>
 " map dil ddI<cr><esc>0
 
 map <a-n> <action>(NextOccurence)
-map <a-p> <action>(PreviousOccurence)
-
 map ]r <action>(NextOccurence)
+map <leader>n <action>(NextOccurence)
+
+map <a-p> <action>(PreviousOccurence)
+map <]c> <action>(PreviousOccurence)
 map [r <action>(PreviousOccurence)
+map <leader>p <action>(PreviousOccurence)
+
 
 map ]d <action>(Diff.PrevChange)
 map zz <action>(EditorScrollToCenter)
@@ -172,7 +177,6 @@ map <c-o> <Action>(Back)
 map <c-i> <Action>(Forward)
 map U <Action>(Redo)
 
-map <leader>C <Action>(ChangeSignature)
 
 " Debug
 map <leader>db <Action>(ToggleLineBreakpoint)
