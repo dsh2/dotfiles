@@ -1325,8 +1325,11 @@ alias app=apropos
 alias abr=abrt-cli
 alias sfp=sftp
 alias UL=unlock
+<<<<<<< HEAD
 alias km=kmonad
 alias xm=xmodmap
 alias xmo=xmodmap
 alias caj='caja . &'
+=======
+>>>>>>> fe96262 (ok)
 alias ASL='lnav ~/.cache/Google/*/log/idea.log(.om[1])'
