@@ -258,16 +258,13 @@ alias gws='git worktree'
 alias gwl='git worktree list'
 alias gwsgl='git worktree list'
 alias glg='noglob git log -n 10'
-# gst() {
-#	local git_min_version="2.10.0"
 
-# }
 gcr() {
 	set -x
 	git clone --recursive --jobs=8 --verbose $1 &&
 		cd ${${1:t}%%.git} &&
 		$EDITOR .
-	}
+}
 
 ghssh() {
 	local dsh2_https_base='https://github.com/dsh2'
@@ -441,6 +438,7 @@ alias qqi=qemu-system-i386
 alias qe=qemu-system-sparc64
 alias qmi=qemu-img
 alias qi=qemu-img
+
 RUN() {
 	# TODO
 	# -Add option to run through watch to show diffs in output
@@ -716,27 +714,6 @@ alias digr='dig -x'
 alias y=yum
 alias ZS='sudo -E $SHELL'
 
-src_index() {
-    # find . \
-	# -type f \
-	# -name .repo -prune -o \
-	# -name .git -prune -o \
-	# -name out -prune -o \
-	# -name build -prune -o \
-	# -type f \( \
-	    # -name '*.c' -o \
-	    # -name '*.cc' -o \
-	    # -name '*.cpp' -o \
-	    # -name '*.h' -o \
-	    # -name '*.hpp' \
-	# \) > cscope.files
-	setopt clobber
-	# TODO: Does not work?
-	# git ls-files -x '*.tff'
-	git ls-files | grep -v 'tff$' > cscope.files
-	cscope -bi cscope.files
-}
-
 alias s3=sqlite3
 alias s3b='sqlitebrowser -R'
 alias s3q='sqlitebrowser -R'
@@ -877,7 +854,7 @@ alias ssl=openssl
 
 alias sss=sssh
 sssh() {
-	now() { date '+%s' }
+	now() { date '+%s' ; }
 	host=$1
 	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	while :; do
