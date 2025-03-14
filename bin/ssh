@@ -1,4 +1,5 @@
 #!/bin/zsh
+# Wrapper around ssh to start one ssh-agent for earch host to limit key(-operation) exposure
 
 err_out() { print -u 2 "$*"; exit 1; }
 # set -x

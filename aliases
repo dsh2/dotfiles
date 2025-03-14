@@ -1077,6 +1077,9 @@ alias us='usermod -aG network $USER'
 alias SL='ZSH_PREPEND="ssh $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias SM='ssh -R localhost:2299:localhost:22 $( sed -nE '\''$s|^.* (.*)@(.*):(.*)|-p \3 \1@\2|p'\'' ~/.ssh/host_history)"'
 alias ffm=ffmpeg
+alias fff='ffprobe -hide_banner -show_streams -show_format -of json'
+alias ffp='ffprobe -hide_banner -show_streams -show_format -of json'
+alias ffmp='ffmpeg -hide_banner'
 alias ltmp='l -dt tmp-*'
 alias yd='noglob yt-dlp -vo $(nn)_'
 alias a1=asn1tools
@@ -1332,3 +1335,4 @@ alias uc=uhubctl
 alias app=apropos
 alias abr=abrt-cli
 alias sfp=sftp
+alias UL=unlock
