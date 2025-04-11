@@ -7,7 +7,7 @@ Port 2299
 User me
 
 IdentitiesOnly yes 
-IdentityFile ~/.ssh/keys/me.pub
+IdentityFile ~/.ssh/id_me
 UserKnownHostsFile /dev/null 
 StrictHostKeyChecking off 
 

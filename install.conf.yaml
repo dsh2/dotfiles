@@ -2,25 +2,25 @@
 - clean: ['~']
 
 - shell:
-  - [git submodule update --init --recursive, Updating submodules]
-  - [mkdir -p ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
-  - [mkdir -p ~/.ssh/hosts ~/.ssh/HOSTS ~/.ssh/keys ~/.ssh/control_paths, Setting up directories for ssh]
-  - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
-  - [mkdir -p ~/mnt/localhost-root, Creating mount points]
-  - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
-  - [mkdir -p ~/.pcaps, Creating pcap dump directory]
-  - [cp -a wg ~/.wg, Copying wireguard template directory]
-  - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
-  - [src/fzf/install --all, Installing fzf]
+    - [git submodule update --init --recursive, Updating submodules]
+    - [mkdir -p ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
+    - [mkdir -p ~/.ssh/hosts ~/.ssh/HOSTS ~/.ssh/keys ~/.ssh/control_paths, Setting up directories for ssh]
+    - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
+    - [mkdir -p ~/mnt/localhost-root, Creating mount points]
+    - [mkdir -p ~/.logs/zsh ~/.logs/nmap ~/.logs/adb, Creating destination for log files ]
+    - [mkdir -p ~/.pcaps, Creating pcap dump directory]
+    - [cp -a wg ~/.wg, Copying wireguard template directory]
+    - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
+    - [src/fzf/install --all, Installing fzf]
 
 - link:
     ~/.aliases: aliases
     ~/.bashrc:
-        path: bashrc
-        force: true
+      path: bashrc
+      force: true
     ~/.bash_profile:
-        path: bash_profile
-        force: true
+      path: bash_profile
+      force: true
     ~/.bashrc.Darwin: bashrc.Darwin
     ~/.bashrc.Linux: bashrc.Linux
     ~/.bcrc: bcrc
@@ -30,7 +30,8 @@
     ~/.config/i3status/config: i3status
     ~/bin/i3status_wrapper: bin/i3status_wrapper
     ~/bin/i3lock-wrapper.sh: bin/i3lock-wrapper.sh
-    ~/bin/ssh:  bin/ssh
+    ~/bin/tmux-fzf-panes.sh: bin/tmux-fzf-panes.sh
+    ~/bin/ssh: bin/ssh
     ~/.config/feh/keys: feh_keys
     ~/.config/feh/themes: feh_themes
     ~/.config/herbstluftwm: herbstluftwm/
@@ -40,7 +41,6 @@
     ~/.config/ranger/commands.py: ranger/commands.py
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
-    ~/.config/i3/config: i3config
     ~/.config/kitty/kitty.conf: kitty.conf
     ~/.clang-format: clang-format
     ~/.environment: environment
@@ -54,8 +54,8 @@
     ~/.liquidpromptrc: liquidpromptrc
     ~/.gef.rc: gef.rc
     ~/.inputrc:
-        path: inputrc
-        force: true
+      path: inputrc
+      force: true
     ~/.minttyrc: minttyrc
     ~/.muttrc: neomutt/neomuttrc
     ~/.config/radare2/radare2rc: radare2rc
@@ -85,12 +85,12 @@
     ~/.config/zathura/zathurarc: zathurarc
     ~/.visidatarc: visidatarc
     ~/.psqlrc: psqlrc
-    ~/.zshrc: 
+    ~/.zshrc:
       path: zshrc
-      force: true 
+      force: true
     ~/.zlogout: zlogout
 
 - shell:
-  - [chmod -cR g-rwx ssh, Restricting file permissions for ssh]
-  - [chmod -cR o-rwx ssh, Restricting file permissions for ssh]
-  - [chmod 0700 wg, Restricting file permissions of wg]
+    - [chmod -cR g-rwx ssh, Restricting file permissions for ssh]
+    - [chmod -cR o-rwx ssh, Restricting file permissions for ssh]
+    - [chmod 0700 wg, Restricting file permissions of wg]
