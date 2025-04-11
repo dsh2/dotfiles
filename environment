@@ -75,22 +75,17 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 pathprepend $GOPATH/bin
 export HH_CONFIG=hicolor
 export HTML_TIDY=~/.tidy.conf
-export INTERACTIVE_COMMANDS=(atop elinks htop lnav mutt powertop r2 ranger vim w3m)
+INTERACTIVE_COMMANDS=(atop elinks htop lnav mutt powertop r2 ranger vim w3m)
 export JCOLOR=1
 export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
-export RANGER_LOAD_DEFAULT_RC=FALSE
-export SSLKEYLOGFILE=$HOME/.ssl/keys && mkdir -p -m 0700 $SSLKEYLOGFILE:h
-# export TERMINAL=kitty:sakura:xfce4-terminal:
-export TERMINAL=kitty
-export TSHARK=/usr/bin/tshark
+export SSLKEYLOGFILE=$HOME/.ssl/keys ; mkdir -pm 0700 $SSLKEYLOGFILE:h
+TERMINAL=kitty
 export USE_CCACHE=1
-export WIRESHARK=/usr/bin/wireshark
-export XENVIRONMENT=$HOME/.Xresources
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
 export RIPGREP_CONFIG_PATH=~/.ripgreprc 
 export TSOCKS_CONF_FILE=~/.tsocks.conf 
 
 export TZ=CET
 
-has ykman && ykserial=$(ykman list --serials | head -1) 
+# has ykman && ykserial=$(ykman list --serials | head -1) 

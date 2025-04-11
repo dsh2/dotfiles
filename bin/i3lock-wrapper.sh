@@ -1,1 +1,0 @@
-herbstluftwm/i3lock-wrapper.sh
