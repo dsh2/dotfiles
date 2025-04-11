@@ -776,7 +776,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	# has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
+	has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -1279,6 +1279,7 @@ alias -g SS2S="|sed -re 's/\s+/ /g'"
 alias -g SS2T="|sed -re 's/[[:space:]]+/\t/g'"
 alias -g SS2TT="|sed -re 's/[[:space:]]{2,}/\t/g'"
 alias -g SS='| strings -t x -e S | LESS= less'
+alias -g SSS='| strings -t x -e S | sort -u | LESS= less'
 alias -g SUU='| sort --unique'
 alias -g SUN='| sort -n'
 alias -g TS="|& ts -m '[%F %T]'"
