@@ -259,6 +259,7 @@ alias gws='git worktree'
 alias gwl='git worktree list'
 alias gwsl='git worktree list'
 alias gwsgl='git worktree list'
+<<<<<<< HEAD
 alias grl='git reflog --date=relative -10'
 alias glg='noglob git log --oneline -n 10'
 alias glgp='noglob git log -p --oneline -n 10'
@@ -268,6 +269,9 @@ trait() {
 	echo "${2:=$1}: \"$trait\""
 }
 prop() { trait "getprop $1" $2 }
+=======
+alias glg='noglob git log -n 10'
+>>>>>>> b1c261a2266108c97d2f348bf6a00cd10c4a0701
 
 gcr() {
 	set -x
