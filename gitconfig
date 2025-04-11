@@ -57,3 +57,5 @@
 	allow = always
 [safe]
 	directory = /home/me/src/dotfiles
+[merge]
+	tool = kdiff3

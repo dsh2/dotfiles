@@ -196,7 +196,8 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/)"
+zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/|\$REPO_ROOT/)"
+
 zshaddhistory() {
 	# Skip empty lines
 	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
@@ -374,15 +375,15 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) |
+			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr | 
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
 			timeout 0.1 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \
 				--extended \
-				--processes |
-				sed -nE "/^.*:6([0-9]{3}).*uid:$(id -u).*$/s..\1.p"
+				--processes | tee /dev/stderr | 
+				sed -nE "/^.*:6([0-9]{3}) .*uid:$(id -u).*$/s..\1.p"
 			} 2>/dev/null | sort -u )
 		)
 		# displays+=($DISPLAY)
@@ -1300,9 +1301,9 @@ alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
 alias -g XP0='| xargs -rP $(nproc) -0'
 # alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
-alias -g gg='| grep -i -- ' # TODO: use rg with rust regex instead
-alias -g ggg='|& grep -i -- ' # TODO: use rg with rust regex instead
-alias -g ggs='| strings | grep -i --'
+alias -g gg='| grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggg='|& grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggs='| strings | grep -Ei --'
 alias -g ggv='| grep -v -- '
 alias -g ggvv='|& grep -v -- '
 alias -g ff='| file -z'
