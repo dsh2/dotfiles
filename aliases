@@ -237,7 +237,8 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 
 # git
 alias g=git
-alias gi=git
+alias gn='noglob git'
+alias gt='git tag'
 alias gf='git fetch'
 alias gcm='git commit --verbose -m ""'
 alias gC='git cherry --verbose'
@@ -546,7 +547,9 @@ alias vpcsv='vim -c "let b:csv_headerline = 0" -c "set filetype=csv" -c "%CSVArr
 alias vpp=vpcsv
 alias tag=prompt_tag
 alias agg='ag --depth=-1'
-alias rgg='time rg --stats --no-search-zip -g '\''*.c'\'' '
+# alias rgg='time rg --stats --no-search-zip -g '\''*.c'\'' '
+# alias rgg'rg --no-search-zip -g !out '
+alias rgg='noglob rg --no-search-zip -g !out'
 alias rgo='noglob rg --no-search-zip -g !out'
 # gw() { grep --color -Iwri -- "$@" *; }
 alias grep='grep --color'
@@ -629,7 +632,7 @@ alias NN="date '+%F__%H.%M.%S.%N'"
 alias Nn="date '+%F %T'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
- alias nnn='N=$( echo 00 ) ; date '+%F__%T' --date=@$(( N / 1 ))'
+alias nnn='N=$(( 00 )) ; M=$(( 1000 )); date '+%F__%T' --date=@$(( N / M ))'
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'

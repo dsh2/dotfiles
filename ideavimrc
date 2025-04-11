@@ -99,7 +99,7 @@ map <leader>x <Action>(CloseContent)
 map <leader>X <Action>(CloseAllEditorsButActive)
 
 " Window management
-map <c-x> <Action>(CloseContent)
+" map <c-x> <Action>(CloseContent)
 map <c-wx> <Action>(CloseContent)
 map <leader>tt :action ActivateStructureToolWindow<cr>
 map ,A <Action>(VimFindActionIdAction)
@@ -193,6 +193,7 @@ map <leader>dF <Action>(StepOut)
 map <leader>B <Action>(Stop)
 set clipboard+=unnamed
 
+map <leader><c-]> <Action>(GotoImplementation)
 map ]n <Action>(GotoNextError)
 map <c-n> <Action>(GotoNextError)
 map ]p <Action>(GotoPreviousError)
