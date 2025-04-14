@@ -1,0 +1,44 @@
+;; vim: ft=lisp:commentstring=;;\ %s
+
+(defcfg
+  ;; find /dev/input -name '*kbd*'
+  input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  output (uinput-sink "kmonad")
+  fallthrough true
+  allow-cmd false
+)
+
+(defsrc
+	F11
+	F12
+	a s d f j k l ;
+	rctl
+)
+
+(defalias
+	sft_l (tap-hold-next-release 200 a lsft)
+	ctl_l (tap-hold-next-release 200 s lctl)
+	met_l (tap-hold-next-release 200 d lmet)
+	alt_l (tap-hold-next-release 200 f lalt)
+
+	alt_r (tap-hold-next-release 200 j ralt)
+	met_r (tap-hold-next-release 200 k rmet)
+	ctl_r (tap-hold-next-release 200 l rctl)
+	sft_r (tap-hold-next-release 200 ; rsft)
+)
+
+(deflayer homerowmods
+	Tab
+	Esc
+	@sft_l
+	@ctl_l
+	@met_l
+	@alt_l
+
+	@alt_r
+	@met_r
+	@ctl_r
+	@sft_r
+	Esc
+)
+
