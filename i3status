@@ -30,8 +30,10 @@ wireless _first_ {
 }
 
 ethernet _first_ {
-        format_up = "E: %ip (%speed)"
-        format_down = "E: down"
+        # format_up = "E: %ip (%speed)"
+        # format_down = "E: down"
+        format_up = "<span background='#ebcb8b'>E: %ip (%speed)</span>"
+		format_down = "<span background='#6dd461'>E: DOWN</span>"
 }
 
 battery all {

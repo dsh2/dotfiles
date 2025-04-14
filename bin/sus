@@ -3,8 +3,8 @@ set -xu
 cd $0:h
 usbip-detach-all
 fuse_unmount
-pkill -e  local_command
+pkill -e local_command
 /bin/kill --verbose --signal INT --timeout 300 TERM --timeout 300 KILL --timeout 300 STOP ssh sshfs local_command
-rfkill block all
+# rfkill block all
 sleep 1
 sudo systemctl suspend

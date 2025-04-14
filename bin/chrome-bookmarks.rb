@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'json'
 require 'date'
-FILE = '~/.config/google-chrome/Default/Bookmarks'
+FILE = '~/.config/google-chrome/Profile 2/Bookmarks'
 CJK  = /\p{Han}|\p{Katakana}|\p{Hiragana}|\p{Hangul}/
 
 def build parent, json

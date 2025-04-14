@@ -1,21 +1,21 @@
-# Path
-pathprepend /sbin
-pathprepend /usr/sbin
-pathprepend /usr/local/go/bin
-pathprepend /usr/local/bin
-pathprepend /usr/local/sbin
-pathprepend /opt/local/bin
-pathprepend /opt/local/sbin
-pathprepend /usr/lib/ccache
-# pathprepend /opt/local/share/man MANPATH
+# # Path
 pathprepend $HOME/bin
+# pathprepend /sbin
+# pathprepend /usr/sbin
+# pathprepend /usr/local/go/bin
+# pathprepend /usr/local/bin
+# pathprepend /usr/local/sbin
+# pathprepend /opt/local/bin
+# pathprepend /opt/local/sbin
+# pathprepend /usr/lib/ccache
+# # pathprepend /opt/local/share/man MANPATH
 pathprepend $HOME/.cargo/bin
-pathprepend $HOME/.dotfiles/bin
-pathprepend $HOME/.dotfiles/fzf/target
-pathprepend $HOME/node_modules/.bin/
-pathprepend $HOME/.local/bin
-pathprepend $HOME/.cargo/bin
-# pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
+# pathprepend $HOME/.dotfiles/bin
+# pathprepend $HOME/.dotfiles/fzf/target
+# pathprepend $HOME/node_modules/.bin/
+# pathprepend $HOME/.local/bin
+# pathprepend $HOME/.cargo/bin
+# # pathprepend $HOME/.dotfiles/bin/github-find-all-forks PYTHONPATH
 
 # Pager
 # export PAGER="$HOME/.dotfiles/fzf/target/fzf-linux_amd64 --tac --bind 'ctrl-space:bottom'"

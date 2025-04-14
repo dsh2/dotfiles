@@ -8,7 +8,7 @@ autoload -Uz add-zsh-hook
 [[ $(uname -a) =~ Microsoft ]] && { unsetopt bgnice; umask 077; }
 
 RUNNING_SHELL=$(readlink /proc/$$/exe)
-while [ -L $SHELL ]; do 
+while [ -L $SHELL ]; do
 	(( n++ > 10 )) && { print -u2 "Failed to detect running shell."; break; }
 	SHELL=$(readlink $SHELL)
 done
@@ -397,6 +397,8 @@ set_clippers() {
 }
 set_clippers
 clip() { (( #clippers > 0 )) && eval ${clippers:s.#.> >(.:s.%.).} }
+cqclip() { for f in $*; do print -nu2 "$f: " ; copyq write $(file --mime-type -b $f | tee /dev/stderr) - < $f; done }
+alias cqc=cqclip
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
@@ -583,7 +585,7 @@ function run_subshell {
 		fi
 	else
 		zle up-history
-		BUFFER=" \$($BUFFER)"
+		BUFFER="out=\$( $BUFFER )"
 		CURSOR=0
 	fi
 }

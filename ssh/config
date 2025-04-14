@@ -1,4 +1,5 @@
 # vim:ft=sshconfig
+PermitLocalCommand no
 Include ~/.ssh/HOSTS/*
 Include ~/.ssh/HOSTS/*/*
 Include ~/.ssh/HOSTS/*/*/*

@@ -11,13 +11,9 @@ revert() {
 	xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
 	~/.dotfiles/herbstluftwm/restartpanels.sh &>/dev/null
 	pkill -USR2 dunst
+	xmodmap -e "keycode $(xmodmap -pk | awk '/Print/ {print $1}') = Super_L" -e "add mod4 = Super_L" ; echo "PrintScreen remapped to Super_L ; done"
 	msg "Reverted locking settings."
 }
-
-if [ "$1" = "-b" ] && nmcli con show --active | grep -qE '(dsn3|dsn5)'; then
-	msg "Screenlock NOT activated because we are at home."
-	exit 0
-fi
 
 trap revert HUP INT TERM
 # pactl set-sink-mute $(pacmd info | sed -nE 's/Default sink name: (.*)/\1/'p) 1
