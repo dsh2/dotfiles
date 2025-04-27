@@ -428,6 +428,7 @@ envof() { sed 's/\x0/\n/g' /proc/${1}/environ; }
 alias va=vagrant
 # alias va=variety
 alias doc=docker
+alias dok=docker
 alias doo=docker
 alias docc=docker-compose
 alias dock=docker
@@ -1334,3 +1335,5 @@ alias xm=xmodmap
 alias xmo=xmodmap
 alias caj='caja . &'
 alias ASL='lnav ~/.cache/Google/*/log/idea.log(.om[1])'
+alias apkk=apkanalyzer
+alias apkt=apktool
