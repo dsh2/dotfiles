@@ -721,10 +721,12 @@ alias gdb='gdb -q'
 alias x0='if [[ -z $DISPLAY ]]; then echo Setting DISPLAY. ; if [[ -z $SSH_CONNECTION ]]; then export DISPLAY=:0 ; else export DISPLAY=localhost:10.0; fi ; fi ; printenv DISPLAY; xprop -root'
 alias x00='export DISPLAY=:0; printenv DISPLAY; xprop -root'
 alias x000='export DISPLAY=localhost:10.0; printenv DISPLAY; xprop -root'
+alias di=dig
 alias digx='dig -x'
 alias digxx='dig -x'
 alias dixx='dig -x'
 alias digr='dig -x'
+alias digg='dig -x'
 alias y=yum
 alias ZS='sudo -E $SHELL'
 
@@ -1327,6 +1329,7 @@ alias abr=abrt-cli
 alias sfp=sftp
 alias UL=unlock
 alias km=kmonad
+alias kmo=kmonad
 alias xm=xmodmap
 alias xmo=xmodmap
 alias caj='caja . &'
