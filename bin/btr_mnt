@@ -29,6 +29,7 @@ done
 
 mountpoint -q $mnt && {
 	echo "Already mounted."
+	ls -al $mnt
 	exit 0
 } 
 
