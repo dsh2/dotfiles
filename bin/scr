@@ -19,4 +19,4 @@ scrcpy --window-title "id=$ADB_ID_U $ADB_SERIAL [$ANDROID_SERIAL] $ADB_PRODUCT_M
 	--no-audio \
 	--no-audio-playback \
 	--disable-screensaver \
-	--shortcut-mod=rctrl $* &
+	--shortcut-mod=lalt $* &
