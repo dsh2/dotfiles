@@ -1225,7 +1225,7 @@ alias mos=mosh
 alias ADS='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 alias ADF='adb_all scrcpy --turn-screen-off --disable-screensaver --shortcut-mod=rctrl&'
 # alias AS='export ANDROID_SERIAL='
-alias AS='typeset -p ANDROID_SERIAL'
+alias AS='adb shell getprop ro.serialno && echo $( typeset -p ANDROID_SERIAL ; echo \; adi )'
 alias p1=p11tool
 alias p11=p11tool
 alias oc=oscap
