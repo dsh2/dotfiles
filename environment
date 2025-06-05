@@ -91,5 +91,4 @@ export TIME_STYLE='+%F %T (%s)'
 export TZ=CET
 export AWKPATH=~/.awk/
 
-
 # has ykman && ykserial=$(ykman list --serials | head -1) 
