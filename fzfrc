@@ -1,13 +1,15 @@
+# vim:ft=zsh
 # TODO
 # -Add binding to pin current item to then relax the filter in order to
 #  explore the environment
 # -Add some means to add an ordering to the selection of --multi
 # -Add some means to match content in a particular column
 
-	# --bind 'change:top'
-	# --bind 'alt-b:deselect-all'
 export FZF_DEFAULT_OPTS="
 	--bind 'alt-a:select-all'
+	--bind 'alt-b:deselect-all'
+	--bind 'alt-D:first'
+	--bind 'alt-U:last'
 	--bind 'alt-d:page-down'
 	--bind 'alt-u:page-up'
 	--bind 'ctrl-r:toggle-sort'
@@ -31,8 +33,8 @@ export FZF_DEFAULT_OPTS="
 	--exact
 	--prompt=\": \"
 "
-export FZF_TMUX=1
-export FZF_TMUX_HEIGHT=90%
+FZF_TMUX=1
+FZF_TMUX_HEIGHT=90%
 
 # TODO: add binding for vared
 ee() {
@@ -51,17 +53,9 @@ fbr() {
     git checkout $=object
 }
 
-fbT() {
-    fbr "refs/tags"
-}
-
-fbS() {
-    fbr "refs/stash"
-}
-
-fbR() {
-    fbr "refs/heads"
-}
+fbT() { fbr "refs/tags" }
+fbS() { fbr "refs/stash" }
+fbR() { fbr "refs/heads" }
 
 # fshow - git commit browser
 fshow() {
@@ -179,4 +173,170 @@ fzf_locate_widget() {
 }
 zle -N fzf_locate_widget; bindkey '^x^l' fzf_locate_widget
 
-# vim:ft=sh
+# Generate and output a list of zsh activities documented in $base_dir. List may contain multiple
+# columns generated off of the files to be found in the runtime directories within $base_dir.
+zsh_history() {
+	# [[ -v zsh_debug ]] && set -x
+	# set -x
+	fields=($@)
+	fields+=("command_oneline")
+	local base_dir=~/.logs/zsh
+	# Create a separate cache for all fields (and its operators)
+	# TODO: Move to "real" cache dir?
+	local cache_file=$base_dir/CACHE_${(j:-:q)fields:gs./._.}
+	local changed_after=""
+	if [[ -r $cache_file ]]; then 
+		changed_after="--changed-after=@$(stat +mtime $cache_file)"
+	else
+		# In case fd finds a lot of dirs but all dirs fail their field comparisons, touch cache file
+		# so fd won't find these dirs again in later invocations of zsh_history
+		touch $cache_file
+	fi
+	# --max-results 10 \
+	fd $changed_after \
+		--type directory \
+		--max-depth 1 \
+		. $base_dir | while read -r dir; do
+			[[ -s $dir/command_oneline ]] || continue
+			local -a out=($dir)
+			set $fields
+			while [[ $# -gt 0 ]]; do
+				field=$1; shift
+				local value=""
+				# [[ -r $dir/$field ]] && value="${(q)$(<$dir/$field)}"
+				value=$(<$dir/$field) 2>/dev/null
+				# XXX: Skip whole line as soon as one field value is missing?
+				[ -z $value ] && continue
+				# If next field's name starts with =, treat it as a exact comparison value for current field's value
+				if [[ $# -gt 0 ]]; then
+					opp=${1[2,-1]}
+					case ${1[1]} in 
+						# Exact comparison
+						(=) shift; [[ $value != $opp ]] && continue 2 ; continue ;;
+						# Prefix match
+						(\*) shift; [[ $value =~ ^${~opp} ]] && continue 2 ; continue ;;
+						# No operator, i.e. next field's name; fall-through and output current field's value
+						(*) ;;
+					esac
+				fi
+				out+=( $value )
+			done
+			# Do not interpret (-R) escape seqeunces in values
+			for o in $out; do print -nR $o ; print -n $'\t'; done
+			print
+	done | sort --reverse >> $cache_file
+	cat $cache_file
+	set +x
+}
+
+# CTRL-R - Paste the selected command from history into the command line
+# TODO: allow --multi and add binding to vimdiff the outputs
+
+declare -i mode_index=1
+declare -a fields_extra=()
+
+fzf-history-widget() {
+	setopt localoptions noglobsubst noposixbuiltins
+	local -a fzf_options=()
+	# fzf_options+=( info=inline )
+	fzf_options+=( info=inline-right:\* )
+	# fzf_options+=( tmux=bottom,70% )
+	# fzf_options+=( tmux=100% )
+	# fzf_options+=( tmux=center )
+	fzf_options+=( border-label=bold )
+	# fzf_options+=( style=full )
+	fzf_options+=( border=double )
+	fzf_options+=( multi )
+	fzf_options+=( no-sort )
+
+	fzf_options+=( )
+	local -a fields_common_start=( "date_start" )
+	# Start fzf query with what is on the command line already
+	local query="${LBUFFER//$/\\$}"
+	# TODO: rename local to path-local
+	# TODO: add local mode in the sense of zsh terminology
+	# TODO: add path-local-recursive
+	local -r mode_switch_key=ctrl-space
+	local -r reload_key=alt-r
+	local -r diff_key=ctrl-d
+	apply_mode
+	while :; do
+		local -a fields=( $fields_common_start $fields_extra )
+		local -a fzf_result=("${(f)$(
+			(
+			# TODO: Add support for nested abortion
+				# [[ -n $ZLE_LINE_ABORTED ]] &&
+					# echo -e $aborted_id\\t$(date +$time_format)\ $ZLE_LINE_ABORTED ;
+				zsh_history "$fields[@]"
+			) |
+			fzf ${(@)fzf_options/#/--} \
+			--accept-nth=1 \
+				--with-nth=2.. \
+				--tiebreak=chunk,begin,index \
+				--bind resize:refresh-preview \
+				--preview "preview.sh {1} {q}" \
+				--preview-window up:45%:wrap \
+				--bind "ctrl-/:change-preview-window(70%,right|hidden|)" \
+				--bind "ctrl-v:execute(tmux split -v $EDITOR {1}/)" \
+				--print-query \
+				--expect=ctrl-m,$mode_switch_key,$reload_key,$diff_key \
+				--query=$query \
+				--prompt="[$zsh_prompt]: "
+		)}")
+
+		# Save current fzf query for further invocations of fzf
+		query=$fzf_result[1]
+		local key=$fzf_result[2]
+		set ${fzf_result:2}
+		case "$key" in
+			(ctrl-m)
+				# set -x
+				local -a new_cmd_line
+				local -i cnt=$#
+				while [[ $# -gt 0 ]]; do
+					BUFFER+=$( < $1/command_oneline )
+					shift
+					[[ $# -gt 0 ]] && BUFFER+='; '
+				done
+				zle -M "New buffer (cnt=$cnd): \"$BUFFER\""
+				return 0
+				;;
+			($diff_key)
+				$EDITOR -d ${*/%/\/output.gz}
+				;;
+			($mode_switch_key)
+				mode_index=$(( mode_index % 3 + 1))
+				apply_mode
+				;;
+			($reload_key)
+				zle -M "Reloading current history"
+				;;
+			(*)
+				zle redisplay
+				zle -M "fzf returned empty key."
+				return
+		esac
+	done
+}
+
+apply_mode() {
+	case $mode_index in
+		(1)
+			zsh_prompt="Global"
+			fields_extra=()
+			;;
+		(2)
+			zsh_prompt="$PWD"
+			fields_extra=( "pwd" "=$PWD" )
+			;;
+		(3)
+			zsh_prompt="zsh_pid=$$"
+			fields_extra=( "zsh_pid" "=$$" )
+			;;
+		(*)
+			zle -M "Illegal mode $mode_index encountered"
+	esac
+}
+
+zle     -N   fzf-history-widget
+bindkey '^R' fzf-history-widget

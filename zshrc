@@ -18,15 +18,6 @@ if [[ $RUNNING_SHELL != $SHELL ]]; then
     SHELL=$RUNNING_SHELL
 fi
 
-zsh_source()
-{
-	# TODO: check if writeable for others than us
-	local quiet
-	[[ $1 = -q ]] && { quiet=1; shift; }
-	[[ ! -r $@ ]] && { (( quiet )) || "zsh_source: "$@" not found. "; return 1; }
-	source $@
-}
-
 has() {
   local verbose=false
   if [[ $1 == '-v' ]]; then
@@ -290,11 +281,11 @@ bindkey "^[;" set-mark-command
 
 function repeat_immediately {
 	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
-	# TODO: && think about something useful
 	zle up-history
+	zle -M "Repeating \"$BUFFER\"..."
 	zle accept-line
 }
-bindkey_func '^j' repeat_immediately
+bindkey_func '\e^j' repeat_immediately
 
 debug_trace_file=
 [[ $debug_trace_file =~ /dev/(pts|tty)/ ]] &&  clear > $debug_trace_file
@@ -375,14 +366,14 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr | 
+			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr |
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
 			timeout 0.1 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \
 				--extended \
-				--processes | tee /dev/stderr | 
+				--processes | tee /dev/stderr |
 				sed -nE "/^.*:6([0-9]{3}) .*uid:$(id -u).*$/s..\1.p"
 			} 2>/dev/null | sort -u )
 		)
@@ -402,7 +393,7 @@ alias cqc=cqclip
 
 function kill-line-copy {
 	if [[ -z $RBUFFER ]]; then
-		filter_last_output
+		filter_last_output_from_below
 	else
 		zle kill-line
 		print -r -n -- $CUTBUFFER | clip
@@ -428,7 +419,7 @@ bindkey '^x^j' down-line
 function copy_last_output {
 	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
-	cat $tmux_log_file | clip \
+	zcat $tmux_log_file | clip \
 		&& zle -M "Copied last command's output WITH ansi escape sequences." \
 		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
@@ -439,17 +430,15 @@ function copy_last_output_stripped {
 	check_output clip || return
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] && { zle -M "No output captured."; return }
 	has strip-ansi ||{ zle -M "strip-ansi NOT available."; return }
-	cat $tmux_log_file | strip-ansi | clip \
+	zcat $tmux_log_file | strip-ansi | clip \
 		&& zle -M "Copied last command's output WITHOUT ansi escape sequences." \
 		|| zle -M "FAILED to copy last command's output. (clippers=$clippers)"
 }
 bindkey_func '^xo' copy_last_output_stripped
 
 function page_tmux_pane {
-	# zle -M "page_tmux_pane"
-	local temp_file=$(mktemp)
-	tmux capture-pane -epJS - > $temp_file
-	tmux split -vbp 60 $EDITOR $temp_file
+
+	tmux split -vbp 60 $EDITOR =(tmux capture-pane -epJS -)
 }
 bindkey_func '^x^r' page_tmux_pane
 
@@ -504,27 +493,34 @@ function check_output {
 }
 
 # TODO:
-# -add mapping to jump to first line of output
 # -prefilter for IP, numbers, paths, etc., cf. above.
 # -add preview to fzf to show various transformations of current line, i.e. filter IP, numbers, strings, etc and add shortcuts to select them as return value
 # -add shortcut to move to or merge previous outputs as well
 function filter_last_output {
 	check_output vp || return
-	RBUFFER=$( cat $tmux_log_file |
-		# Print bogus LINE_SEPARATOR to prevent screen line skip
-	fzf --tac --multi --no-sort \
-		--margin 0,0,1,0 \
-		--preview '(pygmentize -l zsh <(echo {}) || cat <(echo {})) 2> /dev/null' \
-		--preview-window 'up:45%:wrap:hidden' \
-		| ( has dos2unix && dos2unix || cat) \
-		| tr '\t\n' '  ' | tr -s ' '
-		# | tr -d '\n'
+	RBUFFER=$( zcat $tmux_log_file |
+		fzf --tac --multi --no-sort $* \
+			| ( has dos2unix && dos2unix || cat) \
+			| tr '\t\n' '  ' | tr -s ' '
+			# | tr -d '\n'
 	)
 }
-bindkey_func '^o' filter_last_output
+filter_last_output_from_below() {
+	filter_last_output
+}
+filter_last_output_from_top() {
+	filter_last_output \
+		--bind 'load:last' \
+		--bind 'tab:toggle-down' \
+		--bind 'btab:toggle-up'
+}
+
+bindkey_func '^o' filter_last_output_from_below
+bindkey_func '^j' filter_last_output_from_top
 
 function unify_whitespace() {
-    BUFFER=${BUFFER:s:	: ::fs:  : ::fs:# :::fs: %::}
+	BUFFER=$( oneline $BUFFER )
+    # BUFFER=${BUFFER:s:	: ::fs:  : ::fs:# :::fs: %::}
 	# BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
 	# BUFFER=${BUFFER::s  : ::fs:  : ::s:# :::s: %::}
 }
@@ -532,8 +528,8 @@ bindkey_func '^x^ ' unify_whitespace
 
 function diff_last_two_outputs {
 	# TODO: better derive event numbers from internal shell history
-	local o1=~/.tmux-log/$(($(print -P '%!')-2))
-	local o2=~/.tmux-log/$(($(print -P '%!')-1))
+	local o1=$previous_log_dir/output.gz
+	local o2=$log_dir/output.gz
 	[[ -e $o1 ]] || zle -M "Output \"$o1\" not found."
 	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found."
 	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
@@ -705,13 +701,9 @@ bindkey -s AT\  "a''t "
 bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
-bindkey -s cl\  'c $tmux_log_file\t '
-bindkey -s cj\  'c $tmux_log_file\t | jq '
-bindkey -s cjq\  'c $tmux_log_file\t | jq '
-bindkey -s cvd\  'c $tmux_log_file\t | vd -t tsv '
-bindkey -s clj\  'c $tmux_log_file\t | jq '
-bindkey -s clq\  'c $tmux_log_file\t | jq '
-bindkey -s cql\  "c $tmux_log_file\t | jq '.[]'"
+bindkey -s cl\  'zcat $tmux_log_file\t '
+bindkey -s cj\  'zcat $tmux_log_file\t | jq '
+bindkey -s cvd\  'zcat $tmux_log_file\t | vd -t tsv '
 bindkey -s sd\  'systemd-'
 bindkey -s vl\   "$EDITOR $tmux_log_file\\t"
 bindkey -s vll\  "$EDITOR *(.om[1])\\t"
@@ -730,49 +722,106 @@ bindkey -s mvl\  'mv ~/INCOMING/*(.om[1])\t .'
 bindkey -s LD\  '*(/om[1])\t'
 bindkey -s LF\  '*(.om[1])\t'
 
-function start_tmux_logging()
+in_tmux() {
+	setopt localoptions errreturn
+	whence tmux > /dev/null
+    [[ -n $TMUX ]]
+    tmux has-session >& /dev/null
+}
+
+oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
+
+function start_logging()
 {
-	# set -x
-	zsh_history_id=$(print -P '%!')
-	tmux_log_ts=$( date +%s%N )
-	tmux_log_file=$HOME/.tmux-log/$(print -P '%!')
-	# ZSH_DEBUG=1
+	[[ -v zsh_debug ]] && set -x
+	previous_log_dir=$log_dir
+	# Add $RANDOM for the rare case when nanoseconds (on different hosts?) collide
+	# TODO: Hash the hostname/timestamp
+	log_dir=~/.logs/zsh/$(date '+%F__%H.%M.%S_%N')-$RANDOM
+	mkdir $log_dir
 	print -P -- $LINE_SEPARATOR
-	if [[ -n $ZSH_DEBUG ]]; then
-		print literal = \"$1\"
-		print compact: \"$2\"
-		print full: \"$3\"
-		# print full-oneline: \"${3:gs,\\n, ,:gfs,  ,\0x20,}\"
-		print full-oneline: \"$(echo $3 | tr "\n\t" "  " | tr -s " " | sed -e "s/^  *//")\"
-		print time: $(n)
-		print event id: ${$(echo $3 | sha1sum)[1]}
-		print tmux_log_file: $tmux_log_file
+	[[ -v zsh_debug ]] && {
+		print "literal=\"$1\""
+		print "compact=\"$2\""
+		print "full=\"$3\""
+		print "full-oneline=\"$( oneline $3 )\""
+		print "event_id=${$(echo $3 | sha1sum)[1]}"
+		print "log_dir=$log_dir"
+		print "previous_log_dir=$previous_log_dir"
 		print -P $LINE_SEPARATOR
-	fi
-	# TODO: Do not log for INTERACTIVE_COMMANDS
+	}
+	pwd > $log_dir/pwd
+	echo $TTY > $log_dir/tty
+	setopt nomonitor
+	(
+		[[ -v zsh_debug ]] && set -x
+		cd $log_dir
+		[[ -n $previous_log_dir ]] && {
+			ln -s . $previous_log_dir/next_log_dir
+			ln -s $previous_log_dir previous_log_dir
+		}
+		print $3 > command
+		oneline $3 > command_oneline
+		print -P '%!' > zsh_history_id
+		echo $$ > zsh_pid
+		ps -o lstart= $$ > zsh_start_timestamp
+		echo $HOSTNAME > hostname
+		in_tmux && {
+			tmux display-message -p '#{session_name}' > tmux_session_name
+			tmux display-message -p '#{window_name}' > tmux_window_name
+			tmux display-message -p '#{pane_id}' > tmux_pane_id
+			tmux display-message -p '#{pane_title}' > tmux_pane_title
+		}
+		env | gzip > env.gz
+		date '+%F %H.%M.%S' > date_start
+		date '+%s' > date_start_epoch
+		date '+%s%N' > date_start_nano_epoch
+	) &
 	# TODO: Add logging (probably best in directories) for
 	# -exit code
 	# -directory (in case .zsh_local_history is not possible)
-	# -environment
-	# -literal and full command
-	# -report times
-	# -name of tmux session name
-	# -create log_file_name from cmdline contents and timestamp as history event
-	#  number does not seem to be stable enough
-	# TODO: save hostname to merge log among different hosts
-	has dos2unix && pipe_cmd="dos2unix -f" || pipe_cmd=cat
-	# pipe_cmd=cat
-	[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
-	tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
+
+	in_tmux && {
+		tmux_log_file=$log_dir/output.gz
+		# Check if (tmux) logging is about another pane set from env
+		[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
+		has dos2unix && pipe_cmd="dos2unix -f | gzip" || pipe_cmd=gzip
+		tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
+	}
+
 	set +x
 }
 
-function stop_tmux_logging()
+function stop_logging()
 {
-	[ -z $tmux_log_file ] && return
+	exit_code=$?
+	[[ -v zsh_debug ]] && {
+		print -P -- $LINE_SEPARATOR
+		print "log_dir=$log_dir"
+		print -P -- $LINE_SEPARATOR
+	}
+	setopt nomonitor
+	(
+		cd $log_dir
+		date '+%s%N' > date_stop_nano_epoch
+		date '+%s' > date_stop_epoch
+		date '+%F %H.%M.%S' > date_stop
+		echo $exit_code > exit_code
+		# TODO:
+		# -de-ANSI
+		# zstd
+		# runtime
+	) &
+	[[ -z $tmux_log_file ]] && {
+		# zle -M "No tmux output"
+		return
+	}
 	tmux pipe-pane  # close current shell-pipe
 	# TODO: Check if inotifywait is available
-	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h}
+	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		zle -M "tmux log file missing: \"$tmux_log_file\""
+		return
+	}
 	# TODO: fossil commit
 }
 
@@ -781,7 +830,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
+	# as kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -829,14 +878,9 @@ function zsh_detect_display()
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
 
-if whence tmux > /dev/null \
-    && [[ -n $TMUX ]] \
-    && tmux has-session >& /dev/null \
-    && mkdir -p ~/.tmux-log ;
-then
-    add-zsh-hook preexec start_tmux_logging
-    add-zsh-hook precmd stop_tmux_logging
-fi
+
+add-zsh-hook preexec start_logging
+add-zsh-hook precmd stop_logging
 
 function preexec_ssh()
 {
@@ -900,7 +944,7 @@ bindkey_func '^]^]' zle-toggle-keymap
 # }}}
 
 # Completion {{{
-# zsh_source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
+# source ~/.dotfiles/zsh/completion/zchee/src/zsh/zsh-completions.plugin.zsh
 fpath+=~/.dotfiles/zsh/completion/misc
 fpath+=~/.dotfiles/zsh/completion/zsh-users/src
 fpath+=~/.dotfiles/zsh/completion/zchee/src/zsh
@@ -1041,7 +1085,7 @@ fi
 #     fi
 # fi
 
-if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
+if source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 	ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
 	ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
@@ -1049,7 +1093,7 @@ if zsh_source -q ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting
 	ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
 	ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
 	ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
-elif zsh_source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
+elif source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
 	# fast-theme default
 	FAST_HIGHLIGHT[use_async]=1
 fi
@@ -1066,7 +1110,7 @@ pathprepend() {
 	# path=($path_element $path)
 	path=($path_element $path)
 }
-zsh_source ~/.environment
+source ~/.environment
 
 # source aliases shared with bash
 alias fcn='prl ${(ko)functions}'
@@ -1110,17 +1154,9 @@ tmux_neighbor() {
 	fi
 }
 
-tmux_neighbor_pane() {
-	tmux_neighbor $1 '#{pane_id}'
-}
-
-tmux_neighbor_tty() {
-	tmux_neighbor $1 '#{pane_tty}'
-}
-
-tmux_neighbor_pid() {
-	tmux_neighbor $1 '#{pane_pid}'
-}
+tmux_neighbor_pane() { tmux_neighbor $1 '#{pane_id}' }
+tmux_neighbor_tty() { tmux_neighbor $1 '#{pane_tty}' }
+tmux_neighbor_pid() { tmux_neighbor $1 '#{pane_pid}' }
 
 print_tty() {
 	tty=$1
@@ -1383,7 +1419,7 @@ if has apt; then
 	PS() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 	compdef _command_names PS
 elif has yum; then
-	alias pi='sudo -E yum -y install '
+	alias pi='sudo -E yum -y install'
 	# alias pii='sudo yum -C -y install $(sudo yum list -C | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias pii='sudo -E yum -y install $(sudo yum list | fzf --ansi --multi --preview-window=top:50% --preview "yum info {1}; rpm -ql {1}" | cut -f 1 -d\  ); rehash'
 	alias agr='sudo dnf remove $( dnf list --installed | fzf -m | cut -f1 -d" " )'
@@ -1399,16 +1435,6 @@ fi
 
 has kitty && kitty +complete setup zsh | source /dev/stdin
 
-has grc && tf_alias='command grc'
-tf_file=/var/log/messages
-[[ -e $tf_file ]] || tf_file=/var/log/syslog
-if [[ -e $tf_file ]]; then
-	[[ -r $tf_file ]] || tf_alias="sudo true && sudo $tf_alias"
-	alias tf="$tf_alias tail -f $tf_file &"
-else
-	alias tf='err("syslog NOT found")'
-fi
-
 c() {
 	[[ $# = 0 ]] && { die "usage: c files_and_directories"; return }
 	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
@@ -1418,9 +1444,9 @@ c() {
 	done
 }
 
-typeset -a expand_ealias_skip
-expand_ealias_skip=(ls)
+typeset -a expand_ealias_skip=(ls)
 expand_ealias() {
+	[[ -v zsh_debug ]] && set -x
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
 	[[ ${RBUFFER:0:1} = "\\" ]] && return
 	[[ $LBUFFER =~ "(^|[;|&])\s*(${(j:|:)expand_ealias_skip})$" ]] || zle _expand_alias
@@ -1432,16 +1458,8 @@ bindkey -M isearch ' '  magic-space # normal space during searches
 
 setopt extendedglob # Only enable after definition of expand_ealias
 
-function space_prepend {
-    zle -U ' '
-}
+function space_prepend { zle -U ' ' }
 bindkey_func '^ ' space_prepend
-
-function zle_mkdir {
-    zle -M "owi: $BUFFER "
-    zle -M "owii: ${${(Oaz)BUFFER}[1]} "
-}
-bindkey_func '^xd' zle_mkdir
 
 # TODO
 # -Add fzf-bindings for copy-key, copy-value, copy-value-quoted, etc.
@@ -1490,22 +1508,8 @@ watch=notme
 WATCHFMT="User %n from %M has %a at tty%l on %T %W"
 logcheck=30
 
-# Source external ressource files {{{
-zsh_source ~/.fzf.zsh
-zsh_source ~/.fzfrc
-
-nmn() {
-	targets=()
-	excludes=()
-	for if in $(command ls -1 /sys/class/net); do
-		if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then
-			targets+=$(ifdata -pN $if)/24
-			excludes+=$(ifdata -pa $if)
-		fi
-	done
-	print_variables targets excludes
-	nmap -PS2222 -p- -oA ~/.logs/nmap/log-$(nn) --exclude ${(j-,-)excludes} ${(j- -)targets}
-}
+source ~/.fzf.zsh
+source ~/.fzfrc
 
 _at() {
 	cmd=$*
@@ -1582,9 +1586,11 @@ mount_img() {
 }
 
 mvA() {
-    mv $* "$(echo -n $* |tr --complement '[[:alnum:]/.]' '_' )"
+    mv $* "$(echo -n $* | tr --complement '[[:alnum:]/.]' '_' )"
 }
-zsh_source -q  ~/.android/current_serial
+
+source ~/.android/current_serial
+
 p2x() { plistutil -i $1 -o $1.xml }
 cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
@@ -1597,8 +1603,6 @@ zmodload zsh/mathfunc
 # limit coredumpsize 10m maxproc 9000 filesize $(( int(0.1 * $(findmnt -bno AVAIL -T $HOME))))
 
 autoload zcalc
-# leg_db query
-# tabs 55; zargs -P $(nproc) **/*.bin -- leg --no-lifesign-check -p dir -p filename -k --trainPISBodyCustTrainNum | sort -uk 3
 
 rand_int() { echo $(( $(od -v -An -tu -N 4 /dev/urandom ) % ${1:=10} )) }
 rand_geom() {
@@ -1647,10 +1651,11 @@ seq_pairs() {
 	done
 }
 
+
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
-zsh_source ~/.aliases
+source ~/.aliases
 # test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # export SDKMAN_DIR="$HOME/.sdkman"
@@ -1660,7 +1665,6 @@ zsh_source ~/.aliases
 # compdef _docker docker
 # autoload /home-0/dsh2/.dotfiles/zsh/completion/docker-zsh-completion/repos/docker/cli/master/contrib/completion/zsh/_docker
 
-adbfs_mnts() { for mnt in ~/mnt/ADBFS/*; do mountpoint -q $mnt && echo $mnt; done; }
 
 lo=127.0.0.1
 null=/dev/null
@@ -1669,4 +1673,5 @@ now_epoch() { date '+%s' ; }
 now_epoch_ms() { date '+%s000' ; }
 
 zsh_prepend="$( < ~/.zsh_prepend)"
+
 set +x
