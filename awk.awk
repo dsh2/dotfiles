@@ -6,5 +6,5 @@ function humanize(bytes) {
 		bytes /= 1024
 		i++
 	}
-	return sprintf("%.1f %s", bytes, split(units, u) ? u[i+1] : "B")
+	return sprintf("%.1f%s", bytes, split(units, u) ? u[i+1] : "B")
 }
