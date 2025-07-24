@@ -5,3 +5,4 @@ if [[ -n $TMOUT ]]; then
 	# TODO: think about if sleeping is a bad idea....
 	sleep 1m
 fi
+rm -f ~/.cache/zsh_history/*zsh_pid-=$$*
