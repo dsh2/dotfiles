@@ -80,13 +80,16 @@ export JCOLOR=1
 export MOSH_ESCAPE_KEY=
 export MYHOSTNAME=${HOSTNAME/.*/}
 export SSLKEYLOGFILE=$HOME/.ssl/keys ; mkdir -pm 0700 $SSLKEYLOGFILE:h
-TERMINAL=kitty
+# TERMINAL=kitty
 export USE_CCACHE=1
 export SUDO_PROMPT='[sudo %u@%h %p > %U] '
 export RIPGREP_CONFIG_PATH=~/.ripgreprc 
 export TSOCKS_CONF_FILE=~/.tsocks.conf 
 
+export TIME_STYLE='+%F %T'
+export TIME_STYLE='+%F %T (%s)'
 export TZ=CET
 export AWKPATH=~/.awk/
+
 
 # has ykman && ykserial=$(ykman list --serials | head -1) 
