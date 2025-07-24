@@ -38,7 +38,7 @@ FZF_TMUX_HEIGHT=90%
 
 # TODO: add binding for vared
 ee() {
-    typeset | fzf --multi | cut -d= -f1 
+    typeset | fzf --multi | cut -d= -f1
 }
 
 fbr() {
@@ -83,7 +83,7 @@ ftpane() {
   # -focus self
   # -what about colors
   panes=$( \
-    tmux list-panes -aF '#{window_activity_flag} #{window_bell_flag} #{window_silence_flag} #{window_stack_index} #{wrap_flag} #{window_flags}\t#{t:window_activity}\t[#{session_name}]\t#{window_index}|#{=13:window_name}\t#{s,/dev/,,:pane_tty}\t#{pane_id}\t#{pane_pid}\t#{pane_index}|#{=13:pane_current_command}\t#{pane_current_path}:#{pane_title}' | 
+    tmux list-panes -aF '#{window_activity_flag} #{window_bell_flag} #{window_silence_flag} #{window_stack_index} #{wrap_flag} #{window_flags}\t#{t:window_activity}\t[#{session_name}]\t#{window_index}|#{=13:window_name}\t#{s,/dev/,,:pane_tty}\t#{pane_id}\t#{pane_pid}\t#{pane_index}|#{=13:pane_current_command}\t#{pane_current_path}:#{pane_title}' |
 	sort -k 7dr |
     grep -v $$ # TODO: add \t-regex
     )
@@ -112,17 +112,17 @@ zle -N gch; bindkey '\eU' gch
 gcb() {
 	setopt pipefail
 	local urls
-	urls=$(chrome-bookmarks.rb | 
-	    sort -r | 
+	urls=$(chrome-bookmarks.rb |
+	    sort -r |
 	    fzf \
 		--ansi \
 		--bind 'ctrl-x:execute(cut -f 3 <<< {} | xclip -selection clipboard -in)' \
 		--prompt "chrome bookmarks ($(jq -c '.["account_info"] | .[0] | .email' ~/.config/google-chrome/Default/Preferences)): " \
-		--multi | 
+		--multi |
 	    cut -f 3) &&
 	    xdg-open $=urls
 }
-zle -N gcb; 
+zle -N gcb;
 bindkey '\eB' gcb
 bindkey '\eI' gcb
 
@@ -131,11 +131,11 @@ twf() {
 	setopt pipefail
 	local tweed_ids
 	# sed -n '/^[[:digit:]]\{15,\}/{x;p;d};H;x;s/\r\n/ /g;x'
-	tweed_ids=$(t favorites --long --number 1000 | 
+	tweed_ids=$(t favorites --long --number 1000 |
 	    fzf \
 		--ansi \
 		--prompt "twitter favs: " \
-		--multi | 
+		--multi |
 	    sed -nE 's,([0-9]* ).*,https://twitter.com/statuses/\1,p' ) &&
 	    exo-open $=tweed_ids
 }
@@ -161,7 +161,7 @@ bindkey '^G' fzfz_file_widget
 
 fzf_locate_widget() {
     BUFFER="$LBUFFER$(
-	command locate \* | 
+	command locate \* |
 	    fzf --multi --prompt='locate: ' --preview="file {}" |
 	    while read file; do
 		qfile="${(q)file} "
@@ -173,30 +173,28 @@ fzf_locate_widget() {
 }
 zle -N fzf_locate_widget; bindkey '^x^l' fzf_locate_widget
 
-# Generate and output a list of zsh activities documented in $base_dir. List may contain multiple
-# columns generated off of the files to be found in the runtime directories within $base_dir.
+# Generate and output a list of zsh activities documented in $__zsh_history_base_dir. List may contain multiple
+# columns generated off of the files to be found in the runtime directories within $__zsh_history_base_dir.
 zsh_history() {
-	# [[ -v zsh_debug ]] && set -x
+	[[ -v zsh_debug ]] && set -x
 	# set -x
+	mkdir -p $__zsh_history_base_dir $__zsh_history_cache_dir
 	fields=($@)
 	fields+=("command_oneline")
-	local base_dir=~/.logs/zsh
-	# Create a separate cache for all fields (and its operators)
-	# TODO: Move to "real" cache dir?
-	local cache_file=$base_dir/CACHE_${(j:-:q)fields:gs./._.}
+	# Create a separate cache for all fields (and its filters/operators)
+	local cache_file=$__zsh_history_cache_dir/${(j:-:q)fields:gs./._.}
 	local changed_after=""
-	if [[ -r $cache_file ]]; then 
+	if [[ -r $cache_file ]]; then
 		changed_after="--changed-after=@$(stat +mtime $cache_file)"
 	else
 		# In case fd finds a lot of dirs but all dirs fail their field comparisons, touch cache file
-		# so fd won't find these dirs again in later invocations of zsh_history
+		# so fd won't find these dirs again in later invocations of zsh_history.
 		touch $cache_file
 	fi
 	# --max-results 10 \
-	fd $changed_after \
+	( fd $changed_after \
 		--type directory \
-		--max-depth 1 \
-		. $base_dir | while read -r dir; do
+		. $__zsh_history_base_dir | while read -r dir; do
 			[[ -s $dir/command_oneline ]] || continue
 			local -a out=($dir)
 			set $fields
@@ -207,10 +205,9 @@ zsh_history() {
 				value=$(<$dir/$field) 2>/dev/null
 				# XXX: Skip whole line as soon as one field value is missing?
 				[ -z $value ] && continue
-				# If next field's name starts with =, treat it as a exact comparison value for current field's value
 				if [[ $# -gt 0 ]]; then
 					opp=${1[2,-1]}
-					case ${1[1]} in 
+					case ${1[1]} in
 						# Exact comparison
 						(=) shift; [[ $value != $opp ]] && continue 2 ; continue ;;
 						# Prefix match
@@ -224,16 +221,23 @@ zsh_history() {
 			# Do not interpret (-R) escape seqeunces in values
 			for o in $out; do print -nR $o ; print -n $'\t'; done
 			print
-	done | sort --reverse >> $cache_file
-	cat $cache_file
+	done |
+		# Only show unique commands
+		sort -t$'\t' -uk${#${fields/[#=*]*/}} |
+			sort --reverse
+		cat $cache_file
+	) > >( sponge $cache_file ) | cat
 	set +x
 }
 
 # CTRL-R - Paste the selected command from history into the command line
 # TODO: allow --multi and add binding to vimdiff the outputs
 
-declare -i mode_index=1
-declare -a fields_extra=()
+declare __zsh_history_base_dir=~/.logs/zsh/
+declare __zsh_history_cache_dir=~/.cache/zsh_history/
+declare -i __zsh_history_mode_index=1
+declare -ir __zsh_history_mode_max=4
+declare -a __zsh_history_fields_extra=()
 
 fzf-history-widget() {
 	setopt localoptions noglobsubst noposixbuiltins
@@ -243,25 +247,36 @@ fzf-history-widget() {
 	# fzf_options+=( tmux=bottom,70% )
 	# fzf_options+=( tmux=100% )
 	# fzf_options+=( tmux=center )
-	fzf_options+=( border-label=bold )
+	# fzf_options+=( border-label=bold )
 	# fzf_options+=( style=full )
 	fzf_options+=( border=double )
 	fzf_options+=( multi )
-	fzf_options+=( no-sort )
 
-	fzf_options+=( )
+	# local -a fields_common_start=( "date_start" "pwd" "zsh_pid" )
 	local -a fields_common_start=( "date_start" )
 	# Start fzf query with what is on the command line already
 	local query="${LBUFFER//$/\\$}"
 	# TODO: rename local to path-local
 	# TODO: add local mode in the sense of zsh terminology
 	# TODO: add path-local-recursive
+	local -r accept_key=ctrl-m
 	local -r mode_switch_key=ctrl-space
 	local -r reload_key=alt-r
-	local -r diff_key=ctrl-d
+	local -r diff_key=alt-D
+	local -r cols_key=alt-C
+	local -r remove_key=alt-X
+	local -r nuke_key=ctrl-alt-n
+	local -ra all_expect_keys=(
+		$accept_key
+		$mode_switch_key
+		$reload_key
+		$diff_key
+		$remove_key
+		$nuke_key
+	)
 	apply_mode
 	while :; do
-		local -a fields=( $fields_common_start $fields_extra )
+		local -a fields=( $fields_common_start $__zsh_history_fields_extra )
 		local -a fzf_result=("${(f)$(
 			(
 			# TODO: Add support for nested abortion
@@ -269,46 +284,57 @@ fzf-history-widget() {
 					# echo -e $aborted_id\\t$(date +$time_format)\ $ZLE_LINE_ABORTED ;
 				zsh_history "$fields[@]"
 			) |
-			fzf ${(@)fzf_options/#/--} \
-			--accept-nth=1 \
+			fzf \
+				${(@)fzf_options/#/--} \
+				--expect=${(j:,:)all_expect_keys} \
+				--accept-nth=1 \
 				--with-nth=2.. \
 				--tiebreak=chunk,begin,index \
 				--bind resize:refresh-preview \
+				--preview-window up:45% \
 				--preview "preview.sh {1} {q}" \
-				--preview-window up:45%:wrap \
 				--bind "ctrl-/:change-preview-window(70%,right|hidden|)" \
 				--bind "ctrl-v:execute(tmux split -v $EDITOR {1}/)" \
+				--bind "zero:hide-preview" \
+				--bind "change:show-preview" \
 				--print-query \
-				--expect=ctrl-m,$mode_switch_key,$reload_key,$diff_key \
 				--query=$query \
-				--prompt="[$zsh_prompt]: "
+				--prompt="[$__zsh_history_fzf_prompt]: "
 		)}")
 
 		# Save current fzf query for further invocations of fzf
 		query=$fzf_result[1]
 		local key=$fzf_result[2]
-		set ${fzf_result:2}
 		case "$key" in
-			(ctrl-m)
-				# set -x
-				local -a new_cmd_line
+			($accept_key)
+				set ${fzf_result:2}
 				local -i cnt=$#
+				BUFFER=""
 				while [[ $# -gt 0 ]]; do
 					BUFFER+=$( < $1/command_oneline )
 					shift
 					[[ $# -gt 0 ]] && BUFFER+='; '
 				done
-				zle -M "New buffer (cnt=$cnd): \"$BUFFER\""
+				zle -M "New buffer (cnt=$cnt): \"$BUFFER\""
 				return 0
 				;;
 			($diff_key)
+				set ${fzf_result:2}
 				$EDITOR -d ${*/%/\/output.gz}
 				;;
 			($mode_switch_key)
-				mode_index=$(( mode_index % 3 + 1))
+				__zsh_history_mode_index=$(( __zsh_history_mode_index % $__zsh_history_mode_max + 1))
 				apply_mode
 				;;
+			($nuke_key)
+				set ${fzf_result:2}
+				zle redisplay
+				zle -M "Nuking $*"
+				command rm -rfI $*
+
+				;;
 			($reload_key)
+				# command rm -rfI $__zsh_history_cache_dir
 				zle -M "Reloading current history"
 				;;
 			(*)
@@ -320,21 +346,25 @@ fzf-history-widget() {
 }
 
 apply_mode() {
-	case $mode_index in
+	case $__zsh_history_mode_index in
 		(1)
-			zsh_prompt="Global"
-			fields_extra=()
+			__zsh_history_fzf_prompt="Global"
+			__zsh_history_fields_extra=()
 			;;
 		(2)
-			zsh_prompt="$PWD"
-			fields_extra=( "pwd" "=$PWD" )
+			__zsh_history_fzf_prompt="$PWD"
+			__zsh_history_fields_extra=( "pwd" "=$PWD" )
 			;;
 		(3)
-			zsh_prompt="zsh_pid=$$"
-			fields_extra=( "zsh_pid" "=$$" )
+			__zsh_history_fzf_prompt="zsh_pid=$$"
+			__zsh_history_fields_extra=( "zsh_pid" "=$$" )
+				;;
+		(4)
+			__zsh_history_fzf_prompt=$( tmux display-message -p '#{session_name}' )
+			__zsh_history_fields_extra=( "tmux_session_name" "tmux_session_name" "=$__zsh_history_fzf_prompt" )
 			;;
 		(*)
-			zle -M "Illegal mode $mode_index encountered"
+			zle -M "Illegal mode $__zsh_history_mode_index encountered"
 	esac
 }
 

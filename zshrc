@@ -729,16 +729,18 @@ in_tmux() {
     tmux has-session >& /dev/null
 }
 
-oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
+# oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
+oneline() { print -nr $* |
+	sed ':a; N; $!ba; s/\n/; /g' |
+	sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
 
 function start_logging()
 {
 	[[ -v zsh_debug ]] && set -x
 	previous_log_dir=$log_dir
-	# Add $RANDOM for the rare case when nanoseconds (on different hosts?) collide
 	# TODO: Hash the hostname/timestamp
-	log_dir=~/.logs/zsh/$(date '+%F__%H.%M.%S_%N')-$RANDOM
-	mkdir $log_dir
+	log_dir=~/.logs/zsh/$(date '+%Y/%m/%d/%H/%F__%H.%M.%S_%N')
+	mkdir -p $log_dir
 	print -P -- $LINE_SEPARATOR
 	[[ -v zsh_debug ]] && {
 		print "literal=\"$1\""
@@ -757,7 +759,7 @@ function start_logging()
 		[[ -v zsh_debug ]] && set -x
 		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
-			ln -s . $previous_log_dir/next_log_dir
+			ln -s $(pwd) $previous_log_dir/next_log_dir
 			ln -s $previous_log_dir previous_log_dir
 		}
 		print $3 > command
@@ -766,6 +768,7 @@ function start_logging()
 		echo $$ > zsh_pid
 		ps -o lstart= $$ > zsh_start_timestamp
 		echo $HOSTNAME > hostname
+		echo $CURSOR > cursor
 		in_tmux && {
 			tmux display-message -p '#{session_name}' > tmux_session_name
 			tmux display-message -p '#{window_name}' > tmux_window_name
@@ -777,14 +780,14 @@ function start_logging()
 		date '+%s' > date_start_epoch
 		date '+%s%N' > date_start_nano_epoch
 	) &
-	# TODO: Add logging (probably best in directories) for
-	# -exit code
-	# -directory (in case .zsh_local_history is not possible)
-
 	in_tmux && {
 		tmux_log_file=$log_dir/output.gz
 		# Check if (tmux) logging is about another pane set from env
 		[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
+		# tmux pipe-pane $=pane "zsh -c 'cat >( if whence dos2unix >/dev/null ; then dos2unix ; fi | gzip -9 > $tmux_log_file ) > >( file -kbz - > $log_dir/file )'"
+		# tmux pipe-pane $=pane "zsh -c 'cat'"
+		# tmux pipe-pane $=pane "zsh -c 'cat >$tmux_log_file'"
+		# tmux pipe-pane $=pane "cat >$tmux_log_file"
 		has dos2unix && pipe_cmd="dos2unix -f | gzip" || pipe_cmd=gzip
 		tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
 	}
@@ -809,14 +812,13 @@ function stop_logging()
 		echo $exit_code > exit_code
 		# TODO:
 		# -de-ANSI
-		# zstd
 		# runtime
 	) &
 	[[ -z $tmux_log_file ]] && {
 		# zle -M "No tmux output"
 		return
 	}
-	tmux pipe-pane  # close current shell-pipe
+	tmux pipe-pane  # Close current shell-pipe
 	# TODO: Check if inotifywait is available
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
 		zle -M "tmux log file missing: \"$tmux_log_file\""
@@ -877,7 +879,6 @@ function zsh_detect_display()
 # add-zsh-hook preexec zsh_detect_display
 add-zsh-hook precmd zsh_terminal_title_prompt
 add-zsh-hook preexec zsh_terminal_title_running
-
 
 add-zsh-hook preexec start_logging
 add-zsh-hook precmd stop_logging
