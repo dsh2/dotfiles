@@ -437,7 +437,6 @@ function copy_last_output_stripped {
 bindkey_func '^xo' copy_last_output_stripped
 
 function page_tmux_pane {
-
 	tmux split -vbp 60 $EDITOR =(tmux capture-pane -epJS -)
 }
 bindkey_func '^x^r' page_tmux_pane
@@ -460,10 +459,17 @@ fi
 export EDITOR=$VISUAL
 
 # vimp="$VISUAL -c AnsiEsc -c \"s/\%xd//\" -c go1"
-vimp="$VISUAL +AnsiEsc"
+vimp="$VISUAL +AnsiEsc +NERDTreeFind"
 function page_last_output_fullscreen {
 	check_output vp || return
-	tmux new-window -n "log-${tmux_log_file##*/}" $=vimp $tmux_log_file
+	local cmd
+	read -r cmd _ < <( head -n1 $log_dir/command_oneline )
+	# tmux new-window -n "LOG-$cmd-$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" $=vimp $tmux_log_file
+	tmux new-window \
+		-n "LOG-$cmd:t-$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" \
+		nvim $tmux_log_file -c AnsiEsc -c "topleft split $log_dir/command | resize 3" \
+		+"wincmd p | :NERDTreeFind | wincmd p"
+
 }
 bindkey_func '^xx' page_last_output_fullscreen
 
@@ -505,9 +511,7 @@ function filter_last_output {
 			# | tr -d '\n'
 	)
 }
-filter_last_output_from_below() {
-	filter_last_output
-}
+filter_last_output_from_below() { filter_last_output }
 filter_last_output_from_top() {
 	filter_last_output \
 		--bind 'load:last' \
@@ -519,7 +523,10 @@ bindkey_func '^o' filter_last_output_from_below
 bindkey_func '^j' filter_last_output_from_top
 
 function unify_whitespace() {
-	BUFFER=$( oneline $BUFFER )
+	local o=$( oneline $BUFFER )
+	[[ $BUFFER != $o ]] && { BUFFER=$o; return; }
+	BUFFER=$( print -nr $BUFFER | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' )
+
     # BUFFER=${BUFFER:s:	: ::fs:  : ::fs:# :::fs: %::}
 	# BUFFER=${BUFFER:fs:  : ::fs:# :::fs: %::}
 	# BUFFER=${BUFFER::s  : ::fs:  : ::s:# :::s: %::}
@@ -534,8 +541,10 @@ function diff_last_two_outputs {
 	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found."
 	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
 	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
-	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ."; return }
-	tmux new-window "cd ~/.tmux-log/; vimdiff $o1 $o2"
+	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ ($previous_log_dir vs. $log_dir)."; return ; }
+	tmux new-window \
+		-n "DIFF-$( date --date=@$( < $previous_log_dir/date_start_epoch ) '+%T' )---$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" \
+		"nvim -d $o1 $o2"
 }
 bindkey_func '^x^m' diff_last_two_outputs
 
@@ -569,21 +578,10 @@ function run_prepend {
 bindkey_func '^x^p' run_prepend
 
 function run_subshell {
-	if [[ -n $BUFFER ]]; then
-		local current_buffer=$BUFFER
-		if (( CURSOR )); then
-			zle up-history
-			integer new_cursor=$((CURSOR + $#BUFFER + 3))
-			BUFFER="$current_buffer \$($BUFFER)"
-			CURSOR=new_cursor
-		else
-			BUFFER=" \$($current_buffer)"
-		fi
-	else
-		zle up-history
-		BUFFER="out=\$( $BUFFER )"
-		CURSOR=0
-	fi
+	[[ -n $BUFFER ]] && { zle -M "Buffer not empty"; return; }
+	zle up-history
+	BUFFER="=\$( $BUFFER )"
+	CURSOR=0
 }
 bindkey_func '^x^b' run_subshell
 
@@ -600,10 +598,8 @@ bindkey_func '^x^s' run_sudo
 # TODO: Add initial query to fzf with left word
 function select_aliases {
     OLD_BUFFER_LEN=$#BUFFER
-    MARK=CURSOR
     BUFFER=$LBUFFER$(builtin alias | sed -e "s/\([^=]*\)=[' ]*\([^']*\)[']*/\1\t\2/ " | fzf --tabstop=28 --tac | cut -f 2 )$RBUFFER
     CURSOR+=$(($#BUFFER - $OLD_BUFFER_LEN))
-    REGION_ACTIVE=1
     zle redisplay
 }
 bindkey_func '^x^a' select_aliases
@@ -642,7 +638,6 @@ autoload -z edit-command-line
 zle -N edit-command-line
 bindkey_func "^x^v" edit-command-line
 
-#
 # Open man in tmux pane if possible
 # TODO: Strip obvious cruft like like sudo and paths
 if [ -z "$TMUX" ]; then
@@ -725,60 +720,98 @@ bindkey -s LF\  '*(.om[1])\t'
 in_tmux() {
 	setopt localoptions errreturn
 	whence tmux > /dev/null
-    [[ -n $TMUX ]]
-    tmux has-session >& /dev/null
+	[[ -n $TMUX ]]
+	tmux has-session >& /dev/null
 }
 
 # oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
 oneline() { print -nr $* |
+	# sed -E ':a; s.^[[:space:]]+|[[:space:]]+$..; N; s.\n[[:space:]]*.; /; ta'
 	sed ':a; N; $!ba; s/\n/; /g' |
-	sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
+	sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..'
+}
+
+declare __zsh_history_db=~/.zsh_history.db
+zs3() { sqlite3 $__zsh_history_db $* }
+
+zsh_history_create_db() {
+	zs3 <<-EOF_db
+		drop table if exists history ;
+		create table history (
+			id integer primary key,
+			command text,
+			timestamp datetime default current_timestamp,
+			timestamp_text datetime default (strftime('%F %T', 'NOW', 'localtime'))
+		) ;
+		# create unique index date_command on history(date, command)
+	EOF_db
+}
+
+tmux_get() { tmux display-message -p "#{$1}" }
 
 function start_logging()
 {
-	[[ -v zsh_debug ]] && set -x
-	previous_log_dir=$log_dir
-	# TODO: Hash the hostname/timestamp
-	log_dir=~/.logs/zsh/$(date '+%Y/%m/%d/%H/%F__%H.%M.%S_%N')
-	mkdir -p $log_dir
-	print -P -- $LINE_SEPARATOR
 	[[ -v zsh_debug ]] && {
+		set -x
 		print "literal=\"$1\""
 		print "compact=\"$2\""
 		print "full=\"$3\""
-		print "full-oneline=\"$( oneline $3 )\""
-		print "event_id=${$(echo $3 | sha1sum)[1]}"
-		print "log_dir=$log_dir"
-		print "previous_log_dir=$previous_log_dir"
-		print -P $LINE_SEPARATOR
 	}
-	pwd > $log_dir/pwd
-	echo $TTY > $log_dir/tty
+	previous_log_dir=$log_dir
+	# TODO: Hash the hostname/timestamp
+	log_dir=$( zsh_log_date_prefix $( date '+%s' ) )
+	mkdir -p $log_dir
+	print -P -- $LINE_SEPARATOR
+	# Temporarily safe tty and pwd, because they will change in sub-shell
+	local tty_value=$TTY
+	local pwd_value=$PWD
 	setopt nomonitor
 	(
-		[[ -v zsh_debug ]] && set -x
 		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
-			ln -s $(pwd) $previous_log_dir/next_log_dir
-			ln -s $previous_log_dir previous_log_dir
+			command ln -s $(pwd) $previous_log_dir/next_log_dir
+			command ln -s $previous_log_dir previous_log_dir
 		}
-		print $3 > command
-		oneline $3 > command_oneline
-		print -P '%!' > zsh_history_id
-		echo $$ > zsh_pid
-		ps -o lstart= $$ > zsh_start_timestamp
-		echo $HOSTNAME > hostname
-		echo $CURSOR > cursor
-		in_tmux && {
-			tmux display-message -p '#{session_name}' > tmux_session_name
-			tmux display-message -p '#{window_name}' > tmux_window_name
-			tmux display-message -p '#{pane_id}' > tmux_pane_id
-			tmux display-message -p '#{pane_title}' > tmux_pane_title
-		}
+		local -r command_oneline=${3%%$'\n'#}
+		typeset -A history_values=(
+			[pwd]=$pwd_value
+			[tty]=$tty_value
+			[zsh_history_id]=$( print -P '%!' )
+			[zsh_pid]=$$
+			[zsh_start_timestamp]=$( ps -o lstart= $$ )
+			[hostname]=$HOSTNAME
+			[cursor]=$CURSOR
+			[date_start]=$( date '+%F %H.%M.%S' )
+			[date_start_epoch]=$( date '+%s' )
+			[date_start_nano_epoch]=$( date '+%s%N' )
+		)
+		in_tmux && history_values+=(
+			[tmux_session_name]=$( tmux_get session_name )
+			[tmux_window_name]=$( tmux_get window_name )
+			[tmux_pane_id]=$( tmux_get pane_id )
+			[tmux_pane_title]=$( tmux_get pane_title )
+		)
 		env | gzip > env.gz
-		date '+%F %H.%M.%S' > date_start
-		date '+%s' > date_start_epoch
-		date '+%s%N' > date_start_nano_epoch
+		local -a keys=()
+		local -a values=()
+		for key value in "${(@kv)history_values}"; do
+			print -rl -- $value > $key
+			keys+=$key
+			ensure_zs3_column $key
+			[[ $value =~ ^[0-9]+([.][0-9]+)?$ ]] && values+=$value || values+=\'$value\'
+		done
+		# Read command from stdin into sqlite to prevent any quoting hassle
+		# TODO: Think about .parameter feature of sqlite more....
+		# print -n $command_oneline | tee command |
+		# XXX: This will make sqlite complain 'Error: stepping, out of memory (7)'
+		zs3 "insert into history (${(j:,:)keys},command) values (${(j:,:)values},readfile('/dev/stdin'))" <<< $command_oneline
+		print -nr $command_oneline > command_oneline
+		[[ -v zsh_debug ]] && {
+			print "log_dir=$log_dir"
+			print "previous_log_dir=$previous_log_dir"
+			typeset -p history_values
+			print -P $LINE_SEPARATOR
+		}
 	) &
 	in_tmux && {
 		tmux_log_file=$log_dir/output.gz
@@ -793,6 +826,12 @@ function start_logging()
 	}
 
 	set +x
+}
+
+ensure_zs3_column() {
+	zs3 "pragma table_info(history)" | grep -Fq -- "|$1|" && return
+	zs3 "alter table history add column $1"
+
 }
 
 function stop_logging()
@@ -1119,7 +1158,6 @@ compdef _pids cdp
 p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
-cdo() { parallel -i $SHELL -c "cd {}; $* | sed -e 's|^|'{}':\t|'" -- *(/) }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
 nsdo() { for ns in $(sudo ip netns list | cut -d\  -f 1); do sudo ip netns exec $ns $* | sed -e 's|^|'$ns':\t|'; done; }
 nsrm() { for ns in $(sudo ip netns list | cut -d\  -f 1); do echo "Deleting netns \"$ns\"..."; sudo ip netns delete $ns ; done; }
@@ -1411,7 +1449,8 @@ if has apt; then
 	alias agr='sudo -E apt remove $(dpkg-query --show --showformat="\${Package}\\t\${db:Status-Abbrev} \${Version} (\${Installed-Size})\t\${binary:Summary}\n" | fzf --tabstop=40 --sort --multi --preview-window=top:50% --preview "apt-cache show {1}" | cut -f 1)'
 	alias dps='dpkg -S'
 	alias dnp='noglob apt-file search'
-	dpl() { apt-cache show $* && dpkg -L $*}
+	# dpl() { apt-cache show $* && dpkg -L $*}
+	alias dpl='dpkg -L'
 	compdef _deb_packages dpl
 	dpL() { dpl $(dps $(whh $*) 1>&2 | cut -d: -f 1) }
 	compdef _command_names dpL
@@ -1652,6 +1691,18 @@ seq_pairs() {
 	done
 }
 
+
+min() {
+  local m=$1
+  for x; do (( x < m )) && m=$x; done
+  print $m
+}
+
+zsh_log_date_prefix() {
+	setopt localoptions
+	set -u
+	date --date @$1 "+$__zsh_history_base_dir/%Y/%m-%b/%d-%a-%V/%H/%F__%H.%M.%S"
+}
 
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local

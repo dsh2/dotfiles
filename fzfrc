@@ -181,20 +181,27 @@ zsh_history() {
 	mkdir -p $__zsh_history_base_dir $__zsh_history_cache_dir
 	fields=($@)
 	fields+=("command_oneline")
+	local -ir cols=${#${fields/[#=*]*/}}
 	# Create a separate cache for all fields (and its filters/operators)
 	local cache_file=$__zsh_history_cache_dir/${(j:-:q)fields:gs./._.}
+	# Sponge seems sometimes a little buggy leaving target file empty
+	local cache_file_tmp=$cache_file-tmp
 	local changed_after=""
+	local -i cache_mtime=0
 	if [[ -r $cache_file ]]; then
-		changed_after="--changed-after=@$(stat +mtime $cache_file)"
+		cache_mtime=$(stat +mtime $cache_file)
+		changed_after="--changed-after=@$cache_mtime"
 	else
 		# In case fd finds a lot of dirs but all dirs fail their field comparisons, touch cache file
 		# so fd won't find these dirs again in later invocations of zsh_history.
 		touch $cache_file
 	fi
 	# --max-results 10 \
-	( fd $changed_after \
-		--type directory \
-		. $__zsh_history_base_dir | while read -r dir; do
+	( 
+		fd \
+			$changed_after \
+			--type directory . $__zsh_history_base_dir |
+		while read -r dir; do
 			[[ -s $dir/command_oneline ]] || continue
 			local -a out=($dir)
 			set $fields
@@ -223,24 +230,31 @@ zsh_history() {
 			print
 	done |
 		# Only show unique commands
-		sort -t$'\t' -uk${#${fields/[#=*]*/}} |
+		sort -t$'\t' -uk$(( 1 + cols )) |
 			sort --reverse
 		cat $cache_file
-	) > >( sponge $cache_file ) | cat
+	) | tee $cache_file_tmp
+
+	(( $( file_size_bytes $cache_file_tmp ) > $( file_size_bytes $cache_file ) )) &&
+		mv $cache_file_tmp $cache_file
 	set +x
 }
+
+file_size_bytes() { stat +size $1 }
 
 # CTRL-R - Paste the selected command from history into the command line
 # TODO: allow --multi and add binding to vimdiff the outputs
 
 declare __zsh_history_base_dir=~/.logs/zsh/
 declare __zsh_history_cache_dir=~/.cache/zsh_history/
-declare -i __zsh_history_mode_index=1
-declare -ir __zsh_history_mode_max=4
+declare -i __zsh_history_mode_max=5
 declare -a __zsh_history_fields_extra=()
+
+optional_quote() { [[ "$1" == *[[:space:]]* ]] && print -r -- \"$1\" || print -r -- $1 }
 
 fzf-history-widget() {
 	setopt localoptions noglobsubst noposixbuiltins
+	declare -i __zsh_history_mode_index=1
 	local -a fzf_options=()
 	# fzf_options+=( info=inline )
 	fzf_options+=( info=inline-right:\* )
@@ -251,6 +265,7 @@ fzf-history-widget() {
 	# fzf_options+=( style=full )
 	fzf_options+=( border=double )
 	fzf_options+=( multi )
+	# fzf_options+=( track )
 
 	# local -a fields_common_start=( "date_start" "pwd" "zsh_pid" )
 	local -a fields_common_start=( "date_start" )
@@ -261,6 +276,7 @@ fzf-history-widget() {
 	# TODO: add path-local-recursive
 	local -r accept_key=ctrl-m
 	local -r mode_switch_key=ctrl-space
+	local -r mode_switch_back_key=alt-backspace
 	local -r reload_key=alt-r
 	local -r diff_key=alt-D
 	local -r cols_key=alt-C
@@ -269,6 +285,7 @@ fzf-history-widget() {
 	local -ra all_expect_keys=(
 		$accept_key
 		$mode_switch_key
+		$mode_switch_back_key
 		$reload_key
 		$diff_key
 		$remove_key
@@ -299,31 +316,47 @@ fzf-history-widget() {
 				--bind "change:show-preview" \
 				--print-query \
 				--query=$query \
-				--prompt="[$__zsh_history_fzf_prompt]: "
+				--prompt="[$__zsh_history_fzf_prompt ($__zsh_history_mode_index)]: "
 		)}")
 
 		# Save current fzf query for further invocations of fzf
 		query=$fzf_result[1]
 		local key=$fzf_result[2]
+		local -i cnt=$(( $#fzf_result - 2 ))
 		case "$key" in
 			($accept_key)
+				(( cnt == 0 )) && {
+					BUFFER=$query
+					zle redisplay
+					zle -M "fzf returned empty selection. Retaining fzf query in BUFFER, i.e. \"$query\"."
+					return
+				}
 				set ${fzf_result:2}
-				local -i cnt=$#
 				BUFFER=""
 				while [[ $# -gt 0 ]]; do
 					BUFFER+=$( < $1/command_oneline )
 					shift
 					[[ $# -gt 0 ]] && BUFFER+='; '
 				done
-				zle -M "New buffer (cnt=$cnt): \"$BUFFER\""
+				# zle -M "New buffer (cnt=$cnt): \"$BUFFER\""
 				return 0
 				;;
 			($diff_key)
+				(( cnt < 2 )) && { 
+					zle redisplay
+					zle -M "Select at least 2 entries (cnt=$cnt)."
+					sleep 2
+					continue
+				}
 				set ${fzf_result:2}
 				$EDITOR -d ${*/%/\/output.gz}
 				;;
 			($mode_switch_key)
-				__zsh_history_mode_index=$(( __zsh_history_mode_index % $__zsh_history_mode_max + 1))
+				__zsh_history_mode_index=$(( (__zsh_history_mode_index + 1) % __zsh_history_mode_max ))
+				apply_mode
+				;;
+			($mode_switch_back_key)
+				__zsh_history_mode_index=$(( (__zsh_history_mode_index - 1 + __zsh_history_mode_max) % __zsh_history_mode_max ))
 				apply_mode
 				;;
 			($nuke_key)
@@ -331,37 +364,67 @@ fzf-history-widget() {
 				zle redisplay
 				zle -M "Nuking $*"
 				command rm -rfI $*
-
 				;;
 			($reload_key)
-				# command rm -rfI $__zsh_history_cache_dir
+				# command rm -rf $__zsh_history_cache_dir/*
 				zle -M "Reloading current history"
 				;;
 			(*)
+				BUFFER=$query
 				zle redisplay
-				zle -M "fzf returned empty key."
+				zle -M "fzf returned empty key. Retaining query in BUFFER."
 				return
 		esac
 	done
 }
 
+abbrev_path() {
+	local path=$1
+	local -a parts abbrev
+	local IFS='/'
+
+	# Split into path components
+	parts=(${(s:/:)path})
+
+	# Rebuild with abbreviation
+	for ((i = 1; i < ${#parts}; i++)); do
+		abbrev+=(${parts[i]:0:1})
+	done
+
+	# Append last component in full (if any)
+	(( ${#parts} )) && abbrev+=(${parts[-1]})
+
+	# Join with slashes
+	print -r -- "/${(j:/:)abbrev}"
+}
+
 apply_mode() {
 	case $__zsh_history_mode_index in
+		(0)
+			__zsh_history_fzf_prompt="Global (all)"
+			__zsh_history_fields_extra=( "tty" "tmux_session_name" "tmux_window_name" "pwd" )
+			;;
 		(1)
 			__zsh_history_fzf_prompt="Global"
 			__zsh_history_fields_extra=()
 			;;
 		(2)
-			__zsh_history_fzf_prompt="$PWD"
+			__zsh_history_fzf_prompt="pwd=$( optional_quote $PWD )"
 			__zsh_history_fields_extra=( "pwd" "=$PWD" )
 			;;
 		(3)
 			__zsh_history_fzf_prompt="zsh_pid=$$"
 			__zsh_history_fields_extra=( "zsh_pid" "=$$" )
-				;;
+			;;
 		(4)
-			__zsh_history_fzf_prompt=$( tmux display-message -p '#{session_name}' )
-			__zsh_history_fields_extra=( "tmux_session_name" "tmux_session_name" "=$__zsh_history_fzf_prompt" )
+			local tmux_session_name=$( tmux display-message -p '#{session_name}' )
+			__zsh_history_fzf_prompt="tmux_session=$( optional_quote $tmux_session_name )"
+			__zsh_history_fields_extra=( "tmux_session_name" "=$__zsh_history_fzf_prompt" )
+			;;
+		(5)
+			local tmux_window_name=$( tmux display-message -p '#{window_name}' )
+			__zsh_history_fzf_prompt="tmux_window=$( optional_quote $tmux_window_name )"
+			__zsh_history_fields_extra=( "tmux_window_name" "=$__zsh_history_fzf_prompt" )
 			;;
 		(*)
 			zle -M "Illegal mode $__zsh_history_mode_index encountered"
