@@ -732,18 +732,28 @@ oneline() { print -nr $* |
 }
 
 declare __zsh_history_db=~/.zsh_history.db
-zs3() { sqlite3 $__zsh_history_db $* }
+zs3() { sqlite3 $__zsh_history_db '.timeout 5555' $* }
+zs3r() { sqlite3 --readonly $__zsh_history_db '.timeout 5555' $* }
+zs3i() { sqlite3 "file:$__zsh_history_db?mode=ro&immutable=1" $* }
 
-zsh_history_create_db() {
-	zs3 <<-EOF_db
-		drop table if exists history ;
-		create table history (
+zsh_history_recreate_db() {
+	zs3 "drop table if exists history"
+	zsh_history_ensure_db
+}
+
+zsh_history_ensure_db() {
+	# set -x
+	sqlite3 $__zsh_history_db <<-EOF_db
+		create table if not exists history (
 			id integer primary key,
 			command text,
-			timestamp datetime default current_timestamp,
-			timestamp_text datetime default (strftime('%F %T', 'NOW', 'localtime'))
+			date_start datetime default (strftime('%F %T', 'NOW', 'localtime'))
 		) ;
-		# create unique index date_command on history(date, command)
+		create unique index if not exists date_command on history(date_start, command) ;
+		create trigger if not exists trg_trim_commands after insert on history for each row
+		begin
+			update history set command=trim(command, char(0x0a,0x0d,0x20)) where id = new.id;
+		end ;
 	EOF_db
 }
 
@@ -752,7 +762,7 @@ tmux_get() { tmux display-message -p "#{$1}" }
 function start_logging()
 {
 	[[ -v zsh_debug ]] && {
-		set -x
+		# set -x
 		print "literal=\"$1\""
 		print "compact=\"$2\""
 		print "full=\"$3\""
@@ -770,10 +780,13 @@ function start_logging()
 		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
 			command ln -s $(pwd) $previous_log_dir/next_log_dir
-			command ln -s $previous_log_dir previous_log_dir
+			# command ln -s -T $previous_log_dir previous_log_dir
 		}
-		local -r command_oneline=${3%%$'\n'#}
+		local -r command_oneline=${2%%$'\n'#}
+		local -r command_full=${3%%$'\n'#}
 		typeset -A history_values=(
+			[log_dir]=$log_dir
+			[previous_log_dir]=$previous_log_dir
 			[pwd]=$pwd_value
 			[tty]=$tty_value
 			[zsh_history_id]=$( print -P '%!' )
@@ -804,8 +817,12 @@ function start_logging()
 		# TODO: Think about .parameter feature of sqlite more....
 		# print -n $command_oneline | tee command |
 		# XXX: This will make sqlite complain 'Error: stepping, out of memory (7)'
-		zs3 "insert into history (${(j:,:)keys},command) values (${(j:,:)values},readfile('/dev/stdin'))" <<< $command_oneline
+		zsh_history_ensure_db
+		zs3id=$(
+			zs3 "insert into history (${(j:,:)keys},command) values (${(j:,:)values},(readfile('/dev/stdin'))) returning id" <<< $command_oneline
+		)
 		print -nr $command_oneline > command_oneline
+		print -nr $command_full > command_full
 		[[ -v zsh_debug ]] && {
 			print "log_dir=$log_dir"
 			print "previous_log_dir=$previous_log_dir"
@@ -831,7 +848,6 @@ function start_logging()
 ensure_zs3_column() {
 	zs3 "pragma table_info(history)" | grep -Fq -- "|$1|" && return
 	zs3 "alter table history add column $1"
-
 }
 
 function stop_logging()
@@ -860,7 +876,7 @@ function stop_logging()
 	tmux pipe-pane  # Close current shell-pipe
 	# TODO: Check if inotifywait is available
 	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
-		zle -M "tmux log file missing: \"$tmux_log_file\""
+		zle -M "tmux log file missing in log dir: \"$log_dir\""
 		return
 	}
 	# TODO: fossil commit
@@ -1702,6 +1718,85 @@ zsh_log_date_prefix() {
 	setopt localoptions
 	set -u
 	date --date @$1 "+$__zsh_history_base_dir/%Y/%m-%b/%d-%a-%V/%H/%F__%H.%M.%S"
+}
+
+zsh_history_db_import() {
+	# set -x
+	sqlite3 $__zsh_history_db <<< $cmd \
+		".timeout 5000" \
+		"begin ; " \
+		"insert or ignore into history (log_dir, zsh_history_id, date_start, command) values ('$log_dir', $id, '$(date --date @$date "+%F %T")', readfile('/dev/stdin')) ;" \
+		"select 'DB: Command already migrated (id=$id, date=$date)' where changes()=0 ; " \
+		"commit ; "
+}
+
+# TODO: What about .zsh_local_history?
+zsh_history_migrate() {
+
+	declare -r __zsh_history_base_dir=~/.logs/zsh/
+	declare tmux_log=~/.tmux-log/
+
+	# fc -R ~/.zsh_history
+
+	local -i zsh_history_id=$( print -P '%!' )
+	# local -i zsh_history_id_fzf=$( cat $__zsh_history_base_dir/**/zsh_history_id(Om[1]) )
+	# local -i zsh_history_id_fzf_youngest=$( cat $__zsh_history_base_dir/**/zsh_history_id(on[1]) )
+	typeset -p zsh_history_id zsh_history_id_fzf zsh_history_id_fzf_youngest
+
+	print "max_id=$( min $zsh_history_id $zsh_history_id_fzf )"
+	print "diff=$(( zsh_history_id - zsh_history_id_fzf ))"
+
+	# set -x
+
+	# local -i first=$zsh_history_id_fzf_youngest
+	local -i first=1
+	local -i last=$zsh_history_id
+
+	(( first > last )) && step=-1 || step=1
+
+	typeset -p first last step
+
+	setopt localoptions errreturn
+	set -u
+	for i in $( seq $first $step $last ); do
+		fc -lt '%s' $i $i; done |
+			while read id date cmd; do
+				local log_dir=$( zsh_log_date_prefix $date )
+				local -i collision_idx=2
+				while [[ -d $log_dir ]]; do
+					old_cmd=$( < $log_dir/command_oneline )
+					[[ $cmd == $old_cmd ]] && {
+						print "FS: Command already migrated: id=$id date=$date cmd=\"$cmd\""
+						zsh_history_db_import
+						continue 2
+					}
+					local new_log_dir=$( zsh_log_date_prefix $date )-$collision_idx
+					(( collision_idx++ ))
+					print "Command collision: id=$id date=$date new=$new_log_dir cmd=\"$cmd\" old_cmd=\"$old_cmd\""
+					typeset -p id date log_dir new_log_dir cmd old_cmd
+					log_dir=$new_log_dir
+				done
+				zsh_history_db_import
+				mkdir -p $log_dir && cd $log_dir
+				print -R $cmd > command > command_oneline
+				print $id > zsh_history_id
+				echo $date > date_start_epoch
+				date --date @$date '+%F %T' > date_start
+				gz=$tmux_log/$id.gz
+				norm=$tmux_log/$id
+				if [[ -e $gz ]]; then
+					output="gz"
+					cp $gz output.gz
+				elif [[ -e $norm ]]; then
+					output="norm"
+					gzip < $norm > $log_dir/output.gz
+				else
+					output="[no output]"
+				fi
+				print "Command migrated: id=$id date=$date output=$output log_dir=$log_dir cmd=\"$cmd\""
+				# ls -dl $log_dir
+				# ls -Al
+			done
 }
 
 env_local=(~/.environment.d/*(N)) 2>/dev/null

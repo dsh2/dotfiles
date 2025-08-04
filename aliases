@@ -57,6 +57,11 @@ alias acu='source ~/.android/current_serial ; adi'
 alias adsp='adb shell setprop'
 alias adgp='adb shell getprop'
 alias adgpp="adb shell getprop | tr -d '[]:' | sort"
+alias setop=setopt
+alias seop=setopt
+alias sop=setopt
+alias zh=zsh_history
+alias zshh=zsh_history_
 alias ado='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
 alias adro='adb_real_serial=$(adb shell getprop ro.serialno) && typeset -p adb_real_serial ; echo $adb_real_serial ; tmux rename-window $adb_real_serial-RUN'
 alias adi='prop ro.serialno ; prop ro.build.version.release ; prop ro.build.type ; prop ro.build.version.incremental ; prop ro.build.date ; prop service.adb.tcp.port ; prop ro.turbox.build.id.kernel ; prop ro.boot.slot_suffix ; trait "uptime -s" ; trait "uptime -p" ; trait id'
@@ -333,10 +338,10 @@ alias gsmcm='git submodule foreach git checkout main'
 alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
+alias z3s=zs3
 
 # ls
-# alias ls="$LS_COMMAND -Z --almost-all --escape --classify --color=always --time-style='+%F %T'"
-alias l='ls -alh'
+alias l='ls -alhZ'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
@@ -1277,7 +1282,7 @@ alias th='test_host='
 DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* |& pre "$(nn): " ; sleep $n; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
-alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+# alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
 alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; sudo minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
 alias DD='dev=/dev/ttyUSB'
 alias devv='dev=/dev/ttyUSB0'
