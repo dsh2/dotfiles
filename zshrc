@@ -188,7 +188,7 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/|\$REPO_ROOT/)"
+zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/|\$SOURCE_ROOT/)"
 
 zshaddhistory() {
 	# Skip empty lines
@@ -894,7 +894,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	# as kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
+	# has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()

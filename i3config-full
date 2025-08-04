@@ -635,7 +635,7 @@ bindsym $ctrl+$shift+2 exec dunstpause
 bindsym $ctrl+$shift+3 exec dunstctl history-pop
 # xautolock's hotcorner seem to get confused when switching monitor setup
 # exec_always --no-startup-id xautolock -time 9 -corners '--++' -cornerdelay 1 -cornerredelay 60 -locker i3lock-wrapper.sh -detectsleep
-# exec_always --no-startup-id xss-lock --verbose --transfer-sleep-lock -- ~/.dotfiles/bin/i3lock-wrapper.sh
+exec_always --no-startup-id xss-lock --verbose --transfer-sleep-lock -- ~/.dotfiles/bin/i3lock-wrapper.sh
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id pa-applet
 exec_always --no-startup-id killall unclutter ; unclutter --ignore-scrolling --fork --timeout 5
