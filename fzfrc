@@ -298,9 +298,10 @@ fzf-history-widget() {
 	# fzf_options+=( tmux=center )
 	# fzf_options+=( border-label=bold )
 	# fzf_options+=( style=full )
-	fzf_options+=( border=double )
+	# fzf_options+=( border=double )
 	fzf_options+=( multi )
-	fzf_options+=( track )
+	fzf_options+=( no-sort )
+	# fzf_options+=( track )
 
 	local -a fields_common_start=( "date_start" )
 	# Start fzf query with what is on the command line already
@@ -316,6 +317,7 @@ fzf-history-widget() {
 	local -r cols_key=alt-C
 	local -r remove_key=alt-X
 	local -r nuke_key=ctrl-alt-n
+	local -r unique_key=ctrl-alt-u
 	local -ra all_expect_keys=(
 		$accept_key
 		$mode_switch_key
@@ -324,6 +326,7 @@ fzf-history-widget() {
 		$diff_key
 		$remove_key
 		$nuke_key
+		$unique_key
 	)
 	apply_mode
 	while :; do
@@ -340,6 +343,7 @@ fzf-history-widget() {
 				--expect=${(j:,:)all_expect_keys} \
 				--accept-nth=1 \
 				--with-nth=2.. \
+				--print-query \
 				--tiebreak=chunk,begin,index \
 				--preview-window up:45% \
 				--preview "preview.sh {1} {q}" \
@@ -348,7 +352,6 @@ fzf-history-widget() {
 				--bind "zero:hide-preview" \
 				--bind "change:show-preview" \
 				--bind "resize:refresh-preview" \
-				--print-query \
 				--query=$query \
 				--prompt="($__zsh_history_mode_index) [$__zsh_history_fzf_prompt]: "
 		)}")
@@ -393,6 +396,9 @@ fzf-history-widget() {
 			($mode_switch_back_key)
 				__zsh_history_mode_index=$(( (__zsh_history_mode_index - 1 + __zsh_history_mode_max) % __zsh_history_mode_max ))
 				apply_mode
+				;;
+			($unique_key)
+				# TODO: Toggle -d as last extra field
 				;;
 			($nuke_key)
 				set ${fzf_result:2}
@@ -440,7 +446,8 @@ apply_mode() {
 			;;
 		(1)
 			__zsh_history_fzf_prompt="Global"
-			__zsh_history_fields_extra=()
+			# __zsh_history_fields_extra=( "-d" )
+			__zsh_history_fields_extra=( )
 			;;
 		(2)
 			__zsh_history_fzf_prompt="pwd=$( optional_quote $PWD )"
@@ -499,7 +506,6 @@ fzf-history-widget_old() {
 			# $(__fzfcmd) \
 			fzf \
 			--multi \
-			--no-sort \
 			--preview "
 				echo COMMAND: {7..} | pygmentize -l zsh;
 				# echo EVENT ID: {3..4};
