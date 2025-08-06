@@ -51,6 +51,7 @@ bash_source() {
 [[ -r ~/.pip.zsh ]] || pip completion --zsh > ~/.pip.zsh
 eval "$(cat ~/.pip.zsh)"
 
+# Check if $1 is contained in an array named like $2
 in_array() { (( ${${(P)2}[(i)$1]} <= ${#${(P)2}} )) }
 
 setopt prompt_subst
@@ -467,8 +468,9 @@ function page_last_output_fullscreen {
 	# tmux new-window -n "LOG-$cmd-$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" $=vimp $tmux_log_file
 	tmux new-window \
 		-n "LOG-$cmd:t-$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" \
-		nvim $tmux_log_file -c AnsiEsc -c "topleft split $log_dir/command | resize 3" \
-		+"wincmd p | :NERDTreeFind | wincmd p"
+		nvim $tmux_log_file \
+			-c AnsiEsc -c "topleft split $log_dir/command_oneline | resize 3" \
+			+"wincmd p | :NERDTreeFind | wincmd p"
 
 }
 bindkey_func '^xx' page_last_output_fullscreen
@@ -725,9 +727,10 @@ in_tmux() {
 }
 
 # oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
-oneline() { print -nr $* |
+oneline() { 
+	print -nrl $* |
 	# sed -E ':a; s.^[[:space:]]+|[[:space:]]+$..; N; s.\n[[:space:]]*.; /; ta'
-	sed ':a; N; $!ba; s/\n/; /g' |
+	sed ':a; N; $!ba; s/[[:space:]]*\n[[:space:]]*/; /g' |
 	sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..'
 }
 
@@ -758,11 +761,12 @@ zsh_history_ensure_db() {
 }
 
 tmux_get() { tmux display-message -p "#{$1}" }
+declare -r __zsh_history_base_dir=~/.logs/zsh/
 
 function start_logging()
 {
+	# set -x
 	[[ -v zsh_debug ]] && {
-		# set -x
 		print "literal=\"$1\""
 		print "compact=\"$2\""
 		print "full=\"$3\""
@@ -782,8 +786,10 @@ function start_logging()
 			command ln -s $(pwd) $previous_log_dir/next_log_dir
 			# command ln -s -T $previous_log_dir previous_log_dir
 		}
-		local -r command_oneline=${2%%$'\n'#}
-		local -r command_full=${3%%$'\n'#}
+		# local -r command_oneline=${2%%$'\n'#}
+		local -r command_oneline=$( oneline $3 )
+		# local -r command_full=${3%%$'\n'#}
+		local -r command_full=$3
 		typeset -A history_values=(
 			[log_dir]=$log_dir
 			[previous_log_dir]=$previous_log_dir
@@ -1725,78 +1731,79 @@ zsh_history_db_import() {
 	sqlite3 $__zsh_history_db <<< $cmd \
 		".timeout 5000" \
 		"begin ; " \
-		"insert or ignore into history (log_dir, zsh_history_id, date_start, command) values ('$log_dir', $id, '$(date --date @$date "+%F %T")', readfile('/dev/stdin')) ;" \
+		"insert or ignore into history (log_dir, zsh_history_id, date_start, pwd, command) values ('$log_dir', $id, '$(date --date @$date "+%F %T")', '$dir', readfile('/dev/stdin'));" \
 		"select 'DB: Command already migrated (id=$id, date=$date)' where changes()=0 ; " \
 		"commit ; "
 }
 
 # TODO: What about .zsh_local_history?
 zsh_history_migrate() {
-
-	declare -r __zsh_history_base_dir=~/.logs/zsh/
-	declare tmux_log=~/.tmux-log/
-
-	# fc -R ~/.zsh_history
-
-	local -i zsh_history_id=$( print -P '%!' )
+	
 	# local -i zsh_history_id_fzf=$( cat $__zsh_history_base_dir/**/zsh_history_id(Om[1]) )
 	# local -i zsh_history_id_fzf_youngest=$( cat $__zsh_history_base_dir/**/zsh_history_id(on[1]) )
-	typeset -p zsh_history_id zsh_history_id_fzf zsh_history_id_fzf_youngest
-
-	print "max_id=$( min $zsh_history_id $zsh_history_id_fzf )"
-	print "diff=$(( zsh_history_id - zsh_history_id_fzf ))"
+	# typeset -p zsh_history_id zsh_history_id_fzf zsh_history_id_fzf_youngest
+	# print "max_id=$( min $zsh_history_id $zsh_history_id_fzf )"
+	# print "diff=$(( zsh_history_id - zsh_history_id_fzf ))"
 
 	# set -x
+	hh=$( sudo locate -b0 .zsh_local_history ) ; hh=( ${(0)hh} ) 
+	hh+=( "$HOME/zsh_history" )
+	setopt localoptions noerrreturn nounset
+	for h in $hh; do
+		[ -r $h ] || { print -u2 "Cannot read $h, skipping..." }
+		dir=$h:h
+		echo "Migrating from $dir: $h:t"
+		sudo chown -c $(id -u):$(id -g) $h
+		# XXX: Without sub-shell, the whole script will abort if history file $p fails to load
+		( 
+			fc -p $h || continue 
+			zsh_history_migrate_do
+		)
+	done
 
-	# local -i first=$zsh_history_id_fzf_youngest
-	local -i first=1
-	local -i last=$zsh_history_id
+}
 
-	(( first > last )) && step=-1 || step=1
-
-	typeset -p first last step
-
-	setopt localoptions errreturn
-	set -u
-	for i in $( seq $first $step $last ); do
-		fc -lt '%s' $i $i; done |
-			while read id date cmd; do
-				local log_dir=$( zsh_log_date_prefix $date )
-				local -i collision_idx=2
-				while [[ -d $log_dir ]]; do
-					old_cmd=$( < $log_dir/command_oneline )
-					[[ $cmd == $old_cmd ]] && {
-						print "FS: Command already migrated: id=$id date=$date cmd=\"$cmd\""
-						zsh_history_db_import
-						continue 2
-					}
-					local new_log_dir=$( zsh_log_date_prefix $date )-$collision_idx
-					(( collision_idx++ ))
-					print "Command collision: id=$id date=$date new=$new_log_dir cmd=\"$cmd\" old_cmd=\"$old_cmd\""
-					typeset -p id date log_dir new_log_dir cmd old_cmd
-					log_dir=$new_log_dir
-				done
+zsh_history_migrate_do() {
+	setopt localoptions errreturn nounset
+	declare tmux_log=~/.tmux-log/
+	: ${dir:-$HOME}
+	# echo dir=$dir
+	fc -lt '%s' 1 | while read id date cmd; do
+		local log_dir=$( zsh_log_date_prefix $date )
+		local -i collision_idx=2
+		while [[ -d $log_dir ]]; do
+			old_cmd=$( < $log_dir/command_oneline )
+			[[ $cmd == $old_cmd ]] && {
+				print "FS: Command already migrated: id=$id date=$date cmd=\"$cmd\""
 				zsh_history_db_import
-				mkdir -p $log_dir && cd $log_dir
-				print -R $cmd > command > command_oneline
-				print $id > zsh_history_id
-				echo $date > date_start_epoch
-				date --date @$date '+%F %T' > date_start
-				gz=$tmux_log/$id.gz
-				norm=$tmux_log/$id
-				if [[ -e $gz ]]; then
-					output="gz"
-					cp $gz output.gz
-				elif [[ -e $norm ]]; then
-					output="norm"
-					gzip < $norm > $log_dir/output.gz
-				else
-					output="[no output]"
-				fi
-				print "Command migrated: id=$id date=$date output=$output log_dir=$log_dir cmd=\"$cmd\""
-				# ls -dl $log_dir
-				# ls -Al
-			done
+				continue 2
+			}
+			local new_log_dir=$( zsh_log_date_prefix $date )-$collision_idx
+			(( collision_idx++ ))
+			print "Command collision: id=$id date=$date new=$new_log_dir cmd=\"$cmd\" old_cmd=\"$old_cmd\""
+			typeset -p id date log_dir new_log_dir cmd old_cmd
+			log_dir=$new_log_dir
+		done
+		zsh_history_db_import
+		mkdir -p $log_dir && cd $log_dir
+		print -R $cmd > command > command_oneline
+		print $id > zsh_history_id
+		print $date > date_start_epoch
+		print $dir > pwd
+		date --date @$date '+%F %T' > date_start
+		gz=$tmux_log/$id.gz
+		norm=$tmux_log/$id
+		if [[ -e $gz ]]; then
+			output="gz"
+			cp $gz output.gz
+		elif [[ -e $norm ]]; then
+			output="norm"
+			gzip < $norm > $log_dir/output.gz
+		else
+			output="[no output]"
+		fi
+		print "FS: Command migrated: id=$id date=$date output=$output log_dir=$log_dir cmd=\"$cmd\""
+	done
 }
 
 env_local=(~/.environment.d/*(N)) 2>/dev/null

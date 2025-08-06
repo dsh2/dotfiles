@@ -339,6 +339,7 @@ alias gsmu='git submodule update --init --recursive'
 alias gtl='git tag --sort=-taggerdate | head -1'
 alias gci='git config --show-origin --get-regexp user.\*; git init && git add . && git commit -m "Initial commit"'
 alias z3s=zs3
+alias zss=zs3
 
 # ls
 alias l='ls -alhZ'

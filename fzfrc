@@ -204,7 +204,7 @@ zsh_history() {
 	done
 	local -r zs3cols="${(j:, :)cols}${${cols}:+,}"
 	local zs3where=""; (( $#where > 0 )) && zs3where="where ${(j: and :)where}"
-	zs3r ".mod tabs" "select log_dir, $zs3cols trim(command, char(0x0a,0x0d,0x20)) from history $distinct $zs3where order by log_dir desc"
+	zs3r ".mod tabs" ".nullvalue ⛔" "select log_dir, $zs3cols trim(command, char(0x0a,0x0d,0x20)) from history $distinct $zs3where order by log_dir desc"
 }
 
 # Generate and output a list of zsh activities documented in $__zsh_history_base_dir. List may contain multiple
@@ -279,7 +279,6 @@ file_size_bytes() { stat +size $1 }
 # CTRL-R - Paste the selected command from history into the command line
 # TODO: allow --multi and add binding to vimdiff the outputs
 
-declare __zsh_history_base_dir=~/.logs/zsh/
 declare __zsh_history_cache_dir=~/.cache/zsh_history/
 declare -i __zsh_history_mode_max=6
 declare -a __zsh_history_fields_extra=()
