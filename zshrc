@@ -803,6 +803,7 @@ function start_logging()
 			[date_start]=$( date '+%F %H.%M.%S' )
 			[date_start_epoch]=$( date '+%s' )
 			[date_start_nano_epoch]=$( date '+%s%N' )
+			[todo]=$TODO
 		)
 		in_tmux && history_values+=(
 			[tmux_session_name]=$( tmux_get session_name )
@@ -1810,6 +1811,8 @@ env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
 source ~/.aliases
+test -r ~/.TODO && source ~/.TODO
+
 # test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # export SDKMAN_DIR="$HOME/.sdkman"

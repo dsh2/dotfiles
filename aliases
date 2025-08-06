@@ -115,7 +115,9 @@ adb_all() {
 					else
 						adb -t $device $=cmd
 					fi
-				} |& tee $tmp_file | sed "s|^|$real_serial ($device):\t|" ) &
+				# } |& tee $tmp_file | sed "s|^|$real_serial ($device):\t|" ) &
+				} |& tee $tmp_file | 
+					sed "s|^|$real_serial\t|" ) &
 		}
 	done
 	wait
@@ -1350,3 +1352,6 @@ alias apkt=apktool
 alias a2=aapt2
 alias ho=hostapd
 alias hos=hostapd
+alias todo=TODO
+alias to=TODO
+TODO() { TODO="$*" ; typeset -p TODO > ~/.TODO ; }

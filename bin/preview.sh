@@ -28,6 +28,7 @@ print -r "COMMAND: $( cat command_oneline )"
 ecat() { print -n "$1: " ; if [ -r $1 ]; then cat $1; else print "[NO $1]"; fi }
 ecat exit_code
 ecat zsh_history_id
+ecat todo
 declare output=$1/output.gz
 [[ -r $output ]] || { print "OUTPUT: No output captured." ; exit 0 ; }
 width=${FZF_PREVIEW_COLUMNS:-${COLUMNS:-80}}
