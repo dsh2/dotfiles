@@ -1748,7 +1748,7 @@ zsh_history_migrate() {
 
 	# set -x
 	hh=$( sudo locate -b0 .zsh_local_history ) ; hh=( ${(0)hh} ) 
-	hh+=( "$HOME/zsh_history" )
+	hh+=( "$HOME/.zsh_history" )
 	setopt localoptions noerrreturn nounset
 	for h in $hh; do
 		[ -r $h ] || { print -u2 "Cannot read $h, skipping..." }
