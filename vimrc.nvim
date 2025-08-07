@@ -729,7 +729,7 @@ if vim_plug_available
 	"Plug 'rayburgemeestre/phpfolding.vim'
 	Plug 'dsh2/vim-unimpaired'
 	Plug 'christoomey/vim-sort-motion'
-	" Plug 'christoomey/vim-system-copy'
+	Plug 'christoomey/vim-system-copy'
 	Plug 'embear/vim-foldsearch'
 	Plug 'junegunn/rainbow_parentheses.vim'
 	Plug 'lzap/vim-selinux', {'for': 'te'}
