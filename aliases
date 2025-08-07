@@ -1355,3 +1355,4 @@ alias hos=hostapd
 alias todo=TODO
 alias to=TODO
 TODO() { TODO="$*" ; typeset -p TODO > ~/.TODO ; }
+alias kx=keepassxc-cli
