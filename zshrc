@@ -812,6 +812,7 @@ function start_logging()
 			[tmux_pane_title]=$( tmux_get pane_title )
 		)
 		env | gzip > env.gz
+		typeset -p | gzip > typesets.gz
 		local -a keys=()
 		local -a values=()
 		for key value in "${(@kv)history_values}"; do
