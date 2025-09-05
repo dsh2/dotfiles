@@ -25,6 +25,7 @@
 } 2>/dev/null
 print -r "COMMAND: $( grep --color=always --fixed-strings -- ${(q)2} command_oneline )"
 print -r "COMMAND: $( cat command_oneline )"
+print -r "PWD: $( cat pwd )"
 ecat() { print -n "$1: " ; if [ -r $1 ]; then cat $1; else print "[NO $1]"; fi }
 ecat exit_code
 ecat zsh_history_id
