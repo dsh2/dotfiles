@@ -5,35 +5,49 @@
 # -Add some means to add an ordering to the selection of --multi
 # -Add some means to match content in a particular column
 
-export FZF_DEFAULT_OPTS="
-	--bind 'alt-a:select-all'
-	--bind 'alt-b:deselect-all'
-	--bind 'alt-D:first'
-	--bind 'alt-U:last'
-	--bind 'alt-d:page-down'
-	--bind "alt-t:toggle-track"
-	--bind 'alt-u:page-up'
-	--bind 'ctrl-r:toggle-sort'
-	--bind 'ctrl-q:toggle-preview'
-	--bind 'ctrl-alt-j:preview-page-down'
-	--bind 'ctrl-alt-k:preview-page-up'
-	--bind 'ctrl-alt-l:toggle-preview-wrap'
-	--bind 'ctrl-l:cancel'
-	--bind 'ctrl-o:toggle-all'
-	--bind 'alt-c:toggle-all'
-	--bind 'ctrl-n:next-history'
-	--bind 'ctrl-p:previous-history'
-	--bind 'ctrl-t:execute(tmux set-buffer {})'
-	--bind 'ctrl-x:execute(xclip -selection clipboard -in <<< {})'
-	--bind 'ctrl-v:execute(tmux split -v nvim +set\ bt=nofile +let\ @\\\"=\\\"{+}\\\" +normal\ pgg0)' \
-	--bind 'tab:toggle-up'
-	--bind 'btab:toggle-down'
-	--ansi
-	--inline-info
-	--history=${HOME}/.fzf_history
-	--exact
-	--prompt=\": \"
-"
+
+fzf_binds=()
+fzf_binds+=(
+	alt-a:select-all
+	alt-A:deselect-all
+	alt-D:first
+	alt-d:page-down
+	alt-U:last
+	alt-u:page-up
+)
+
+fzf_binds+=(
+	alt-t:toggle-track
+)
+
+fzf_binds+=(
+	ctrl-r:toggle-sort
+	ctrl-q:toggle-preview
+	ctrl-alt-j:preview-page-down
+	ctrl-alt-k:preview-page-up
+	ctrl-alt-l:toggle-preview-wrap
+	ctrl-l:cancel
+	ctrl-o:toggle-all
+	ctrl-n:next-history
+	ctrl-p:previous-history
+	tab:toggle-up
+	shift-tab:toggle-down
+)
+
+fzf_binds+=( "'ctrl-x:execute(echo -n {+} | zsh -ic clip)'")
+
+fzf_binds+=( "'ctrl-t:execute(echo -n {+} | tmux load-buffer -)'")
+
+fzf_options=(
+	ansi
+	multi
+	inline-info
+	history=${HOME}/.fzf_history
+)
+
+export FZF_DEFAULT_OPTS="${(@)fzf_binds/#/--bind } ${(@)fzf_options/#/--}"
+unset fzf_binds fzf_options
+
 FZF_TMUX=1
 FZF_TMUX_HEIGHT=90%
 
@@ -312,7 +326,7 @@ fzf-history-widget() {
 	local -r mode_switch_key=ctrl-space
 	local -r mode_switch_back_key=alt-backspace
 	local -r reload_key=alt-r
-	local -r diff_key=alt-D
+	local -r diff_key=ctrl-alt-d
 	local -r cols_key=alt-C
 	local -r remove_key=alt-X
 	local -r nuke_key=ctrl-alt-n
@@ -406,6 +420,7 @@ fzf-history-widget() {
 				zle redisplay
 				zle -M "Nuking $*"
 				command rm -rfI $*
+				sleep 3s
 				;;
 			($reload_key)
 				# command rm -rf $__zsh_history_cache_dir/*
@@ -479,9 +494,9 @@ bindkey '^R' fzf-history-widget
 # CTRL-R - Paste the selected command from history into the command line
 # TODO: allow --multi and add binding to vimdiff the outputs
 fzf-history-widget_old() {
-	setopt localoptions noglobsubst noposixbuiltins 
+	setopt localoptions noglobsubst noposixbuiltins
 	local query="${LBUFFER//$/\\$}"
-	local -r time_format='%a %F %T' 
+	local -r time_format='%a %F %T'
 	local -r aborted_id="ABRT"
 	local -r mode_switch_key=ctrl-space
 	# TODO: rename local to path-local
@@ -497,9 +512,9 @@ fzf-history-widget_old() {
 	local -a fzf_result
 	while :; do
 		fzf_result=("${(f)$(
-			( 
+			(
 			# TODO: Add support for nested abortion
-				[[ -n $ZLE_LINE_ABORTED ]] && 
+				[[ -n $ZLE_LINE_ABORTED ]] &&
 					echo -e $aborted_id\\t$(date +$time_format)\ $ZLE_LINE_ABORTED ;
 				fc $=mode_fd_param -rlEDt '%a %F  %T' 1 2> /dev/null | sed 's:[[:space:]]$::' | uniq -f 6
 			) |
@@ -518,7 +533,7 @@ fzf-history-widget_old() {
 			--expect=ctrl-m,$mode_switch_key \
 			--query=$query \
 			--prompt="$modes[$mode_index] $fzf_prompt: "
-		)}") 
+		)}")
 
 		query=$fzf_result[1]
 		local key=$fzf_result[2]
@@ -537,7 +552,7 @@ fzf-history-widget_old() {
 					else
 						zle -M "fc returned illegal event id (event_id = \"$event_id\")."
 					fi
-					separator='; ' 
+					separator='; '
 					# separator=$'\n'
 				done
 				BUFFER=$new_cmd_line
@@ -547,17 +562,17 @@ fzf-history-widget_old() {
 			"$mode_switch_key")
 				mode_index=$((mode_index % $#modes + 1))
 				case "$modes[$mode_index]" in
-					"global") 
+					"global")
 						mode_fd_param=""
-						fc -P 
+						fc -P
 						;;
-					"local") 
+					"local")
 						mode_fd_param=""
 						fc -ap $(zloc_file)
 						;;
-					"internal") 
+					"internal")
 						mode_fd_param="-I"
-						fc -P 
+						fc -P
 						;;
 					*)
 						print "Illegal mode encountered"; sleep 5
