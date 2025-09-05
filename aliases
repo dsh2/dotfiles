@@ -773,7 +773,7 @@ alias xps='ps axu gg $(xpidof)'
 alias pss='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "info shared" -ex "quit" -p '
 alias gbt='gdb -batch -q -ex "set confirm off" -ex "set height 0" -ex "thread apply all bt" -ex "quit" -p '
 # TODO: make C a zle binding
-alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
+# alias Q='cool-retro-term --fullscreen -e /usr/bin/tmux attach DN &; sleep 0.3; clear'
 alias RR=reset
 alias H='cd ~/.ssh/HOSTS/'
 alias Hk='cd ~/.ssh/keys/'
@@ -945,7 +945,7 @@ alias ns=netsniff-ng
 alias i=ip
 alias pst='pstree -lp'
 alias ne=neomutt
-alias V=v4l2ctrl
+# alias V=v4l2ctrl
 alias v2=v4l2ctrl
 alias zat='zathura --fork'
 alias dm='sudo dmsetup'
