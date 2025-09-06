@@ -1829,6 +1829,6 @@ null=/dev/null
 now_epoch() { date '+%s' ; }
 now_epoch_ms() { date '+%s000' ; }
 
-zsh_prepend="$( < ~/.zsh_prepend)"
+zsh_prepend=$( < ~/.zsh_prepend 2>$null )
 
 set +x
