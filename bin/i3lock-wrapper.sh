@@ -18,13 +18,15 @@ trap revert_lock_settings HUP INT TERM
 apply_lock_settings() {
 	dunstctl set-paused true
 	xset +dpms dpms 10 10 10 
-	setxkbmap -layout us,de -option grp:alt_caps_toggle
+	# TODO: Understand why sleep is necessary - or how to explicitly switch to us layout
+	setxkbmap us; sleep 0.9 ; setxkbmap us,de
 	for s in $(pactl list short sinks | cut -f 1); do 
 		# pactl set-sink-volume $s 0
 		pactl set-sink-mute $s 1
 	done
+	# TODO: Also mute sources?
 	i3sock=(/run/user/$(id -u)/i3/ipc-socket.*(om[1]))
-	[[ -n $i3sock ]] && { i3-msg -s $i3sock workspace BLANK }
+	[[ -n $i3sock ]] && { i3-msg -s $i3sock workspace BLANK-$RANDOM }
 	msg $( pstree -ps $$ )
 	# rfkill block all
 }
