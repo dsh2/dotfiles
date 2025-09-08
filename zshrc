@@ -817,7 +817,7 @@ function start_logging()
 		for key value in "${(@kv)history_values}"; do
 			print -rl -- $value > $key
 			keys+=$key
-			ensure_zs3_column $key
+			# ensure_zs3_column $key
 			[[ $value =~ ^[0-9]+([.][0-9]+)?$ ]] && values+=$value || values+=\'$value\'
 		done
 		# Read command from stdin into sqlite to prevent any quoting hassle
