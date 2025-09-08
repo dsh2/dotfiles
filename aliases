@@ -963,10 +963,10 @@ alias sup=supermin
 alias chx='sudo chmod +x'
 alias chnox='sudo chmod -Rc -x'
 alias chnx='sudo chmod -Rc -x'
-alias chmer='sudo chown -c -R $(id -u):$(id -g) .'
+alias chmer='sudo chown -c -R $(id -u):$(id -g) '
 alias chme='sudo chown -c $(id -u):$(id -g)'
 alias chu='sudo chown -c $(command stat -c "%U:%G" .) .'
-alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) .'
+alias chur='sudo chown -c -R $(command stat -c "%U:%G" .) '
 
 alias lo='losetup --find --show'
 alias los=losetup
