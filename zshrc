@@ -188,8 +188,6 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/|\$SOURCE_ROOT/)"
-
 zshaddhistory() {
 	# Skip empty lines
 	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
@@ -229,6 +227,7 @@ zshaddhistory() {
 			# ls -l $local_history_link
 		fi
 	else
+		# TODO: Dereference all symlinks in $PWD, so blacklist won't be circumvented by symlinks
 		if [[ $PWD =~ $zsh_local_history_blacklist ]]; then
 			print "zshaddhistory: Not creating link to local history because \"$PWD\" matches blacklist \"$zsh_local_history_blacklist\"."
 		else
@@ -779,7 +778,6 @@ function start_logging()
 	# Temporarily safe tty and pwd, because they will change in sub-shell
 	local tty_value=$TTY
 	local pwd_value=$PWD
-	setopt nomonitor
 	(
 		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
@@ -818,7 +816,7 @@ function start_logging()
 		for key value in "${(@kv)history_values}"; do
 			print -rl -- $value > $key
 			keys+=$key
-			ensure_zs3_column $key
+			# ensure_zs3_column $key
 			[[ $value =~ ^[0-9]+([.][0-9]+)?$ ]] && values+=$value || values+=\'$value\'
 		done
 		# Read command from stdin into sqlite to prevent any quoting hassle
@@ -837,7 +835,7 @@ function start_logging()
 			typeset -p history_values
 			print -P $LINE_SEPARATOR
 		}
-	) &
+	)
 	in_tmux && {
 		tmux_log_file=$log_dir/output.gz
 		# Check if (tmux) logging is about another pane set from env
@@ -866,7 +864,6 @@ function stop_logging()
 		print "log_dir=$log_dir"
 		print -P -- $LINE_SEPARATOR
 	}
-	setopt nomonitor
 	(
 		cd $log_dir
 		date '+%s%N' > date_stop_nano_epoch
@@ -876,7 +873,7 @@ function stop_logging()
 		# TODO:
 		# -de-ANSI
 		# runtime
-	) &
+	)
 	[[ -z $tmux_log_file ]] && {
 		# zle -M "No tmux output"
 		return
@@ -1830,6 +1827,6 @@ null=/dev/null
 now_epoch() { date '+%s' ; }
 now_epoch_ms() { date '+%s000' ; }
 
-zsh_prepend="$( < ~/.zsh_prepend)"
+zsh_prepend=$( < ~/.zsh_prepend 2>$null )
 
 set +x
