@@ -760,7 +760,7 @@ zsh_history_ensure_db() {
 }
 
 tmux_get() { tmux display-message -p "#{$1}" }
-declare -r __zsh_history_base_dir=~/.logs/zsh/
+declare __zsh_history_base_dir=~/.logs/zsh/
 
 function start_logging()
 {
