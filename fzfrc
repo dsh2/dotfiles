@@ -40,6 +40,7 @@ fzf_binds+=( "'ctrl-t:execute(echo -n {+} | tmux load-buffer -)'")
 
 fzf_options=(
 	ansi
+	exact
 	multi
 	inline-info
 	history=${HOME}/.fzf_history
