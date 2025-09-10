@@ -188,8 +188,6 @@ setopt no_inc_append_history
 setopt no_inc_append_history_time
 setopt share_history
 
-zsh_local_history_blacklist="(/mnt|~/mnt|^/tmp|~/src/HC/|\$SOURCE_ROOT/)"
-
 zshaddhistory() {
 	# Skip empty lines
 	[[ -z $1 || $1 =~ (^[[:space:]]+.*$) ]] && return
@@ -229,6 +227,7 @@ zshaddhistory() {
 			# ls -l $local_history_link
 		fi
 	else
+		# TODO: Dereference all symlinks in $PWD, so blacklist won't be circumvented by symlinks
 		if [[ $PWD =~ $zsh_local_history_blacklist ]]; then
 			print "zshaddhistory: Not creating link to local history because \"$PWD\" matches blacklist \"$zsh_local_history_blacklist\"."
 		else
