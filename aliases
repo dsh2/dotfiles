@@ -248,6 +248,7 @@ alias df='\df -h | sort -k 6,6 | sed "/^Filesystem/d"'
 alias g=git
 alias gn='noglob git'
 alias gt='git tag'
+alias gdes='git describe --all --tags'
 alias gf='git fetch'
 alias gcm='git commit --verbose -m ""'
 alias gC='git cherry --verbose'
