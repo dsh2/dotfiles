@@ -778,7 +778,6 @@ function start_logging()
 	# Temporarily safe tty and pwd, because they will change in sub-shell
 	local tty_value=$TTY
 	local pwd_value=$PWD
-	setopt nomonitor
 	(
 		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
@@ -836,7 +835,7 @@ function start_logging()
 			typeset -p history_values
 			print -P $LINE_SEPARATOR
 		}
-	) &
+	)
 	in_tmux && {
 		tmux_log_file=$log_dir/output.gz
 		# Check if (tmux) logging is about another pane set from env
@@ -865,7 +864,6 @@ function stop_logging()
 		print "log_dir=$log_dir"
 		print -P -- $LINE_SEPARATOR
 	}
-	setopt nomonitor
 	(
 		cd $log_dir
 		date '+%s%N' > date_stop_nano_epoch
@@ -875,7 +873,7 @@ function stop_logging()
 		# TODO:
 		# -de-ANSI
 		# runtime
-	) &
+	)
 	[[ -z $tmux_log_file ]] && {
 		# zle -M "No tmux output"
 		return
