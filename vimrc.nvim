@@ -408,6 +408,9 @@ if vim_plug_available
 	autocmd vimrc FileType nerdtree map <buffer> ; go
 	autocmd vimrc FileType nerdtree map <buffer> <F2> :NERDTreeClose<cr>
 	nnoremap <F2> :NERDTreeFind<cr>
+	nnoremap <leader>N :NERDTreeFind<cr>
+	nnoremap <leader>n :NERDTreeFind<cr>
+	nnoremap <leader>F :NERDTreeFind<cr>
 	" }}}
 	""Plug 'tyru/open-browser.vim' "{{{
 	""" let g:netrw_nogx = 1 " disable netrw's gx mapping.
