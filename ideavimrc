@@ -14,6 +14,7 @@ set nowrapscan
 nmap <leader>G <action>(Generate)
 nmap <leader>g <action>(Generate)
 
+
 nmap <leader>, <action>(PreviousTab)
 nmap <c-,> <action>(PreviousTab)
 nmap <leader>. <action>(NextTab)
@@ -166,6 +167,7 @@ map <leader>i <Action>(ShowIntentionActions)
 
 map <leader>mr <Action>(Run)
 map <leader>mm <Action>(Run)
+map <leader>ms <Action>(Android.SyncProject)
 map <leader>mc <Action>(RunConfiguration)
 " map <leader>mm <Action>(MakeGradleProject)
 map <leader>mM <Action>(MakeGradleProject)
@@ -193,7 +195,8 @@ map <leader>dF <Action>(StepOut)
 map <leader>B <Action>(Stop)
 set clipboard+=unnamed
 
-map <leader><c-]> <Action>(GotoImplementation)
+map <leader><c-]> <Action>(GotoSuperMethod)
+map <s-c-]> <Action>(GotoImplementation)
 map ]n <Action>(GotoNextError)
 map <c-n> <Action>(GotoNextError)
 map ]p <Action>(GotoPreviousError)
