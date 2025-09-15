@@ -492,7 +492,10 @@ bindkey_func '^x^x' page_last_output
 
 function check_output {
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 0
-	zle -M "No output captured (tmux_log_file = \"$tmux_log_file\")."
+	local msg="No output captured for "
+	[[ -z $pane_id ]] && msg+="this pane" || msg+="pane \"$pane_id\""
+	msg+=" (log_dir=\"$log_dir\")."
+	zle -M $msg
 	zle up-history
 	zle end-of-line
 	zle -U " | $1"
@@ -764,7 +767,6 @@ declare __zsh_history_base_dir=~/.logs/zsh/
 
 function start_logging()
 {
-	# set -x
 	[[ -v zsh_debug ]] && {
 		print "literal=\"$1\""
 		print "compact=\"$2\""
@@ -779,7 +781,7 @@ function start_logging()
 	local tty_value=$TTY
 	local pwd_value=$PWD
 	(
-		cd $log_dir
+		cd $log_dir 
 		[[ -n $previous_log_dir ]] && {
 			command ln -s $(pwd) $previous_log_dir/next_log_dir
 			# command ln -s -T $previous_log_dir previous_log_dir
@@ -809,8 +811,8 @@ function start_logging()
 			[tmux_pane_id]=$( tmux_get pane_id )
 			[tmux_pane_title]=$( tmux_get pane_title )
 		)
-		env | gzip > env.gz
-		typeset -p | gzip > typesets.gz
+		env | sort | gzip > env.gz
+		typeset -p | sort | gzip > typesets.gz
 		local -a keys=()
 		local -a values=()
 		for key value in "${(@kv)history_values}"; do
@@ -837,17 +839,13 @@ function start_logging()
 		}
 	)
 	in_tmux && {
-		tmux_log_file=$log_dir/output.gz
-		# Check if (tmux) logging is about another pane set from env
-		[[ -n $pane_id ]] && pane="-t $pane_id" || pane=""
-		# tmux pipe-pane $=pane "zsh -c 'cat >( if whence dos2unix >/dev/null ; then dos2unix ; fi | gzip -9 > $tmux_log_file ) > >( file -kbz - > $log_dir/file )'"
-		# tmux pipe-pane $=pane "zsh -c 'cat'"
-		# tmux pipe-pane $=pane "zsh -c 'cat >$tmux_log_file'"
-		# tmux pipe-pane $=pane "cat >$tmux_log_file"
-		has dos2unix && pipe_cmd="dos2unix -f | gzip" || pipe_cmd=gzip
-		tmux pipe-pane $=pane "$pipe_cmd > $tmux_log_file"
+		tmux_log_file=$log_dir/output
+		# Check if (tmux) logging is about another pane set from env or the current one
+		local pane=""
+		[[ -n $pane_id ]] && pane="-t $pane_id"
+		tmux pipe-pane $=pane "cat > $tmux_log_file"
+		unset pane
 	}
-
 	set +x
 }
 
@@ -862,29 +860,36 @@ function stop_logging()
 	[[ -v zsh_debug ]] && {
 		print -P -- $LINE_SEPARATOR
 		print "log_dir=$log_dir"
+		print "tmux_log_file=$tmux_log_file"
 		print -P -- $LINE_SEPARATOR
 	}
+	[[ -d $log_dir ]] || { print -u2 "Missing log_dir"; return; }
 	(
-		cd $log_dir
+		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return; }
 		date '+%s%N' > date_stop_nano_epoch
 		date '+%s' > date_stop_epoch
 		date '+%F %H.%M.%S' > date_stop
 		echo $exit_code > exit_code
-		# TODO:
-		# -de-ANSI
-		# runtime
+		local -i runtime_ns=$(( $(<date_stop_nano_epoch) - $(<date_start_nano_epoch) ))
+		(( runtime_ns > 0 )) && awk -v d=$runtime_ns 'BEGIN{
+			ns = d % 1000000000
+			s  = d / 1000000000
+			printf "%ddays %dhours %dminutes %dseconds %dms %dns\n", s/86400, s%86400/3600, s%3600/60, s%60, ns/1000000, ns
+		} ' > runtime
+		[[ -z $tmux_log_file ]] && return
+		tmux pipe-pane  # Close current shell-pipe
+		# TODO: Check if inotifywait is available?
+		[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+			# Cannot be called here, need zle
+			# zle -M "tmux log file missing in log dir: \"$log_dir\""
+			return
+		}
+		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
+		# has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
+		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
+		gzip $tmux_log_file
 	)
-	[[ -z $tmux_log_file ]] && {
-		# zle -M "No tmux output"
-		return
-	}
-	tmux pipe-pane  # Close current shell-pipe
-	# TODO: Check if inotifywait is available
-	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
-		zle -M "tmux log file missing in log dir: \"$log_dir\""
-		return
-	}
-	# TODO: fossil commit
+	tmux_log_file=$tmux_log_file.gz
 }
 
 function set_terminal_title()
@@ -1146,7 +1151,9 @@ fi
 #     fi
 # fi
 
-if source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; then
+msource() { for f in $*; do [ -r $f ] && source $f; done; }
+
+if msource ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ; then
 	ZSH_HIGHLIGHT_HIGHLIGHTERS=(main line brackets)
 	ZSH_HIGHLIGHT_STYLES[redirection]='fg=red,underline'
 	ZSH_HIGHLIGHT_STYLES[bracket-level-1]='fg=blue'
@@ -1154,10 +1161,11 @@ if source ~/.dotfiles/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; t
 	ZSH_HIGHLIGHT_STYLES[bracket-level-3]='fg=magenta'
 	ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=white,bold,underline'
 	ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=grey,bold'
-elif source $HOME/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh; then
+elif msource ~/.dotfiles/zsh/syntax-highlighting/fast-syntax-highlighting.plugin.zsh ; then
 	# fast-theme default
 	FAST_HIGHLIGHT[use_async]=1
 fi
+
 # }}}
 
 # Setup aliases {{{
@@ -1244,11 +1252,20 @@ alias Kl=tmux_send_keys_left
 alias Ka=tmux_send_keys_above
 alias Kb=tmux_send_keys_below
 
-tmux_send_line_right() { tmux send-keys -t $(tmux_neighbor_pane right) "$*" $'\n' }
-tmux_send_line_left() { tmux send-keys -t $(tmux_neighbor_pane left) "$*" $'\n'}
-tmux_send_line_above() { tmux send-keys -t $(tmux_neighbor_pane above) "$*" $'\n' }
-tmux_send_line_below() { tmux send-keys -t $(tmux_neighbor_pane below) "$*" $'\n' }
+tmux_send_line() {
+	local id=$1
+	[[ -z $id ]] && { print -u2 "No pane_id"; return } 
+	shift
+	tmux send-keys -t $id "$*" $'\n' 
+}
 
+tmux_send_line_pane()  { tmux_send_line $pane_id $* }
+tmux_send_line_right() { tmux_send_line $(tmux_neighbor_pane right) $* }
+tmux_send_line_left()  { tmux_send_line $(tmux_neighbor_pane left) $* }
+tmux_send_line_above() { tmux_send_line $(tmux_neighbor_pane above) $* }
+tmux_send_line_below() { tmux_send_line $(tmux_neighbor_pane below) $* }
+
+alias Lp=tmux_send_line_pane
 alias Lr=tmux_send_line_right
 alias Ll=tmux_send_line_left
 alias La=tmux_send_line_above
