@@ -1192,6 +1192,7 @@ alias dif=diff
 alias iper=iperf
 alias mtr='command mtr --interval 5 --curses --displaymode 2 1.1.1.1'
 alias cdr='cd $REPO_ROOT'
+alias cds='cd ~/src'
 alias cdrr='cd $REPO_ROOT/.repo/manifests'
 alias rp=rpm
 alias ssf=sshfs
