@@ -1367,3 +1367,4 @@ alias sff='sudo sfdisk --list /dev/'
 alias bld='sudo blockdev --getsize64 /dev/ '
 alias dunstt=dunstctl 
 alias ags=ssh-agent
+alias ota=ota_from_target_files
