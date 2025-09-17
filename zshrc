@@ -780,6 +780,8 @@ function start_logging()
 	# Temporarily safe tty and pwd, because they will change in sub-shell
 	local tty_value=$TTY
 	local pwd_value=$PWD
+	env | sort | gzip > $log_dir/env.gz
+	typeset -p | sort | gzip > $log_dir/typesets.gz
 	(
 		cd $log_dir 
 		[[ -n $previous_log_dir ]] && {
@@ -811,8 +813,6 @@ function start_logging()
 			[tmux_pane_id]=$( tmux_get pane_id )
 			[tmux_pane_title]=$( tmux_get pane_title )
 		)
-		env | sort | gzip > env.gz
-		typeset -p | sort | gzip > typesets.gz
 		local -a keys=()
 		local -a values=()
 		for key value in "${(@kv)history_values}"; do
