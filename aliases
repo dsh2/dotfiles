@@ -1358,3 +1358,7 @@ alias todo=TODO
 alias to=TODO
 TODO() { TODO="$*" ; typeset -p TODO > ~/.TODO ; }
 alias kx=keepassxc-cli
+alias sgd=sgdisk
+alias sgg=sgdisk
+alias sgp='sgdisk --print /dev/'
+alias sff='sfdisk'
