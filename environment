@@ -10,7 +10,7 @@ pathprepend $HOME/bin
 # pathprepend /usr/lib/ccache
 # # pathprepend /opt/local/share/man MANPATH
 pathprepend $HOME/.cargo/bin
-# pathprepend $HOME/.dotfiles/bin
+pathprepend $HOME/bin
 # pathprepend $HOME/.dotfiles/fzf/target
 # pathprepend $HOME/node_modules/.bin/
 # pathprepend $HOME/.local/bin
@@ -90,6 +90,5 @@ export TIME_STYLE='+%F %T'
 export TIME_STYLE='+%F %T (%s)'
 export TZ=CET
 export AWKPATH=~/.awk/
-
 
 # has ykman && ykserial=$(ykman list --serials | head -1) 

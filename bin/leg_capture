@@ -1,1 +1,220 @@
-../../src/DB/LEG/leg/tools/leg_capture
+#!/bin/bash
+
+# This script initializes a UART at $leg_uart (default: /dev/ttyUSB0) according
+# to the LEG specification. After successful initialization it starts to
+# capture LEG data from this UART into a directory hierarchy. For each encoding
+# type a separate directory is created beforehand. For emulation purposes, a FIFO
+# (instead of a UART) may be used as well.
+#
+# The script also tries to connect to a (local) PostgreSQL database to store
+# the LEG data in JER-encoding there. If the connection fails, the capture will
+# continue storing LEG data into the directory hierarchy, and tries to reconnect
+# to the database every now and then.
+
+die() {
+	echo "[error] $* Exiting..."
+	exit 1
+}
+
+warn() {
+	echo "[warning] $*"
+}
+
+pre() {
+	while read line; do 
+		echo "$*$line"
+	done
+}
+
+initialize_uart() { (
+	(( x )) && set -x
+	[ -e $leg_uart ] || die "UART at \"$leg_uart\" does not exist."
+	[ -c "$leg_uart" ] || {
+		echo "UART at $leg_uart is not a character device. Skipping initialization..."
+		return
+	}
+	readonly uart_model="$(udevadm info --query=property --name=$leg_uart \
+		| sed -nE 's:^ID_MODEL_FROM_DATABASE=(.*)$:\1:p')"
+	echo "Configuring UART \"$uart_model\" at $leg_uart."
+	stty -F "$leg_uart" 921600 cs8 -cstopb parenb -cooked
+	readonly uart_state=$(stty -gF "$leg_uart")
+	readonly uart_state_nominal="0:4:1db7:8a38:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0"
+	[[ "$uart_state" == "$uart_state_nominal" ]] || warn "Initialization of UART may have failed: \"$uart_state\"."
+) }
+
+create_output_dir() {
+	(( x )) && set -x
+	output_base=$HOME/LEG_CAPTURE/$leg_uart_suffix
+	output_dir=$output_base/$(date '+%F__%H.%M.%S')
+	mkdir -p "$output_dir"
+	output_dir=$( readlink -f $output_dir )
+	echo "Created new capture directory \"$output_dir\"."
+	cd "$output_dir"
+	ln -srfT "$output_dir" "$output_base/current"
+	output_raw=$output_dir/leg.raw
+	output_diff=$output_dir/diff.txt
+	output_lint=$output_dir/lint.txt
+}
+
+# Check database connection
+PSQL() { psql --no-password --host 127.0.0.1 leg postgres "$*"; }
+psql_connect_check() {
+	PSQL -Atc "select 'addr: ' || inet_server_addr()::text || " \
+		"', port: ' || inet_server_port() || " \
+		"', start time: ' || pg_postmaster_start_time() || " \
+		"', version: ' || version()" 2>&1
+}
+
+psql_check() {
+	psql_conn=$(psql_connect_check) || {
+		logger -s -t leg_capture -p syslog.warning -- \
+			"Failed to connect to database. Continuing to capture to file system. (psql_error: \"$psql_conn\")"
+		psql_connected=0
+		return 1
+	}
+	echo "Successfully connected to database of LEG-Analyser ($psql_conn)."
+	psql_connected=1
+}
+
+capture() {
+	# When several processes are reading from the same UART, datagrams will
+	# be corrupted because they are split amongs the readers. Therefor, we stop
+	# all others readers. When several capture services race for one UART, at least 
+	# one functional capture service should remain.
+	# o=$(fuser -v --kill -STOP "$leg_uart") &&
+	# 	warn "Multiple readers of UART \"$leg_uart\" found and stopped, cf. below:$'\n'$o"
+	# | $leg \
+	tail -fc+1 "$leg_uart" | \
+			/home/dsh2/.local/bin/leg \
+			--keep-going \
+			--streaming \
+			--encoding=bin \
+			--split-mode $leg_conv \
+			--prepend time \
+			--prepend latency \
+			--prepend lifesign \
+			--diff --blockPData > "$output_diff"
+}
+
+ingest() {
+	(( x )) && set -x
+	first_time=0
+	while sleep 0.5; do
+		(( !psql_connected )) && (( RANDOM < 1000 )) && psql_check
+		# TODO: Try to understand why inotifywait misses some output files of leg tool
+		# Switching to polling by for loop for now...
+		# event=$( inotifywait -qe create .) || { echo inotify failed; break; }
+		shopt -s extglob nullglob
+		files=( *.{bin,ber,jer,js,json,xer,xml} )
+		# warn "FILES: ${files[@]}"
+		# for file in *.{bin,ber,jer,js,json,xer,xml}; do
+		for file in ${files[@]}; do
+			enc=${file##*.}
+			case $enc in
+				bin | ber)
+					(( first_time == 0 )) && { 
+						first_time=1
+						echo "First datagram detected with lifesign/date: $($leg < "$file" -I/ --lifesign --processDataTime )"
+					}
+					(( RANDOM < 1000 )) && echo "MARK: lifesign = $($leg < "$file" --lifesign)"
+					mv "$file" bin
+					;;
+				js | jer | json)
+					((psql_connected)) && {
+						if id=$(PSQL < "$file" -Aqtc '
+							create temp table temp_leg (like leg including defaults);
+							copy temp_leg (datagram) from stdin;
+							insert into leg(datagram) select datagram from temp_leg returning id
+						'); then
+							# TODO: Make column "message" enum or similar
+							< $file $leg_lint | while read level message; do 
+								psql -qc "insert into lint(message, level, leg_ref) values ('$message', '${level%:}', $id)"
+								echo "$file: $level $message" >> $output_lint
+							done
+							id_file=js/${file%.*}-$id.js
+							mv "$file" "$id_file"
+							# [[ -r "$previous_id_file" ]] && $leg -dje json "$previous_id_file" "$id_file"
+							# previous_id_file="$id_file"
+						else
+							warn "Failed to get ingestion id for file \"$file\"."
+						fi
+					} || psql_connected=0
+					# TODO: Dump/ingest block data
+					;;
+				xer | xml)
+					# TODO: Use leg_tidy now
+					tidy < "$file" -xml -q \
+						--show-errors 0 --show-warnings 0 \
+						--force-output --indent auto \
+						--indent-spaces 4 --vertical-space yes \
+						--tidy-mark no -wrap 0 > "xml/$file"
+					rm "$file"
+					;;
+				*)
+					echo "Unknown extension \"$enc\" detected (event = \"$event\")."
+					;;
+			esac
+		done
+	done
+}
+
+trapped() {
+	(( x )) && set -x
+	cleanup
+	trap - INT TERM
+	kill $$
+}
+
+cleanup() {
+	/bin/kill --verbose --timeout 1000 TERM --timeout 1000 KILL $pid_capture $pid_v 
+}
+
+main() {
+	(( x )) && set -x
+	trap trapped INT TERM
+
+	set -e
+	umask 002 # Make captured datagrams available to leg group as well
+
+	readonly leg_uart=${leg_uart:-/dev/ttyUSB0}
+	readonly leg_uart_suffix=${leg_uart#/dev/#/}
+	[ -x $HOME/leg ] && readonly leg="$HOME/leg" || readonly leg=leg
+	[ -x $HOME/leg_lint ] && readonly leg_lint="$HOME/leg_lint" || readonly leg_lint=leg_lint
+
+	initialize_uart
+	psql_check
+
+	echo "Starting LEG capture service on host \"$(hostname -s)\" (machine-id: $(cat /etc/machine-id 2> /dev/null || echo NONE))."
+	readonly output_encodings="bin js"
+	# readonly output_encodings="bin js xml"
+	create_output_dir
+	for enc in $output_encodings; do
+		mkdir -p "$output_dir/$enc"
+		leg_conv+="-c $enc "
+	done
+
+	capture & pid_capture=$!
+	echo -e "Started capture thread with pid $pid_capture.\nDiffing to \"$output_diff\".\nLiniting to \"$output_lint\"."
+
+	ingest & pid_ingest=$!
+	echo "Started ingestion thread with pid $pid_ingest."
+
+	# When any job terminates, terminate all
+	wait -n
+	cleanup
+
+	echo "Exiting."
+}
+
+sourced() {
+	if [ -n "$ZSH_EVAL_CONTEXT" ]; then
+		case $ZSH_EVAL_CONTEXT in *:file:*) return 0 ;; esac
+	elif [ -n "$BASH_VERSION" ] ; then
+		[ "$BASH_SOURCE" = "$0" ] || return 0
+	else
+		case ${0##*/} in sh | dash) return 0 ;; esac
+	fi
+	return 1
+}
+
+sourced || main $@

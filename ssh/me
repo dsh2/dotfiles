@@ -9,7 +9,8 @@ User me
 IdentitiesOnly yes 
 IdentityFile ~/.ssh/id_me
 UserKnownHostsFile /dev/null 
-StrictHostKeyChecking off 
+# StrictHostKeyChecking off 
+StrictHostKeyChecking accept-new 
 
 # ControlPersist yes
 ControlPersist no
