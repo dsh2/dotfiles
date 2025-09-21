@@ -1218,6 +1218,7 @@ alias wa='watch -d -n 0.4'
 alias waa='watch -d -n 4'
 alias dun='dunstctl is-paused'
 alias no=notify-send
+alias not=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
 alias lsbb='lsblk -o NAME,FSSIZE,UUID /dev/'
 alias dr=dracut
