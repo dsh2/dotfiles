@@ -856,6 +856,11 @@ ensure_zs3_column() {
 
 function stop_logging()
 {
+
+	[[ $tmux_log_file = *.gz ]] && { 
+		print "Recursive call to stop_logging() detected. Break not detected?"
+		return 1
+	}
 	exit_code=$?
 	[[ -v zsh_debug ]] && {
 		print -P -- $LINE_SEPARATOR
@@ -1415,12 +1420,12 @@ alias -g X1='| xargs -rn 1'
 alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
 alias -g XP0='| xargs -rP $(nproc) -0'
-# alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
-alias -g gg='| grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggg='|& grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggs='| strings | grep -Ei --'
-alias -g ggv='| grep -v -- '
-alias -g ggvv='|& grep -v -- '
+# alias -g gg='|& command grep -i -- ' # TODO: use rg with rust regex instead
+alias -g gg='| command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggg='|& command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggs='| strings | command grep -Ei --'
+alias -g ggv='| command grep -v -- '
+alias -g ggvv='|& command grep -v -- '
 alias -g ff='| file -z'
 alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"

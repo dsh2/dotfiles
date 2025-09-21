@@ -565,7 +565,7 @@ alias agg='ag --depth=-1'
 alias rgg='noglob rg --no-search-zip -g !out'
 alias rgo='noglob rg --no-search-zip -g !out'
 # gw() { grep --color -Iwri -- "$@" *; }
-alias grep='grep --color'
+alias grep='command grep --color'
 # alias pg='ping gdns |& lnav -qt'
 alias pg='pgrep -ax'
 alias acs='apt-cache search'
@@ -1367,3 +1367,5 @@ alias sff='sudo sfdisk --list /dev/'
 alias bld='sudo blockdev --getsize64 /dev/ '
 alias dunstt=dunstctl 
 alias ags=ssh-agent
+alias ke=kexec
+alias bu=busybox
