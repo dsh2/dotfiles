@@ -885,7 +885,8 @@ function stop_logging()
 		[[ -z $tmux_log_file ]] && return
 		tmux pipe-pane  # Close current shell-pipe
 		# TODO: Check if inotifywait is available?
-		[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		# [[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		[[ -r $tmux_log_file ]] || {
 			# Cannot be called here, need zle
 			# zle -M "tmux log file missing in log dir: \"$log_dir\""
 			return
