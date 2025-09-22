@@ -411,7 +411,6 @@ mcd() {
 }
 alias mcdb='mcd BUILD-$(nn)'
 alias mkp=mkd
-alias goo=googler
 alias wh='whence -sv'
 alias whh=whence
 alias prr=print
@@ -1371,3 +1370,5 @@ alias dunstt=dunstctl
 alias ags=ssh-agent
 alias ota=ota_from_target_files
 alias co=cargo
+alias goo=google-chrome-stable
+alias goog=google-chrome-stable
