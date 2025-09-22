@@ -509,7 +509,13 @@ function check_output {
 function filter_last_output {
 	check_output vp || return
 	RBUFFER=$( zcat $tmux_log_file |
-		fzf --tac --multi --no-sort $* \
+		fzf \
+		--tac \
+		--bind "ctrl-/:change-preview-window(hidden|20%,up|70%,right)" \
+		--preview-window=hidden \
+		--preview "echo {} " \
+		--multi \
+		--no-sort $* \
 			| ( has dos2unix && dos2unix || cat) \
 			| tr '\t\n' '  ' | tr -s ' '
 			# | tr -d '\n'
