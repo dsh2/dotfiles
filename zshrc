@@ -1822,10 +1822,10 @@ zsh_history_migrate_do() {
 	done
 }
 
+source ~/.aliases
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
-source ~/.aliases
 test -r ~/.TODO && source ~/.TODO
 
 # test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
