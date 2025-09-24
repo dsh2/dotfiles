@@ -509,7 +509,13 @@ function check_output {
 function filter_last_output {
 	check_output vp || return
 	RBUFFER=$( zcat $tmux_log_file |
-		fzf --tac --multi --no-sort $* \
+		fzf \
+		--tac \
+		--bind "ctrl-/:change-preview-window(hidden|20%,up|70%,right)" \
+		--preview-window=hidden \
+		--preview "echo {} " \
+		--multi \
+		--no-sort $* \
 			| ( has dos2unix && dos2unix || cat) \
 			| tr '\t\n' '  ' | tr -s ' '
 			# | tr -d '\n'
@@ -884,7 +890,8 @@ function stop_logging()
 		[[ -z $tmux_log_file ]] && return
 		tmux pipe-pane  # Close current shell-pipe
 		# TODO: Check if inotifywait is available?
-		[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		# [[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		[[ -r $tmux_log_file ]] || {
 			# Cannot be called here, need zle
 			# zle -M "tmux log file missing in log dir: \"$log_dir\""
 			return

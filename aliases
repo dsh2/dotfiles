@@ -411,7 +411,6 @@ mcd() {
 }
 alias mcdb='mcd BUILD-$(nn)'
 alias mkp=mkd
-alias goo=googler
 alias wh='whence -sv'
 alias whh=whence
 alias prr=print
@@ -1218,6 +1217,7 @@ alias wa='watch -d -n 0.4'
 alias waa='watch -d -n 4'
 alias dun='dunstctl is-paused'
 alias no=notify-send
+alias not=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
 alias lsbb='lsblk -o NAME,FSSIZE,UUID /dev/'
 alias dr=dracut
@@ -1286,6 +1286,7 @@ alias admsg='adb shell dmesg -T -w | lnav -t'
 alias chm='chmod -Rc'
 alias A=awk
 alias th='test_host='
+# DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* | pre "$(nn): " ; sleep $n; done; }
 DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* |& pre "$(nn): " ; sleep $n; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
@@ -1370,3 +1371,6 @@ alias ags=ssh-agent
 alias ke=kexec
 alias bu=busybox
 alias ota=ota_from_target_files
+alias co=cargo
+alias goo=google-chrome-stable
+alias goog=google-chrome-stable
