@@ -509,7 +509,13 @@ function check_output {
 function filter_last_output {
 	check_output vp || return
 	RBUFFER=$( zcat $tmux_log_file |
-		fzf --tac --multi --no-sort $* \
+		fzf \
+		--tac \
+		--bind "ctrl-/:change-preview-window(hidden|20%,up|70%,right)" \
+		--preview-window=hidden \
+		--preview "echo {} " \
+		--multi \
+		--no-sort $* \
 			| ( has dos2unix && dos2unix || cat) \
 			| tr '\t\n' '  ' | tr -s ' '
 			# | tr -d '\n'
@@ -856,6 +862,11 @@ ensure_zs3_column() {
 
 function stop_logging()
 {
+
+	[[ $tmux_log_file = *.gz ]] && { 
+		print "Recursive call to stop_logging() detected. Break not detected?"
+		return 1
+	}
 	exit_code=$?
 	[[ -v zsh_debug ]] && {
 		print -P -- $LINE_SEPARATOR
@@ -879,7 +890,8 @@ function stop_logging()
 		[[ -z $tmux_log_file ]] && return
 		tmux pipe-pane  # Close current shell-pipe
 		# TODO: Check if inotifywait is available?
-		[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		# [[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		[[ -r $tmux_log_file ]] || {
 			# Cannot be called here, need zle
 			# zle -M "tmux log file missing in log dir: \"$log_dir\""
 			return
@@ -1415,12 +1427,12 @@ alias -g X1='| xargs -rn 1'
 alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
 alias -g XP0='| xargs -rP $(nproc) -0'
-# alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
-alias -g gg='| grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggg='|& grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggs='| strings | grep -Ei --'
-alias -g ggv='| grep -v -- '
-alias -g ggvv='|& grep -v -- '
+# alias -g gg='|& command grep -i -- ' # TODO: use rg with rust regex instead
+alias -g gg='| command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggg='|& command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggs='| strings | command grep -Ei --'
+alias -g ggv='| command grep -v -- '
+alias -g ggvv='|& command grep -v -- '
 alias -g ff='| file -z'
 alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"

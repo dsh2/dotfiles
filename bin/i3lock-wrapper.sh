@@ -11,6 +11,9 @@ revert_lock_settings() {
 	xmodmap -e "keycode 94 = asciitilde asciitilde asciitilde asciitilde" 
 	xmodmap -e "keycode $(xmodmap -pk | awk '/Print/ {print $1}') = Super_L" -e "add mod4 = Super_L" ; echo "PrintScreen remapped to Super_L ; done"
 	msg "Reverted locking settings."
+	pkill -USR1 dunst
+	dunstctl set-paused false
+	msg "Screen unlocked."
 }
 
 trap revert_lock_settings HUP INT TERM
@@ -28,7 +31,6 @@ apply_lock_settings() {
 	i3sock=(/run/user/$(id -u)/i3/ipc-socket.*(om[1]))
 	[[ -n $i3sock ]] && { i3-msg -s $i3sock workspace BLANK-$RANDOM }
 	msg $( pstree -ps $$ )
-	# rfkill block all
 }
 
 apply_lock_settings
