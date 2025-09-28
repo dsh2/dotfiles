@@ -1652,17 +1652,63 @@ gcd() {
 }
 
 mount_dev() {
-	set -x
+	# set -x
 	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
-	sudo sfdisk -J $1  |
-		jq -r '.partitiontable.partitions[].node' |
+	local dev=$1
+	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
+	[[ $dev = /dev/* ]] || dev=/dev/$dev
+	[[ -e $dev ]] || { print -u2 "Device $dev not found."; return 1; }
+	# [[ -r $dev ]] || { print -u2 "Device $dev not readable. Permission problem?"; ls -lZ $dev; id; return 1; }
+	j=$( sudo sfdisk -J $dev | jq .partitiontable )
+	[[ -z $j ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
+	mnt=$( jq <<< $j -r '.id + "-" + .label' )
+	[[ -z $mnt ]] && mnt=mnt_noname
+	echo "Mount point mnt=${mnt:a}"
+	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
+	[[ -z $paths ]] || {
+		print -rl -- "Unmounting..." $paths
+		sudo umount -R $paths
+	}
+	mkdir -p $mnt && cd $mnt
+	jq <<< $j -r '.partitions[].node' |
 		while read dev; do
-			mnt=mnt/${dev#/dev/}
-			mkdir -p $mnt && sudo mount -v $dev $mnt
+			eval $( blkid --output export $dev )
+			mnt_dev=by-dev/$dev:t
+			mnt_label=by-label/$LABEL
+			mnt_uuid=by-uuid/$UUID
+			mnt_partuuid=by-partuuid/$PARTUUID
+			mnt_fs=by-fstype/$TYPE/$dev:t
+			# echo "Mounting $dev at $mnt_dev, $mnt_label, $mnt_uuid, $mnt_partuuid, $mnt_fs."
+			echo "Mounting $dev..."
+			mkdir -p $mnt_dev $mnt_label:h $mnt_uuid:h $mnt_partuuid:h $mnt_fs:h
+			sudo mount -v $dev $mnt_dev
+			ln=( ln 
+				--interactive
+				--relative
+				--symbolic
+				--verbose
+			)
+			for m in $mnt_label $mnt_uuid $mnt_partuuid $mnt_fs; do
+				$ln $mnt_dev $m
+			done
 		done
+	cd - >/dev/null
 }
 compdef _mount mount_dev
-alias uma='sudo umount mnt/*'
+uma() {
+	{ if [[ -n $1 ]]; then pushd $1; else  pushd .; fi } > /dev/null
+	local paths=( $( grep $PWD /proc/mounts | cut -d " " -f 2 ) ) 
+	typeset -p paths
+	if [[ -z $paths ]]; then 
+		print "Nothing to unmount."
+	else
+		for p in $paths; do 
+			print "Unmounting $p..."
+			sudo umount -R $p
+		done
+	fi
+	popd > /dev/null
+}
 
 mount_img() {
 	[[ -r $1 ]] || { echo "usage: $0 image"; return; }
