@@ -22,6 +22,6 @@ mountpoint -q $mnt_efi && sudo mount --bind $mnt_efi $mnt_root/$mnt_efi
 	mountpoint -q $mnt_boot && { print -u2 "$mnt_boot already mounted?"; exit 1; }
 	sudo mount $dev_boot $mnt_boot
 }
-cmd=$*
-sudo chroot $mnt_root $=cmd
+# $* can be empty
+sudo chroot $mnt_root $*
 sudo umount -R $mnt_root

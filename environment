@@ -1,5 +1,6 @@
 # # Path
 pathprepend $HOME/bin
+pathprepend $HOME/.local/bin
 # pathprepend /sbin
 # pathprepend /usr/sbin
 # pathprepend /usr/local/go/bin

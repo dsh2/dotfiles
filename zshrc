@@ -366,9 +366,9 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr |
+			timeout 2 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr |
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
-			timeout 0.1 ss --no-header \
+			timeout 2 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \
@@ -509,7 +509,13 @@ function check_output {
 function filter_last_output {
 	check_output vp || return
 	RBUFFER=$( zcat $tmux_log_file |
-		fzf --tac --multi --no-sort $* \
+		fzf \
+		--tac \
+		--bind "ctrl-/:change-preview-window(hidden|20%,up|70%,right)" \
+		--preview-window=hidden \
+		--preview "echo {} " \
+		--multi \
+		--no-sort $* \
 			| ( has dos2unix && dos2unix || cat) \
 			| tr '\t\n' '  ' | tr -s ' '
 			# | tr -d '\n'
@@ -780,6 +786,8 @@ function start_logging()
 	# Temporarily safe tty and pwd, because they will change in sub-shell
 	local tty_value=$TTY
 	local pwd_value=$PWD
+	env | sort | gzip > $log_dir/env.gz
+	typeset -p | sort | gzip > $log_dir/typesets.gz
 	(
 		cd $log_dir 
 		[[ -n $previous_log_dir ]] && {
@@ -811,8 +819,6 @@ function start_logging()
 			[tmux_pane_id]=$( tmux_get pane_id )
 			[tmux_pane_title]=$( tmux_get pane_title )
 		)
-		env | sort | gzip > env.gz
-		typeset -p | sort | gzip > typesets.gz
 		local -a keys=()
 		local -a values=()
 		for key value in "${(@kv)history_values}"; do
@@ -856,6 +862,11 @@ ensure_zs3_column() {
 
 function stop_logging()
 {
+
+	[[ $tmux_log_file = *.gz ]] && { 
+		print "Recursive call to stop_logging() detected. Break not detected?"
+		return 1
+	}
 	exit_code=$?
 	[[ -v zsh_debug ]] && {
 		print -P -- $LINE_SEPARATOR
@@ -863,9 +874,25 @@ function stop_logging()
 		print "tmux_log_file=$tmux_log_file"
 		print -P -- $LINE_SEPARATOR
 	}
-	[[ -d $log_dir ]] || { print -u2 "Missing log_dir"; return; }
+
+	[[ -z $tmux_log_file ]] && return
+	tmux pipe-pane  # Close current shell-pipe
+	# TODO: Check if inotifywait is available?
+	# TODO: When tmux_log_file was not created yet, and if inotifywait is not available,
+	# busy wait for log file in background job?
+	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		# Cannot be called here, need zle
+		# zle -M "tmux log file missing in log dir: \"$log_dir\""
+		print -u2 "tmux log file missing in log dir: \"$log_dir\""
+	}
+	setopt nomonitor
 	(
-		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return; }
+		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
+		has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
+		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
+		gzip $tmux_log_file
+		[[ -d $log_dir ]] || { print -u2 "Missing log_dir" ; return }
+		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return }
 		date '+%s%N' > date_stop_nano_epoch
 		date '+%s' > date_stop_epoch
 		date '+%F %H.%M.%S' > date_stop
@@ -876,19 +903,7 @@ function stop_logging()
 			s  = d / 1000000000
 			printf "%ddays %dhours %dminutes %dseconds %dms %dns\n", s/86400, s%86400/3600, s%3600/60, s%60, ns/1000000, ns
 		} ' > runtime
-		[[ -z $tmux_log_file ]] && return
-		tmux pipe-pane  # Close current shell-pipe
-		# TODO: Check if inotifywait is available?
-		[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
-			# Cannot be called here, need zle
-			# zle -M "tmux log file missing in log dir: \"$log_dir\""
-			return
-		}
-		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
-		# has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
-		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
-		gzip $tmux_log_file
-	)
+	) &
 	tmux_log_file=$tmux_log_file.gz
 }
 
@@ -1415,12 +1430,12 @@ alias -g X1='| xargs -rn 1'
 alias -g XP='| xargs -rP $(nproc)'
 alias -g XZ='| xargs -rP $(nproc) -0'
 alias -g XP0='| xargs -rP $(nproc) -0'
-# alias -g gg='|& grep -i -- ' # TODO: use rg with rust regex instead
-alias -g gg='| grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggg='|& grep -Ei -- ' # TODO: use rg with rust regex instead
-alias -g ggs='| strings | grep -Ei --'
-alias -g ggv='| grep -v -- '
-alias -g ggvv='|& grep -v -- '
+# alias -g gg='|& command grep -i -- ' # TODO: use rg with rust regex instead
+alias -g gg='| command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggg='|& command grep -Ei -- ' # TODO: use rg with rust regex instead
+alias -g ggs='| strings | command grep -Ei --'
+alias -g ggv='| command grep -v -- '
+alias -g ggvv='|& command grep -v -- '
 alias -g ff='| file -z'
 alias -g hh='| hexdump -Cv | less'
 alias -g hs="| hexdump -v -e '1/1 \"%02x:\"' | sed -e 's,:$,\n,'"
@@ -1822,10 +1837,10 @@ zsh_history_migrate_do() {
 	done
 }
 
+source ~/.aliases
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
-source ~/.aliases
 test -r ~/.TODO && source ~/.TODO
 
 # test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
