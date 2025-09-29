@@ -874,9 +874,25 @@ function stop_logging()
 		print "tmux_log_file=$tmux_log_file"
 		print -P -- $LINE_SEPARATOR
 	}
-	[[ -d $log_dir ]] || { print -u2 "Missing log_dir"; return; }
+
+	[[ -z $tmux_log_file ]] && return
+	tmux pipe-pane  # Close current shell-pipe
+	# TODO: Check if inotifywait is available?
+	# TODO: When tmux_log_file was not created yet, and if inotifywait is not available,
+	# busy wait for log file in background job?
+	[[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
+		# Cannot be called here, need zle
+		# zle -M "tmux log file missing in log dir: \"$log_dir\""
+		print -u2 "tmux log file missing in log dir: \"$log_dir\""
+	}
+	setopt nomonitor
 	(
-		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return; }
+		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
+		has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
+		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
+		gzip $tmux_log_file
+		[[ -d $log_dir ]] || { print -u2 "Missing log_dir" ; return }
+		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return }
 		date '+%s%N' > date_stop_nano_epoch
 		date '+%s' > date_stop_epoch
 		date '+%F %H.%M.%S' > date_stop
@@ -887,20 +903,7 @@ function stop_logging()
 			s  = d / 1000000000
 			printf "%ddays %dhours %dminutes %dseconds %dms %dns\n", s/86400, s%86400/3600, s%3600/60, s%60, ns/1000000, ns
 		} ' > runtime
-		[[ -z $tmux_log_file ]] && return
-		tmux pipe-pane  # Close current shell-pipe
-		# TODO: Check if inotifywait is available?
-		# [[ -r $tmux_log_file ]] || inotifywait -t 1 -qqe create ${tmux_log_file:h} || {
-		[[ -r $tmux_log_file ]] || {
-			# Cannot be called here, need zle
-			# zle -M "tmux log file missing in log dir: \"$log_dir\""
-			return
-		}
-		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
-		# has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
-		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
-		gzip $tmux_log_file
-	)
+	) &
 	tmux_log_file=$tmux_log_file.gz
 }
 
