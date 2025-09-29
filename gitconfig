@@ -33,6 +33,7 @@
 	reauthor = !bash -c 'git rebase --onto $1 --exec \"git commit --amend --author=\\"$2\\"\" $1' --
 	r = remote
     rl = reflog --pretty=reflog
+	date-diff = !git log --pretty=format:'%h|%ad|%cd|%an|%s' --date=iso-strict | awk -F'|' '$2 != $3 { print $0 }'
 [pretty]
     reflog = %C(auto)%h %<|(20)%gd %C(blue)%cr%C(reset) %gs (%s)
 [gc]
@@ -57,3 +58,8 @@
 	allow = always
 [merge]
 	tool = kdiff3
+[safe]
+	directory = /home-0/dsh2/src/WFA/config
+	directory = /home/iot-lab-thc/turbox-sdkmanager-ws/sourcecode/*
+	directory = *
+	directory = /home/me/src/dotfiles
