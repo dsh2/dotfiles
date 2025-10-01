@@ -366,9 +366,9 @@ set_clippers() {
 	has xclip || has xsel {
 		displays=($( {
 			echo ${DISPLAY/*:/} ;
-			timeout 0.1 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr |
+			timeout 2 lsof -P -n -i -sTCP:LISTEN -a -u$(id -u) | tee /dev/stderr |
 				sed -nE '/^sshd.*:6([0-9]{3}).*$/s..\1.p' ;
-			timeout 0.1 ss --no-header \
+			timeout 2 ss --no-header \
 				--oneline \
 				--numeric \
 				--listening \

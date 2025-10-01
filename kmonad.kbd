@@ -1,19 +1,23 @@
-;; vim: ft=lisp:commentstring=;;\ %s
+;;aa vim: ft=lisp:commentstring=;;\ %s
 
 (defcfg
   ;; find /dev/input -name '*kbd*'
   input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
   ;; input  (device-file "/dev/input/by-id/usb-Ultimate_Gadget_Laboratories_UHK_60_v1-if01-event-kbd")
   output (uinput-sink "kmonad")
+  ;; input  (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  ;; output (uinput-sink "kmonad")
   fallthrough true
   allow-cmd false
+;; For Windows
+input  (low-level-hook)
+output (send-event-sink)
 )
 
 (defsrc
 	F11
 	F12
 	a s d f j k l ;
-	rctl
 )
 
 (defalias
@@ -40,6 +44,5 @@
 	@met_r
 	@ctl_r
 	@sft_r
-	Esc
 )
 
