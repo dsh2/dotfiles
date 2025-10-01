@@ -1663,7 +1663,8 @@ mount_dev() {
 	[[ -z $j ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
 	mnt=$( jq <<< $j -r '.id + "-" + .label' )
 	[[ -z $mnt ]] && mnt=mnt_noname
-	echo "Mount point mnt=${mnt:a}"
+	mnt=$mnt:a
+	typeset -p mnt
 	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
@@ -1672,7 +1673,11 @@ mount_dev() {
 	mkdir -p $mnt && cd $mnt
 	jq <<< $j -r '.partitions[].node' |
 		while read dev; do
-			eval $( blkid --output export $dev )
+			eval $( sudo blkid --output export $dev )
+			[ -z $LABEL -o -z $UUID -o -z $PARTUUID -o -z $TYPE ] && {
+				print -u "Failed to determine blk info."
+				continue
+			}
 			mnt_dev=by-dev/$dev:t
 			mnt_label=by-label/$LABEL
 			mnt_uuid=by-uuid/$UUID
@@ -1680,7 +1685,7 @@ mount_dev() {
 			mnt_fs=by-fstype/$TYPE/$dev:t
 			# echo "Mounting $dev at $mnt_dev, $mnt_label, $mnt_uuid, $mnt_partuuid, $mnt_fs."
 			echo "Mounting $dev..."
-			mkdir -p $mnt_dev $mnt_label:h $mnt_uuid:h $mnt_partuuid:h $mnt_fs:h
+			mkdir -p $mnt_dev $mnt_label $mnt_uuid $mnt_partuuid $mnt_fs
 			sudo mount -v $dev $mnt_dev
 			ln=( ln 
 				--interactive
