@@ -1384,4 +1384,5 @@ alias gas='git annex status'
 alias gaS='git annex sync --content'
 alias gac='git annex config'
 alias gai='git init; git annex init'
-
+alias xau=xautolock
+alias toi=toilet
