@@ -694,12 +694,9 @@ mvO() {
 mvOO() { for f in $*; do mv -v -- $f $f-$(nn); done; }
 mvOFF() { for f in $*; do mv -v -- $f $f-OFF; done; }
 mvON() { for f in $*; do if [ -e $f-OFF ]; then mv -v -- $f-OFF $f; elif [ -e $f ]; then if [ $f != ${f%-OFF} ]; then mv -v -- $f ${f%-OFF}; else echo \"$f\" not off; fi; else echo \"$f\" not found; fi; done; }
-alias sl='echo -e Loaded keys\\n-----------; ssh-add -l; echo -----------; setopt nopipefail; for key in ~/.ssh/hosts/**/*.key; do ssh-add -c $key; done'
 alias sL='tabs 15; for key in /etc/ssh/ssh_host_*(.)pub; do print -n ${key:t}\\t; ssh-keygen -lf $key; done'
 alias shk='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
 alias skg='( umask 077; ssh-keygen -t ed25519 -f id -N "" -C $USER@$HOST@ )'
-# alias sshl="ssh -p 22222 $USER@localhost"
-alias sshl='ssh -o PermitLocalCommand=yes'
 alias ssha=ssh-add
 alias ssal='ssh-add -l'
 alias sal='ssh-add -l'
@@ -720,7 +717,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='agents=( ${TMPDIR:-/tmp}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
+alias sa='agents=( $HOME/.ssh/agents/* ${TMPDIR:-/tmp}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
@@ -1226,6 +1223,7 @@ alias lsbb='lsblk -o NAME,FSSIZE,UUID /dev/'
 alias dr=dracut
 alias dra=dracut
 alias sw=swapo
+alias swo=swapoff
 alias ak='adb shell killall -vw'
 alias apg='adb shell pgrep -l -f'
 # alias zp='zsh_prepend= '
@@ -1377,3 +1375,17 @@ alias ota=ota_from_target_files
 alias co=cargo
 alias goo=google-chrome-stable
 alias goog=google-chrome-stable
+alias md=mount_dev
+alias MM=mutt
+alias efi=efivar
+alias smar=smartctl
+alias sm=smartctl
+alias au=ausearch
+alias wss=websocat
+alias ga='git annex'
+alias gas='git annex status'
+alias gaS='git annex sync --content'
+alias gac='git annex config'
+alias gai='git init; git annex init'
+alias xau=xautolock
+alias toi=toilet
