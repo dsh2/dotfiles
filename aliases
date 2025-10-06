@@ -1022,7 +1022,10 @@ alias yy=yarn
 alias zx=zargs
 alias zxx='zargs -P $(nproc)'
 alias rax='rax2 -s'
+alias sql=sqlite3
+alias l3=sqlite3
 alias sqll=sqlite3
+
 
 # alias scr='scrcpy --select-usb --disable-screensaver --turn-screen-off --shortcut-mod=rctrl+lctrl'
 # alias scr='scrcpy --disable-screensaver --turn-screen-off --shortcut-mod=rctrl&'
