@@ -116,7 +116,7 @@ adb_all() {
 						adb -t $device $=cmd
 					fi
 				# } |& tee $tmp_file | sed "s|^|$real_serial ($device):\t|" ) &
-				} |& tee $tmp_file | 
+				} |& tee $tmp_file |
 					sed "s|^|$real_serial\t|" ) &
 		}
 	done
@@ -192,7 +192,7 @@ adb_device_n() {
 	#
 }
 alias adn=adb_device_n
-alias adn=adb_device_n 
+alias adn=adb_device_n
 alias adN=adb_device_n_disconnect
 alias adnn=adb_device_n_disconnect
 alias an=adb_device_n
@@ -1252,7 +1252,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -Syy -zaxP' 
+alias scp='rsync -Syy -zaxP'
 # alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
 alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
@@ -1357,14 +1357,34 @@ alias ho=hostapd
 alias hos=hostapd
 alias todo=TODO
 alias to=TODO
-TODO() { TODO="$*" ; typeset -p TODO > ~/.TODO ; }
+alias t=TODO
+TODO() {
+	# set -x
+	[[ -n $* ]] && {
+		TODO="$*"
+		TODO_dir=~/TODO/$(nn)-${TODO//[[:space:]]/_}
+		mkdir -p $TODO_dir
+		cd $TODO_dir
+		typeset -p TODO TODO_dir > ~/.TODO
+		return
+	}
+
+	[[ -n $TODO ]] && {
+		echo $TODO
+		read
+		typeset -p TODO TODO_dir
+		cd $TODO_dir
+		return
+	}
+	echo "TODO [some idea / subject]"
+}
 alias kx=keepassxc-cli
 alias sgd=sgdisk
 alias sgg=sgdisk
 alias sgp='sgdisk --print /dev/'
 alias sff='sfdisk'
 alias bld='sudo blockdev --getsize64 /dev/ '
-alias dunstt=dunstctl 
+alias dunstt=dunstctl
 alias ags=ssh-agent
 alias ke=kexec
 alias bu=busybox
@@ -1386,3 +1406,6 @@ alias gac='git annex config'
 alias gai='git init; git annex init'
 alias xau=xautolock
 alias toi=toilet
+alias apk='adb shell pkill -V'
+alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
+alias ac=auditctl
