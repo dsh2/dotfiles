@@ -3,7 +3,7 @@
 
 - shell:
     - [git submodule update --init --recursive, Updating submodules]
-    - [mkdir -p ~/.awk/ ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
+    - [mkdir -p ~/bin/ ~/.awk/ ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
     - [mkdir -p ~/.ssh/hosts ~/.ssh/HOSTS ~/.ssh/keys ~/.ssh/control_paths, Setting up directories for ssh]
     - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
     - [mkdir -p ~/mnt/localhost-root, Creating mount points]
@@ -11,7 +11,6 @@
     - [mkdir -p ~/.pcaps, Creating pcap dump directory]
     - [cp -a wg ~/.wg, Copying wireguard template directory]
     - [curl  -fLo ~/.vim/autoload/plug.vim --create-dirs https&#58;//raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim, Installing vim-plug]
-    - [src/fzf/install --all, Installing fzf]
 
 - link:
     ~/.aliases: aliases
@@ -36,10 +35,6 @@
     ~/.config/feh/keys: feh_keys
     ~/.config/feh/themes: feh_themes
     ~/.config/herbstluftwm: herbstluftwm/
-    ~/.config/ranger/scope.sh: ranger/scope.sh
-    ~/.config/ranger/rifle.conf: ranger/rifle.conf
-    ~/.config/ranger/rc.conf: ranger/rc.conf
-    ~/.config/ranger/commands.py: ranger/commands.py
     ~/.config/rofi/config.rasi: rofi
     ~/.config/yamllint/config: yamllint.yaml
     ~/.config/kitty/kitty.conf: kitty.conf
@@ -58,7 +53,6 @@
       path: inputrc
       force: true
     ~/.minttyrc: minttyrc
-    ~/.muttrc: neomutt/neomuttrc
     ~/.config/radare2/radare2rc: radare2rc
     ~/.config/autorandr: autorandr
     ~/.config/copyq/copyq.conf: copyq.conf
