@@ -66,3 +66,6 @@
 [submodule "zsh/completion/docker-zsh-completion"]
 	path = zsh/completion/docker-zsh-completion
 	url = https://github.com/greymd/docker-zsh-completion
+[submodule "src/fzf"]
+	path = src/fzf
+	url = https://github.com/junegunn/fzf
