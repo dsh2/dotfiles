@@ -1808,6 +1808,20 @@ zsh_log_date_prefix() {
 	date --date @$1 "+$__zsh_history_base_dir/%Y/%m-%b/%d-%a-%V/%H/%F__%H.%M.%S"
 }
 
+zsh_history_db_merge() {
+	zsh_history_db_append $__zsh_history_db $1
+	zsh_history_db_append $1 $__zsh_history_db
+}
+
+zsh_history_db_append() {
+	sqlite3 $1 <<-EOF_sql
+		attach '$2' as db ;
+		insert or ignore into main.history select * from db.history ;
+		select 'Number of new history entries in $1: ' || changes() ;
+		select 'Number of total history entries in $1: ' || count(*) from main.history ;
+	EOF_sql
+}
+
 zsh_history_db_import() {
 	# set -x
 	sqlite3 $__zsh_history_db <<< $cmd \
