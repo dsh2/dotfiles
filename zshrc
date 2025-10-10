@@ -735,7 +735,7 @@ in_tmux() {
 }
 
 # oneline() { print -nr $* | tr -s '\n' ';' | tr -s '[:space:]' ' ' | sed 's.^[;[:space:]]*.. ; s.[;[:space:]]*$..' }
-oneline() { 
+oneline() {
 	print -nrl $* |
 	# sed -E ':a; s.^[[:space:]]+|[[:space:]]+$..; N; s.\n[[:space:]]*.; /; ta'
 	sed ':a; N; $!ba; s/[[:space:]]*\n[[:space:]]*/; /g' |
@@ -789,7 +789,7 @@ function start_logging()
 	env | sort | gzip > $log_dir/env.gz
 	typeset -p | sort | gzip > $log_dir/typesets.gz
 	(
-		cd $log_dir 
+		cd $log_dir
 		[[ -n $previous_log_dir ]] && {
 			command ln -s $(pwd) $previous_log_dir/next_log_dir
 			# command ln -s -T $previous_log_dir previous_log_dir
@@ -863,7 +863,7 @@ ensure_zs3_column() {
 function stop_logging()
 {
 
-	[[ $tmux_log_file = *.gz ]] && { 
+	[[ $tmux_log_file = *.gz ]] && {
 		print "Recursive call to stop_logging() detected. Break not detected?"
 		return 1
 	}
@@ -1269,9 +1269,9 @@ alias Kb=tmux_send_keys_below
 
 tmux_send_line() {
 	local id=$1
-	[[ -z $id ]] && { print -u2 "No pane_id"; return } 
+	[[ -z $id ]] && { print -u2 "No pane_id"; return }
 	shift
-	tmux send-keys -t $id "$*" $'\n' 
+	tmux send-keys -t $id "$*" $'\n'
 }
 
 tmux_send_line_pane()  { tmux_send_line $pane_id $* }
@@ -1687,7 +1687,7 @@ mount_dev() {
 			echo "Mounting $dev..."
 			mkdir -p $mnt_dev $mnt_label $mnt_uuid $mnt_partuuid $mnt_fs
 			sudo mount -v $dev $mnt_dev
-			ln=( ln 
+			ln=( ln
 				--interactive
 				--relative
 				--symbolic
@@ -1702,12 +1702,12 @@ mount_dev() {
 compdef _mount mount_dev
 uma() {
 	{ if [[ -n $1 ]]; then pushd $1; else  pushd .; fi } > /dev/null
-	local paths=( $( grep $PWD /proc/mounts | cut -d " " -f 2 ) ) 
+	local paths=( $( grep $PWD /proc/mounts | cut -d " " -f 2 ) )
 	typeset -p paths
-	if [[ -z $paths ]]; then 
+	if [[ -z $paths ]]; then
 		print "Nothing to unmount."
 	else
-		for p in $paths; do 
+		for p in $paths; do
 			print "Unmounting $p..."
 			sudo umount -R $p
 		done
@@ -1834,7 +1834,7 @@ zsh_history_db_import() {
 
 # TODO: What about .zsh_local_history?
 zsh_history_migrate() {
-	
+
 	# local -i zsh_history_id_fzf=$( cat $__zsh_history_base_dir/**/zsh_history_id(Om[1]) )
 	# local -i zsh_history_id_fzf_youngest=$( cat $__zsh_history_base_dir/**/zsh_history_id(on[1]) )
 	# typeset -p zsh_history_id zsh_history_id_fzf zsh_history_id_fzf_youngest
@@ -1842,7 +1842,7 @@ zsh_history_migrate() {
 	# print "diff=$(( zsh_history_id - zsh_history_id_fzf ))"
 
 	# set -x
-	hh=$( sudo locate -b0 .zsh_local_history ) ; hh=( ${(0)hh} ) 
+	hh=$( sudo locate -b0 .zsh_local_history ) ; hh=( ${(0)hh} )
 	hh+=( "$HOME/.zsh_history" )
 	setopt localoptions noerrreturn nounset
 	for h in $hh; do
@@ -1851,8 +1851,8 @@ zsh_history_migrate() {
 		echo "Migrating from $dir: $h:t"
 		sudo chown -c $(id -u):$(id -g) $h
 		# XXX: Without sub-shell, the whole script will abort if history file $p fails to load
-		( 
-			fc -p $h || continue 
+		(
+			fc -p $h || continue
 			zsh_history_migrate_do
 		)
 	done
