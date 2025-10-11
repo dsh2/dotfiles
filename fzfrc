@@ -197,7 +197,7 @@ zsh_history() {
 	while [[ $# -gt 0 ]]; do
 		col=$1; shift
 		[[ $col == -d ]] && {
-			# If last arg is -d make command_oneline distinct (below)
+			# If last arg is '-d' make command_oneline distinct (below)
 			[[ $# -gt 0 ]] || { distinct="group by command "; break; }
 			shift
 			cols+="distinct $1"
@@ -329,6 +329,7 @@ fzf-history-widget() {
 	local -r reload_key=alt-r
 	local -r diff_key=ctrl-alt-d
 	local -r cols_key=alt-C
+	local -r output_key=alt-o
 	local -r remove_key=alt-X
 	local -r nuke_key=ctrl-alt-n
 	local -r unique_key=ctrl-alt-u
@@ -338,6 +339,7 @@ fzf-history-widget() {
 		$mode_switch_back_key
 		$reload_key
 		$diff_key
+		$output_key
 		$remove_key
 		$nuke_key
 		$unique_key
@@ -357,7 +359,6 @@ fzf-history-widget() {
 			fzf \
 				${(@)fzf_options/#/--} \
 				--expect=${(j:,:)all_expect_keys} \
-				--accept-nth=1 \
 				--with-nth=2.. \
 				--print-query \
 				--tiebreak=chunk,begin,index \
@@ -372,38 +373,57 @@ fzf-history-widget() {
 				--prompt="($__zsh_history_mode_index) [$__zsh_history_fzf_prompt]: "
 		)}")
 		# --prompt="[$__zsh_history_fzf_prompt ($__zsh_history_mode_index)]: "
-		#
 		# Save current fzf query for further invocations of fzf
 		query=$fzf_result[1]
 		local key=$fzf_result[2]
-		local -i cnt=$(( $#fzf_result - 2 ))
-		case "$key" in
+		local results=( ${fzf_result[3,-1]} )
+		local -a dirs=() timestamps=() cmds=()
+		for result in $results; do
+			cols=( ${(s:	:)result} ) 
+			dirs+=${cols[1]} 
+			timestamps+=${cols[2]} 
+			cmds+=${cols[3]} 
+		done
+		case $key in
 			($accept_key)
-				(( cnt == 0 )) && {
+				(( $#results == 0 )) && {
 					BUFFER=$query
 					zle redisplay
 					zle -M "fzf returned empty selection. Retaining fzf query in BUFFER, i.e. \"$query\"."
 					return
 				}
-				set ${fzf_result:2}
 				BUFFER=""
-				while [[ $# -gt 0 ]]; do
-					BUFFER+=$( < $1/command_oneline )
-					shift
-					[[ $# -gt 0 ]] && BUFFER+='; '
+				for cmd in $cmds; do
+					[[ -z $BUFFER ]] || BUFFER+="; "
+					BUFFER+=$cmd
 				done
-				# zle -M "New buffer (cnt=$cnt): \"$BUFFER\""
 				return 0
 				;;
 			($diff_key)
-				(( cnt < 2 )) && {
-					zle redisplay
-					zle -M "Select at least 2 entries (cnt=$cnt)."
-					sleep 2
+				(( $#dirs < 2 )) && {
+					print -u2 "Select at least 2 entries (cnt=$#dirs)."
+					sleep 4
 					continue
 				}
-				set ${fzf_result:2}
-				$EDITOR -d ${*/%/\/output.gz}
+				(( $#dirs > 8 )) && {
+					print -u2 "Select at most 8 entries (cnt=$#dirs)."
+					sleep 4
+					continue
+				}
+				$EDITOR -d ${dirs/%/\/output.gz}
+				;;
+			($output_key)
+				local o=( ${dirs/%/\/output.gz} )
+				if (( $#dirs == 1 )); then
+					if [[ -r $o ]]; then 
+						$EDITOR $o
+					else 
+						print -lu2 "" "Output in $dirs not found."
+					fi
+					continue
+				fi
+				zcat $o | $EDITOR
+				continue
 				;;
 			($mode_switch_key)
 				__zsh_history_mode_index=$(( (__zsh_history_mode_index + 1) % __zsh_history_mode_max ))
