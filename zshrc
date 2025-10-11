@@ -888,7 +888,7 @@ function stop_logging()
 	setopt nomonitor
 	(
 		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
-		has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
+		# has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
 		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
 		gzip $tmux_log_file
 		[[ -d $log_dir ]] || { print -u2 "Missing log_dir" ; return }
@@ -1652,7 +1652,7 @@ gcd() {
 }
 
 mount_dev() {
-	# set -x
+	[[ -v x ]] && set -x
 	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	local dev=$1
 	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
@@ -1678,22 +1678,18 @@ mount_dev() {
 				print -u "Failed to determine blk info."
 				continue
 			}
-			mnt_dev=by-dev/$dev:t
-			mnt_label=by-label/$LABEL
-			mnt_uuid=by-uuid/$UUID
-			mnt_partuuid=by-partuuid/$PARTUUID
-			mnt_fs=by-fstype/$TYPE/$dev:t
-			# echo "Mounting $dev at $mnt_dev, $mnt_label, $mnt_uuid, $mnt_partuuid, $mnt_fs."
+			
 			echo "Mounting $dev..."
-			mkdir -p $mnt_dev $mnt_label $mnt_uuid $mnt_partuuid $mnt_fs
 			sudo mount -v $dev $mnt_dev
 			ln=( ln
 				--interactive
 				--relative
 				--symbolic
+				--no-target-directory
 				--verbose
 			)
-			for m in $mnt_label $mnt_uuid $mnt_partuuid $mnt_fs; do
+			for m in by-dev/$dev:t by-label/$LABEL by-uuid/$UUID by-partuuid/$PARTUUID by-fstype/$TYPE/$dev:t ; do
+				mkdir -p $m:a
 				$ln $mnt_dev $m
 			done
 		done
@@ -1906,6 +1902,7 @@ source ~/.aliases
 env_local=(~/.environment.d/*(N)) 2>/dev/null
 [ -e ~/.environment.local ] && source ~/.environment.local
 
+# set -x
 test -r ~/.TODO && source ~/.TODO
 
 # test -r /home/dsh2/.opam/opam-init/init.zsh && . /home/dsh2/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
