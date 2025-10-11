@@ -18,16 +18,24 @@ revert_lock_settings() {
 
 trap revert_lock_settings HUP INT TERM
 
+mute_audio() {
+	# TODO: Also mute sources?
+	pactl list short sinks | while read serial name driver spec _; do
+	[[ $name == *38_18_4C_AE_B3_DA* ]] && {
+			echo "Not Muting P3: $name ($serial)"
+			continue
+		}
+		echo "Muting $name ($serial)"
+		pactl set-sink-mute $serial 1
+	done
+}
+
 apply_lock_settings() {
+	mute_audio
 	dunstctl set-paused true
 	xset +dpms dpms 10 10 10 
 	# TODO: Understand why sleep is necessary - or how to explicitly switch to us layout
 	setxkbmap us; sleep 0.9 ; setxkbmap us,de
-	for s in $(pactl list short sinks | cut -f 1); do 
-		# pactl set-sink-volume $s 0
-		pactl set-sink-mute $s 1
-	done
-	# TODO: Also mute sources?
 	i3sock=(/run/user/$(id -u)/i3/ipc-socket.*(om[1]))
 	[[ -n $i3sock ]] && { i3-msg -s $i3sock workspace BLANK-$RANDOM }
 	msg $( pstree -ps $$ )
@@ -42,7 +50,7 @@ i3oo=(
 	show-failed-attempts
 	ignore-empty-password
 )
-# i3oo+=( beep )
+ i3oo+=( beep )
 i3oo+=( show-keyboard-layout )
 
 i3lock ${(@)i3oo/#/--}
