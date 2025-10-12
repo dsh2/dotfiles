@@ -1413,3 +1413,5 @@ alias apk='adb shell pkill -V'
 alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
 alias ac=auditctl
 alias lct=loginctl
+alias boo=bootctl
+alias kl=kernel-install
