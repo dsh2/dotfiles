@@ -1415,3 +1415,5 @@ alias ac=auditctl
 alias lct=loginctl
 alias boo=bootctl
 alias kl=kernel-install
+alias ddd='find /dev/disk'
+alias cdz="cd $__zsh_history_base_dir"
