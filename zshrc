@@ -1664,13 +1664,14 @@ mount_dev() {
 	[[ -z $mnt ]] && mnt=mnt_noname
 	mnt=$mnt:a
 	typeset -p mnt
+	echo $mnt
 	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
 		sudo umount -R $paths
 	}
 	mkdir -p $mnt && cd $mnt
-	local ln=( ln --interactive --relative --symbolic --no-target-directory --verbose)
+	local ln=( ln --force --relative --symbolic --no-target-directory )
 	jq <<< $table_json -r '.partitions[].node' |
 		while read dev; do
 			echo "Mounting $dev..."
@@ -1682,10 +1683,12 @@ mount_dev() {
 				case $line in
 					(BLOCK_SIZE=*|DEVNAME=*) continue;;
 					(UUID=*) p=by-uuid/$UUID ;;
+					(PARTUUID=*) p=by-partuuid/$PARTUUID ;;
+					(LABEL=*) p=by-label/$LABEL ;;
 					(TYPE=*) p=by-type/$TYPE/$dev:t ;;
 					(*) echo "Don't know how to handle blkid info \"$line\"."; continue ;;
 				esac
-				echo $line
+				echo $p
 				mkdir -p $p:h
 				$ln $mnt_dev $p
 			done
