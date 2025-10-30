@@ -1436,3 +1436,5 @@ alias xls=xsltproc
 alias xsl=xsltproc
 alias xxl=xmlstarlet
 alias pingg='ping -A -H -W1 -c4 -D $lanip'
+alias ddd='find /dev/disk'
+alias cdz="cd $__zsh_history_base_dir"
