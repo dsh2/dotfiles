@@ -30,6 +30,8 @@
     ~/bin/i3status_wrapper: bin/i3status_wrapper
     ~/bin/i3lock-wrapper.sh: bin/i3lock-wrapper.sh
     ~/bin/tmux-fzf-panes.sh: bin/tmux-fzf-panes.sh
+    ~/bin/dunstpause: bin/dunstpause
+    ~/bin/dunstpaused: bin/dunstpause
     ~/bin/ssh: bin/ssh
     ~/.awk/awk.awk: awk.awk
     ~/.config/feh/keys: feh_keys

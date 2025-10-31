@@ -28,7 +28,7 @@ ignore_newline = no
 
 # Hide duplicate's count and stack them
 stack_duplicates = yes
-hide_duplicates_count = no
+hide_duplicate_count = no
 
 
 # The geometry of the window:
@@ -126,7 +126,6 @@ icon_path = /usr/share/icons/Paper/16x16/mimetypes/:/usr/share/icons/Paper/48x48
 frame_width = 3
 frame_color = "#8EC07C"
 
-[shortcuts]
 
 # Shortcuts are specified as [modifier+][modifier+]...key
 # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
@@ -142,7 +141,8 @@ close = ctrl+shift+space
 # Redisplay last message(s).
 # On the US keyboard layout "grave" is normally above TAB and left
 # of "1".
-history = ctrl+grave
+history = ctrl+shift+grave
+history_length = 99
 
 # Context menu.
 context = ctrl+shift+period
