@@ -1132,6 +1132,7 @@ alias B=btrfs
 alias Bs='btrfs subvolume'
 alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
+alias bfs='btrfs filesystem'
 alias bt=btrfs
 alias btr=btrfs
 alias gr='./gradlew'
