@@ -1,4 +1,11 @@
 
+function div(a,b) {
+	b=int(b)
+	return (b == 0 ? "NA" : a / b)
+}
+
+function hum(bytes) { return humanize(bytes) }
+
 function humanize(bytes) {
 	units = "B KB MB GB TB PB"
 	i = 0
