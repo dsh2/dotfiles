@@ -57,7 +57,7 @@ alias acu='source ~/.android/current_serial ; adi'
 alias adsp='adb shell setprop'
 alias adgp='adb shell getprop'
 alias adgpp="adb shell getprop | tr -d '[]:' | sort"
-alias setop=setopt
+alias seo=setopt
 alias seop=setopt
 alias sop=setopt
 alias zh=zsh_history
@@ -345,7 +345,7 @@ alias z3s=zs3
 alias zss=zs3
 
 # ls
-alias l='ls -alhZ'
+alias l='cmd ls -alhZ'
 alias l1='ls -1'
 alias lD='l --group-directories-first'
 alias lt='l -tr'
@@ -430,6 +430,9 @@ alias wanip2='curl -s https://checkip.amazonaws.com'
 alias wanip2x='dig -x $(wanip2)'
 alias wanip3='dig TXT +short o-o.myaddr.l.google.com @ns1.google.com'
 alias lanip='for if in $(\ls -1 /sys/class/net); do if [ $if != "lo" -a $(cat /sys/class/net/$if/operstate) = "up" ]; then echo $if:\\t$(ifdata -pa $if); fi; done'
+alias pv='cmd pv -v -i0.2'
+alias pvr='pv_pids=( $( pidof pv ) ) && ps -O ppid $pv_pids; eval ls -al /proc/{${(j:,:)pv_pids}}/fd/ '
+alias pvrr='pv -R $pv_pid -L '
 alias PV=print_variables
 alias PVV=print_variables
 alias pvv=print_variables
@@ -717,7 +720,7 @@ alias sshk='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -v
 alias sshkl='ssh-keyscan localhost 2> /dev/null | tee /dev/stderr | ssh-keygen -vlf - | sed "s:^[0-9]*:Fingerprint :"'
 alias sshc='ssh-copy-id -n -i ~/.ssh/id_rsa.pub'
 alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
-alias sa='agents=( $HOME/.ssh/agents/* ${TMPDIR:-/tmp}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
+alias sa='agents=( $HOME/.ssh/agents/*(N) ${TMPDIR:-/tmp}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
@@ -740,11 +743,13 @@ alias y=yum
 alias ZS='sudo -E $SHELL'
 
 alias s3=sqlite3
-alias s33='sqlite3 ${DB:=DB}'
-alias s33t='sqlite3 ${DB:=DB} ".mode tabs"'
-alias s33m='sqlite3 ${DB:=DB} ".mode table"'
+alias s33='sqlite3 $db'
+alias dbs='sqlite3 $db "pragma busy_timeout=5000; select * from $table limit 20"'
+alias s33b='sqlitebrowser $db &'
+alias s33t='sqlite3 $db ".mode tabs"'
+alias s33m='sqlite3 $db ".mode table"'
+alias s3bb='sqlitebrowser -R $db'
 alias s3b=sqlitebrowser
-alias s3bb='sqlitebrowser -R ${DB:=DB}'
 alias file='file -z'
 alias d2='dnf-2'
 alias sx='screen -X'
@@ -884,10 +889,15 @@ alias sss=sssh
 sssh() {
 	now() { date '+%s' ; }
 	host=$1
-	host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
+	local session=$( i3-msg -t get_workspaces | jq -r '.[] | select( .focused == true )| .name | sub(".*:"; "")' )
+	[[ -z session ]] && session=$( shuf -n 1 /usr/share/dict/linux.words )
+	[[ -z session ]] && session="ROOT"
+
+	local host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
+	local N=/dev/null
 	while :; do
 		connect_time=$( now )
-		ssh -t $host "if tmux has-session 2>/dev/null; then tmux attach; else tmux new-session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
+		ssh -t $host "if tmux has-session -t $session 2>$N ; then tmux attach -t $session; elif tmux has-session 2>$N; then tmux attach; else tmux new-session -s $session \"tmux set-option -g status-bg $host_color; $SHELL\" ; fi " && break
 		# TODO: Update to notify-send.py?
 		(( $( now ) - connect_time > 5 )) || {
 			notify-send -u critical "Lost connection to \"$host\"."
@@ -992,8 +1002,9 @@ alias xi=xinput
 alias xin=xinput
 alias os=openssl
 alias xq='xset q'
-alias blc=bluetoothctl
 alias bl=bluetoothctl
+alias blc=bluetoothctl
+alias blt=bluetoothctl
 alias cm=command
 alias cmd=command
 alias un=unset
@@ -1020,6 +1031,7 @@ alias osl=openssl
 alias r22='rax2 -s'
 alias yy=yarn
 alias zx=zargs
+alias zar=zargs
 alias zxx='zargs -P $(nproc)'
 alias rax='rax2 -s'
 alias sql=sqlite3
@@ -1064,6 +1076,7 @@ alias mod=modprobe
 alias HH='hostname -A'
 alias gz=gzip
 alias dms='dmesg -Tw | lnav -q'
+alias zca=zcat
 alias zc='zcalc -e'
 alias zc='noglob zcalc -e'
 PX() {
@@ -1119,8 +1132,7 @@ alias ffb='fossil branch'
 alias ffa='fossil add'
 alias ffc='fossil commit'
 alias fss='fossil'
-alias vd3='vd -f sqlite'
-alias vds='vd -f sqlite'
+alias vdd='vd -f sqlite $db'
 alias rss=rssh
 alias fo=for
 alias m3=m365
@@ -1135,6 +1147,8 @@ alias B=btrfs
 alias Bs='btrfs subvolume'
 alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
+alias Bf='btrfs filesystem'
+alias bfu='btrfs filesystem usage /'
 alias bt=btrfs
 alias btr=btrfs
 alias gr='./gradlew'
@@ -1258,7 +1272,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync -Syy -zaxP'
+alias scp='rsync --info=progress2 -zaxP'
 # alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
 alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
@@ -1432,9 +1446,13 @@ alias ly=lynx
 alias eli=elinks
 alias RU=RUN
 alias hq=htmlq
+alias pu=pup
+alias pq=pup
 alias xls=xsltproc
 alias xsl=xsltproc
 alias xxl=xmlstarlet
 alias pingg='ping -A -H -W1 -c4 -D $lanip'
+alias nuf='numfmt --grouping'
+alias num=numfmt
 alias ddd='find /dev/disk'
 alias cdz="cd $__zsh_history_base_dir"
