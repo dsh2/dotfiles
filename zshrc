@@ -441,6 +441,22 @@ function page_tmux_pane {
 }
 bindkey_func '^x^r' page_tmux_pane
 
+scat() {
+	for f in $*; do
+		[[ -n $f ]] && [[ -r $f ]] || { print -u2 "File not readable: \"$f\"."; continue; }
+		mime_type=$(file --exclude compress --brief --mime-type -- $f)
+		case $mime_type in
+			(application/gzip) gzip -cd -- $f ;;
+			(application/x-lz4) lz4 -cd -- $f ;;
+			(application/x-xz) xz -cd -- $f ;;
+			(application/x-bzip2) bzip2 -cd -- $f ;;
+			(application/zstd|application/x-zstd) zstd -cd -- $f ;;
+			(text/*|application/json|application/xml) cat -- $f ;;
+			(*) print -u2 "Don't know how to cat mime type $mime_type" ;;
+		esac
+	done
+}
+
 min_version() {
 	local current_version=$1
 	local min_version=$2
@@ -551,7 +567,7 @@ function diff_last_two_outputs {
 	[[ -e $o2 ]] || zle -M "Output \"$o2\" not found."
 	[[ -s $o1 ]] || zle -M "Output \"$o1\" is empty."
 	[[ -s $o2 ]] || zle -M "Output \"$o2\" is empty."
-	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ ($previous_log_dir vs. $log_dir)."; return ; }
+	diff -q $o1 $o2 > /dev/null && { zle -M "Last two outputs do NOT differ ($previous_log_dir:t vs. $log_dir:t)."; return  }
 	tmux new-window \
 		-n "DIFF-$( date --date=@$( < $previous_log_dir/date_start_epoch ) '+%T' )---$( date --date=@$( < $log_dir/date_start_epoch ) '+%T' )" \
 		"nvim -d $o1 $o2"
@@ -862,12 +878,11 @@ ensure_zs3_column() {
 
 function stop_logging()
 {
-
+	exit_code=$?
 	[[ $tmux_log_file = *.gz ]] && {
 		print "Recursive call to stop_logging() detected. Break not detected?"
 		return 1
 	}
-	exit_code=$?
 	[[ -v zsh_debug ]] && {
 		print -P -- $LINE_SEPARATOR
 		print "log_dir=$log_dir"
@@ -890,7 +905,7 @@ function stop_logging()
 		# has file && ( file -kzi - < $tmux_log_file ; file -kz - < $tmux_log_file ) | cut -d: -f 2- | sed 's/^[[:space:]]*//' > file_type
 		# has dos2unix && dos2unix < $tmux_log_file | gzip > $tmux_log_file.dos2unix.gz
 		# has strip-ansi && strip-ansi < $tmux_log_file | gzip > $tmux_log_file.no_ansi.gz
-		gzip $tmux_log_file
+		gzip -n $tmux_log_file
 		[[ -d $log_dir ]] || { print -u2 "Missing log_dir" ; return }
 		cd $log_dir || { print -u2 "Failed to change to log_dir $log_dir" ; return }
 		date '+%s%N' > date_stop_nano_epoch
@@ -963,6 +978,8 @@ add-zsh-hook preexec zsh_terminal_title_running
 add-zsh-hook preexec start_logging
 add-zsh-hook precmd stop_logging
 
+# Execute current (local) command on remote host when env var is set
+# TODO: Add to PS1?
 function preexec_ssh()
 {
 	[[ -v remote_host ]] || return
@@ -1199,7 +1216,7 @@ source ~/.environment
 # source aliases shared with bash
 alias fcn='prl ${(ko)functions}'
 compdef _pids cdp
-p() { grep --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
+p() { grep -i --color=always -e "${*:s- -.\*-}" =( ps -w -w -e -O user,ppid,start_time ) }
 jobs_wait() { max_jobs=${1:=4}; [ $max_jobs > 0 ] || max_jobs=1; while [ $( jobs | wc -l) -ge $max_jobs ]; do sleep 0.1; done; }
 faketty() { script -qfc "$(printf "%q " "$@")"; }
 # nsdo() { parallel -i $SHELL -c "sudo ip netns exec {} $* | sed -e 's|^|'{}':\t|'" -- $(ip netns list) }
@@ -1240,6 +1257,14 @@ tmux_neighbor() {
 tmux_neighbor_pane() { tmux_neighbor $1 '#{pane_id}' }
 tmux_neighbor_tty() { tmux_neighbor $1 '#{pane_tty}' }
 tmux_neighbor_pid() { tmux_neighbor $1 '#{pane_pid}' }
+
+strip_dev() { sed 's.^/dev/..' }
+tmux_neighbor_pids() {
+	local tty=$( tmux_neighbor_tty ${1:=right} | strip_dev )
+	pids=( $( pgrep -t $tty ) )
+	typeset -p tty pids
+	(( $#pids > 0 ))
+}
 
 print_tty() {
 	tty=$1
@@ -1416,7 +1441,8 @@ alias -g SS='| strings -t x -e S | LESS= less'
 alias -g SSS='| strings -t x -e S | sort -u | LESS= less'
 alias -g SUU='| sort --unique'
 alias -g SUN='| sort -n'
-alias -g TS="|& ts -m '[%F %T]'"
+alias -g TS='|& ts -m "%F %T%t"'
+alias -g TSs='|& ts -m "%s%t"'
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
@@ -1537,7 +1563,7 @@ c() {
 	done
 }
 
-typeset -a expand_ealias_skip=(ls)
+typeset -a expand_ealias_skip=( l ls)
 expand_ealias() {
 	[[ -v zsh_debug ]] && set -x
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
@@ -1653,7 +1679,7 @@ gcd() {
 
 mount_dev() {
 	[[ -v x ]] && set -x
-	local dev=$1
+	local dev=$1; shift
 	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
 	[[ $dev = /dev/* ]] || dev=/dev/$dev
 	[[ -e $dev ]] || { print -u2 "Device $dev not found."; return 1; }
@@ -1664,7 +1690,6 @@ mount_dev() {
 	[[ -z $mnt ]] && mnt=mnt_noname
 	mnt=$mnt:a
 	typeset -p mnt
-	echo $mnt
 	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
@@ -1677,8 +1702,8 @@ mount_dev() {
 			echo "Mounting $dev..."
 			mnt_dev=by-dev/$dev:t
 			mkdir -p $mnt_dev
-			sudo mount $dev $mnt_dev || continue
-			sudo blkid --output export $dev | while read line; do 
+			sudo mount $* $dev $mnt_dev || continue
+			sudo blkid --output export $dev | while read line; do
 				eval $line
 				case $line in
 					(BLOCK_SIZE=*|DEVNAME=*) continue;;
@@ -1694,6 +1719,7 @@ mount_dev() {
 			done
 		done
 	cd - >/dev/null
+	echo $mnt
 }
 compdef _mount mount_dev
 uma() {
