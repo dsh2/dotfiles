@@ -1653,44 +1653,44 @@ gcd() {
 
 mount_dev() {
 	[[ -v x ]] && set -x
-	# [[ $1 == /dev/* ]] || { echo "usage: $0 dev_with_partitions_to_mount"; return; }
 	local dev=$1
 	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
 	[[ $dev = /dev/* ]] || dev=/dev/$dev
 	[[ -e $dev ]] || { print -u2 "Device $dev not found."; return 1; }
 	# [[ -r $dev ]] || { print -u2 "Device $dev not readable. Permission problem?"; ls -lZ $dev; id; return 1; }
-	j=$( sudo sfdisk -J $dev | jq .partitiontable )
-	[[ -z $j ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
-	mnt=$( jq <<< $j -r '.id + "-" + .label' )
+	table_json=$( sudo sfdisk -J $dev | jq .partitiontable )
+	[[ -z $table_json ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
+	mnt=$( jq <<< $table_json -r '.id + "-" + .label' )
 	[[ -z $mnt ]] && mnt=mnt_noname
 	mnt=$mnt:a
 	typeset -p mnt
+	echo $mnt
 	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
 		sudo umount -R $paths
 	}
 	mkdir -p $mnt && cd $mnt
-	jq <<< $j -r '.partitions[].node' |
+	local ln=( ln --force --relative --symbolic --no-target-directory )
+	jq <<< $table_json -r '.partitions[].node' |
 		while read dev; do
-			eval $( sudo blkid --output export $dev )
-			[ -z $LABEL -o -z $UUID -o -z $PARTUUID -o -z $TYPE ] && {
-				print -u "Failed to determine blk info."
-				continue
-			}
-			
 			echo "Mounting $dev..."
-			sudo mount -v $dev $mnt_dev
-			ln=( ln
-				--interactive
-				--relative
-				--symbolic
-				--no-target-directory
-				--verbose
-			)
-			for m in by-dev/$dev:t by-label/$LABEL by-uuid/$UUID by-partuuid/$PARTUUID by-fstype/$TYPE/$dev:t ; do
-				mkdir -p $m:a
-				$ln $mnt_dev $m
+			mnt_dev=by-dev/$dev:t
+			mkdir -p $mnt_dev
+			sudo mount $dev $mnt_dev || continue
+			sudo blkid --output export $dev | while read line; do 
+				eval $line
+				case $line in
+					(BLOCK_SIZE=*|DEVNAME=*) continue;;
+					(UUID=*) p=by-uuid/$UUID ;;
+					(PARTUUID=*) p=by-partuuid/$PARTUUID ;;
+					(LABEL=*) p=by-label/$LABEL ;;
+					(TYPE=*) p=by-type/$TYPE/$dev:t ;;
+					(*) echo "Don't know how to handle blkid info \"$line\"."; continue ;;
+				esac
+				echo $p
+				mkdir -p $p:h
+				$ln $mnt_dev $p
 			done
 		done
 	cd - >/dev/null
