@@ -1380,9 +1380,10 @@ alias to=TODO
 alias t=TODO
 TODO() {
 	# set -x
+	local TODO_dir_base=~/TODO
 	[[ -n $* ]] && {
 		TODO="$*"
-		TODO_dir=~/TODO/$(nn)-${TODO//[[:space:]]/_}
+		TODO_dir=$TODO_dir_base/$(nn)-${TODO//[[:space:]]/_}
 		mkdir -p $TODO_dir
 		cd $TODO_dir
 		typeset -p TODO TODO_dir > ~/.TODO
@@ -1390,7 +1391,8 @@ TODO() {
 	}
 
 	[[ -n $TODO ]] && {
-		echo $TODO
+		ls --color=always -1tr $TODO_dir_base | head -$LINES
+		print -rl -- "Current TODO: \"$TODO\"" "[Press ENTER to continue there...]"
 		read
 		typeset -p TODO TODO_dir
 		cd $TODO_dir
