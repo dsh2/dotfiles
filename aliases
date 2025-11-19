@@ -1378,28 +1378,33 @@ alias hos=hostapd
 alias todo=TODO
 alias to=TODO
 alias t=TODO
+
 TODO() {
 	# set -x
 	local TODO_dir_base=~/TODO
+	# Create a new TODO
 	[[ -n $* ]] && {
 		TODO="$*"
 		TODO_dir=$TODO_dir_base/$(nn)-${TODO//[[:space:]]/_}
 		mkdir -p $TODO_dir
 		cd $TODO_dir
-		typeset -p TODO TODO_dir > ~/.TODO
+		typeset -p TODO TODO_dir > ~/.TODO > $TODO_dir/.TODO
 		return
 	}
-
+	# Select a former TODO
 	[[ -n $TODO ]] && {
-		ls --color=always -1tr $TODO_dir_base | head -$LINES
-		print -rl -- "Current TODO: \"$TODO\"" "[Press ENTER to continue there...]"
-		read
+		local todo
+		ls --color=always -1t $TODO_dir_base | 
+			fzf  --header="TODOs" |
+			read todo || return
+		cd $TODO_dir_base/$todo
+		source .TODO
 		typeset -p TODO TODO_dir
-		cd $TODO_dir
 		return
 	}
 	echo "TODO [some idea / subject]"
 }
+
 alias kx=keepassxc-cli
 alias sgd=sgdisk
 alias sgg=sgdisk

@@ -278,6 +278,7 @@ bindkey '^?' undo
 bindkey '^xr' redo
 bindkey "^x;" describe-key-briefly
 bindkey "^[;" set-mark-command
+bindkey_func '\et' TODO
 
 function repeat_immediately {
 	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
