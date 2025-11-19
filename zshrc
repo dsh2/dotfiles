@@ -1804,6 +1804,11 @@ zsh_log_date_prefix() {
 	date --date @$1 "+$__zsh_history_base_dir/%Y/%m-%b/%d-%a-%V/%H/%F__%H.%M.%S"
 }
 
+
+zsh_history_db_pull() {
+	zsh_history_db_append $1 $__zsh_history_db
+}
+
 zsh_history_db_merge() {
 	zsh_history_db_append $__zsh_history_db $1
 	zsh_history_db_append $1 $__zsh_history_db
