@@ -219,7 +219,7 @@ zsh_history() {
 	done
 	local -r zs3cols="${(j:, :)cols}${${cols}:+,}"
 	local zs3where=""; (( $#where > 0 )) && zs3where="where ${(j: and :)where}"
-	zs3i ".mod tabs" ".nullvalue ⛔" "select log_dir, $zs3cols trim(command, char(0x0a,0x0d,0x20)) from history $distinct $zs3where order by id desc"
+	zs3i ".mod tabs" ".header on" ".nullvalue ⛔" "select log_dir, $zs3cols trim(command, char(0x0a,0x0d,0x20)) command from history $distinct $zs3where order by date_start desc"
 }
 
 # Generate and output a list of zsh activities documented in $__zsh_history_base_dir. List may contain multiple
@@ -309,10 +309,17 @@ fzf-history-widget() {
 	fzf_options+=( info=inline-right:\* )
 	# fzf_options+=( tmux=bottom,70% )
 	# fzf_options+=( tmux=100% )
+	fzf_options+=( header-lines=1 )
+	# fzf_options+=( header-label=label )
+	# fzf_options+=( header-lines-border=rounded )
+	# fzf_options+=( header-lines-border=sharp )
+	# fzf_options+=( header-label-pos=top )
+	fzf_options+=( tabstop=22 )
 	# fzf_options+=( tmux=center )
 	# fzf_options+=( border-label=bold )
 	# fzf_options+=( style=full )
 	# fzf_options+=( border=double )
+	# fzf_options+=( border=top )
 	fzf_options+=( multi )
 	fzf_options+=( no-sort )
 	# fzf_options+=( track )
@@ -479,7 +486,7 @@ apply_mode() {
 	case $__zsh_history_mode_index in
 		(0)
 			__zsh_history_fzf_prompt="Global (all)"
-			__zsh_history_fields_extra=( "tty" "zsh_pid" "tmux_session_name" "tmux_window_name" "todo" "pwd" )
+			__zsh_history_fields_extra=( "tty" "zsh_pid" "hostname" "tmux_session_name" "tmux_window_name" "todo" "pwd" )
 			;;
 		(1)
 			__zsh_history_fzf_prompt="Global"

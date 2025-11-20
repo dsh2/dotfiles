@@ -278,6 +278,7 @@ bindkey '^?' undo
 bindkey '^xr' redo
 bindkey "^x;" describe-key-briefly
 bindkey "^[;" set-mark-command
+bindkey_func '\et' TODO
 
 function repeat_immediately {
 	[[ $#BUFFER -eq 0 ]] || { zle -M "Command line not empty."; return }
@@ -1802,6 +1803,11 @@ zsh_log_date_prefix() {
 	setopt localoptions
 	set -u
 	date --date @$1 "+$__zsh_history_base_dir/%Y/%m-%b/%d-%a-%V/%H/%F__%H.%M.%S"
+}
+
+
+zsh_history_db_pull() {
+	zsh_history_db_append $1 $__zsh_history_db
 }
 
 zsh_history_db_merge() {
