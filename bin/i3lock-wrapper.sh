@@ -32,6 +32,7 @@ mute_audio() {
 
 apply_lock_settings() {
 	mute_audio
+	lux -S 10%
 	dunstctl set-paused true
 	xset +dpms dpms 10 10 10 
 	# TODO: Understand why sleep is necessary - or how to explicitly switch to us layout

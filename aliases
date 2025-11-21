@@ -1313,12 +1313,11 @@ DO() { [[ $1 =~ ^[0-9.]+$ && $1 -gt 0.01 ]] && { t=$1 ; shift } || t=1; while :;
 alias core=coredumpctl
 alias rest='restorecon -v'
 # alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
-alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; sudo minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
+alias mii='minicom_log_dir=~/.logs/minicom/${dev:t}; mkdir -p $minicom_log_dir ; sudo minicom -c on -O timestamp=extended -C $minicom_log_dir/$(nn) -D $dev'
 alias DD='dev=/dev/ttyUSB'
 alias devv='dev=/dev/ttyUSB0'
-# alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
-alias miil='log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
-alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+# alias miil='dev=(/dev/uart-*); minicom_log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $minicom_log_dir'
+alias miil='minicom_log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $minicom_log_dir'
 # alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
@@ -1435,7 +1434,7 @@ alias xau=xautolock
 alias toi=toilet
 alias apk='adb shell pkill -V'
 alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
-alias ac=auditctl
+# alias ac=auditctl
 alias lct=loginctl
 alias boo=bootctl
 alias kl=kernel-install
