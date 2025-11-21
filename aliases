@@ -1240,7 +1240,7 @@ alias dun='dunstctl is-paused'
 alias no=notify-send
 alias not=notify-send
 alias lsb='lsblk --fs -o +FSSIZE'
-alias lsbb='lsblk -o MOUNTPOINT,LABEL,NAME,FSSIZE,FSAVAIL,FSUSED,FSUSE%,PARTUUID,PARTTYPENAME,MODEL'
+alias lsbb='lsblk -o MOUNTPOINT,LABEL,FSTYPE,NAME,FSSIZE,FSAVAIL,FSUSED,FSUSE%,PARTUUID,PARTTYPENAME,MODEL'
 alias dr=dracut
 alias dra=dracut
 alias sw=swapo
@@ -1381,26 +1381,33 @@ alias hos=hostapd
 alias todo=TODO
 alias to=TODO
 alias t=TODO
+
 TODO() {
 	# set -x
+	local TODO_dir_base=~/TODO
+	# Create a new TODO
 	[[ -n $* ]] && {
 		TODO="$*"
-		TODO_dir=~/TODO/$(nn)-${TODO//[[:space:]]/_}
+		TODO_dir=$TODO_dir_base/$(nn)-${TODO//[[:space:]]/_}
 		mkdir -p $TODO_dir
 		cd $TODO_dir
-		typeset -p TODO TODO_dir > ~/.TODO
+		typeset -p TODO TODO_dir > ~/.TODO > $TODO_dir/.TODO
 		return
 	}
-
+	# Select a former TODO
 	[[ -n $TODO ]] && {
-		echo $TODO
-		read
+		local todo
+		ls --color=always -1t $TODO_dir_base | 
+			fzf  --header="TODOs" |
+			read todo || return
+		cd $TODO_dir_base/$todo
+		source .TODO
 		typeset -p TODO TODO_dir
-		cd $TODO_dir
 		return
 	}
 	echo "TODO [some idea / subject]"
 }
+
 alias kx=keepassxc-cli
 alias sgd=sgdisk
 alias sgg=sgdisk
@@ -1438,6 +1445,7 @@ alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
 alias lct=loginctl
 alias boo=bootctl
 alias kl=kernel-install
+alias ddd='find /dev/disk ! -type d'
 alias up=upower
 alias una=unalias
 alias seto=setopt
@@ -1457,5 +1465,4 @@ alias xxl=xmlstarlet
 alias pingg='ping -A -H -W1 -c4 -D $ip'
 alias nuf='numfmt --grouping'
 alias num=numfmt
-alias ddd='find /dev/disk'
 alias cdz="cd $__zsh_history_base_dir"
