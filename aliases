@@ -592,7 +592,6 @@ alias rh=rehash
 alias ipp='ipython3 -i -- '
 alias iz=ipython3
 alias pz=python
-alias p2=python2.7
 alias ipbr='ip --br'
 alias ip='ip -c -o -d -s'
 alias ip4='ip -4 -c -o -d -s'
@@ -892,7 +891,7 @@ sssh() {
 	local session=$( i3-msg -t get_workspaces | jq -r '.[] | select( .focused == true )| .name | sub(".*:"; "")' )
 	[[ -z session ]] && session=$( shuf -n 1 /usr/share/dict/linux.words )
 	[[ -z session ]] && session="ROOT"
-
+	typeset -p session
 	local host_color=colour$[0x$(echo $host | md5sum | cut -c 1-2)%256]
 	local N=/dev/null
 	while :; do
@@ -1179,10 +1178,15 @@ alias res=resolvectl
 alias rr='resolvectl query'
 alias pgt='pgrep -a -t ${TTY#/dev/}'
 alias pts='pgrep -a -t pts/'
-alias ptsl='pgrep -a -t ${$( tmux_neighbor_tty left )/\/dev\/}'
-alias ptsa='pgrep -a -t ${$( tmux_neighbor_tty above )/\/dev\/}'
-alias ptsr='pgrep -a -t ${$( tmux_neighbor_tty right )/\/dev\/}'
-alias ptsb='pgrep -a -t ${$( tmux_neighbor_tty below )/\/dev\/}'
+typeset -T ps_cols_list ps_cols=( ppid pgid ) , 
+alias ptsa='tmux_neighbor_pids above && P'
+alias ptsb='tmux_neighbor_pids below && P'
+alias ptsl='tmux_neighbor_pids left && P'
+alias ptsr='tmux_neighbor_pids right && P'
+alias P='cmd ps -O $ps_cols_list $pids'
+alias pr2='print -u2'
+alias p2='print -u2'
+alias kp='cmd kill $pids'
 alias sk=ssh-keygen
 alias findm=findmnt
 alias dn=dnf
@@ -1305,16 +1309,15 @@ alias chm='chmod -Rc'
 alias A=awk
 alias th='test_host='
 # DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* | pre "$(nn): " ; sleep $n; done; }
-DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* |& pre "$(nn): " ; sleep $n; done; }
+DO() { [[ $1 =~ ^[0-9.]+$ && $1 -gt 0.01 ]] && { t=$1 ; shift } || t=1; while :; do $* |& ts -m "%F %T%t" ; sleep $t; done; }
 alias core=coredumpctl
 alias rest='restorecon -v'
 # alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
-alias mii='log_dir=~/.logs/minicom/${dev:t}; mkdir -p $log_dir ; sudo minicom -c on -O timestamp=extended -C $log_dir/$(nn) -D $dev'
+alias mii='minicom_log_dir=~/.logs/minicom/${dev:t}; mkdir -p $minicom_log_dir ; sudo minicom -c on -O timestamp=extended -C $minicom_log_dir/$(nn) -D $dev'
 alias DD='dev=/dev/ttyUSB'
 alias devv='dev=/dev/ttyUSB0'
-# alias miil='dev=(/dev/uart-*); log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
-alias miil='log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $log_dir'
-alias mini='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
+# alias miil='dev=(/dev/uart-*); minicom_log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $minicom_log_dir'
+alias miil='minicom_log_dir=~/.logs/minicom/${dev:t}; lnav -Rr $minicom_log_dir'
 # alias miil='minicom_log=( ~/.logs/minicom/*(om[1]) ) && typeset -p minicom_log && tail -f $minicom_log | lnav'
 alias oo=openvpn
 alias ov=openvpn
@@ -1438,7 +1441,7 @@ alias xau=xautolock
 alias toi=toilet
 alias apk='adb shell pkill -V'
 alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
-alias ac=auditctl
+# alias ac=auditctl
 alias lct=loginctl
 alias boo=bootctl
 alias kl=kernel-install
@@ -1459,7 +1462,7 @@ alias pq=pup
 alias xls=xsltproc
 alias xsl=xsltproc
 alias xxl=xmlstarlet
-alias pingg='ping -A -H -W1 -c4 -D $lanip'
+alias pingg='ping -A -H -W1 -c4 -D $ip'
 alias nuf='numfmt --grouping'
 alias num=numfmt
 alias cdz="cd $__zsh_history_base_dir"
