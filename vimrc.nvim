@@ -529,8 +529,8 @@ if vim_plug_available
 	"let g:peekaboo_compact = 0
 	""}}}
 	Plug 'Chiel92/vim-autoformat', {'on': 'Autoformat'} "{{{
-	" let g:formatdef_my_custom_json = '"jq -s"'
-	let g:formatdef_my_custom_json = '"jq ."'
+	let g:formatdef_my_custom_json = '"jq -s"'
+	" let g:formatdef_my_custom_json = '"jq ."'
 	let g:formatdef_my_custom_sh = '"shfmt -i 0 -bn -ci -sr"'
 	let g:formatters_sh = ['my_custom_sh']
 	let g:formatters_json = ['my_custom_json']
@@ -543,7 +543,7 @@ if vim_plug_available
 	Plug 'tpope/vim-commentary' "{{{
 	autocmd vimrc BufNewFile,BufReadPost authorized_keys,known_hosts,*.conf setlocal commentstring=#\ %s
 	" autocmd vimrc FileType asn setlocal commentstring=--\ %s
-	autocmd vimrc FileType config,crontab,expect,exports,fstab,dosini,sshconfig,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
+	autocmd vimrc FileType strace,config,crontab,expect,exports,fstab,dosini,sshconfig,systemd,i3config,jq,resolv,gitconfig setlocal commentstring=#\ %s
 	autocmd vimrc FileType asn,sql setlocal commentstring=--\ %s
 	nmap gcC yygccp
 	"}}}
