@@ -1689,9 +1689,9 @@ mount_dev() {
 	[[ -z $table_json ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
 	mnt=$( jq <<< $table_json -r '.id + "-" + .label' )
 	[[ -z $mnt ]] && mnt=mnt_noname
-	mnt=$mnt:a
+	# mnt=$mnt:a
 	typeset -p mnt
-	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
+	paths=( $( grep $mnt:a /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
 		sudo umount -R $paths
@@ -1721,6 +1721,7 @@ mount_dev() {
 		done
 	cd - >/dev/null
 	echo $mnt
+	echo $mnt:a
 }
 compdef _mount mount_dev
 uma() {
