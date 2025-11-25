@@ -744,6 +744,8 @@ alias ZS='sudo -E $SHELL'
 alias s3=sqlite3
 alias s33='sqlite3 $db'
 alias dbs='sqlite3 $db "pragma busy_timeout=5000; select * from $table limit 20"'
+alias dbss='sqlite3 $db ".mode tabs" ".header on" "select rowid,* from $table limit 20" | vd'
+alias dbsw='sqlite3 $db ".output -w" "select rowid,* from $table limit 20"'
 alias s33b='sqlitebrowser $db &'
 alias s33t='sqlite3 $db ".mode tabs"'
 alias s33m='sqlite3 $db ".mode table"'
@@ -1466,3 +1468,4 @@ alias pingg='ping -A -H -W1 -c4 -D $ip'
 alias nuf='numfmt --grouping'
 alias num=numfmt
 alias cdz="cd $__zsh_history_base_dir"
+alias hwi=hwinfo 
