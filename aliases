@@ -724,7 +724,7 @@ alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
 alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
-alias dd='dd status=progress conv=fdatasync'
+alias dd='dd status=progress conv=fsync'
 # alias hc=herbstclient
 alias hc=hcitool
 alias cts=curl-tesseract
@@ -1383,7 +1383,18 @@ alias hos=hostapd
 alias todo=TODO
 alias to=TODO
 alias t=TODO
-
+alias tw=TODO_WS
+save_todo() { typeset -p TODO TODO_dir TODO_WORKSPACE_NAME > ~/.TODO > $TODO_dir/.TODO }
+set_todo_ws() {
+	[[ -n $TODO_WORKSPACE_NAME ]] || return
+	i3-msg rename workspace to $TODO_WORKSPACE_NAME 2>&1 >/dev/null
+	tmux rename-session $TODO_WORKSPACE_NAME
+}
+TODO_WS() {
+	TODO_WORKSPACE_NAME=$1
+	save_todo
+	set_todo_ws
+}
 TODO() {
 	# set -x
 	local TODO_dir_base=~/TODO
@@ -1391,20 +1402,21 @@ TODO() {
 	[[ -n $* ]] && {
 		TODO="$*"
 		TODO_dir=$TODO_dir_base/$(nn)-${TODO//[[:space:]]/_}
+		TODO_WORKSPACE_NAME=$( shuf -n 1 ~/words 2>/dev/null || echo WS-$RANDOM )
 		mkdir -p $TODO_dir
 		cd $TODO_dir
-		typeset -p TODO TODO_dir > ~/.TODO > $TODO_dir/.TODO
+		save_todo
 		return
 	}
 	# Select a former TODO
 	[[ -n $TODO ]] && {
 		local todo
 		ls --color=always -1t $TODO_dir_base | 
-			fzf  --header="TODOs" |
-			read todo || return
+			fzf  --header="TODOs" | read todo || return
 		cd $TODO_dir_base/$todo
 		source .TODO
-		typeset -p TODO TODO_dir
+		typeset -p TODO TODO_dir TODO_WORKSPACE_NAME
+		set_todo_ws
 		return
 	}
 	echo "TODO [some idea / subject]"
