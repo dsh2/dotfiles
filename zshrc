@@ -1687,7 +1687,7 @@ mount_dev() {
 	# [[ -r $dev ]] || { print -u2 "Device $dev not readable. Permission problem?"; ls -lZ $dev; id; return 1; }
 	table_json=$( sudo sfdisk -J $dev | jq .partitiontable )
 	[[ -z $table_json ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
-	mnt=$( jq <<< $table_json -r '.id + "-" + .label' )
+	mnt=./MNT/$( jq <<< $table_json -r '.id + "-" + .label' )
 	[[ -z $mnt ]] && mnt=mnt_noname
 	# mnt=$mnt:a
 	typeset -p mnt
@@ -1834,7 +1834,7 @@ zsh_log_date_prefix() {
 
 zsh_history_db_push() { zsh_history_db_append $1 $__zsh_history_db }
 zsh_history_db_pull() { zsh_history_db_append $__zsh_history_db $1 }
-zsh_history_db_merge() { zsh_history_db_pull; zsh_history_db_push }
+zsh_history_db_merge() { zsh_history_db_pull $1 ; zsh_history_db_push $1 }
 
 # Append contents of $2 onto $1 - if schema allows
 zsh_history_db_append() {
