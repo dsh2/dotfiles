@@ -41,6 +41,11 @@ map [e I<cr><esc>
 map [<space> I<cr><esc>
 " map dil ddI<cr><esc>0
 
+map <a-w> <action>(HideAllWindows)
+
+map <a-j> <action>(EditorDown)
+map <a-k> <action>(EditorUp)
+
 map <a-n> <action>(NextOccurence)
 map ]r <action>(NextOccurence)
 map <leader>n <action>(NextOccurence)
