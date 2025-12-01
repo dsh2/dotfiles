@@ -1838,11 +1838,15 @@ zsh_history_db_merge() { zsh_history_db_pull $1 ; zsh_history_db_push $1 }
 
 # Append contents of $2 onto $1 - if schema allows
 zsh_history_db_append() {
+	local dst=$1 src=$2
+	local -T keys_list keys=($( sqlite3 $dst "select name from pragma_table_info('history')" )) ,
+	local drop_id_keys=( id rowid ); keys=(${keys:|drop_id_keys})
+	typeset -p dst src keys
 	sqlite3 $1 <<-EOF_sql
-		attach '$2' as db ;
-		insert or ignore into main.history select * from db.history ;
-		select 'Number of new history entries in $1: ' || changes() ;
-		select 'Number of total history entries in $1: ' || count(*) from main.history ;
+		attach '$src' as src ;
+		insert or ignore into main.history($keys_list) select $keys_list from src.history ;
+		select 'Number of new history entries in $dst: ' || changes() ;
+		select 'Number of total history entries in $dst: ' || count(*) from main.history ;
 	EOF_sql
 }
 
