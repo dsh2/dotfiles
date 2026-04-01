@@ -39,6 +39,7 @@ alias adbke='adb shell input keyevent'
 alias als='noglob adb shell ls -alZ -h'
 alias aff='noglob adb shell find  /sys/class/ -xdev -context u:object_r:sysfs_leds:s0 -printf '\''"%M\t%Z\t%u:%g\t%p\t%l\n"'\'''
 alias adk=adbk
+alias adc='adb connect'
 adbk() { timeout 10 adb shell input keyboard text "${(q)*}$'\n'" }
 # adbk() { adb shell input keyboard text "${(q)*}" && adb shell input keyevent KEYCODE_ENTER ; }
 alias adkp="adb shell input keyboard text \\\"\$(cat | tr -c '[\\r\\n[:space:][:graph:]]' '_')\\\""
@@ -722,9 +723,9 @@ alias sskg='echo ssh-keygen -t ed25519 -N "" -f id -C $USER@$HOSTNAME@'
 alias sa='agents=( $HOME/.ssh/agents/*(N) ${TMPDIR:-/tmp}/ssh-*/agent.*(Nom)) ; typeset -p agents ; export SSH_AUTH_SOCK ; for SSH_AUTH_SOCK in $agents; do echo Trying $SSH_AUTH_SOCK; ssh-add -L && break; done '
 alias saa='printenv SSH_AUTH_SOCK'
 alias sll='. ~/.keychain/$HOST-sh; sl'
-alias Rl='ranger ~/INCOMING'
 alias dcl='dynamic-colors cycle'
 alias dd='dd status=progress conv=fsync'
+alias dda='dd status=none conv=notrunc oflag=append of='
 # alias hc=herbstclient
 alias hc=hcitool
 alias cts=curl-tesseract
@@ -839,8 +840,8 @@ alias fmd='findmnt --df'
 alias jr='journalctl -f -u'
 alias jc=journalctl
 alias sf=sshfs
-alias cu=curl
-alias cur=curl
+alias cu='noglob curl'
+alias cur='noglob curl'
 alias fj=frida
 alias fr=frida
 alias AA='xrandr --verbose --output DP-2-1 --auto --output DP-2-2 --auto --output DP-2-3 --auto --output eDP-1 --auto --output HDMI-2 --auto --output HDMI-1 --auto --output DP-2 --auto --output DP-1 --auto'
@@ -1103,7 +1104,7 @@ alias fff='ffprobe -hide_banner -show_streams -show_format -of json'
 alias ffp='ffprobe -hide_banner -show_streams -show_format -of json'
 alias ffmp='ffmpeg -hide_banner'
 alias ltmp='l -dt tmp-*'
-alias yd='noglob yt-dlp -vo $(nn)_'
+alias yd='cd ~/VIDEO/ && noglob yt-dlp -vo $(nn)_'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -1278,7 +1279,7 @@ alias E='noglob echo'
 alias exa='export ANDROID_SERIAL=$( echo ); adb connect $ANDROID_SERIAL'
 alias ha=hashcat
 alias IP=install_path
-alias scp='rsync --info=progress2 -zaxP'
+alias scp='noglob rsync --info=progress2 -zaxP $host:'
 # alias scp='rsync -Syy **/*(/[1,20]P:--compare-dest:N) -zaxP --bwlimit=0.9m'
 alias scpp='cmd scp'
 alias sR='ssh-keygen -R'
@@ -1299,10 +1300,10 @@ alias cer=certutil
 alias cert=certutil
 alias fwk=fwknop
 alias hy=hydra
-alias wge=wget
+alias wge='noglob wget'
+alias wgg='noglob wget'
 alias diffo=diffoscope
 alias ev=eval
-alias wge=wget
 alias adD='eval $( < ~/.android/current_serial >&2 )'
 alias zco=zcompile
 alias adms='adb shell dmesg -T -w | lnav -t'
@@ -1310,8 +1311,11 @@ alias admsg='adb shell dmesg -T -w | lnav -t'
 alias chm='chmod -Rc'
 alias A=awk
 alias th='test_host='
-# DO() { [[ $1 =~ ^[0-9]+$ && $1 -gt 1 ]] && { n=$1 ; shift } || n=1; while :; do $* | pre "$(nn): " ; sleep $n; done; }
+# Do forever, sleep $1 inbetween or 1 second
 DO() { [[ $1 =~ ^[0-9.]+$ && $1 -gt 0.01 ]] && { t=$1 ; shift } || t=1; while :; do $* |& ts -m "%F %T%t" ; sleep $t; done; }
+# Do until successful, sleep too.
+# FIXME: 'break' does not "jump" after while-loop
+DOr() { [[ $1 =~ ^[0-9.]+$ && $1 -gt 0.01 ]] && { t=$1 ; shift } || t=1; set -x ; while :; do $* && break |& ts -m "%F %T%t" ; sleep $t; done; echo "Success" }
 alias core=coredumpctl
 alias rest='restorecon -v'
 # alias min='minicom -c on -O timestamp=extended -C ~/.logs/minicom/$(nn).log -D /dev/ttyUSB'
@@ -1351,6 +1355,7 @@ alias iii=i3
 alias ii=i3
 alias hostn=hostname
 alias hn=hostname
+alias hnc=hostnamectl
 alias be=brew
 alias duff='diff -u'
 alias str=strings
@@ -1459,7 +1464,7 @@ alias ats='adb shell ps -Awf -o pid,ppid,cmd,comm,name | column -i1 -p2 -r3'
 alias lct=loginctl
 alias boo=bootctl
 alias kl=kernel-install
-alias ddd='find /dev/disk ! -type d'
+alias ddd='find /dev/disk ! -type d -ls'
 alias up=upower
 alias una=unalias
 alias seto=setopt
@@ -1481,3 +1486,16 @@ alias nuf='numfmt --grouping'
 alias num=numfmt
 alias cdz="cd $__zsh_history_base_dir"
 alias hwi=hwinfo 
+alias pdk=pdftk
+alias ops=opensnoop
+alias lsn='sudo lsns --notruncate --nowrap --output-all'
+zsho() {
+	sqlite3 $__zsh_history_db '.timeout 5555' "select log_dir from history where command glob '$1' order by date_start desc limit 20" | while read d; do zcat $d/output.gz | command grep -Ei -- $2 | pree $d; done
+}
+alias part=parted
+alias pas=pass
+alias too=toolbox
+alias fire=firefox
+alias nee=nsenter
+alias ac=caddy
+alias off=tofu

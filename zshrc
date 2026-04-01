@@ -509,7 +509,9 @@ bindkey_func '^x^x' page_last_output
 
 function check_output {
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 0
-	local msg="No output captured for "
+	local msg
+	[[ -z $TMUX ]] && msg+="No TMUX; "
+	msg+="No output captured for "
 	[[ -z $pane_id ]] && msg+="this pane" || msg+="pane \"$pane_id\""
 	msg+=" (log_dir=\"$log_dir\")."
 	zle -M $msg
@@ -928,7 +930,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	# has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
+	[[ -v KITTY_LISTEN_ON ]] && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -1242,8 +1244,6 @@ ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
 compdef _man vimman
-compdef _ps pf
-compdef _ps pidof
 
 typeset -A tmux_dirs=(right R left L above U top U up U below D down D)
 
@@ -1495,15 +1495,7 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
-# set +x
-if has trash; then
-	alias rm='trash --'
-	alias rmm='\rm -rf --'
-	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
-else
-	tl() { err "trash-cli NOT installed." }
-fi
-alias rm='\rm -rf -v --'
+alias rm='cmd rm -rf -v --'
 
 visudo_append() {
 	has -v sudo || { die; return }
@@ -1662,6 +1654,9 @@ fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
 
+Rl() { f=${1:a} ; typeset -p f ; echo ${(q)f} }
+compdef _files Rl
+
 gcdd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
 		cd $(git rev-parse --git-dir)
@@ -1680,16 +1675,16 @@ gcd() {
 
 mount_dev() {
 	[[ -v x ]] && set -x
-	local dev=$1; shift
-	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
+	local dev=$1
+	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device [prefix]"; return 1; }
 	[[ $dev = /dev/* ]] || dev=/dev/$dev
 	[[ -e $dev ]] || { print -u2 "Device $dev not found."; return 1; }
 	# [[ -r $dev ]] || { print -u2 "Device $dev not readable. Permission problem?"; ls -lZ $dev; id; return 1; }
-	table_json=$( sudo sfdisk -J $dev | jq .partitiontable )
+	disk_id=$(udevadm info --query=property --property=DISKSEQ --value $dev)
+	[[ -z $disk_id ]] && { print -u2 "Failed to dertermine disk_id"; return 1; }
+	table_json=$( sudo sfdisk --json $( readlink -f /dev/disk/by-diskseq/${disk_id} ) | jq .partitiontable )
 	[[ -z $table_json ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
-	mnt=./MNT/$( jq <<< $table_json -r '.id + "-" + .label' )
-	[[ -z $mnt ]] && mnt=mnt_noname
-	# mnt=$mnt:a
+	mnt=./${2:=MNT}/$( jq <<< $table_json -r '.id + "-" + .label' )
 	typeset -p mnt
 	paths=( $( grep $mnt:a /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
@@ -1703,13 +1698,14 @@ mount_dev() {
 			echo "Mounting $dev..."
 			mnt_dev=by-dev/$dev:t
 			mkdir -p $mnt_dev
-			sudo mount $* $dev $mnt_dev || continue
+			sudo mount $dev $mnt_dev || continue
 			sudo blkid --output export $dev | while read line; do
 				eval $line
 				case $line in
 					(BLOCK_SIZE=*|DEVNAME=*) continue;;
 					(UUID=*) p=by-uuid/$UUID ;;
 					(PARTUUID=*) p=by-partuuid/$PARTUUID ;;
+					(PARTLABEL=*) p=by-partlabel/$PARTLABEL ;;
 					(LABEL=*) p=by-label/$LABEL ;;
 					(TYPE=*) p=by-type/$TYPE/$dev:t ;;
 					(*) echo "Don't know how to handle blkid info \"$line\"."; continue ;;
@@ -1724,6 +1720,8 @@ mount_dev() {
 	echo $mnt:a
 }
 compdef _mount mount_dev
+
+compdef _directories uma
 uma() {
 	{ if [[ -n $1 ]]; then pushd $1; else  pushd .; fi } > /dev/null
 	local paths=( $( grep $PWD /proc/mounts | cut -d " " -f 2 ) )
