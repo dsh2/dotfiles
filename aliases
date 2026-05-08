@@ -444,6 +444,7 @@ alias doc=docker
 alias dok=docker
 alias doo=docker
 alias docc=docker-compose
+alias dokk=docker-compose
 alias dock=docker
 alias wgk='{ wg genkey 1>&2 | wg pubkey | sed "s:^:PublicKey = :" 1>&3 } 2>&1 3>&2| sed "s:^:PrivateKey = :" 3>&-'
 # Vim aliases
@@ -1190,7 +1191,7 @@ alias P='cmd ps -O $ps_cols_list $pids'
 alias pr2='print -u2'
 alias p2='print -u2'
 alias kp='cmd kill $pids'
-alias sk=ssh-keygen
+alias sk='ssh-keygen -f /dev/stdin'
 alias findm=findmnt
 alias dn=dnf
 alias xa='sudo getfattr -d -m .\* -R .'
@@ -1489,13 +1490,22 @@ alias hwi=hwinfo
 alias pdk=pdftk
 alias ops=opensnoop
 alias lsn='sudo lsns --notruncate --nowrap --output-all'
+# alias cdl='cd $log_dir'
+alias cdl='cd $__zsh_history_base_dir'
+alias cdlz='cd $__zsh_history_base_dir'
 zsho() {
 	sqlite3 $__zsh_history_db '.timeout 5555' "select log_dir from history where command glob '$1' order by date_start desc limit 20" | while read d; do zcat $d/output.gz | command grep -Ei -- $2 | pree $d; done
 }
 alias part=parted
 alias pas=pass
 alias too=toolbox
+alias fir=firefox
 alias fire=firefox
 alias nee=nsenter
 alias ac=caddy
 alias off=tofu
+alias zb=zbarimg
+alias zbar=zbarimg
+alias bas=bash
+alias bs=boltctl
+alias hd=hmdm
