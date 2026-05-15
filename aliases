@@ -768,7 +768,7 @@ alias wsl='wireshark -r ~/.pcaps/*.pcap(om[1]) &'
 # export WS_OPTIONS=(-o tcp.no_subdissector_on_error:false -d tcp.port==1-65535,ssl -o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 # export WS_OPTIONS=(-o ssl.keylog_file:/home/dsf/PCAPS/all-pcaps.keylogfile)
 alias lvs='tmux split -d lnav ssldebug'
-alias tsv='truncate -s0 ssldebug'
+# alias tsv='truncate -s0 ssldebug'
 alias ww='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/null -r cap.pcap &'
 alias wwss='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:/dev/stdout -r cap.pcap'
 alias wws='${WIRESHARK:-wireshark} $=WS_OPTIONS $=WS_DISABLE_PROTO -o ssl.debug_file:ssldebug -r cap.pcap & truncate -s0 ssldebug'
@@ -840,7 +840,7 @@ alias fmm='findmnt --real --raw | command grep -F -- $PWD'
 alias fmd='findmnt --df'
 alias jr='journalctl -f -u'
 alias jc=journalctl
-alias sf=sshfs
+alias sf='DO 10 sshfs -f -v -o reconnect $host:/ /SSHFS/$host'
 alias cu='noglob curl'
 alias cur='noglob curl'
 alias fj=frida
@@ -859,7 +859,8 @@ alias dpp=docker-packer
 alias pa=patool
 alias s=ssh
 alias psl="psql -Aqtc"
-alias py3=python3
+alias py3=python
+# alias py3=python3
 alias pod=podman
 alias podd=podman-compose
 
@@ -948,8 +949,8 @@ alias i3m='i3-msg -s $(echo /var/run/user/1000/i3/ipc-socket*(om[1]))'
 alias ki=kitty
 alias kit=kitty
 alias K=kitty
-TT() { nvim +'norm i' term://"$*" ; }
-T() { nvim term://"$*" ; }
+# TT() { nvim +'norm i' term://"$*" ; }
+# T() { nvim term://"$*" ; }
 alias ng=noglob
 alias Pi='ping -D -W 1 -i 0.2 '
 alias gvv='nvim +GV\ --all'
@@ -1105,7 +1106,7 @@ alias fff='ffprobe -hide_banner -show_streams -show_format -of json'
 alias ffp='ffprobe -hide_banner -show_streams -show_format -of json'
 alias ffmp='ffmpeg -hide_banner'
 alias ltmp='l -dt tmp-*'
-alias yd='cd ~/VIDEO/ && noglob yt-dlp -vo $(nn)_'
+alias yd='cd ~/VIDEO/ && noglob yt-dlp --write-subs --sub-langs=all -vo $(nn)_'
 alias a1=asn1tools
 alias acc='asn1tools convert -i gser -o ber '
 alias acp='asn1tools parse '
@@ -1509,3 +1510,6 @@ alias zbar=zbarimg
 alias bas=bash
 alias bs=boltctl
 alias hd=hmdm
+alias hdd=hmdm_
+alias thc=thc_ota_config
+alias mk=mtk.py

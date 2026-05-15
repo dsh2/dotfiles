@@ -584,7 +584,7 @@ function run_ab {
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
 	local zsh_c=1_zsh_deadbeef  # TODO: zip zsh_a and zsh_b?
-	BUFFER=$(<<< $BUFFER sed -e "s:$zsh_a:$zsh_c:g" -e "s:$zsh_b:$zsh_a:g" -e "s:$zsh_c:$zsh_b:g")
+	BUFFER=$(<<< $BUFFER sed -e "s|$zsh_a|$zsh_c|g" -e "s|$zsh_b|$zsh_a|g" -e "s|$zsh_c|$zsh_b|g")
 }
 bindkey_func '^x^f' run_ab
 
@@ -1444,6 +1444,7 @@ alias -g SUU='| sort --unique'
 alias -g SUN='| sort -n'
 alias -g TS='|& ts -m "%F %T%t"'
 alias -g TSs='|& ts -m "%s%t"'
+alias -g TT='| tsv | vd -'
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
