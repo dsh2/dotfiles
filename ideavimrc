@@ -1,9 +1,11 @@
 let mapleader=" "
 
+
 " set notimeout
 " set nottimeout
 
 map <leader>C <Action>(Android.Designer.CommonActions.ForceCompileAndRefreshActionForNotification)
+
 
 set ideajoin
 " set ideaput
@@ -37,6 +39,7 @@ map [s <action>(EditorDownWithSelection)
 
 map ]f <action>(MethodDown)
 map [f <action>(MethodUp)
+
 map [e I<cr><esc>
 map [<space> I<cr><esc>
 " map dil ddI<cr><esc>0
