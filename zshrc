@@ -825,7 +825,7 @@ function start_logging()
 			[zsh_history_id]=$( print -P '%!' )
 			[zsh_pid]=$$
 			[zsh_start_timestamp]=$( ps -o lstart= $$ )
-			[hostname]=$HOSTNAME
+			[hostname]=$(hostname)
 			[cursor]=$CURSOR
 			[date_start]=$( date '+%F %H.%M.%S' )
 			[date_start_epoch]=$( date '+%s' )

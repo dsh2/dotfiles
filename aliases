@@ -1153,6 +1153,7 @@ alias B=btrfs
 alias Bs='btrfs subvolume'
 alias Bss='btrfs subvolume snapshot'
 alias Bf='btrfs filesystem'
+alias bfs='btrfs filesystem'
 alias Bf='btrfs filesystem'
 alias bfu='btrfs filesystem usage /'
 alias bt=btrfs
