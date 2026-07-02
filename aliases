@@ -1516,4 +1516,5 @@ alias hd=hmdm
 alias hdd=hmdm_
 alias ngs=ngr_sql_
 alias thc=thc_ota_config
+alias mi='mysql -e' 
 alias mk=mtk.py
