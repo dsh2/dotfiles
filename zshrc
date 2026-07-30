@@ -642,23 +642,21 @@ zle_die() {
 # TODO: Instead split vim with new script containing current line and RUN-split
 function edit_command_line() {
 	[[ -z $BUFFER ]] && zle up-history
-	local old_buffer="$BUFFER"
+	local old_buffer=${(q)BUFFER}
 	zle kill-whole-line
 	zle -M "Enter script suffix for \"$old_buffer\"."
 	zle recursive-edit || { zle -M "Aborted." ; return; }
-	local run_file=$HOME/bin/tmp-$(nn)${BUFFER:+\-${(q)BUFFER}}.sh
-	# TODO: Merge next line into previous.
-	run_file=${(q)run_file}
+	local run_file=$HOME/bin/tmp-$(nn)-${(q)BUFFER:s: :_:}.sh
 	zle kill-whole-line
 	local editor=${${VISUAL:-${EDITOR:-vi}}}
-	print -l -- '#!'$SHELL $'' "$old_buffer" | tee /tmp/some_file > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
-	echo $old_buffer | tee /tmp/some_file >> $run_file
-	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
+	print -l -- '#!/bin/zsh' '' $old_buffer > $run_file 
+	chmod +x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
 		tmux split -vbl 80% $SHELL -ic "$editor $run_file; $SHELL -i "
 		zle -U "RUN -tcsv $run_file"
   	else
-		# TODO: Try something new when running out of tmux
+		zle -M "Run file created at \"$run_file\"."
+
 	fi
 }
 bindkey_func "^xq" edit_command_line
@@ -726,6 +724,7 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'zcat $tmux_log_file\t '
+bindkey -s cv\  'vd < $tmux_log_file\t '
 bindkey -s cj\  'zcat $tmux_log_file\t | jq '
 bindkey -s cvd\  'zcat $tmux_log_file\t | vd -t tsv '
 bindkey -s sd\  'systemd-'

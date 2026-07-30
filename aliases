@@ -359,7 +359,7 @@ alias lsd='l -d'
 alias lS='ls -ahlSsr'
 alias fre='free -hwt'
 alias tt=set_terminal_title
-alias vb=vboxmanage
+# alias vb=vboxmanage
 alias stcp='host=$( echo 127.0.0.1 ) ; iface=$( echo any ) ; filter=$( echo port not 22 ) ; pcap=~/.pcaps/$(nn)-$host.pcap ; ssh $host sudo stdbuf -o0 tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
 alias tcp='iface=$( echo any ) ; filter=$( echo icmp ) ; pcap=~/.pcaps/$(nn).pcap ; sudo tcpdump -pUnni $iface $filter -w - | tee $pcap | tcpdump -pUnnr - '
 # alias tcp='sudo tcpdump -pUnni any icmp'
@@ -576,7 +576,8 @@ alias pg='pgrep -ax'
 alias acs='apt-cache search'
 alias r22='rabin2 -gx'
 alias pl='patool list'
-alias pc="psql <<< '"
+# alias pc="psql <<< '"
+alias pc=psql
 alias pC="psql -c ''"
 alias pCC='psql -c ""'
 alias px='patool extract'
@@ -652,6 +653,12 @@ alias Nn="date '+%F %T'"
 # alias nn="date '+%F__%T'"
  # %H.%M.%S.%N
 alias nnn='N=$(( 00 )) ; M=$(( 1000 )); date '+%F__%T' --date=@$(( N / M ))'
+alias nns='date -d "3 days ago" "+%s"'
+alias vv='vd $db'
+alias hss=hmdm_sql
+alias hsss='hmdm_sql <<<'
+alias way=waydroid
+alias V='vd $db'
 alias tgi=telegram-cli
 alias ncn='nmcli con'
 alias ndn='nmcli con'
@@ -660,7 +667,7 @@ alias ncnn='nmcli dev'
 alias nd='nmcli dev'
 alias ncnc='nmcli con'
 # alias vv=voltron
-alias vv=vboxmanage
+# alias vv=vboxmanage
 # alias k='command kill --verbose'
 # alias k='kill --verbose'
 alias k='kill'
@@ -748,8 +755,11 @@ alias ZS='sudo -E $SHELL'
 alias s3=sqlite3
 alias s33='sqlite3 $db'
 alias dbs='sqlite3 $db "pragma busy_timeout=5000; select * from $table limit 20"'
-alias dbss='sqlite3 $db ".schema" | sleek --lines-between-queries 2 --uppercase false'
+alias dbss='sqlite3 $db ".schema $table" | sleek --lines-between-queries 2 --uppercase false'
+# sqlite3 -tabs $db "select sql from sqlite_master where name='$table'" | sleek --lines-between-queries 2 --uppercase false
 alias dbsw='sqlite3 $db ".output -w" "select rowid,* from $table limit 20"'
+# alias dbt="sqlite3 -table \$db \"select * from sqlite_master where type='table'\""
+alias dbt="sqlite3 -tabs \$db \"select name,group_concat(type) from sqlite_master group by name order by name\""
 alias s33b='sqlitebrowser $db &'
 alias s33t='sqlite3 $db ".mode tabs"'
 alias s33m='sqlite3 $db ".mode table"'
@@ -1516,5 +1526,6 @@ alias hd=hmdm
 alias hdd=hmdm_
 alias ngs=ngr_sql_
 alias thc=thc_ota_config
+alias thcc=thc_ota_config
 alias mi='mysql -e' 
 alias mk=mtk.py
