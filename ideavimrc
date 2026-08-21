@@ -65,6 +65,7 @@ map zz <action>(EditorScrollToCenter)
 set ignorecase
 " set scrolloff=20
 set scrolloff=999
+set incsearch
 set showmode
 set ideastatusicon=gray
 set idearefactormode=keep
@@ -87,7 +88,6 @@ vnoremap > >gv
 let g:highlightedyank_highlight_duration = "1000"
 
 Plug 'https://github.com/tommcdo/vim-exchange'
-Plug 'tpope/vim-commentary'
 Plug 'https://github.com/machakann/vim-highlightedyank'
 
 set surround
@@ -237,8 +237,10 @@ set showmode
 imap <c-j> <cr>
 
 map <a-e> :action EditorSelectWord<CR>
-map <a-s-e> :action EditorUnSelectWord<CR>
+map <a-E> :action EditorUnSelectWord<CR>
+map <a-s-w> :action EditorUnSelectWord<CR>
 
+# EditorSelectWord                                   <A-Up> <M-Þ>
 
 " Fix the search highlight
 set incsearch
