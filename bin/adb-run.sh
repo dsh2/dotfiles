@@ -1,4 +1,5 @@
 #!/bin/sh
+
 unset PS4
 set -x
 set -e
@@ -7,6 +8,7 @@ set -e
 
 pkg=$( aapt dump badging $1 | awk -F" " '/package/ {print $2}' | awk -F"'" '/name=/ {print $2}' )
 [[ -n $pkg ]]
+adb shell pm list package | grep -q "^package:$pkg$" || adb install $1
 act=$( aapt dump badging $1 | awk -F" " '/launchable-activity/ {print $2}' | awk -F"'" '/name=/ {print $2}' )
 [[ -n $act ]]
 

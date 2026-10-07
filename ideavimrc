@@ -1,9 +1,11 @@
 let mapleader=" "
 
+
 " set notimeout
 " set nottimeout
 
 map <leader>C <Action>(Android.Designer.CommonActions.ForceCompileAndRefreshActionForNotification)
+
 
 set ideajoin
 " set ideaput
@@ -37,9 +39,15 @@ map [s <action>(EditorDownWithSelection)
 
 map ]f <action>(MethodDown)
 map [f <action>(MethodUp)
+
 map [e I<cr><esc>
 map [<space> I<cr><esc>
 " map dil ddI<cr><esc>0
+
+map <a-w> <action>(HideAllWindows)
+
+map <a-j> <action>(EditorDown)
+map <a-k> <action>(EditorUp)
 
 map <a-n> <action>(NextOccurence)
 map ]r <action>(NextOccurence)
@@ -228,9 +236,11 @@ set showmode
 
 imap <c-j> <cr>
 
-map <leader>w :action EditorSelectWord<CR>
-map <leader>W viW EditorSelectWord<CR>
+map <a-e> :action EditorSelectWord<CR>
+map <a-E> :action EditorUnSelectWord<CR>
+map <a-s-w> :action EditorUnSelectWord<CR>
 
+# EditorSelectWord                                   <A-Up> <M-Þ>
 
 " Fix the search highlight
 set incsearch

@@ -509,7 +509,9 @@ bindkey_func '^x^x' page_last_output
 
 function check_output {
 	[[ -z $tmux_log_file || ! -s $tmux_log_file ]] || return 0
-	local msg="No output captured for "
+	local msg
+	[[ -z $TMUX ]] && msg+="No TMUX; "
+	msg+="No output captured for "
 	[[ -z $pane_id ]] && msg+="this pane" || msg+="pane \"$pane_id\""
 	msg+=" (log_dir=\"$log_dir\")."
 	zle -M $msg
@@ -582,7 +584,7 @@ function run_ab {
 	# TODO: try to find in zsh docs which modifier to use to make search pattern to be eval
 	# BUFFER="$($BUFFER:s:$zsh_a:$zsh_b:)"
 	local zsh_c=1_zsh_deadbeef  # TODO: zip zsh_a and zsh_b?
-	BUFFER=$(<<< $BUFFER sed -e "s:$zsh_a:$zsh_c:g" -e "s:$zsh_b:$zsh_a:g" -e "s:$zsh_c:$zsh_b:g")
+	BUFFER=$(<<< $BUFFER sed -e "s|$zsh_a|$zsh_c|g" -e "s|$zsh_b|$zsh_a|g" -e "s|$zsh_c|$zsh_b|g")
 }
 bindkey_func '^x^f' run_ab
 
@@ -640,23 +642,21 @@ zle_die() {
 # TODO: Instead split vim with new script containing current line and RUN-split
 function edit_command_line() {
 	[[ -z $BUFFER ]] && zle up-history
-	local old_buffer="$BUFFER"
+	local old_buffer=${(q)BUFFER}
 	zle kill-whole-line
 	zle -M "Enter script suffix for \"$old_buffer\"."
 	zle recursive-edit || { zle -M "Aborted." ; return; }
-	local run_file=$HOME/bin/tmp-$(nn)${BUFFER:+\-${(q)BUFFER}}.sh
-	# TODO: Merge next line into previous.
-	run_file=${(q)run_file}
+	local run_file=$HOME/bin/tmp-$(nn)-${(q)BUFFER:s: :_:}.sh
 	zle kill-whole-line
 	local editor=${${VISUAL:-${EDITOR:-vi}}}
-	print -l -- '#!'$SHELL $'' "$old_buffer" | tee /tmp/some_file > $run_file || { zle_die "Failed to create \"$run_file\""; return; }
-	echo $old_buffer | tee /tmp/some_file >> $run_file
-	chmod a+x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
+	print -l -- '#!/bin/zsh' '' $old_buffer > $run_file 
+	chmod +x $run_file || { zle_die "Failed to make \"$run_file\" executable"; return; }
 	if [[ -n $TMUX ]]; then
 		tmux split -vbl 80% $SHELL -ic "$editor $run_file; $SHELL -i "
 		zle -U "RUN -tcsv $run_file"
   	else
-		# TODO: Try something new when running out of tmux
+		zle -M "Run file created at \"$run_file\"."
+
 	fi
 }
 bindkey_func "^xq" edit_command_line
@@ -724,6 +724,7 @@ bindkey -s ATi\  "a''t !"
 bindkey -s ATii\  "a''t !=?"
 bindkey -s ATp\  "a''t ^"
 bindkey -s cl\  'zcat $tmux_log_file\t '
+bindkey -s cv\  'vd < $tmux_log_file\t '
 bindkey -s cj\  'zcat $tmux_log_file\t | jq '
 bindkey -s cvd\  'zcat $tmux_log_file\t | vd -t tsv '
 bindkey -s sd\  'systemd-'
@@ -823,7 +824,7 @@ function start_logging()
 			[zsh_history_id]=$( print -P '%!' )
 			[zsh_pid]=$$
 			[zsh_start_timestamp]=$( ps -o lstart= $$ )
-			[hostname]=$HOSTNAME
+			[hostname]=$(hostname)
 			[cursor]=$CURSOR
 			[date_start]=$( date '+%F %H.%M.%S' )
 			[date_start_epoch]=$( date '+%s' )
@@ -928,7 +929,7 @@ function set_terminal_title()
     # TODO:
     # -make this more portable
     # -check for ssh_tty
-	# has kitty && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
+	[[ -v KITTY_LISTEN_ON ]] && timeout 1 kitty @ set-window-title "$*" 2>/dev/null
 }
 
 function zsh_terminal_title()
@@ -1242,8 +1243,6 @@ ut2nt() { date -d@$1 '+%F %T'}
 D() { set -x; $*; set +x; }
 curl-tesseract() { curl --silent --output - "$@" | tesseract -l eng -l deu - - ; }
 compdef _man vimman
-compdef _ps pf
-compdef _ps pidof
 
 typeset -A tmux_dirs=(right R left L above U top U up U below D down D)
 
@@ -1444,6 +1443,7 @@ alias -g SUU='| sort --unique'
 alias -g SUN='| sort -n'
 alias -g TS='|& ts -m "%F %T%t"'
 alias -g TSs='|& ts -m "%s%t"'
+alias -g TT='| tsv | vd -'
 alias -g TTT='| tesseract - - | strings'
 alias -g UU='| sort | uniq'
 alias -g WL='| wc -l'
@@ -1495,15 +1495,7 @@ die() {
   (( $# > 0 )) && err "$*"
 }
 
-# set +x
-if has trash; then
-	alias rm='trash --'
-	alias rmm='\rm -rf --'
-	tl() {'cd $(trash-list|sort|fzf --tac|cut -d\  -f 3); restore-trash; cd -'}
-else
-	tl() { err "trash-cli NOT installed." }
-fi
-alias rm='\rm -rf -v --'
+alias rm='cmd rm -rf -v --'
 
 visudo_append() {
 	has -v sudo || { die; return }
@@ -1662,6 +1654,9 @@ fU() { [ -d $1 ] && fusermount -u $1 && rmdir $1 }
 compdef _files fz
 compdef _directories fU
 
+Rl() { f=${1:a} ; typeset -p f ; echo ${(q)f} }
+compdef _files Rl
+
 gcdd() {
 	if git rev-parse -q --is-inside-work-tree > /dev/null 2>&1; then
 		cd $(git rev-parse --git-dir)
@@ -1680,18 +1675,18 @@ gcd() {
 
 mount_dev() {
 	[[ -v x ]] && set -x
-	local dev=$1; shift
-	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device"; return 1; }
+	local dev=$1
+	[[ -z $dev ]] && { print -u2 "Usage: mount_dev device [prefix]"; return 1; }
 	[[ $dev = /dev/* ]] || dev=/dev/$dev
 	[[ -e $dev ]] || { print -u2 "Device $dev not found."; return 1; }
 	# [[ -r $dev ]] || { print -u2 "Device $dev not readable. Permission problem?"; ls -lZ $dev; id; return 1; }
-	table_json=$( sudo sfdisk -J $dev | jq .partitiontable )
+	disk_id=$(udevadm info --query=property --property=DISKSEQ --value $dev)
+	[[ -z $disk_id ]] && { print -u2 "Failed to dertermine disk_id"; return 1; }
+	table_json=$( sudo sfdisk --json $( readlink -f /dev/disk/by-diskseq/${disk_id} ) | jq .partitiontable )
 	[[ -z $table_json ]] && { print -u2 "Failed to get partition info for $1"; return 1; }
-	mnt=$( jq <<< $table_json -r '.id + "-" + .label' )
-	[[ -z $mnt ]] && mnt=mnt_noname
-	mnt=$mnt:a
+	mnt=./${2:=MNT}/$( jq <<< $table_json -r '.id + "-" + .label' )
 	typeset -p mnt
-	paths=( $( grep $mnt /proc/mounts | cut -d ' ' -f 2 ) )
+	paths=( $( grep $mnt:a /proc/mounts | cut -d ' ' -f 2 ) )
 	[[ -z $paths ]] || {
 		print -rl -- "Unmounting..." $paths
 		sudo umount -R $paths
@@ -1703,13 +1698,14 @@ mount_dev() {
 			echo "Mounting $dev..."
 			mnt_dev=by-dev/$dev:t
 			mkdir -p $mnt_dev
-			sudo mount $* $dev $mnt_dev || continue
+			sudo mount $dev $mnt_dev || continue
 			sudo blkid --output export $dev | while read line; do
 				eval $line
 				case $line in
 					(BLOCK_SIZE=*|DEVNAME=*) continue;;
 					(UUID=*) p=by-uuid/$UUID ;;
 					(PARTUUID=*) p=by-partuuid/$PARTUUID ;;
+					(PARTLABEL=*) p=by-partlabel/$PARTLABEL ;;
 					(LABEL=*) p=by-label/$LABEL ;;
 					(TYPE=*) p=by-type/$TYPE/$dev:t ;;
 					(*) echo "Don't know how to handle blkid info \"$line\"."; continue ;;
@@ -1721,8 +1717,11 @@ mount_dev() {
 		done
 	cd - >/dev/null
 	echo $mnt
+	echo $mnt:a
 }
 compdef _mount mount_dev
+
+compdef _directories uma
 uma() {
 	{ if [[ -n $1 ]]; then pushd $1; else  pushd .; fi } > /dev/null
 	local paths=( $( grep $PWD /proc/mounts | cut -d " " -f 2 ) )
@@ -1833,15 +1832,19 @@ zsh_log_date_prefix() {
 
 zsh_history_db_push() { zsh_history_db_append $1 $__zsh_history_db }
 zsh_history_db_pull() { zsh_history_db_append $__zsh_history_db $1 }
-zsh_history_db_merge() { zsh_history_db_pull; zsh_history_db_push }
+zsh_history_db_merge() { zsh_history_db_pull $1 ; zsh_history_db_push $1 }
 
 # Append contents of $2 onto $1 - if schema allows
 zsh_history_db_append() {
+	local dst=$1 src=$2
+	local -T keys_list keys=($( sqlite3 $dst "select name from pragma_table_info('history')" )) ,
+	local drop_id_keys=( id rowid ); keys=(${keys:|drop_id_keys})
+	typeset -p dst src keys
 	sqlite3 $1 <<-EOF_sql
-		attach '$2' as db ;
-		insert or ignore into main.history select * from db.history ;
-		select 'Number of new history entries in $1: ' || changes() ;
-		select 'Number of total history entries in $1: ' || count(*) from main.history ;
+		attach '$src' as src ;
+		insert or ignore into main.history($keys_list) select $keys_list from src.history ;
+		select 'Number of new history entries in $dst: ' || changes() ;
+		select 'Number of total history entries in $dst: ' || count(*) from main.history ;
 	EOF_sql
 }
 

@@ -3,7 +3,7 @@
 
 - shell:
     - [git submodule update --init --recursive, Updating submodules]
-    - [mkdir -p ~/bin/ ~/.awk/ ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
+    - [mkdir -p ~/TODO ~/bin/ ~/.awk/ ~/.gnupg ~/.config/feh ~/.ipython/profile_default ~/.config/ptpython ~/.config/copyq ~/.config/dunst ~/.config/i3 ~/.config/i3status ~/.config/kitty ~/.config/procps ~/.config/radare2 ~/.config/ranger ~/.config/rofi ~/.config/yamllint ~/.config/zathura ~/.environment.d, Creating config directories]
     - [mkdir -p ~/.ssh/hosts ~/.ssh/HOSTS ~/.ssh/keys ~/.ssh/control_paths, Setting up directories for ssh]
     - [mkdir -p ~/.config/nvim ~/.vim/compiler ~/.vim/swo ~/.vim/backup ~/.vim/undodir ~/.vim/viminfo, Setting up directories for vim]
     - [mkdir -p ~/mnt/localhost-root, Creating mount points]
@@ -88,6 +88,5 @@
     ~/.zlogout: zlogout
 
 - shell:
-    - [chmod -cR g-rwx ssh, Restricting file permissions for ssh]
-    - [chmod -cR o-rwx ssh, Restricting file permissions for ssh]
+    - [chmod -cR go-rwx ~/.ssh, Restricting file permissions for ssh]
     - [chmod 0700 wg, Restricting file permissions of wg]
