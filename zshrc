@@ -1556,7 +1556,7 @@ c() {
 	done
 }
 
-typeset -a expand_ealias_skip=( l ls)
+typeset -a expand_ealias_skip=( ls )
 expand_ealias() {
 	[[ -v zsh_debug ]] && set -x
 	# zle -M "1 = \"${LBUFFER:0:1}\", CURSOR = $CURSOR, LBUFFER = \"$LBUFFER\", RBUFFER = \"$RBUFFER\""
