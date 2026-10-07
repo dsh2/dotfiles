@@ -982,6 +982,7 @@ alias ne=neomutt
 alias v2=v4l2ctrl
 alias zat='zathura --fork'
 alias dm='sudo dmsetup'
+alias lu=cryptsetup
 alias cr=cryptsetup
 alias cry=cryptsetup
 alias PI='pip3 install --user -vvv'
