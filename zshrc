@@ -1758,7 +1758,7 @@ mvA() {
 source ~/.android/current_serial
 
 p2x() { plistutil -i $1 -o $1.xml }
-cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
+# cx() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 ch() { r2 -c "e hex.cols = $[COLUMNS /5]" -cV $1 }
 proc_loaded() { (( $#jobtexts > ${1:-$(nproc)} )) }
 sigint() { trap 'done=1' INT; }
