@@ -16,9 +16,20 @@ set $right l
 
 # Colors {{{
 # class                 border  backgr. text    indicator child_border
+
+# Original blue
 # client.focused        #4c7899 #285577 #ffffff #2e9ef4   #285577
+
+# Orange
+client.focused        #ff6a00 #ff6a00 #ffffff #ff9a3c #ff6a00
+# client.focused        #ff8c00 #ff8c00 #ffffff #ffb347 #ff8c00
+
+# Off-site green
 # client.focused          #00ff00 #007000 #ffffff #ffff00   #007000
-client.focused          #ee4400 #ff0000 #ffffff #ffff00   #ff0000
+
+# NEW red
+# client.focused          #ee4400 #ff0000 #ffffff #ffff00   #ff0000
+
 client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
 client.unfocused        #333333 #222222 #888888 #292d2e   #222222
 client.urgent           #2f343a #900000 #ffffff #900000   #900000
@@ -133,6 +144,7 @@ bindsym $meta+8 split vertical, exec $terminal
 bindsym $meta+$shift+8 split vertical, exec $terminal_tmux
 # }}}
 # Start a browser {{{
+bindsym $alt+$ctrl+$shift+J exec /bin/caja INCOMING
 bindsym $ctrl+Return exec $browser
 bindsym $meta+n exec i3 workspace $(2> /dev/null shuf -n 1 /usr/share/dict/words || date '+%s'),  exec $browser, exec ~/.dotfiles/bin/i3-ws-enum,
 # TODO: Add delay such that new terminal show up on new workspace

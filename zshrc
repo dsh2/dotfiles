@@ -1549,10 +1549,10 @@ has kitty && kitty +complete setup zsh | source /dev/stdin
 
 c() {
 	[[ $# = 0 ]] && { die "usage: c files_and_directories"; return }
-	cc() { [[ -d $1 ]] && ls -al $1 || cat $1 }
+	cc() { [[ -d $1 ]] && ls -al $1 || cat -v $1 }
 	[[ $# = 1 ]] && { cc $1; return }
 	for f in $@; do
-		cc $f | sed "s|^|$f:\t|"
+		cc $f | sed "s|^|$f\t|"
 	done
 }
 
